@@ -42,11 +42,11 @@ class Patients extends React.Component {
       imageDetails: null,
       formDetails: {
         gender: "Male",
-        village_prefix: "SV",
+        village_prefix: "CATT",
       },
       scanOptions: {
         gender: "Male",
-        village_prefix: "SV",
+        village_prefix: "CATT",
       },
       possibleOptions: [],
     };
@@ -140,10 +140,8 @@ class Patients extends React.Component {
 
       return {
         ...patient,
-        filterString:
-          `${village}` +
-          `${id}`.padStart(3, "0") +
-          ` ${village}${id} ${name} ${contact_no} ${localName}`,
+        filterString: `${village}` + `${id}`.padStart(3,'0') 
+                      + ` ${village}${id} ${name} ${contact_no} ${localName}`,
       };
     });
 
@@ -235,7 +233,7 @@ class Patients extends React.Component {
           patient: response[0],
           formDetails: {
             gender: "Male",
-            village_prefix: "SV",
+            village_prefix: "CATT",
           },
           imageDetails: null,
         });
@@ -246,7 +244,7 @@ class Patients extends React.Component {
         this.setState({ patient: "test" });
         //console.log(this.state);
         //console.log(response[0]);
-        this.setState({ patient: response[0] });
+        this.setState({patient: response[0]});
         this.autoSubmitNewVisit(response[0]);
       } else {
         alert("Please retake photo!");
@@ -606,12 +604,12 @@ class Patients extends React.Component {
                       <select
                         name="village_prefix"
                         onChange={this.handleInputChange}
-                        default="SV"
+                        default="CATT"
                       >
-                        <option value="SV">Smong Village</option>
-                        <option value="SO">Smong Orphanage</option>
-                        <option value="SPS">Smong Primary School</option>
-                        <option value="SSS">Smong Secondary School</option>
+                        <option value="CATT">CATT</option>
+                        <option value="PC">PC</option>
+                        <option value="TK">TK</option>
+                        <option value="TT">TT</option>
                       </select>
                     </div>
                     {/* <input
@@ -730,8 +728,9 @@ class Patients extends React.Component {
     let query =
       inputLength === 0
         ? []
-        : patients.filter((patient) =>
-            patient.filterString.toLowerCase().includes(inputValue)
+        : patients.filter(
+            (patient) =>
+              patient.filterString.toLowerCase().includes(inputValue)
           );
     return query;
   }
