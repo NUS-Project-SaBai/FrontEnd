@@ -344,12 +344,12 @@ class MedicalForm extends React.Component {
         <label className="label">Medical Consultation Form</label>
 
         <div className="field">
-          <label className="label">Problems</label>
+          <label className="label">Past Medical History</label>
           <div className="control">
             <textarea
               name="problems"
               className="textarea"
-              placeholder="Type your problems here..."
+              placeholder="Type your the patient's past medical history here..."
               onChange={handleInputChange}
               value={formDetails.problems}
             />
