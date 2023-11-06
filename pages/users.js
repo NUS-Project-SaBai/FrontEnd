@@ -2,16 +2,11 @@ import React from "react";
 import Modal from "react-modal";
 import axios from "axios";
 import { API_URL } from "../utils/constants";
-import { withAuthSync, logInCheck } from "../utils/auth";
+import withAuth from "../utils/auth";
 
 Modal.setAppElement("#__next");
 
 class Users extends React.Component {
-  static async getInitialProps(ctx) {
-    let authentication = await logInCheck(ctx);
-    return authentication;
-  }
-
   constructor() {
     super();
 
@@ -222,4 +217,4 @@ const userModalStyles = {
 //   }
 // }
 
-export default withAuthSync(Users);
+export default withAuth(Users);

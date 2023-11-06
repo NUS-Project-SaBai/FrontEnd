@@ -1,67 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "react-sidebar";
-import Head from "next/head";
-import Header from "./header";
 import SideMenu from "./sideMenu";
+import withAuth from "../utils/auth"
 
-export default class Layout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mql: null,
-      sidebarDocked: null,
-      sidebarOpen: false,
+function Layout(props) {
+  const [mql, setMql] = useState(null);
+  const [sidebarDocked, setSidebarDocked] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(min-width: 800px)`);
+    mql.addListener(mediaQueryChanged);
+    setMql(mql);
+    setSidebarDocked(mql.matches);
+
+    return () => {
+      mql.removeListener(mediaQueryChanged);
     };
+  }, []);
 
-    this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
-    this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
-  }
+  const mediaQueryChanged = () => {
+    setSidebarDocked(mql.matches);
+    setSidebarOpen(false);
+  };
 
-  componentWillMount() {}
-  componentDidMount() {
-    let mql = window.matchMedia(`(min-width: 800px)`);
-    mql.addListener(this.mediaQueryChanged);
-    this.setState({ mql, sidebarDocked: mql.matches });
-  }
+  const onSetSidebarOpen = (open) => {
+    setSidebarOpen(open);
+  };
 
-  componentWillUnmount() {
-    this.state.mql.removeListener(this.mediaQueryChanged);
-  }
-
-  onSetSidebarOpen(open) {
-    this.setState({ sidebarOpen: open });
-  }
-
-  mediaQueryChanged() {
-    let { mql } = this.state;
-
-    this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
-  }
-
-  render() {
-    return (
-      <Sidebar
-        sidebar={<SideMenu />}
-        open={this.state.sidebarOpen}
-        docked={this.state.sidebarDocked}
-        onSetOpen={this.onSetSidebarOpen}
-        styles={{ sidebar: { background: "#180424" } }}
-        transitions={false}
-        suppressHydrationWarning={true}
-      >
-        <div>{this.props.children}</div>
-      </Sidebar>
-    );
-  }
+  return (
+    <Sidebar
+      sidebar={<SideMenu />}
+      open={sidebarOpen}
+      docked={sidebarDocked}
+      onSetOpen={onSetSidebarOpen}
+      styles={{ sidebar: { background: "#180424" } }}
+      transitions={false}
+      suppressHydrationWarning={true}
+    >
+      <div>{props.children}</div>
+    </Sidebar>
+  );
 }
 
-/* <Sidebar
-          sidebar={<SideMenu />}
-          open={this.state.sidebarOpen}
-          docked={this.state.sidebarDocked}
-          onSetOpen={this.onSetSidebarOpen}
-          styles={{ sidebar: { background: "#180424" } }}
-          transitions={false}
-        >
-          <div>{this.props.children}</div>
-        </Sidebar> */
+export default withAuth(Layout);

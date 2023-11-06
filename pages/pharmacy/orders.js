@@ -2,16 +2,12 @@
 // there is definitely room for refactoring
 
 import React from "react";
-import { withAuthSync, logInCheck } from "../../utils/auth";
 import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../../utils/constants";
+import withAuth from "../../utils/auth";
 
 class Orders extends React.Component {
-  static async getInitialProps(ctx) {
-    let authentication = await logInCheck(ctx);
-    return authentication;
-  }
 
   constructor() {
     super();
@@ -148,4 +144,4 @@ class Orders extends React.Component {
   }
 }
 
-export default withAuthSync(Orders);
+export default withAuth(Orders);
