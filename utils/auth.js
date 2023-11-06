@@ -10,10 +10,10 @@ const withAuth = (Component) => {
       return <p>Loading...</p>;
     }
 
-    // if (!user) {
-    //   return <Redirect ssr to="/api/auth/login" />;
-    // }
-    // console.log("role is false!")
+    if (!user) {
+      return <Redirect ssr to="/api/auth/login" />;
+    }
+    console.log("role is false!");
     return <Component user={user} isLoading={isLoading} {...props} />;
   };
 };
