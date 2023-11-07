@@ -12,6 +12,7 @@ import {
 } from "../components/views/patient";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
+import Router from "next/router";
 
 Modal.setAppElement("#__next");
 
@@ -45,7 +46,9 @@ class Record extends React.Component {
   }
 
   async onRefresh() {
-    let { id: patientId } = this.props.query;
+    const router = Router;
+    const {query} = router;
+    let { id: patientId } = query;
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
 
