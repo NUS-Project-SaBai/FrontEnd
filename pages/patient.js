@@ -52,7 +52,11 @@ class Patient extends React.Component {
   }
 
   async onRefresh() {
-    let { id: patientId } = this.props.query;
+    // let { id: patientId } = this.props.query;
+    const router = Router;
+    const { query } = router;
+    const {id : patientId} = query;
+
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
 
@@ -267,7 +271,9 @@ class Patient extends React.Component {
   }
 
   async submitForm() {
-    let { form } = this.props.query;
+    const router = Router;
+    const  {query : form} = router
+    //let { form } = this.props.query;
     let { formDetails, visitID, orders } = this.state;
     var formPayload = {
       visit: visitID,
@@ -460,7 +466,11 @@ class Patient extends React.Component {
   }
 
   renderSecondColumn() {
-    let { form } = this.props.query;
+    //let { form } = this.props.query;
+    const router = Router;
+    const { query } = router;
+    const {form} = query;
+
     let { formDetails, orders } = this.state;
 
     let formContent = () => {
