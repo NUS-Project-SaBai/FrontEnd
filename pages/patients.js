@@ -1,5 +1,4 @@
 import React from "react";
-import { withAuthSync, logInCheck } from "../utils/auth";
 import Autosuggest from "react-autosuggest";
 import axios from "axios";
 import _ from "lodash";
@@ -8,21 +7,14 @@ import Webcam from "react-webcam";
 import moment from "moment";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import { urltoFile } from "../utils/helpers";
-import record from "./record";
+import withAuth from "../utils/auth";
+import toast from "react-hot-toast";
 
 // put id
 
 Modal.setAppElement("#__next");
 
 class Patients extends React.Component {
-  static async getInitialProps(ctx) {
-    let authentication = await logInCheck(ctx);
-
-    let { query } = ctx;
-
-    return { query };
-  }
-
   constructor() {
     super();
 
@@ -199,9 +191,9 @@ class Patients extends React.Component {
     });
 
     if (errorCount > 0) {
-      alert("Please complete the form before submitting!");
+      toast.error("Please complete the form before submitting!");
     } else if (imageDetails == null) {
-      alert("Please take a photo before submitting!");
+      toast.error("Please take a photo before submitting!");
     } else {
       let payload = {
         ...formDetails,
@@ -239,7 +231,7 @@ class Patients extends React.Component {
         });
         //console.log(this.state);
         //console.log("testing!!!!!!!!");
-        alert("New patient registered!");
+        toast.success("New patient created!");
         this.closeModal();
         this.setState({ patient: "test" });
         //console.log(this.state);
@@ -247,7 +239,7 @@ class Patients extends React.Component {
         this.setState({patient: response[0]});
         this.autoSubmitNewVisit(response[0]);
       } else {
-        alert("Please retake photo!");
+        toast.error("Please retake photo!");
       }
     }
   }
@@ -266,8 +258,8 @@ class Patients extends React.Component {
     }
 
     let { data: possibleOptions } = await axios.post(scanUrl, payload);
-    if (possibleOptions.length > 0) alert("Options found!");
-    else alert("No options found!");
+    if (possibleOptions.length > 0) toast.success("Options found!");
+    else toast.error("No options found!");
 
     this.setState({ possibleOptions });
   }
@@ -291,7 +283,7 @@ class Patients extends React.Component {
     this.setState({
       patient: {},
     });
-    alert("Visit started!");
+    toast("Visit started!");
   }
 
   async autoSubmitNewVisit(patient) {
@@ -308,7 +300,7 @@ class Patients extends React.Component {
     };
     //console.log(payload);
     await axios.post(`${API_URL}/visits`, payload);
-    alert("Patient successfully registered!");
+    toast.success("New visit created for patient!");
   }
 
   /**
@@ -947,4 +939,4 @@ const videoConstraints = {
   facingMode: "user",
 };
 
-export default withAuthSync(Patients);
+export default withAuth(Patients);

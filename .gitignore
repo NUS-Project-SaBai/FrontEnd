@@ -2,3 +2,7 @@
 node_modules/
 package-lock.json
 .next
+
+.env.local
+.env
+user.json

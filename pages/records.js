@@ -1,16 +1,10 @@
 import React from "react";
-import { withAuthSync, logInCheck } from "../utils/auth";
 import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
+import withAuth from "../utils/auth";
 
 class Records extends React.Component {
-  static async getInitialProps(ctx) {
-    let authentication = await logInCheck(ctx);
-    let { query } = ctx;
-
-    return { query };
-  }
 
   constructor() {
     super();
@@ -159,4 +153,4 @@ class Records extends React.Component {
   }
 }
 
-export default withAuthSync(Records);
+export default withAuth(Records);

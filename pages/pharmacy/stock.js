@@ -1,20 +1,16 @@
 import React from "react";
-import { withAuthSync, logInCheck } from "../../utils/auth";
 import Modal from "react-modal";
 import moment from "moment";
 import axios from "axios";
 import _ from "lodash";
 import { MedicationForm } from "../../components/forms/stock";
 import { API_URL } from "../../utils/constants";
+import withAuth from "../../utils/auth";
+import toast from "react-hot-toast";
 
 Modal.setAppElement("#__next");
 
 class Stock extends React.Component {
-  static async getInitialProps(ctx) {
-    let authentication = await logInCheck(ctx);
-    return authentication;
-  }
-
   constructor() {
     super();
 
@@ -66,21 +62,21 @@ class Stock extends React.Component {
 
         await axios
           .patch(`${API_URL}/medications/${key}`, { quantityChange })
-          .then(() => alert("Medication updated!"))
+          .then(() => toast.success("Medication updated!"))
           .catch(() => {
-            alert("Encountered an error!");
+            toast.error("Encountered an error!");
             this.toggleModal();
             this.onRefresh();
           });
       } else {
-        alert("Insufficient medication!");
+        toast.error("Insufficient medication!");
       }
     } else if (quantityChange >= 0) {
       medicationDetails.quantity = quantityChange;
       await axios.post(`${API_URL}/medications`, medicationDetails);
-      alert("New Medication created!");
+      toast.success("New Medication created!");
     } else {
-      alert("Invalid number!");
+      toast.error("Invalid number!");
     }
 
     this.toggleModal();
@@ -109,6 +105,7 @@ class Stock extends React.Component {
         medications: updatedMedications,
         medicationsFiltered: updatedMedicationsFiltered,
       });
+      toast.success("Medication successfully deleted!");
     } catch (error) {
       console.error(error);
     }
@@ -270,4 +267,4 @@ const prescriptionModalStyles = {
   },
 };
 
-export default withAuthSync(Stock);
+export default withAuth(Stock);

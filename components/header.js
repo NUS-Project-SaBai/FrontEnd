@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { logout } from "../utils/auth";
 
 const Header = (props) => (
   <nav className="navbar is-dark">

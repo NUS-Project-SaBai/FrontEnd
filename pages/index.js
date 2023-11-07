@@ -1,17 +1,19 @@
-import React from "react";
-import Modal from "react-modal";
-import Router from "next/router";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import Redirect from "./api/redirect";
+import withAuth from "../utils/auth";
 
-export default class Index extends React.Component {
-  static async getInitialProps({ res }) {
-    if (res) {
-      res.writeHead(302, {
-        Location: "/patients",
-      });
-      res.end();
-    } else {
-      Router.push("/patients");
-    }
-    return {};
-  }
+const Index = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // User is logged in
+    router.push("/patients");
+  }, [router]);
+
+  // User is logged in, perform client-side redirect to '/patients'
+
+  return null;
 }
+
+export default withAuth(Index);

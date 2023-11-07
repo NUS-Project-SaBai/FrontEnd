@@ -1,17 +1,11 @@
 import React from "react";
-import { withAuthSync, logInCheck } from "../utils/auth";
 import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import moment from "moment";
+import withAuth from "../utils/auth";
 
 class Queue extends React.Component {
-  static async getInitialProps(ctx) {
-    let authentication = await logInCheck(ctx);
-    let { query } = ctx;
-
-    return { query };
-  }
 
   constructor() {
     super();
@@ -208,4 +202,4 @@ class Queue extends React.Component {
   }
 }
 
-export default withAuthSync(Queue);
+export default withAuth(Queue);

@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { logout } from "../utils/auth";
-import cookie from "js-cookie";
 
 const SideMenu = (props) => (
   <aside className="menu sideMenu">
@@ -13,7 +11,6 @@ const SideMenu = (props) => (
         <h1 className="level-item sideMenuTitle">Sa'Bai '23</h1>
       </div>
     </div>
-    <p className="menu-label sideMenuItem">{cookie.get("name")}</p>
     <p className="menu-label sideMenuItem">Services</p>
     <ul className="menu-list">
       <li>
@@ -53,8 +50,8 @@ const SideMenu = (props) => (
           Users
         </Link>
       </li> */}
-      <li onClick={logout}>
-        <a>Logout</a>
+      <li>
+        <a href="/api/auth/logout">Logout</a>
       </li>
     </ul>
   </aside>

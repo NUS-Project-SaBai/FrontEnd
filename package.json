@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.2.0",
     "axios": "^0.19.0",
     "bulma": "^0.7.5",
     "dotenv": "^8.2.0",
@@ -20,10 +21,12 @@
     "react-alert-template-basic": "^1.0.2",
     "react-autosuggest": "^9.4.3",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
     "react-modal": "^3.10.1",
     "react-router-dom": "^5.0.1",
     "react-sidebar": "^3.0.2",
     "react-webcam": "^3.1.1",
-    "sass": "^1.58.0"
+    "sass": "^1.58.0",
+    "yarn": "^1.22.19"
   }
 }
