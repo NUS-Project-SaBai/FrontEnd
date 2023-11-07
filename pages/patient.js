@@ -272,7 +272,8 @@ class Patient extends React.Component {
 
   async submitForm() {
     const router = Router;
-    const  {query : form} = router
+    const {query} = router;
+    const {form} = query;
     //let { form } = this.props.query;
     let { formDetails, visitID, orders } = this.state;
     var formPayload = {
