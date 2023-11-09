@@ -123,7 +123,7 @@ class VitalsForm extends React.Component {
           </div>
         </div>
 
-        <div className="field is-grouped">
+        {/* <div className="field is-grouped">
           <div className="control is-expanded">
             <label className="label">Cataract (Text eg. Anyth)</label>
             <div className="control">
@@ -237,9 +237,7 @@ class VitalsForm extends React.Component {
               value={formDetails.sdq}
             />
           </div>
-        </div>
-
-        <br></br>
+        </div> */}
 
         <label className="label">STAT Investigations</label>
         <div className="field is-grouped">
@@ -272,7 +270,7 @@ class VitalsForm extends React.Component {
 
         <div className="field is-grouped">
           <div className="control is-expanded">
-            <label className="label">Blood Glucose (Decimal eg. 13.2)</label>
+            <label className="label">Capillary Blood Glucose (Decimal eg. 13.2)</label>
             <div className="control">
               <input
                 name="blood_glucose"
