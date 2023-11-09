@@ -435,15 +435,6 @@ class PatientView extends React.Component {
         </div>
 
         <div className="field">
-          <label className="label">Travelling Time to Village</label>
-          <article className="message">
-            <div className="message-body">
-              {content.fields.travelling_time_to_village}
-            </div>
-          </article>
-        </div>
-
-        <div className="field">
           <label className="label">Allergies</label>
           <article className="message">
             <div className="message-body">{content.fields.drug_allergy}</div>

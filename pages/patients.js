@@ -179,7 +179,6 @@ class Patients extends React.Component {
       "local_name",
       "gender",
       "contact_no",
-      "travelling_time_to_village",
       "date_of_birth",
       "drug_allergy",
       "village_prefix",
@@ -615,19 +614,6 @@ class Patients extends React.Component {
                     /> */}
                   </div>
                 </div>
-
-                <div className="control is-expanded">
-                  <label className="label">Travelling Time to Village</label>
-                  <div className="control">
-                    <input
-                      name="travelling_time_to_village"
-                      className="input"
-                      type="number"
-                      onChange={this.handleInputChange}
-                      value={formDetails.travelling_time_to_village}
-                    />
-                  </div>
-                </div>
               </div>
 
               <div className="field">
@@ -893,12 +879,6 @@ class Patients extends React.Component {
               <article className="message">
                 <div className="message-body">
                   {patient.fields.date_of_birth}
-                </div>
-              </article>
-              <label className="label">Travelling Time to Village</label>
-              <article className="message">
-                <div className="message-body">
-                  {patient.fields.travelling_time_to_village}
                 </div>
               </article>
               <label className="label">Drug Allergies</label>
