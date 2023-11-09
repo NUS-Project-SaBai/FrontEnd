@@ -17,6 +17,7 @@ import {
 } from "../components/views/patient";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
+import toast from "react-hot-toast";
 
 Modal.setAppElement("#__next");
 
