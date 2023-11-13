@@ -109,24 +109,30 @@ class ConsultationsView extends React.Component {
         {type == "medical" ? this.renderMedicalConsultation(content) : null}
 
         <hr />
-
+        {/*We still haven't figured out a way to let the backend handle new fields
+        // which we want to create. Hence, we are using existing fields (problems, 
+        // diagnosis, notes) to store the data which we want to store :
+        // NEW:                         STORED IN OLD FIELD OF:
+        // Past Med History      ->     Problems
+        // Consultation          ->     Diagnosis
+        // Diagnosis (1 + 2 + 3) ->     Notes 
+        // Plan                  ->     Addendum*/}
         <div className="field">
-          <label className="label">Referred For</label>
+          <label className="label">Referrals</label>
           <article className="message">
-            <div className="message-body">{content.referred_for}</div>
-          </article>
-        </div>
-        <div className="field">
-          <label className="label">Referral Notes</label>
-          <article className="message">
-            <div className="message-body">{content.referred_notes}</div>
+            <div 
+                className="message-body"
+                style={{ whiteSpace: 'pre-line' }}
+            >
+                {content.referrals}
+            </div>
           </article>
         </div>
 
         <hr />
 
         <div className="field">
-          <label className="label">Problems</label>
+          <label className="label">Past Medical History</label>
           <article className="message">
             <div className="message-body">{content.problems}</div>
           </article>
@@ -135,7 +141,7 @@ class ConsultationsView extends React.Component {
         <hr />
 
         <div className="field">
-          <label className="label">Diagnosis</label>
+          <label className="label">Consultation</label>
           <article className="message">
             <div className="message-body">{content.diagnosis}</div>
           </article>
@@ -144,9 +150,26 @@ class ConsultationsView extends React.Component {
         <hr />
 
         <div className="field">
-          <label className="label">Notes</label>
+          <label className="label">Diagnosis</label>
           <article className="message">
-            <div className="message-body">{content.notes}</div>
+            <div 
+                className="message-body"
+                style={{ whiteSpace: 'pre-line' }}
+            >
+                {content.notes}
+            </div>
+          </article>
+        </div>
+
+        <div className="field">
+          <label className="label">Plan</label>
+          <article className="message">
+            <div 
+                className="message-body"
+                style={{ whiteSpace: 'pre-line' }}
+            >
+                {content.addendum}
+            </div>
           </article>
         </div>
 
@@ -175,7 +198,7 @@ class ConsultationsView extends React.Component {
           </div>
         )} */}
 
-        <div className="field">
+        {/* <div className="field">
           <label className="label">Breast Problem</label>
           <article className="message">
             <div className="message_body">
@@ -201,7 +224,7 @@ class ConsultationsView extends React.Component {
             </div>
           </article>
           <hr />
-        </div>
+        </div> */}
 
         <div className="field">
           <label className="label">Prescriptions</label>

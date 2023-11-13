@@ -7,7 +7,6 @@ class VitalsForm extends React.Component {
 
   render() {
     let { handleInputChange, formDetails } = this.props;
-
     return (
       <div>
         <label className="label">Vitals</label>
@@ -323,10 +322,10 @@ class MedicalForm extends React.Component {
   render() {
     let { handleInputChange, formDetails } = this.props;
     const { showWomenClinicDetails } = this.state;
-
+    //console.log(formDetails);
     return (
       <div>
-        <label className="label">Patient Photo Details</label>
+        {/* <label className="label">Patient Photo Details</label>
 
         <div className="field">
           <label className="label">Photo URL</label>
@@ -339,12 +338,12 @@ class MedicalForm extends React.Component {
               value={formDetails.photo_url}
             />
           </div>
-        </div>
+        </div> */}
 
         <label className="label">Medical Consultation Form</label>
 
         <div className="field">
-          <label className="label">Problems</label>
+          <label className="label">Past Medical History</label>
           <div className="control">
             <textarea
               name="problems"
@@ -357,7 +356,7 @@ class MedicalForm extends React.Component {
         </div>
 
         <div className="field">
-          <label className="label">Diagnosis</label>
+          <label className="label">Consultation</label>
           <div className="control">
             <textarea
               name="diagnosis"
@@ -368,22 +367,136 @@ class MedicalForm extends React.Component {
             />
           </div>
         </div>
+
+        <hr/>
+        <label className="label">Assessment</label>
+
         <div className="field">
-          <label className="label">Notes</label>
+          <label className="label">Diagnosis 1</label>
           <div className="control">
             <textarea
-              name="notes"
-              className="textarea"
+              name="diagnosis1"
               placeholder="Type your notes here..."
+              className='textarea'
               onChange={handleInputChange}
-              value={formDetails.notes}
+              value={formDetails.diagnosis1}
+            />
+          </div>
+          <div className='select'>
+                <select 
+                    name="diagnosisType1"
+                    onChange={handleInputChange}
+                    value={formDetails.diagnosisType1}
+                >
+                    <option value="Cardiovascular">Cardiovascular</option>
+                    <option value="Dermatology">Dermatology</option>
+                    <option value="Ear Nose Throat">Ear Nose Throat</option>
+                    <option value="Endocrine">Endocrine</option>
+                    <option value="Eye">Eye</option>
+                    <option value="Gastrointestinal">Gastrointestinal</option>
+                    <option value="Haematology">Haematology</option>
+                    <option value="Infectious Diseases">Infectious Diseases</option>
+                    <option value="Renal & Genitourinary">Renal & Genitourinary</option>
+                    <option value="Respiratory">Respiratory</option>
+                    <option value="Musculoskeletal ">Musculoskeletal </option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Obstetrics & Gynaecology">Obstetrics & Gynaecology</option>
+                    <option value="Oral Health">Oral Health</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+        </div>
+
+        <div className="field">
+          <label className="label">Diagnosis 2</label>
+          <div className="control">
+            <textarea
+              name="diagnosis2"
+              placeholder="Type your notes here..."
+              className='textarea'
+              onChange={handleInputChange}
+              value={formDetails.diagnosis2}
+            />
+          </div>
+          <div className='select'>
+                <select 
+                    name="diagnosisType2"
+                    onChange={handleInputChange}
+                    value={formDetails.diagnosisType2}
+                >
+                    <option value="Cardiovascular">Cardiovascular</option>
+                    <option value="Dermatology">Dermatology</option>
+                    <option value="Ear Nose Throat">Ear Nose Throat</option>
+                    <option value="Endocrine">Endocrine</option>
+                    <option value="Eye">Eye</option>
+                    <option value="Gastrointestinal">Gastrointestinal</option>
+                    <option value="Haematology">Haematology</option>
+                    <option value="Infectious Diseases">Infectious Diseases</option>
+                    <option value="Renal & Genitourinary">Renal & Genitourinary</option>
+                    <option value="Respiratory">Respiratory</option>
+                    <option value="Musculoskeletal ">Musculoskeletal </option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Obstetrics & Gynaecology">Obstetrics & Gynaecology</option>
+                    <option value="Oral Health">Oral Health</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+        </div>
+
+        <div className="field">
+          <label className="label">Diagnosis 3</label>
+          <div className="control">
+            <textarea
+              name="diagnosis3"
+              placeholder="Type your notes here..."
+              className='textarea'
+              onChange={handleInputChange}
+              value={formDetails.diagnosis3}
+            />
+          </div>
+          <div className='select'>
+                <select 
+                    name="diagnosisType3"
+                    onChange={handleInputChange}
+                    value={formDetails.diagnosisType3}
+                >
+                    <option value="Cardiovascular">Cardiovascular</option>
+                    <option value="Dermatology">Dermatology</option>
+                    <option value="Ear Nose Throat">Ear Nose Throat</option>
+                    <option value="Endocrine">Endocrine</option>
+                    <option value="Eye">Eye</option>
+                    <option value="Gastrointestinal">Gastrointestinal</option>
+                    <option value="Haematology">Haematology</option>
+                    <option value="Infectious Diseases">Infectious Diseases</option>
+                    <option value="Renal & Genitourinary">Renal & Genitourinary</option>
+                    <option value="Respiratory">Respiratory</option>
+                    <option value="Musculoskeletal ">Musculoskeletal </option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Obstetrics & Gynaecology">Obstetrics & Gynaecology</option>
+                    <option value="Oral Health">Oral Health</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+        </div>
+
+        <hr />
+
+        <div className="field">
+          <label className="label">Plan</label>
+          <div className="control">
+            <textarea
+              name="addendum"
+              className="textarea"
+              placeholder="Type your plan here..."
+              onChange={handleInputChange}
+              value={formDetails.addendum}
             />
           </div>
         </div>
 
         <hr />
 
-        <div className="field">
+        {/* <div className="field">
           <label className="label">
             <input
               name="women_clinic_checkbox"
@@ -449,7 +562,7 @@ class MedicalForm extends React.Component {
                     />
                     Others
                   </label> */}
-                  <textarea
+                  {/*<textarea
                     name="others_details"
                     className="textarea"
                     placeholder="Others..."
@@ -462,7 +575,7 @@ class MedicalForm extends React.Component {
           </div>
         )}
 
-        <hr />
+        <hr /> */}
 
         <div className="field">
           <label className="label">* Referred for (within clinic)</label>
@@ -473,7 +586,7 @@ class MedicalForm extends React.Component {
                 <option value="Diagnostic">Diagnostic</option>
                 <option value="Acute">Acute</option>
                 <option value="Chronic">Chronic</option>
-              </select>
+              </select> 
             </div>
             {/* <input
               name="referred_for"
