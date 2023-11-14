@@ -42,7 +42,6 @@ class Records extends React.Component {
         .padStart(3, "0")}`;
       let imageUrl = `${CLOUDINARY_URL}/${patient.fields.picture}`;
       let fullName = patient.fields.name;
-
       let progress = (
         <div>
           <button
