@@ -56,7 +56,7 @@ class Patient extends React.Component {
     // let { id: patientId } = this.props.query;
     const router = Router;
     const { query } = router;
-    const {id : patientId} = query;
+    const { id: patientId } = query;
 
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
@@ -273,11 +273,11 @@ class Patient extends React.Component {
 
   async submitForm() {
     const router = Router;
-    const {query} = router;
-    const {form} = query;
+    const { query } = router;
+    const { form } = query;
     //let { form } = this.props.query;
     let { formDetails, visitID, orders } = this.state;
-    
+
     //We still haven't figured out a way to let the backend handle new fields
     //which we want to create. Hence, we are using existing fields (problems, diagnosis, notes)
     //to store the data which we want to store :
@@ -289,50 +289,61 @@ class Patient extends React.Component {
 
     //For Diagnosis (1 + 2 + 3), we have insufficient old fields to store the data in.
     //Hence, we are using a standardised text format to store the three possibilities
-    //of diagnosis. By using this standardised format, we can use data manipulation 
+    //of diagnosis. By using this standardised format, we can use data manipulation
     //later on to retrieve and split the data as neccessary
-    let diagnosisFormat = '';
+    let diagnosisFormat = "";
     if (formDetails.diagnosis1) {
-        diagnosisFormat += `DIAGNOSIS 1
+      diagnosisFormat += `DIAGNOSIS 1
         ${formDetails.diagnosis1}
-        ${!(formDetails.diagnosisType1) ? 'Cardiovascular' : formDetails.diagnosisType1}
+        ${
+          !formDetails.diagnosisType1
+            ? "Cardiovascular"
+            : formDetails.diagnosisType1
+        }
         `;
     }
-    if (formDetails.diagnosis2){
-        diagnosisFormat += `
+    if (formDetails.diagnosis2) {
+      diagnosisFormat += `
         DIAGNOSIS 2
         ${formDetails.diagnosis2}
-        ${!(formDetails.diagnosisType2) ? 'Cardiovascular' : formDetails.diagnosisType2}
+        ${
+          !formDetails.diagnosisType2
+            ? "Cardiovascular"
+            : formDetails.diagnosisType2
+        }
         `;
     }
-    if (formDetails.diagnosis3){
-        diagnosisFormat += `
+    if (formDetails.diagnosis3) {
+      diagnosisFormat += `
         DIAGNOSIS 3
         ${formDetails.diagnosis3}
-        ${!(formDetails.diagnosisType3) ? 'Cardiovascular' : formDetails.diagnosisType3}
+        ${
+          !formDetails.diagnosisType3
+            ? "Cardiovascular"
+            : formDetails.diagnosisType3
+        }
         `;
-    } 
+    }
 
     var formPayload = {
       visit: visitID,
       ...formDetails,
       notes: diagnosisFormat,
     };
-    
-    //For Referrals, we are also using a standardised text format to store information 
+
+    //For Referrals, we are also using a standardised text format to store information
     //from referred_for and referred_notes
 
     if (formDetails.referred_notes) {
-        const referrals = `
+      const referrals = `
         Referred For: ${formDetails.referred_for}
         Notes: ${formDetails.referred_notes}`;
-        formPayload = {
-            ...formPayload,
-            referrals: referrals,
-        }
+      formPayload = {
+        ...formPayload,
+        referrals: referrals,
+      };
     }
 
-    console.log(formPayload);
     var consultId;
     var orderPromises;
 
@@ -454,13 +465,14 @@ class Patient extends React.Component {
 
   renderFirstColumn() {
     let { vitals, consults, visitPrescriptions } = this.state;
-
     let consultRows = consults.map((consult) => {
       // let type = consult.type;
       // let subType = consult.sub_type == null ? "General" : consult.sub_type;
       let doctor = consult.doctor.username;
       let referredFor =
-        consult.referredFor == null ? "None" : consult.referredFor;
+        consult.referrals == null || consult.referrals == ""
+          ? "None"
+          : consult.referrals.split("\n")[0].split(" ")[2];
       return (
         <tr key={consult.id}>
           {/* <td>{type}</td>
@@ -523,22 +535,22 @@ class Patient extends React.Component {
     //let { form } = this.props.query;
     const router = Router;
     const { query } = router;
-    const {form} = query;
+    const { form } = query;
 
     let { formDetails, orders } = this.state;
 
     let formContent = () => {
       switch (form) {
         case "vitals":
-            return (
-                <VitalsForm
-                formDetails={formDetails}
-                handleInputChange={this.handleInputChange}
-                />
-            );
+          return (
+            <VitalsForm
+              formDetails={formDetails}
+              handleInputChange={this.handleInputChange}
+            />
+          );
 
         case "medical":
-            return (
+          return (
             <div>
               <MedicalForm
                 formDetails={formDetails}
