@@ -14,6 +14,7 @@ const withAuth = (Component) => {
       return <Redirect ssr to="/api/auth/login" />;
     }
     console.log("role is false!");
+    window.localStorage.setItem("userID", parseInt(user?.name));
     return <Component user={user} isLoading={isLoading} {...props} />;
   };
 };
