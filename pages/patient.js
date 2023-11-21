@@ -249,8 +249,9 @@ class Patient extends React.Component {
 
     let consultsEnriched = consults.map((consult) => {
       let consultPrescriptions = prescriptions.filter((prescription) => {
-        return prescription.visit.id == consult.visit.id;
+        return prescription.consult.visit.id == consult.visit.id;
       });
+      
 
       return {
         ...consult,
@@ -367,6 +368,7 @@ class Patient extends React.Component {
             ...order,
             visit: visitID,
             doctor: window.localStorage.getItem("userID"),
+            consult: consultId
           };
           orderPromises.push(axios.post(`${API_URL}/orders`, orderPayload));
         });
