@@ -137,7 +137,7 @@ class Record extends React.Component {
 
     let consultsEnriched = consults.map((consult) => {
       let consultPrescriptions = prescriptions.filter((prescription) => {
-        return prescription.visit.id == consult.visit.id;
+        return prescription.consult.id === consult.id;
       });
 
       return {
@@ -153,7 +153,7 @@ class Record extends React.Component {
     this.setState({
       consults: consultsEnriched,
       vitals: vitals[0] || {},
-      visitPrescriptions: prescriptions,
+      visitPrescriptions: consultsEnriched.flatMap(x => x.prescriptions),
       mounted: true,
       visitID,
     });
@@ -278,7 +278,7 @@ class Record extends React.Component {
         )}
 
         <hr />
-        <label className="label">Prescriptions</label>
+        <label className="label">Prescriptions</label>      
         {visitPrescriptions.length > 0 ? (
           <VisitPrescriptionsTable content={visitPrescriptions} />
         ) : (
