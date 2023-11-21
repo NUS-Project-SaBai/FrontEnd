@@ -44,7 +44,6 @@ class Stock extends React.Component {
 
   async onSubmitForm() {
     let { medicationDetails } = this.state;
-
     let quantityChange = medicationDetails.quantityChange;
     let nameEnriched =
       medicationDetails.medicine_name.charAt(0).toUpperCase() +
@@ -54,14 +53,14 @@ class Stock extends React.Component {
       let key = medicationDetails.pk;
       let quantity =
         parseInt(medicationDetails.quantity) + parseInt(quantityChange);
-      if (quantity >= 0) {
+      if (quantity >= 0) { // edit case
         // medicationDetails.quantity = quantity;
 
         // medicationDetails.changeQuantity = 0;
         // delete medicationDetails["pk"];
 
         await axios
-          .patch(`${API_URL}/medications/${key}`, { quantityChange })
+          .patch(`${API_URL}/medications/${key}`, { quantity })
           .then(() => toast.success("Medication updated!"))
           .catch(() => {
             toast.error("Encountered an error!");
@@ -71,7 +70,7 @@ class Stock extends React.Component {
       } else {
         toast.error("Insufficient medication!");
       }
-    } else if (quantityChange >= 0) {
+    } else if (quantityChange >= 0) { //new medication case
       medicationDetails.quantity = quantityChange;
       await axios.post(`${API_URL}/medications`, medicationDetails);
       toast.success("New Medication created!");
@@ -131,10 +130,7 @@ class Stock extends React.Component {
     let changes = {
       modalIsOpen: !this.state.modalIsOpen,
     };
-    if (edit) {
-      // load up what we have chosen
-      changes.medicationDetails = medication;
-    }
+    changes.medicationDetails = medication;
     this.setState(changes);
   }
 
