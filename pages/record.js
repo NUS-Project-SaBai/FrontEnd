@@ -47,7 +47,7 @@ class Record extends React.Component {
 
   async onRefresh() {
     const router = Router;
-    const {query} = router;
+    const { query } = router;
     let { id: patientId } = query;
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
@@ -224,13 +224,14 @@ class Record extends React.Component {
 
   renderSecondColumn() {
     let { vitals, consults, visitPrescriptions } = this.state;
-
     let consultRows = consults.map((consult) => {
       let type = consult.type;
       let subType = consult.sub_type == null ? "General" : consult.sub_type;
       let doctor = consult.doctor.username;
       let referredFor =
-        consult.referred_for == null ? "None" : consult.referred_for;
+        consult.referrals == null || consult.referrals == ""
+          ? "None"
+          : consult.referrals.split("\n")[0].split(" ")[2];
 
       return (
         <tr key={consult.pk}>
