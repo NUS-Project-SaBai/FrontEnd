@@ -131,10 +131,7 @@ class Stock extends React.Component {
     let changes = {
       modalIsOpen: !this.state.modalIsOpen,
     };
-    if (edit) {
-      // load up what we have chosen
-      changes.medicationDetails = medication;
-    }
+    changes.medicationDetails = medication;
     this.setState(changes);
   }
 
