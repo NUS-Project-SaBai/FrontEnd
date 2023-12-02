@@ -351,8 +351,7 @@ class Patient extends React.Component {
     switch (form) {
       case "vitals":
         delete formPayload.notes
-        delete formPayload.visit
-        await axios.patch(`${API_URL}/vitals/${visitID}`, formPayload);
+        await axios.post(`${API_URL}/vitals`, formPayload);
         toast.success("Vitals completed!");
         break;
       case "medical":
