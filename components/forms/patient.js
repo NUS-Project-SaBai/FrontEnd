@@ -385,7 +385,9 @@ class MedicalForm extends React.Component {
                     name="diagnosisType1"
                     onChange={handleInputChange}
                     value={formDetails.diagnosisType1}
+                    defaultValue={'DEFAULT'}
                 >
+                    <option value="DEFAULT" disabled >Please select....</option>
                     <option value="Cardiovascular">Cardiovascular</option>
                     <option value="Dermatology">Dermatology</option>
                     <option value="Ear Nose Throat">Ear Nose Throat</option>
