@@ -35,7 +35,7 @@ class Patient extends React.Component {
       orders: [],
       referredFor: [],
       vitals: {},
-      formDetails: {},
+      formDetails: { diagnoses: [] },
       medicationDetails: {},
       formModalOpen: false,
       isEditing: false,
@@ -46,6 +46,7 @@ class Patient extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePrescriptionChange = this.handlePrescriptionChange.bind(this);
     this.handleVisitChange = this.handleVisitChange.bind(this);
+    this.updateFormDetails = this.updateFormDetails.bind(this);
   }
 
   componentDidMount() {
@@ -292,39 +293,50 @@ class Patient extends React.Component {
     //Hence, we are using a standardised text format to store the three possibilities
     //of diagnosis. By using this standardised format, we can use data manipulation
     //later on to retrieve and split the data as neccessary
+
+    console.log(formDetails);
+
     let diagnosisFormat = "";
-    if (formDetails.diagnosis1) {
-      diagnosisFormat += `DIAGNOSIS 1
-        ${formDetails.diagnosis1}
-        ${
-          !formDetails.diagnosisType1
-            ? "Cardiovascular"
-            : formDetails.diagnosisType1
-        }
+
+    for (let i = 0; i < formDetails.diagnoses.length; i++) {
+      diagnosisFormat += `DIAGNOSIS ${i + 1}
+        ${formDetails.diagnoses[i].details}
+        ${formDetails.diagnoses[i].type}
         `;
     }
-    if (formDetails.diagnosis2) {
-      diagnosisFormat += `
-        DIAGNOSIS 2
-        ${formDetails.diagnosis2}
-        ${
-          !formDetails.diagnosisType2
-            ? "Cardiovascular"
-            : formDetails.diagnosisType2
-        }
-        `;
-    }
-    if (formDetails.diagnosis3) {
-      diagnosisFormat += `
-        DIAGNOSIS 3
-        ${formDetails.diagnosis3}
-        ${
-          !formDetails.diagnosisType3
-            ? "Cardiovascular"
-            : formDetails.diagnosisType3
-        }
-        `;
-    }
+
+    // if (formDetails.diagnosis1) {
+    //   diagnosisFormat += `DIAGNOSIS 1
+    //     ${formDetails.diagnosis1}
+    //     ${
+    //       !formDetails.diagnosisType1
+    //         ? "Cardiovascular"
+    //         : formDetails.diagnosisType1
+    //     }
+    //     `;
+    // }
+    // if (formDetails.diagnosis2) {
+    //   diagnosisFormat += `
+    //     DIAGNOSIS 2
+    //     ${formDetails.diagnosis2}
+    //     ${
+    //       !formDetails.diagnosisType2
+    //         ? "Cardiovascular"
+    //         : formDetails.diagnosisType2
+    //     }
+    //     `;
+    // }
+    // if (formDetails.diagnosis3) {
+    //   diagnosisFormat += `
+    //     DIAGNOSIS 3
+    //     ${formDetails.diagnosis3}
+    //     ${
+    //       !formDetails.diagnosisType3
+    //         ? "Cardiovascular"
+    //         : formDetails.diagnosisType3
+    //     }
+    //     `;
+    // }
 
     var formPayload = {
       visit: visitID,
@@ -380,6 +392,15 @@ class Patient extends React.Component {
     }
 
     Router.push("/queue");
+  }
+
+  updateFormDetails(diagnoses) {
+
+    // update the form details
+    let { formDetails } = this.state;
+    formDetails = { ...formDetails, diagnoses: diagnoses };
+ 
+    this.setState({ formDetails });
   }
 
   handleInputChange(event) {
@@ -556,6 +577,7 @@ class Patient extends React.Component {
           return (
             <div>
               <MedicalForm
+                updateFormDetails={this.updateFormDetails}
                 formDetails={formDetails}
                 handleInputChange={this.handleInputChange}
               />

@@ -269,7 +269,9 @@ class VitalsForm extends React.Component {
 
         <div className="field is-grouped">
           <div className="control is-expanded">
-            <label className="label">Capillary Blood Glucose (Decimal eg. 13.2)</label>
+            <label className="label">
+              Capillary Blood Glucose (Decimal eg. 13.2)
+            </label>
             <div className="control">
               <input
                 name="blood_glucose"
@@ -316,6 +318,74 @@ class MedicalForm extends React.Component {
     this.handleCheckboxChange(event);
     handleInputChange(event);
   };
+
+  handleClick = (e) => {
+    let { formDetails, updateFormDetails } = this.props;
+
+    updateFormDetails([...formDetails?.diagnoses, {details: '', type: ''}]);
+  };
+
+  handleDiagnosisChange = (e, index) => {
+    let { updateFormDetails, formDetails } = this.props;
+
+    const newDiagnoses = formDetails.diagnoses.map((diagnosis, i) => {
+      if (index !== i) return diagnosis;
+      return { ...diagnosis, [e.target.name]: e.target.value };
+    });
+    updateFormDetails(newDiagnoses)
+  };
+
+  diagnosisToAdd() {
+    let { formDetails } = this.props;
+
+    return formDetails.diagnoses?.map((diagnosis, index) => {
+      return (
+        <div className="field" key={index}>
+          <label className="label">Diagnosis {index + 1}</label>
+          <div className="control">
+            <textarea
+              name="details"
+              placeholder="Type your notes here..."
+              className="textarea"
+              onChange={(e) => this.handleDiagnosisChange(e, index)}
+              value={diagnosis.details}
+            />
+          </div>
+          <div className="select">
+            <select
+              name="type"
+              onChange={(e) => this.handleDiagnosisChange(e, index)}
+              value={diagnosis.type}
+              defaultValue={"DEFAULT"}
+            >
+              <option value="DEFAULT" disabled>
+                Please select....
+              </option>
+              <option value="Cardiovascular">Cardiovascular</option>
+              <option value="Dermatology">Dermatology</option>
+              <option value="Ear Nose Throat">Ear Nose Throat</option>
+              <option value="Endocrine">Endocrine</option>
+              <option value="Eye">Eye</option>
+              <option value="Gastrointestinal">Gastrointestinal</option>
+              <option value="Haematology">Haematology</option>
+              <option value="Infectious Diseases">Infectious Diseases</option>
+              <option value="Renal & Genitourinary">
+                Renal & Genitourinary
+              </option>
+              <option value="Respiratory">Respiratory</option>
+              <option value="Musculoskeletal ">Musculoskeletal </option>
+              <option value="Neurology">Neurology</option>
+              <option value="Obstetrics & Gynaecology">
+                Obstetrics & Gynaecology
+              </option>
+              <option value="Oral Health">Oral Health</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+        </div>
+      );
+    });
+  }
 
   render() {
     let { handleInputChange, formDetails } = this.props;
@@ -366,10 +436,14 @@ class MedicalForm extends React.Component {
           </div>
         </div>
 
-        <hr/>
+        <hr />
         <label className="label">Assessment</label>
 
-        <div className="field">
+        {this.diagnosisToAdd()}
+
+        <button onClick={(e) => this.handleClick(e)}>Add New Diagnosis</button>
+
+        {/* <div className="field">
           <label className="label">Diagnosis 1</label>
           <div className="control">
             <textarea
@@ -385,7 +459,9 @@ class MedicalForm extends React.Component {
                     name="diagnosisType1"
                     onChange={handleInputChange}
                     value={formDetails.diagnosisType1}
+                    defaultValue={'DEFAULT'}
                 >
+                    <option value="DEFAULT" disabled >Please select....</option>
                     <option value="Cardiovascular">Cardiovascular</option>
                     <option value="Dermatology">Dermatology</option>
                     <option value="Ear Nose Throat">Ear Nose Throat</option>
@@ -475,7 +551,7 @@ class MedicalForm extends React.Component {
                     <option value="Others">Others</option>
                 </select>
             </div>
-        </div>
+        </div> */}
 
         <hr />
 
@@ -560,7 +636,7 @@ class MedicalForm extends React.Component {
                     />
                     Others
                   </label> */}
-                  {/*<textarea
+        {/*<textarea
                     name="others_details"
                     className="textarea"
                     placeholder="Others..."
@@ -584,7 +660,7 @@ class MedicalForm extends React.Component {
                 <option value="Diagnostic">Diagnostic</option>
                 <option value="Acute">Acute</option>
                 <option value="Chronic">Chronic</option>
-              </select> 
+              </select>
             </div>
             {/* <input
               name="referred_for"
