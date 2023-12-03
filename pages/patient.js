@@ -301,7 +301,8 @@ class Patient extends React.Component {
     for (let i = 0; i < formDetails.diagnoses.length; i++) {
       diagnosisFormat += `DIAGNOSIS ${i + 1}
         ${formDetails.diagnoses[i].details}
-        ${formDetails.diagnoses[i].type}
+        ${!formDetails.diagnoses[i].type ? "Cardiovascular" : formDetails.diagnoses[i].type}
+        
         `;
     }
 

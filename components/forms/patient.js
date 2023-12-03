@@ -322,7 +322,7 @@ class MedicalForm extends React.Component {
   handleClick = (e) => {
     let { formDetails, updateFormDetails } = this.props;
 
-    updateFormDetails([...formDetails?.diagnoses, {details: '', type: ''}]);
+    updateFormDetails([...formDetails.diagnoses, { details: "", type: "" }]);
   };
 
   handleDiagnosisChange = (e, index) => {
@@ -332,13 +332,13 @@ class MedicalForm extends React.Component {
       if (index !== i) return diagnosis;
       return { ...diagnosis, [e.target.name]: e.target.value };
     });
-    updateFormDetails(newDiagnoses)
+    updateFormDetails(newDiagnoses);
   };
 
   diagnosisToAdd() {
     let { formDetails } = this.props;
 
-    return formDetails.diagnoses?.map((diagnosis, index) => {
+    return formDetails.diagnoses.map((diagnosis, index) => {
       return (
         <div className="field" key={index}>
           <label className="label">Diagnosis {index + 1}</label>
@@ -356,11 +356,8 @@ class MedicalForm extends React.Component {
               name="type"
               onChange={(e) => this.handleDiagnosisChange(e, index)}
               value={diagnosis.type}
-              defaultValue={"DEFAULT"}
             >
-              <option value="DEFAULT" disabled>
-                Please select....
-              </option>
+              <option disabled>Please select....</option>
               <option value="Cardiovascular">Cardiovascular</option>
               <option value="Dermatology">Dermatology</option>
               <option value="Ear Nose Throat">Ear Nose Throat</option>
