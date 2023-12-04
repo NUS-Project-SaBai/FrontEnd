@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { PrescriptionForm } from "../../components/forms/prescription";
 import { API_URL, CLOUDINARY_URL } from "../../utils/constants";
 import withAuth from "../../utils/auth";
+import toast from "react-hot-toast";
 
 Modal.setAppElement("#__next");
 
@@ -30,7 +31,9 @@ class Prescription extends React.Component {
   }
 
   async onRefresh() {
-    let { id: visitId } = this.props.query;
+    const router = Router;
+    const { query } = router;
+    let { id: visitId } = query;
     let { data: visit } = await axios.get(`${API_URL}/visits/${visitId}`);
 
     let { data: consultations } = await axios.get(

@@ -155,8 +155,16 @@ class Patient extends React.Component {
       medicationDetails,
       formModalIsOpen,
       reservedMedications,
+      orders,
     } = this.state;
-    let options = medications.map((medication) => {
+    let options = medications
+    .filter((medication) => {
+      for (let i = 0; i < orders.length; i++) {
+        if (orders[i].medicine == medication.pk) return false;
+      }
+      return true;
+    })
+    .map((medication) => {
       let name = medication.fields.medicine_name;
       let pKey = medication.pk;
 
@@ -250,6 +258,7 @@ class Patient extends React.Component {
 
     let consultsEnriched = consults.map((consult) => {
       let consultPrescriptions = prescriptions.filter((prescription) => {
+        console.log(prescription)
         return prescription.consult.visit.id == consult.visit.id;
       });
       
@@ -277,8 +286,11 @@ class Patient extends React.Component {
     const router = Router;
     const { query } = router;
     const { form } = query;
-    //let { form } = this.props.query;
     let { formDetails, visitID, orders } = this.state;
+
+    orders.forEach((order) => {
+      axios.patch(`${API_URL}/medications/${order.medicine}`, { quantityChange: -parseInt(order.quantity) })
+    })
 
     //We still haven't figured out a way to let the backend handle new fields
     //which we want to create. Hence, we are using existing fields (problems, diagnosis, notes)

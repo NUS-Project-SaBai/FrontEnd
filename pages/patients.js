@@ -238,7 +238,7 @@ class Patients extends React.Component {
         //console.log(this.state);
         //console.log(response[0]);
         this.setState({ patient: response[0] });
-        this.autoSubmitNewVisit(response[0]);
+        // this.autoSubmitNewVisit(response[0]);
       } else {
         toast.error("Please retake photo!");
       }

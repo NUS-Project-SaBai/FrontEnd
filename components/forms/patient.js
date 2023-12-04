@@ -744,11 +744,6 @@ class PrescriptionForm extends React.Component {
           </div>
 
           <div className="control is-expanded">
-            <label className="label">Currently Reserved</label>
-            <h2>{this.calculateMedicineReservedStock(formDetails.medicine)}</h2>
-          </div>
-
-          <div className="control is-expanded">
             <label className="label">Quantity to be ordered</label>
             <div className="control">
               <input
