@@ -6,7 +6,7 @@ class VitalsForm extends React.Component {
   }
 
   render() {
-    let { handleInputChange, formDetails } = this.props;
+    let { handleInputChange, formDetails, patient } = this.props;
     return (
       <div>
         <label className="label">Vitals</label>
@@ -18,6 +18,7 @@ class VitalsForm extends React.Component {
                 name="height"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.height}
               />
@@ -31,6 +32,7 @@ class VitalsForm extends React.Component {
                 name="weight"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.weight}
               />
@@ -46,6 +48,7 @@ class VitalsForm extends React.Component {
                 name="systolic"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.systolic}
               />
@@ -59,6 +62,7 @@ class VitalsForm extends React.Component {
                 name="diastolic"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.diastolic}
               />
@@ -74,6 +78,7 @@ class VitalsForm extends React.Component {
                 name="temperature"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.temperature}
               />
@@ -87,6 +92,7 @@ class VitalsForm extends React.Component {
                 name="heart_rate"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.heart_rate}
               />
@@ -121,6 +127,56 @@ class VitalsForm extends React.Component {
             </div>
           </div>
         </div>
+
+        <div className="field is-grouped">
+          <div className="control is-expanded">
+            <label className="label">Left Eye Pinhole (Fraction eg. 6/6)</label>
+            <div className="control">
+              <input
+                name="left_eye_pinhole"
+                className="input"
+                type="text"
+                onChange={handleInputChange}
+                value={formDetails.left_eye_pinhole}
+              />
+            </div>
+          </div>
+
+          <div className="control is-expanded">
+            <label className="label">
+              Right Eye Pinhole (Fraction eg. 6/12)
+            </label>
+            <div className="control">
+              <input
+                name="right_eye_pinhole"
+                className="input"
+                type="text"
+                onChange={handleInputChange}
+                value={formDetails.right_eye_pinhole}
+              />
+            </div>
+          </div>
+        </div>
+
+        {patient.fields.date_of_birth &&
+          Math.abs(
+            new Date(
+              Date.now() - new Date(patient.fields.date_of_birth)
+            ).getUTCFullYear() - 1970
+          ) >= 40 && (
+            <div className="field is-grouped">
+              <div className="control is-expanded">
+                <label className="label"> Has Diabetes?</label>
+                <div className="select">
+                  <select name="diabetes_mellitus" onChange={handleInputChange}>
+                    <option>Please Select...</option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
 
         {/* <div className="field is-grouped">
           <div className="control is-expanded">
@@ -269,7 +325,9 @@ class VitalsForm extends React.Component {
 
         <div className="field is-grouped">
           <div className="control is-expanded">
-            <label className="label">Capillary Blood Glucose (Decimal eg. 13.2)</label>
+            <label className="label">
+              Capillary Blood Glucose (Decimal eg. 13.2)
+            </label>
             <div className="control">
               <input
                 name="blood_glucose"
@@ -316,6 +374,71 @@ class MedicalForm extends React.Component {
     this.handleCheckboxChange(event);
     handleInputChange(event);
   };
+
+  handleClick = (e) => {
+    let { formDetails, updateFormDetails } = this.props;
+
+    updateFormDetails([...formDetails.diagnoses, { details: "", type: "" }]);
+  };
+
+  handleDiagnosisChange = (e, index) => {
+    let { updateFormDetails, formDetails } = this.props;
+
+    const newDiagnoses = formDetails.diagnoses.map((diagnosis, i) => {
+      if (index !== i) return diagnosis;
+      return { ...diagnosis, [e.target.name]: e.target.value };
+    });
+    updateFormDetails(newDiagnoses);
+  };
+
+  diagnosisToAdd() {
+    let { formDetails } = this.props;
+
+    return formDetails.diagnoses.map((diagnosis, index) => {
+      return (
+        <div className="field" key={index}>
+          <label className="label">Diagnosis {index + 1}</label>
+          <div className="control">
+            <textarea
+              name="details"
+              placeholder="Type your notes here..."
+              className="textarea"
+              onChange={(e) => this.handleDiagnosisChange(e, index)}
+              value={diagnosis.details}
+            />
+          </div>
+          <div className="select">
+            <select
+              name="type"
+              onChange={(e) => this.handleDiagnosisChange(e, index)}
+              value={diagnosis.type}
+            >
+              <option disabled>Please select....</option>
+              <option value="Cardiovascular">Cardiovascular</option>
+              <option value="Dermatology">Dermatology</option>
+              <option value="Ear Nose Throat">Ear Nose Throat</option>
+              <option value="Endocrine">Endocrine</option>
+              <option value="Eye">Eye</option>
+              <option value="Gastrointestinal">Gastrointestinal</option>
+              <option value="Haematology">Haematology</option>
+              <option value="Infectious Diseases">Infectious Diseases</option>
+              <option value="Renal & Genitourinary">
+                Renal & Genitourinary
+              </option>
+              <option value="Respiratory">Respiratory</option>
+              <option value="Musculoskeletal ">Musculoskeletal </option>
+              <option value="Neurology">Neurology</option>
+              <option value="Obstetrics & Gynaecology">
+                Obstetrics & Gynaecology
+              </option>
+              <option value="Oral Health">Oral Health</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+        </div>
+      );
+    });
+  }
 
   render() {
     let { handleInputChange, formDetails } = this.props;
@@ -366,10 +489,14 @@ class MedicalForm extends React.Component {
           </div>
         </div>
 
-        <hr/>
+        <hr />
         <label className="label">Assessment</label>
 
-        <div className="field">
+        {this.diagnosisToAdd()}
+
+        <button onClick={(e) => this.handleClick(e)}>Add New Diagnosis</button>
+
+        {/* <div className="field">
           <label className="label">Diagnosis 1</label>
           <div className="control">
             <textarea
@@ -385,7 +512,9 @@ class MedicalForm extends React.Component {
                     name="diagnosisType1"
                     onChange={handleInputChange}
                     value={formDetails.diagnosisType1}
+                    defaultValue={'DEFAULT'}
                 >
+                    <option value="DEFAULT" disabled >Please select....</option>
                     <option value="Cardiovascular">Cardiovascular</option>
                     <option value="Dermatology">Dermatology</option>
                     <option value="Ear Nose Throat">Ear Nose Throat</option>
@@ -475,7 +604,7 @@ class MedicalForm extends React.Component {
                     <option value="Others">Others</option>
                 </select>
             </div>
-        </div>
+        </div> */}
 
         <hr />
 
@@ -560,7 +689,7 @@ class MedicalForm extends React.Component {
                     />
                     Others
                   </label> */}
-                  {/*<textarea
+        {/*<textarea
                     name="others_details"
                     className="textarea"
                     placeholder="Others..."
@@ -584,7 +713,7 @@ class MedicalForm extends React.Component {
                 <option value="Diagnostic">Diagnostic</option>
                 <option value="Acute">Acute</option>
                 <option value="Chronic">Chronic</option>
-              </select> 
+              </select>
             </div>
             {/* <input
               name="referred_for"
@@ -671,17 +800,13 @@ class PrescriptionForm extends React.Component {
           </div>
 
           <div className="control is-expanded">
-            <label className="label">Currently Reserved</label>
-            <h2>{this.calculateMedicineReservedStock(formDetails.medicine)}</h2>
-          </div>
-
-          <div className="control is-expanded">
             <label className="label">Quantity to be ordered</label>
             <div className="control">
               <input
                 name="quantity"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.quantity}
               />

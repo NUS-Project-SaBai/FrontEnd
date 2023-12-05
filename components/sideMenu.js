@@ -20,14 +20,14 @@ const SideMenu = (props) => (
       </li>
       <li>
         <Link href="/queue" replace>
-          Queue
+          Patient Records
         </Link>
       </li>
-      <li>
+      {/* <li>
         <Link href="/records" replace>
           Records
         </Link>
-      </li>
+      </li> */}
     </ul>
     <p className="menu-label sideMenuItem">Pharmacy</p>
     <ul className="menu-list">

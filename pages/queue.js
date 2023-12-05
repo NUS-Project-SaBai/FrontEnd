@@ -111,14 +111,6 @@ class Queue extends React.Component {
         </div>
       );
 
-      let deleteVisit = (
-        <button
-          className="button is-danger"
-          onClick={() => this.handleDelete(visit.id, visit.patient.id)}
-        >
-          Delete
-        </button>
-      );
       return (
         <tr key={idx}>
           <td>{Id}</td>
@@ -136,7 +128,6 @@ class Queue extends React.Component {
           <td>{progress}</td>
           <td>{vitals}</td>
           <td>{consultation}</td>
-          <td>{deleteVisit}</td>
         </tr>
       );
     });
@@ -171,7 +162,7 @@ class Queue extends React.Component {
         }}
       >
         <div className="column is-12">
-          <h1 style={{ color: "black", fontSize: "1.5em" }}>Queue</h1>
+          <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient Records</h1>
           <div className="field">
             <div className="control">
               <input
@@ -191,7 +182,6 @@ class Queue extends React.Component {
                 <th>Record</th>
                 <th>New Vitals</th>
                 <th>New Consultation</th>
-                <th>Delete Visit</th>
               </tr>
             </thead>
             <tbody>{this.renderTableContent()}</tbody>

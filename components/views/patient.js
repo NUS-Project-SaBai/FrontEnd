@@ -31,7 +31,7 @@ class ConsultationsView extends React.Component {
 
   renderPrescriptions(prescriptions) {
     let prescriptionRows = prescriptions.map((prescription) => {
-      let name = prescription.medicine.medicine_name;
+      let name = prescription?.medicine?.medicine_name;
       let quantity = prescription.quantity;
       let notes = prescription.notes;
 
@@ -334,6 +334,37 @@ class VitalsView extends React.Component {
           </div>
         </div>
 
+        <div className="field is-grouped">
+          <div className="control is-expanded">
+            <label className="label">Left Eye Pinhole</label>
+            <div className="control">
+              <article className="message">
+                <div className="message-body">{content.left_eye_pinhole}</div>
+              </article>
+            </div>
+          </div>
+
+          <div className="control is-expanded">
+            <label className="label">Right Eye Pinhole</label>
+            <div className="control">
+              <article className="message">
+                <div className="message-body">{content.right_eye_pinhole}</div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div className="field is-grouped">
+          <div className="control is-expanded">
+            <label className="label">Diabetes Mellitus?</label>
+            <div className="control">
+              <article className="message">
+                <div className="message-body">{content.diabetes_mellitus}</div>
+              </article>
+            </div>
+          </div>
+        </div>
+
         <hr />
 
         <div className="field is-grouped">
@@ -389,7 +420,8 @@ class VisitPrescriptionsTable extends React.Component {
     let { content: prescriptions } = this.props;
 
     let prescriptionRows = prescriptions.map((prescription) => {
-      let name = prescription.medicine.medicine_name;
+      console.log(prescription)
+      let name = prescription?.medicine?.medicine_name;
       let quantity = prescription.quantity;
       // let doctor = prescription.doctor
 
