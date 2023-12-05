@@ -9,6 +9,7 @@ import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import { urltoFile } from "../utils/helpers";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
+import Router from "next/router";
 
 // put id
 
@@ -238,7 +239,9 @@ class Patients extends React.Component {
         //console.log(this.state);
         //console.log(response[0]);
         this.setState({ patient: response[0] });
-        // this.autoSubmitNewVisit(response[0]);
+        this.autoSubmitNewVisit(response[0]);
+        const { router } = Router;
+        router.push("/queue");
       } else {
         toast.error("Please retake photo!");
       }

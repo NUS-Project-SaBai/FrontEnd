@@ -101,9 +101,6 @@ class Prescription extends React.Component {
         order_status: flag,
       };
 
-      medicationUpdates.push(() =>
-        axios.patch(`${API_URL}/medications/${order.medicine.id}`, medPayload)
-      );
       orderUpdates.push(() =>
         axios.patch(`${API_URL}/orders/${order.id}`, orderPayload)
       );

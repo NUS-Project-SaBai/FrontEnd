@@ -41,6 +41,7 @@ class MedicationForm extends React.Component {
                 name="quantityChange"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.quantityChange}
               />

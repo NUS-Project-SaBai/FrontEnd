@@ -6,7 +6,7 @@ class VitalsForm extends React.Component {
   }
 
   render() {
-    let { handleInputChange, formDetails } = this.props;
+    let { handleInputChange, formDetails, patient } = this.props;
     return (
       <div>
         <label className="label">Vitals</label>
@@ -18,6 +18,7 @@ class VitalsForm extends React.Component {
                 name="height"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.height}
               />
@@ -31,6 +32,7 @@ class VitalsForm extends React.Component {
                 name="weight"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.weight}
               />
@@ -46,6 +48,7 @@ class VitalsForm extends React.Component {
                 name="systolic"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.systolic}
               />
@@ -59,6 +62,7 @@ class VitalsForm extends React.Component {
                 name="diastolic"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.diastolic}
               />
@@ -74,6 +78,7 @@ class VitalsForm extends React.Component {
                 name="temperature"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.temperature}
               />
@@ -87,6 +92,7 @@ class VitalsForm extends React.Component {
                 name="heart_rate"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.heart_rate}
               />
@@ -121,6 +127,56 @@ class VitalsForm extends React.Component {
             </div>
           </div>
         </div>
+
+        <div className="field is-grouped">
+          <div className="control is-expanded">
+            <label className="label">Left Eye Pinhole (Fraction eg. 6/6)</label>
+            <div className="control">
+              <input
+                name="left_eye_pinhole"
+                className="input"
+                type="text"
+                onChange={handleInputChange}
+                value={formDetails.left_eye_pinhole}
+              />
+            </div>
+          </div>
+
+          <div className="control is-expanded">
+            <label className="label">
+              Right Eye Pinhole (Fraction eg. 6/12)
+            </label>
+            <div className="control">
+              <input
+                name="right_eye_pinhole"
+                className="input"
+                type="text"
+                onChange={handleInputChange}
+                value={formDetails.right_eye_pinhole}
+              />
+            </div>
+          </div>
+        </div>
+
+        {patient.fields.date_of_birth &&
+          Math.abs(
+            new Date(
+              Date.now() - new Date(patient.fields.date_of_birth)
+            ).getUTCFullYear() - 1970
+          ) >= 40 && (
+            <div className="field is-grouped">
+              <div className="control is-expanded">
+                <label className="label"> Has Diabetes?</label>
+                <div className="select">
+                  <select name="diabetes_mellitus" onChange={handleInputChange}>
+                    <option>Please Select...</option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
 
         {/* <div className="field is-grouped">
           <div className="control is-expanded">
@@ -750,6 +806,7 @@ class PrescriptionForm extends React.Component {
                 name="quantity"
                 className="input"
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 onChange={handleInputChange}
                 value={formDetails.quantity}
               />
