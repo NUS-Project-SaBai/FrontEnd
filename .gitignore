@@ -3,6 +3,6 @@ node_modules/
 package-lock.json
 .next
 
-.env.local
 .env
+.env.local
 user.json
