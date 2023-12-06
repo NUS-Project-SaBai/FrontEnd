@@ -6,9 +6,9 @@ import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../../utils/constants";
 import withAuth from "../../utils/auth";
+import prescription from "./prescription";
 
 class Orders extends React.Component {
-
   constructor() {
     super();
 
@@ -16,89 +16,161 @@ class Orders extends React.Component {
       visits: [],
       visitsFiltered: [],
       filterString: "",
+      orders: [],
+      consults: [],
+      filteredVisitIdsUsingOrders: new Set(),
     };
 
     this.onFilterChange = this.onFilterChange.bind(this);
   }
 
-  componentDidMount() {
-    this.onRefresh();
+  async componentDidMount() {
+    await this.onRefresh();
   }
 
   async onRefresh() {
-    let { data: visits } = await axios.get(`${API_URL}/visits?status=started`);
-    this.setState({ visits, visitsFiltered: visits });
+    let { data: orders } = await axios.get(
+      `${API_URL}/orders?order_status=PENDING`
+    );
+    let { data: visits } = await axios.get(`${API_URL}/visits`);
+
+    const filteredVisitIdsUsingOrders = new Set();
+    for (let i = 0; i < orders.length; i++) {
+      const order = orders[i];
+
+      console.log(order);
+      filteredVisitIdsUsingOrders.add(order.consult.visit.id);
+    }
+
+    console.log(filteredVisitIdsUsingOrders);
+
+    this.setState({
+      visits: visits,
+      visitsFiltered: visits,
+      filteredVisitIdsUsingOrders,
+      orders,
+    });
   }
 
   onFilterChange(event) {
     let { visits } = this.state;
 
     let filteredVisits = visits.filter((visit) => {
-      let patientId = "";
-      // `${visit.patient.village_prefix}${visit.patient.id}`.toLowerCase();
+      let patientId =
+        `${visit.patient.village_prefix}`.toLowerCase() +
+        `${visit.patient.id}`.padStart(3, `0`) +
+        ` ${visit.patient.name} ${visit.patient.local_name}`.toLowerCase();
 
       return patientId.includes(event.target.value.toLowerCase());
     });
-
     this.setState({ visitsFiltered: filteredVisits });
   }
 
   renderTableContent() {
-    let { visitsFiltered } = this.state;
-    let visitsRows = visitsFiltered.map((visit) => {
-      let Id = `${visit.patient.village_prefix}`
-               + `${visit.patient.id}`.padStart(3, `0`);
-      let imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
-      let fullName = visit.patient.name;
+    let { visitsFiltered, filteredVisitIdsUsingOrders, orders } = this.state;
 
-      let action = (
-        <div>
-          <button
-            className="button is-dark level-item"
-            onClick={() => {
-              Router.push(`/pharmacy/prescription?id=${visit.id}`);
-            }}
-            style={{ display: "inline-block" }}
-          >
-            View
-          </button>
+    let visitsRows = visitsFiltered
+      .filter((visit) => filteredVisitIdsUsingOrders.has(visit.id))
+      .map((visit) => {
+        let Id =
+          `${visit.patient.village_prefix}` +
+          `${visit.patient.id}`.padStart(3, `0`);
+        let imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
+        let fullName = visit.patient.name;
 
-          <button
-            className="button is-danger level-item"
-            onClick={async () => {
-              if (confirm("Are you sure you want to delete this order?")) {
-                try {
-                  await axios.delete(`${API_URL}/visits/${visit.id}`);
-                  await this.onRefresh();
-                } catch (error) {
-                  console.error(error);
+        let correctPrescription = [];
+
+        for (let i = 0; i < orders.length; i++) {
+          const order = orders[i];
+          if (order.consult.visit.id == visit.id) {
+            correctPrescription.push(order);
+          }
+        }
+        console.log(correctPrescription);
+        let prescriptions = correctPrescription.map((prescription) => (
+          <li>
+            {prescription.medicine.medicine_name}: {prescription.quantity} <br/>
+            Notes: {prescription.notes} <br/> <br/>
+          </li>
+        ));
+
+        let action = (
+          <div>
+            <button
+              className="button is-dark level-item"
+              onClick={async () => {
+                if (
+                  confirm(
+                    "Have you checked whether the prescription and amounts are correct?"
+                  )
+                ) {
+                  try {
+                    const promises = [];
+                    correctPrescription.forEach((prescription) => {
+                      promises.push(
+                        axios.patch(`${API_URL}/orders/${prescription.id}`, {
+                          order_status: "approved",
+                        })
+                      );
+                    });
+                    Promise.all(promises).then(() => this.onRefresh());
+                  } catch (error) {
+                    console.error(error);
+                  }
                 }
-              }
-            }}
-            style={{ display: "inline-block", marginLeft: "10px" }}
-          >
-            Delete
-          </button>
-        </div>
-      );
+              }}
+              style={{ display: "inline-block" }}
+            >
+              Prescribe
+            </button>
 
-      return (
-        <tr key={visit.id}>
-          <td>{Id}</td>
-          <td>
-            <figure className="image is-96x96">
-              <img
-                src={imageUrl}
-                alt="Placeholder image"
-                style={{ height: 96, width: 96, objectFit: "cover" }}
-              />
-            </figure>
-          </td>
-          <td>{fullName}</td>
-          <td>{action}</td>
-        </tr>
-      );
-    });
+            <button
+              className="button is-danger level-item"
+              onClick={async () => {
+                if (confirm("Are you sure you want to delete this order?")) {
+                  try {
+                    const promises = [];
+                    correctPrescription.forEach((prescription) => {
+                      promises.push(
+                        axios.delete(`${API_URL}/orders/${prescription.id}`)
+                      );
+                      promises.push(axios.patch(`${API_URL}/medications/${prescription.medicine.id}`, {
+                        quantityChange: parseInt(prescription.quantity)
+                      }))
+                    });
+                    Promise.all(promises).then(() => this.onRefresh());
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }
+              }}
+              style={{ display: "inline-block", marginLeft: "10px" }}
+            >
+              Cancel
+            </button>
+          </div>
+        );
+
+        return (
+          <tr key={visit.id}>
+            <td>{Id}</td>
+            <td>
+              <figure className="image is-96x96">
+                <img
+                  src={imageUrl}
+                  alt="Placeholder image"
+                  style={{ height: 96, width: 96, objectFit: "cover" }}
+                />
+              </figure>
+            </td>
+            <td>{fullName}</td>
+            <td>
+              <ul>{prescriptions}</ul>
+            </td>
+            <td>{action}</td>
+          </tr>
+        );
+      });
 
     return visitsRows;
   }
@@ -133,6 +205,7 @@ class Orders extends React.Component {
                 <th>ID</th>
                 <th>Photo</th>
                 <th>Full Name</th>
+                <th>Prescriptions</th>
                 <th>Actions</th>
               </tr>
             </thead>

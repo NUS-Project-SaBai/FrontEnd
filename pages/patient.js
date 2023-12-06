@@ -35,7 +35,7 @@ class Patient extends React.Component {
       orders: [],
       referredFor: [],
       vitals: {},
-      formDetails: {},
+      formDetails: { diagnoses: [] },
       medicationDetails: {},
       formModalOpen: false,
       isEditing: false,
@@ -46,6 +46,7 @@ class Patient extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePrescriptionChange = this.handlePrescriptionChange.bind(this);
     this.handleVisitChange = this.handleVisitChange.bind(this);
+    this.updateFormDetails = this.updateFormDetails.bind(this);
   }
 
   componentDidMount() {
@@ -154,27 +155,35 @@ class Patient extends React.Component {
       medicationDetails,
       formModalIsOpen,
       reservedMedications,
+      orders,
     } = this.state;
-    let options = medications.map((medication) => {
-      let name = medication.fields.medicine_name;
-      let pKey = medication.pk;
+    let options = medications
+      .filter((medication) => {
+        for (let i = 0; i < orders.length; i++) {
+          if (orders[i].medicine == medication.pk) return false;
+        }
+        return true;
+      })
+      .map((medication) => {
+        let name = medication.fields.medicine_name;
+        let pKey = medication.pk;
 
-      var value = "";
-      if (Object.keys(medicationDetails).length > 0)
-        value = `${medicationDetails.medicine} ${medicationDetails.medicine_name}`;
+        var value = "";
+        if (Object.keys(medicationDetails).length > 0)
+          value = `${medicationDetails.medicine} ${medicationDetails.medicine_name}`;
 
-      if (value == `${pKey} ${name}`)
+        if (value == `${pKey} ${name}`)
+          return (
+            <option key={pKey} value={`${pKey} ${name}`}>
+              {name}
+            </option>
+          );
         return (
           <option key={pKey} value={`${pKey} ${name}`}>
             {name}
           </option>
         );
-      return (
-        <option key={pKey} value={`${pKey} ${name}`}>
-          {name}
-        </option>
-      );
-    });
+      });
 
     return (
       <Modal
@@ -249,9 +258,8 @@ class Patient extends React.Component {
 
     let consultsEnriched = consults.map((consult) => {
       let consultPrescriptions = prescriptions.filter((prescription) => {
-        return prescription.consult.visit.id == consult.visit.id;
+        return prescription.consult.id === consult.id;
       });
-      
 
       return {
         ...consult,
@@ -266,7 +274,7 @@ class Patient extends React.Component {
     this.setState({
       consults: consultsEnriched,
       vitals: vitals[0] || {},
-      visitPrescriptions: prescriptions,
+      visitPrescriptions: consultsEnriched.flatMap(x => x.prescriptions),
       mounted: true,
       visitID,
     });
@@ -276,8 +284,13 @@ class Patient extends React.Component {
     const router = Router;
     const { query } = router;
     const { form } = query;
-    //let { form } = this.props.query;
     let { formDetails, visitID, orders } = this.state;
+
+    orders.forEach((order) => {
+      axios.patch(`${API_URL}/medications/${order.medicine}`, {
+        quantityChange: -parseInt(order.quantity),
+      });
+    });
 
     //We still haven't figured out a way to let the backend handle new fields
     //which we want to create. Hence, we are using existing fields (problems, diagnosis, notes)
@@ -292,37 +305,20 @@ class Patient extends React.Component {
     //Hence, we are using a standardised text format to store the three possibilities
     //of diagnosis. By using this standardised format, we can use data manipulation
     //later on to retrieve and split the data as neccessary
+
+    console.log(formDetails);
+
     let diagnosisFormat = "";
-    if (formDetails.diagnosis1) {
-      diagnosisFormat += `DIAGNOSIS 1
-        ${formDetails.diagnosis1}
+
+    for (let i = 0; i < formDetails.diagnoses.length; i++) {
+      diagnosisFormat += `DIAGNOSIS ${i + 1}
+        ${formDetails.diagnoses[i].details}
         ${
-          !formDetails.diagnosisType1
+          !formDetails.diagnoses[i].type
             ? "Cardiovascular"
-            : formDetails.diagnosisType1
+            : formDetails.diagnoses[i].type
         }
-        `;
-    }
-    if (formDetails.diagnosis2) {
-      diagnosisFormat += `
-        DIAGNOSIS 2
-        ${formDetails.diagnosis2}
-        ${
-          !formDetails.diagnosisType2
-            ? "Cardiovascular"
-            : formDetails.diagnosisType2
-        }
-        `;
-    }
-    if (formDetails.diagnosis3) {
-      diagnosisFormat += `
-        DIAGNOSIS 3
-        ${formDetails.diagnosis3}
-        ${
-          !formDetails.diagnosisType3
-            ? "Cardiovascular"
-            : formDetails.diagnosisType3
-        }
+        
         `;
     }
 
@@ -335,10 +331,11 @@ class Patient extends React.Component {
     //For Referrals, we are also using a standardised text format to store information
     //from referred_for and referred_notes
 
-    if (formDetails.referred_notes) {
+    if (formDetails.referred_for) {
       const referrals = `
-        Referred For: ${formDetails.referred_for}
-        Notes: ${formDetails.referred_notes}`;
+        Referred For: ${formDetails.referred_for} 
+        Notes: 
+        ${formDetails.referred_notes || "No Notes Provided"}`;
       formPayload = {
         ...formPayload,
         referrals: referrals,
@@ -346,11 +343,11 @@ class Patient extends React.Component {
     }
 
     var consultId;
-    var orderPromises;  
+    var orderPromises;
 
     switch (form) {
       case "vitals":
-        delete formPayload.notes
+        delete formPayload.notes;
         await axios.post(`${API_URL}/vitals`, formPayload);
         toast.success("Vitals completed!");
         break;
@@ -369,7 +366,7 @@ class Patient extends React.Component {
             ...order,
             visit: visitID,
             doctor: window.localStorage.getItem("userID"),
-            consult: consultId
+            consult: consultId,
           };
           orderPromises.push(axios.post(`${API_URL}/orders`, orderPayload));
         });
@@ -380,6 +377,14 @@ class Patient extends React.Component {
     }
 
     Router.push("/queue");
+  }
+
+  updateFormDetails(diagnoses) {
+    // update the form details
+    let { formDetails } = this.state;
+    formDetails = { ...formDetails, diagnoses: diagnoses };
+
+    this.setState({ formDetails });
   }
 
   handleInputChange(event) {
@@ -453,10 +458,16 @@ class Patient extends React.Component {
             </article>
           </div>
           <div className="column is-3">
-            <label className="label">Visited Before?</label>
+            <label className="label">Age</label>
             <article className="message">
               <div className="message-body">
-                {visits.length > 1 ? "Yes" : "No"}
+                {patient.fields.date_of_birth
+                  ? Math.abs(
+                      new Date(
+                        Date.now() - new Date(patient.fields.date_of_birth)
+                      ).getUTCFullYear() - 1970
+                    )
+                  : "No DOB"}
               </div>
             </article>
           </div>
@@ -497,22 +508,14 @@ class Patient extends React.Component {
     return (
       <div className="column is-5">
         <div className="columns">
-          <div className="column is-4">
-            <label className="label">Vital Signs</label>
-            {typeof vitals === "undefined" ? (
+          {typeof vitals === "undefined" ? (
+            <>
+              <label className="label">Vital Signs</label>
               <h2>Not Done</h2>
-            ) : (
-              <button
-                className="button is-dark level-item"
-                style={{ marginTop: 15 }}
-                onClick={() => {
-                  this.toggleViewModal("vitals");
-                }}
-              >
-                View
-              </button>
-            )}
-          </div>
+            </>
+          ) : (
+            <VitalsView content={vitals} />
+          )}
         </div>
 
         <hr />
@@ -540,7 +543,7 @@ class Patient extends React.Component {
     const { query } = router;
     const { form } = query;
 
-    let { formDetails, orders } = this.state;
+    let { formDetails, orders, patient } = this.state;
 
     let formContent = () => {
       switch (form) {
@@ -549,6 +552,7 @@ class Patient extends React.Component {
             <VitalsForm
               formDetails={formDetails}
               handleInputChange={this.handleInputChange}
+              patient={patient}
             />
           );
 
@@ -556,6 +560,7 @@ class Patient extends React.Component {
           return (
             <div>
               <MedicalForm
+                updateFormDetails={this.updateFormDetails}
                 formDetails={formDetails}
                 handleInputChange={this.handleInputChange}
               />
