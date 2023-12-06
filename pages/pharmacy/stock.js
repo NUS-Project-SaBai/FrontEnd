@@ -60,7 +60,7 @@ class Stock extends React.Component {
         // delete medicationDetails["pk"];
 
         await axios
-          .patch(`${API_URL}/medications/${key}`, { quantity })
+          .patch(`${API_URL}/medications/${key}`, { quantityChange: quantity })
           .then(() => toast.success("Medication updated!"))
           .catch(() => {
             toast.error("Encountered an error!");
