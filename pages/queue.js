@@ -19,8 +19,8 @@ class Queue extends React.Component {
     this.onFilterChange = this.onFilterChange.bind(this);
   }
 
-  componentDidMount() {
-    this.onRefresh();
+  async componentDidMount() {
+    await this.onRefresh();
   }
 
   async onRefresh() {
