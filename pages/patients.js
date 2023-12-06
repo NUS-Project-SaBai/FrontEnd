@@ -240,8 +240,6 @@ class Patients extends React.Component {
         //console.log(response[0]);
         this.setState({ patient: response[0] });
         this.autoSubmitNewVisit(response[0]);
-        const { router } = Router;
-        router.push("/queue");
       } else {
         toast.error("Please retake photo!");
       }
