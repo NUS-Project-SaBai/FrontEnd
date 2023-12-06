@@ -5,7 +5,11 @@ import _ from "lodash";
 import Modal from "react-modal";
 import toast from "react-hot-toast";
 import moment from "moment";
-import { API_URL, CLOUDINARY_URL } from "../../utils/constants";
+import {
+  API_URL,
+  CLOUDINARY_URL,
+  NO_PHOTO_MESSAGE,
+} from "../../utils/constants";
 import { urltoFile } from "../../utils/helpers";
 import withAuth from "../../utils/auth";
 import AppWebcam from "../../utils/webcam";
@@ -45,11 +49,6 @@ class Patients extends React.Component {
         gender: "Male",
         village_prefix: "SV",
       },
-      scanOptions: {
-        gender: "Male",
-        village_prefix: "SV",
-      },
-      possibleOptions: [],
     };
 
     this.openModal = this.openModal.bind(this);
@@ -61,7 +60,6 @@ class Patients extends React.Component {
     this.webcamSetRef = this.webcamSetRef.bind(this);
     this.webcamCapture = this.webcamCapture.bind(this);
     this.submitNewPatient = this.submitNewPatient.bind(this);
-    this.handleScanOptionsChange = this.handleScanOptionsChange.bind(this);
     this.toggleCameraOpen = this.toggleCameraOpen.bind(this);
   }
 
@@ -136,20 +134,6 @@ class Patients extends React.Component {
     });
   }
 
-  handleScanOptionsChange(event) {
-    let { scanOptions } = this.state;
-
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-
-    scanOptions[name] = value;
-
-    this.setState({
-      scanOptions,
-    });
-  }
-
   async submitNewPatient() {
     let { formDetails, imageDetails } = this.state;
 
@@ -173,7 +157,7 @@ class Patients extends React.Component {
     if (errorCount > 0) {
       toast.error("Please complete the form before submitting!");
     } else if (imageDetails == null) {
-      toast.error("Please take a photo before submitting!");
+      toast.error(NO_PHOTO_MESSAGE);
     } else {
       let payload = {
         ...formDetails,
@@ -362,8 +346,6 @@ class Patients extends React.Component {
       scanModalIsOpen,
       imageDetails,
       cameraIsOpen,
-      scanOptions,
-      possibleOptions,
     } = this.state;
 
     // Autosuggest will pass through all these props to the input.
@@ -405,23 +387,16 @@ class Patients extends React.Component {
         />
         <ScanModal
           modalIsOpen={scanModalIsOpen}
-          scanOptions={scanOptions}
-          possibleOptions={possibleOptions}
           cameraIsOpen={cameraIsOpen}
           imageDetails={imageDetails}
-          closeModal={this.closeScanModal}
+          closeScanModal={this.closeScanModal}
           renderWebcam={() => (
             <AppWebcam
               webcamSetRef={this.webcamSetRef}
               webcamCapture={this.webcamCapture}
             />
           )}
-          handleScanOptionsChange={this.handleScanOptionsChange}
           toggleCameraOpen={this.toggleCameraOpen}
-          setPatientOptions={(option) => this.setState({ patient: option })}
-          setPossibleOptions={(possibleOptions) =>
-            this.setState({ possibleOptions })
-          }
           customStyles={customStyles}
         />
         <div className="column is-12">

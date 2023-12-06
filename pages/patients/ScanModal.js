@@ -1,84 +1,60 @@
 import axios from "axios";
 import Modal from "react-modal";
 import toast from "react-hot-toast";
-import { API_URL } from "../../utils/constants";
+import { useState } from "react";
+import {
+  API_URL,
+  CLOUDINARY_URL,
+  MATCH_FOUND_MESSAGE,
+  NO_MATCHES_FOUND_MESSAGE,
+  NO_PHOTO_MESSAGE,
+} from "../../utils/constants";
 import { urltoFile } from "../../utils/helpers";
 
 const ScanModal = ({
   modalIsOpen,
-  scanOptions,
-  possibleOptions,
   cameraIsOpen,
   imageDetails,
   closeScanModal,
   renderWebcam,
-  handleScanOptionsChange,
   toggleCameraOpen,
-  setPatientOption,
-  setPossibleOptions,
   customStyles,
 }) => {
-  let tableContents = possibleOptions.map((option) => {
-    let fields = option.fields;
-    let name = fields.name;
-    let id = `${fields.village_prefix}${option.pk}`;
-    let imageUrl = `${API_URL}/${fields.picture}`;
-    let dateOfBirth = moment(fields.date_of_birth).format("DD MMM YYYY");
-
-    let select = (
-      <button
-        className="button is-dark level-item"
-        onClick={() => {
-          closeScanModal();
-          setPatientOption(option);
-        }}
-      >
-        Select
-      </button>
-    );
-
-    return (
-      <tr>
-        <td>{id}</td>
-        <td>
-          <figure className="image is-96x96">
-            <img
-              src={imageUrl}
-              alt="Placeholder image"
-              style={{ height: 96, width: 96, objectFit: "cover" }}
-            />
-          </figure>
-        </td>
-        <td>{name}</td>
-        <td>{dateOfBirth}</td>
-        <td>{select}</td>
-      </tr>
-    );
-  });
+  const [matchedPatientData, setMatchedPatientData] = useState(null);
 
   const scanPatient = async () => {
+    if (imageDetails == null) {
+      toast.error(NO_PHOTO_MESSAGE);
+      return;
+    }
+
     const scanPatientFormData = new FormData();
     scanPatientFormData.append(
       "picture",
       await urltoFile(imageDetails, "patient_screenshot.jpg", "image/jpg")
     );
 
-    const response = await axios.post(
-      `${API_URL}/patients/search`,
-      scanPatientFormData,
-      {
+    const response = await axios
+      .post(`${API_URL}/patients/search`, scanPatientFormData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
-    );
-
-    console.log(response);
+      })
+      .then((response) => {
+        setMatchedPatientData(response.data);
+        toast.success(MATCH_FOUND_MESSAGE);
+      })
+      .catch((error) => {
+        console.log(error.response.status);
+        if (error.response.status === 404) {
+          toast.error(NO_MATCHES_FOUND_MESSAGE);
+        } else if (error.response.status === 400) {
+          toast.error(NO_PHOTO_MESSAGE);
+        }
+      });
 
     // if (possibleOptions.length > 0) toast.success("Options found!");
     // else toast.error("No options found!");
-
-    // setPossibleOptions(possibleOptions);
   };
 
   return (
@@ -128,48 +104,33 @@ const ScanModal = ({
             </div>
           </div>
           <div className="column is-4">
-            <div className="field">
-              <label className="label">Gender</label>
-              <div className="control">
-                <div className="select" style={{ margin: "0 auto" }}>
-                  <select name="gender" onChange={handleScanOptionsChange}>
-                    <option
-                      selected={scanOptions.gender === "Male"}
-                      value="Male"
-                    >
-                      Male
-                    </option>
-                    <option
-                      selected={scanOptions.gender === "Female"}
-                      value="Female"
-                    >
-                      Female
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="field">
-              <label className="label">Village Prefix</label>
-              <div className="control">
-                <input
-                  name="village_prefix"
-                  className="input"
-                  type="text"
-                  onChange={handleScanOptionsChange}
-                  value={scanOptions.village_prefix}
-                />
-              </div>
-            </div>
-
             <div>
               <button
                 className="button is-dark is-medium"
                 onClick={() => scanPatient()}
-                style={{ marginTop: 10 }}
+                style={{
+                  marginTop: 10,
+                }}
               >
-                Search
+                <span
+                  style={{
+                    marginRight: 15,
+                  }}
+                >
+                  Search
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="16"
+                  width="16"
+                  viewBox="0 0 512 512"
+                  style={{ fill: "white", float: "right" }}
+                >
+                  {
+                    "Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc."
+                  }
+                  <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                </svg>
               </button>
             </div>
           </div>
@@ -177,19 +138,27 @@ const ScanModal = ({
         <hr />
 
         <label className="label">Results</label>
-        {possibleOptions.length > 0 ? (
+        {matchedPatientData ? (
           <div>
             <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Name</th>
                   <th>Photo</th>
-                  <th>Full Name</th>
-                  <th>Date of Birth </th>
-                  <th>Actions</th>
+                  <th>Confidence (%)</th>
                 </tr>
               </thead>
-              <tbody>{tableContents}</tbody>
+              <tbody>
+                <td> {matchedPatientData.patient.id}</td>
+                <td>{matchedPatientData.patient.name}</td>
+                <td>
+                  <img
+                    src={`${CLOUDINARY_URL}/${matchedPatientData.patient.picture}`}
+                  ></img>
+                </td>
+                <td>{matchedPatientData.confidence.toFixed(2)}</td>
+              </tbody>
             </table>
           </div>
         ) : (
