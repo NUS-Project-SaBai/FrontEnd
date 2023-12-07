@@ -9,7 +9,6 @@ import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import { urltoFile } from "../utils/helpers";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
-import Router from "next/router";
 
 // put id
 
@@ -892,15 +891,7 @@ class Patients extends React.Component {
             <div
               className="column is-5"
               // style={{ backgroundColor: "yellow" }}
-            >
-              <label className="label">Start a Visit</label>
-              <button
-                className="button is-dark is-medium level-item"
-                onClick={() => this.submitNewVisit()}
-              >
-                Start
-              </button>
-            </div>
+            ></div>
           </div>
         )}
       </div>
