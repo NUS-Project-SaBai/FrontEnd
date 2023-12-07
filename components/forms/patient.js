@@ -381,6 +381,12 @@ class MedicalForm extends React.Component {
     updateFormDetails([...formDetails.diagnoses, { details: "", type: "" }]);
   };
 
+  handleDelete = (index) => {
+    let { formDetails, updateFormDetails } = this.props;
+
+    updateFormDetails([...formDetails.diagnoses].filter((_, i) => i != index));
+  };
+
   handleDiagnosisChange = (e, index) => {
     let { updateFormDetails, formDetails } = this.props;
 
@@ -435,6 +441,9 @@ class MedicalForm extends React.Component {
               <option value="Others">Others</option>
             </select>
           </div>
+          <button className="button is-dark" style={{ marginTop: 10, marginLeft: 10}} onClick={() => this.handleDelete(index)}>
+            Delete Assessment
+          </button>
         </div>
       );
     });
@@ -494,7 +503,7 @@ class MedicalForm extends React.Component {
 
         {this.diagnosisToAdd()}
 
-        <button onClick={(e) => this.handleClick(e)}>Add New Diagnosis</button>
+        <button className="button is-dark" onClick={(e) => this.handleClick(e)}>Add New Diagnosis</button>
 
         {/* <div className="field">
           <label className="label">Diagnosis 1</label>
