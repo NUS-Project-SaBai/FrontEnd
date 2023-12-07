@@ -8,31 +8,30 @@ const videoConstraints = {
 };
 
 const AppWebcam = ({ webcamSetRef, webcamCapture }) => (
-  <div
-    style={{
-      height: 300,
-      width: 250,
-      margin: "0 auto",
-      display: "flex",
-      justifyContent: "center",
-    }}
-  >
-    <div>
-      <Webcam
-        audio={false}
-        height={250}
-        width={250}
-        ref={webcamSetRef}
-        screenshotFormat="image/jpeg"
-        screenshotQuality={1}
-        videoConstraints={videoConstraints}
-      />
+  <>
+    <div
+      style={{
+        height: 250,
+        width: 250,
+        margin: "0 auto",
+      }}
+    >
+      <div>
+        <Webcam
+          audio={false}
+          height={250}
+          width={250}
+          ref={webcamSetRef}
+          screenshotFormat="image/jpeg"
+          screenshotQuality={1}
+          videoConstraints={videoConstraints}
+        />
+      </div>
     </div>
     <div
       style={{
-        position: "absolute",
-        bottom: 0,
         textAlign: "center",
+        marginTop: 15,
       }}
     >
       <button className="button is-dark is-medium" onClick={webcamCapture}>
@@ -40,7 +39,7 @@ const AppWebcam = ({ webcamSetRef, webcamCapture }) => (
         <CameraIcon />
       </button>
     </div>
-  </div>
+  </>
 );
 
 export default AppWebcam;
