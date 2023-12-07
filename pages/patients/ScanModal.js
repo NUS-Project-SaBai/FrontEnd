@@ -10,6 +10,8 @@ import {
   NO_PHOTO_MESSAGE,
 } from "../../utils/constants";
 import { urltoFile } from "../../utils/helpers";
+import Link from "next/link";
+import SearchIcon from "../../components/icons/SearchIcon";
 
 const ScanModal = ({
   modalIsOpen,
@@ -69,7 +71,7 @@ const ScanModal = ({
           Scan Face
         </h1>
         <div className="columns">
-          <div className="column is-4">
+          <div className="column is-6">
             {!cameraIsOpen && (
               <div
                 style={{
@@ -83,55 +85,52 @@ const ScanModal = ({
               </div>
             )}
 
-            {cameraIsOpen && (
-              <div className="control">
-                {/* <WebcamCapture /> */}
-                {renderWebcam()}
-              </div>
-            )}
+            {cameraIsOpen && <div className="control">{renderWebcam()}</div>}
             <div
               style={{
-                textAlign: "center",
+                fisplay: "flex",
+                justifyContent: "center",
+                margin: "0px auto 0px",
+                width: "60%",
               }}
             >
-              <button
-                className="button is-dark is-medium"
-                onClick={toggleCameraOpen}
-                style={{ marginTop: cameraIsOpen ? 60 : 15 }}
-              >
-                {cameraIsOpen ? "Cancel" : "Take Photo"}
-              </button>
-            </div>
-          </div>
-          <div className="column is-4">
-            <div>
-              <button
-                className="button is-dark is-medium"
-                onClick={() => scanPatient()}
+              <div
                 style={{
-                  marginTop: 10,
+                  textAlign: "center",
                 }}
               >
-                <span
+                <button
+                  className={`button is-medium ${
+                    cameraIsOpen ? "is-danger" : "is-dark"
+                  }`}
+                  onClick={toggleCameraOpen}
+                  style={{ marginTop: 15 }}
+                >
+                  <span>{cameraIsOpen ? "Cancel" : "Take Photo"}</span>
+                </button>
+              </div>
+              <div
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                <button
+                  className="button is-dark is-medium"
+                  onClick={() => scanPatient()}
                   style={{
-                    marginRight: 15,
+                    marginTop: 15,
                   }}
                 >
-                  Search
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="16"
-                  width="16"
-                  viewBox="0 0 512 512"
-                  style={{ fill: "white", float: "right" }}
-                >
-                  {
-                    "Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc."
-                  }
-                  <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                </svg>
-              </button>
+                  <span
+                    style={{
+                      marginRight: 15,
+                    }}
+                  >
+                    Search
+                  </span>
+                  <SearchIcon />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -150,7 +149,11 @@ const ScanModal = ({
                 </tr>
               </thead>
               <tbody>
-                <td> {matchedPatientData.patient.id}</td>
+                <td>
+                  <Link href={`/record?id=${matchedPatientData.patient.id}`}>
+                    {matchedPatientData.patient.id}
+                  </Link>
+                </td>
                 <td>{matchedPatientData.patient.name}</td>
                 <td>
                   <img
