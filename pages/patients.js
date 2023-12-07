@@ -41,6 +41,7 @@ class Patients extends React.Component {
         village_prefix: "SV",
       },
       possibleOptions: [],
+      submitIsLoading: false,
     };
 
     this.openModal = this.openModal.bind(this);
@@ -171,8 +172,8 @@ class Patients extends React.Component {
   }
 
   async submitNewPatient() {
-    // console.log("In submit new patient");
     let { formDetails, imageDetails } = this.state;
+    this.setState({ submitIsLoading: true });
 
     let checklist = [
       "name",
@@ -243,6 +244,7 @@ class Patients extends React.Component {
         toast.error("Please retake photo!");
       }
     }
+    this.setState({ submitIsLoading: false });
   }
 
   async scanPatient() {
@@ -499,7 +501,7 @@ class Patients extends React.Component {
   // };
 
   renderModal() {
-    const { formDetails } = this.state;
+    const { formDetails, submitIsLoading } = this.state;
 
     return (
       <Modal
@@ -635,6 +637,7 @@ class Patients extends React.Component {
                   <button
                     className="button is-dark is-medium"
                     onClick={this.submitNewPatient}
+                    disabled={submitIsLoading}
                     // onClick={this.submitNewPatientAndStartVisit}
                   >
                     Submit
