@@ -89,13 +89,23 @@ class Orders extends React.Component {
         console.log(correctPrescription);
         let prescriptions = correctPrescription.map((prescription) => (
           <li>
-            {prescription.medicine.medicine_name}: {prescription.quantity} <br/>
-            Notes: {prescription.notes} <br/> <br/>
+            {prescription.medicine && "medicine_name" in prescription.medicine
+              ? prescription.medicine.medicine_name
+              : ""}
+            : {prescription.quantity} <br />
+            Notes: {prescription.notes} <br /> <br />
           </li>
         ));
 
         let action = (
-          <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <button
               className="button is-dark level-item"
               onClick={async () => {
@@ -134,9 +144,14 @@ class Orders extends React.Component {
                       promises.push(
                         axios.delete(`${API_URL}/orders/${prescription.id}`)
                       );
-                      promises.push(axios.patch(`${API_URL}/medications/${prescription.medicine.id}`, {
-                        quantityChange: parseInt(prescription.quantity)
-                      }))
+                      promises.push(
+                        axios.patch(
+                          `${API_URL}/medications/${prescription.medicine.id}`,
+                          {
+                            quantityChange: parseInt(prescription.quantity),
+                          }
+                        )
+                      );
                     });
                     Promise.all(promises).then(() => this.onRefresh());
                   } catch (error) {
