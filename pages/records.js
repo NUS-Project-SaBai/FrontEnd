@@ -5,6 +5,7 @@ import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 
 class Records extends React.Component {
+  // change to functional
 
   constructor() {
     super();
