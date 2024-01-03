@@ -4,6 +4,7 @@ import Redirect from "./api/redirect";
 import withAuth from "../utils/auth";
 
 const Index = () => {
+  // test
   const router = useRouter();
 
   useEffect(() => {
