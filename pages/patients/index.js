@@ -403,17 +403,17 @@ class Patients extends React.Component {
           <h1 style={{ color: "black", fontSize: "1.5em" }}>Registration</h1>
           <div className="columns is-vcentered">
             <div className="column is-12">
-              <div class="levels" style={{ marginBottom: 10 }}>
-                <div class="level-left">
+              <div className="levels" style={{ marginBottom: 10 }}>
+                <div className="level-left">
                   <button
-                    class="button is-dark is-medium level-item"
+                    className="button is-dark is-medium level-item"
                     style={{ display: "inline-block", verticalAlign: "top" }}
                     onClick={this.openScanModal}
                   >
                     Scan Face
                   </button>
                   <button
-                    class="button is-dark is-medium level-item"
+                    className="button is-dark is-medium level-item"
                     onClick={this.openModal}
                   >
                     New Patient
