@@ -1,9 +1,11 @@
 import React from "react";
-import withAuth from "../../utils/auth";
+import withAuth from "../../utils/auth"
 
 class Daily extends React.Component {
   render() {
-    return <h1>Daily Analytics page under construction</h1>;
+    return (
+        <h1>Daily Analytics page under construction</h1>
+    );
   }
 }
 

@@ -30,7 +30,7 @@ class Orders extends React.Component {
 
   async onRefresh() {
     let { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`,
+      `${API_URL}/orders?order_status=PENDING`
     );
     let { data: visits } = await axios.get(`${API_URL}/visits`);
 
@@ -111,7 +111,7 @@ class Orders extends React.Component {
               onClick={async () => {
                 if (
                   confirm(
-                    "Have you checked whether the prescription and amounts are correct?",
+                    "Have you checked whether the prescription and amounts are correct?"
                   )
                 ) {
                   try {
@@ -120,7 +120,7 @@ class Orders extends React.Component {
                       promises.push(
                         axios.patch(`${API_URL}/orders/${prescription.id}`, {
                           order_status: "approved",
-                        }),
+                        })
                       );
                     });
                     Promise.all(promises).then(() => this.onRefresh());
@@ -142,15 +142,15 @@ class Orders extends React.Component {
                     const promises = [];
                     correctPrescription.forEach((prescription) => {
                       promises.push(
-                        axios.delete(`${API_URL}/orders/${prescription.id}`),
+                        axios.delete(`${API_URL}/orders/${prescription.id}`)
                       );
                       promises.push(
                         axios.patch(
                           `${API_URL}/medications/${prescription.medicine.id}`,
                           {
                             quantityChange: parseInt(prescription.quantity),
-                          },
-                        ),
+                          }
+                        )
                       );
                     });
                     Promise.all(promises).then(() => this.onRefresh());

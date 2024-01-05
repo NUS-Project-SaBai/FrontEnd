@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "react-sidebar";
 import SideMenu from "./sideMenu";
-import withAuth from "../utils/auth";
+import withAuth from "../utils/auth"
 
 function Layout(props) {
   const [mql, setMql] = useState(null);

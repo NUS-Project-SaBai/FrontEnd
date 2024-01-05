@@ -1,5 +1,3 @@
-//record.js;
-
 import React from "react";
 import axios from "axios";
 import _ from "lodash";
@@ -56,7 +54,7 @@ class Record extends React.Component {
 
     // gets all visit data
     let { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientId}`,
+      `${API_URL}/visits?patient=${patientId}`
     );
 
     // sorts
@@ -108,7 +106,7 @@ class Record extends React.Component {
     let { data: medications } = await axios.get(`${API_URL}/medications`);
 
     let { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`,
+      `${API_URL}/orders?order_status=PENDING`
     );
     // key -> medicine pk
     // value -> total reserved
@@ -130,11 +128,11 @@ class Record extends React.Component {
 
   async loadVisitDetails(visitID) {
     let { data: consults } = await axios.get(
-      `${API_URL}/consults?visit=${visitID}`,
+      `${API_URL}/consults?visit=${visitID}`
     );
 
     let { data: prescriptions } = await axios.get(
-      `${API_URL}/orders?visit=${visitID}`,
+      `${API_URL}/orders?visit=${visitID}`
     );
 
     let consultsEnriched = consults.map((consult) => {
@@ -149,13 +147,13 @@ class Record extends React.Component {
     });
 
     let { data: vitals } = await axios.get(
-      `${API_URL}/vitals?visit=${visitID}`,
+      `${API_URL}/vitals?visit=${visitID}`
     );
 
     this.setState({
       consults: consultsEnriched,
       vitals: vitals[0] || {},
-      visitPrescriptions: consultsEnriched.flatMap((x) => x.prescriptions),
+      visitPrescriptions: consultsEnriched.flatMap(x => x.prescriptions),
       mounted: true,
       visitID,
     });
@@ -281,7 +279,7 @@ class Record extends React.Component {
         )}
 
         <hr />
-        <label className="label">Prescriptions</label>
+        <label className="label">Prescriptions</label>      
         {visitPrescriptions.length > 0 ? (
           <VisitPrescriptionsTable content={visitPrescriptions} />
         ) : (

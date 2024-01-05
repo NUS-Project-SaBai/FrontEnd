@@ -5,8 +5,8 @@ import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 
 class Records extends React.Component {
+
   constructor() {
-    console.log("Old records");
     super();
 
     this.state = {

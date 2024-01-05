@@ -53,17 +53,14 @@ class Stock extends React.Component {
       let key = medicationDetails.pk;
       let quantity =
         parseInt(medicationDetails.quantity) + parseInt(quantityChange);
-      if (quantity >= 0) {
-        // edit case
+      if (quantity >= 0) { // edit case
         // medicationDetails.quantity = quantity;
 
         // medicationDetails.changeQuantity = 0;
         // delete medicationDetails["pk"];
 
         await axios
-          .patch(`${API_URL}/medications/${key}`, {
-            quantityChange: parseInt(quantityChange),
-          })
+          .patch(`${API_URL}/medications/${key}`, { quantityChange: parseInt(quantityChange) })
           .then(() => toast.success("Medication updated!"))
           .catch(() => {
             toast.error("Encountered an error!");
@@ -73,8 +70,7 @@ class Stock extends React.Component {
       } else {
         toast.error("Insufficient medication!");
       }
-    } else if (quantityChange >= 0) {
-      //new medication case
+    } else if (quantityChange >= 0) { //new medication case
       medicationDetails.quantity = quantityChange;
       await axios.post(`${API_URL}/medications`, medicationDetails);
       toast.success("New Medication created!");
@@ -90,7 +86,7 @@ class Stock extends React.Component {
     const { medications, medicationsFiltered } = this.state;
 
     const confirmed = window.confirm(
-      "Are you sure you want to delete this medication?",
+      "Are you sure you want to delete this medication?"
     );
     if (!confirmed) {
       return;
@@ -99,10 +95,10 @@ class Stock extends React.Component {
     try {
       await axios.delete(`${API_URL}/medications/${pk}`);
       const updatedMedications = medications.filter(
-        (medication) => medication.pk !== pk,
+        (medication) => medication.pk !== pk
       );
       const updatedMedicationsFiltered = medicationsFiltered.filter(
-        (medication) => medication.pk !== pk,
+        (medication) => medication.pk !== pk
       );
       this.setState({
         medications: updatedMedications,

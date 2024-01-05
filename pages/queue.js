@@ -6,6 +6,7 @@ import moment from "moment";
 import withAuth from "../utils/auth";
 
 class Queue extends React.Component {
+
   constructor() {
     super();
 
@@ -32,7 +33,7 @@ class Queue extends React.Component {
     const { visits, visitsFiltered } = this.state;
 
     const confirmed = window.confirm(
-      "Are you sure you want to delete this visit?",
+      "Are you sure you want to delete this visit?"
     );
     if (!confirmed) {
       return;
@@ -45,11 +46,11 @@ class Queue extends React.Component {
       //   status: "ended",
       //   visit_date: moment().format("YYYY-MM-DD"),
       // };
-
+  
       // await axios.post(`${API_URL}/visits`, payload);
       const updatedVisits = visits.filter((visit) => visit.id !== visit_id);
       const updatedVisitsFiltered = visitsFiltered.filter(
-        (visit) => visit.id !== visit_id,
+        (visit) => visit.id !== visit_id
       );
       this.setState({
         visits: updatedVisits,
@@ -72,7 +73,7 @@ class Queue extends React.Component {
       let progress = (
         <button
           className="button is-dark level-item"
-          onClick={() => Router.push(`/recordComponent?id=${visit.patient.id}`)}
+          onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
         >
           View
         </button>
@@ -139,16 +140,13 @@ class Queue extends React.Component {
     let filteredVisits = visits.filter((visit) => {
       let patientId1 =
         `${visit.patient.village_prefix}${visit.patient.id}`.toLowerCase();
-      let patientId2 =
-        `${visit.patient.village_prefix}`.toLowerCase() +
-        `${visit.patient.id}`.padStart(3, `0`);
+      let patientId2 = 
+        `${visit.patient.village_prefix}`.toLowerCase()
+        + `${visit.patient.id}`.padStart(3, `0`);
       let name = `${visit.patient.name}`.toLowerCase();
       let searchValue = event.target.value.toLowerCase();
-      return (
-        patientId1.includes(searchValue) ||
-        patientId2.includes(searchValue) ||
-        name.includes(searchValue)
-      );
+      return patientId1.includes(searchValue) || patientId2.includes(searchValue)
+            || name.includes(searchValue);
     });
 
     this.setState({ visitsFiltered: filteredVisits });
