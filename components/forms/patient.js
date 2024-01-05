@@ -161,8 +161,8 @@ class VitalsForm extends React.Component {
         {patient.fields.date_of_birth &&
           Math.abs(
             new Date(
-              Date.now() - new Date(patient.fields.date_of_birth)
-            ).getUTCFullYear() - 1970
+              Date.now() - new Date(patient.fields.date_of_birth),
+            ).getUTCFullYear() - 1970,
           ) >= 40 && (
             <div className="field is-grouped">
               <div className="control is-expanded">
@@ -441,7 +441,11 @@ class MedicalForm extends React.Component {
               <option value="Others">Others</option>
             </select>
           </div>
-          <button className="button is-dark" style={{ marginTop: 10, marginLeft: 10}} onClick={() => this.handleDelete(index)}>
+          <button
+            className="button is-dark"
+            style={{ marginTop: 10, marginLeft: 10 }}
+            onClick={() => this.handleDelete(index)}
+          >
             Delete Assessment
           </button>
         </div>
@@ -503,7 +507,9 @@ class MedicalForm extends React.Component {
 
         {this.diagnosisToAdd()}
 
-        <button className="button is-dark" onClick={(e) => this.handleClick(e)}>Add New Diagnosis</button>
+        <button className="button is-dark" onClick={(e) => this.handleClick(e)}>
+          Add New Diagnosis
+        </button>
 
         {/* <div className="field">
           <label className="label">Diagnosis 1</label>

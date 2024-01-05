@@ -64,7 +64,7 @@ class Patient extends React.Component {
 
     // gets all visit data
     let { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientId}`
+      `${API_URL}/visits?patient=${patientId}`,
     );
 
     // sorts
@@ -126,7 +126,7 @@ class Patient extends React.Component {
     let { data: medications } = await axios.get(`${API_URL}/medications`);
 
     let { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`
+      `${API_URL}/orders?order_status=PENDING`,
     );
 
     // key -> medicine pk
@@ -249,11 +249,11 @@ class Patient extends React.Component {
 
   async loadVisitDetails(visitID) {
     let { data: consults } = await axios.get(
-      `${API_URL}/consults?visit=${visitID}`
+      `${API_URL}/consults?visit=${visitID}`,
     );
 
     let { data: prescriptions } = await axios.get(
-      `${API_URL}/orders?visit=${visitID}`
+      `${API_URL}/orders?visit=${visitID}`,
     );
 
     let consultsEnriched = consults.map((consult) => {
@@ -268,7 +268,7 @@ class Patient extends React.Component {
     });
 
     let { data: vitals } = await axios.get(
-      `${API_URL}/vitals?visit=${visitID}`
+      `${API_URL}/vitals?visit=${visitID}`,
     );
 
     this.setState({
@@ -464,8 +464,8 @@ class Patient extends React.Component {
                 {patient.fields.date_of_birth
                   ? Math.abs(
                       new Date(
-                        Date.now() - new Date(patient.fields.date_of_birth)
-                      ).getUTCFullYear() - 1970
+                        Date.now() - new Date(patient.fields.date_of_birth),
+                      ).getUTCFullYear() - 1970,
                     )
                   : "No DOB"}
               </div>

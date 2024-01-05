@@ -120,11 +120,8 @@ class ConsultationsView extends React.Component {
         <div className="field">
           <label className="label">Referrals</label>
           <article className="message">
-            <div 
-                className="message-body"
-                style={{ whiteSpace: 'pre-line' }}
-            >
-                {content.referrals}
+            <div className="message-body" style={{ whiteSpace: "pre-line" }}>
+              {content.referrals}
             </div>
           </article>
         </div>
@@ -152,11 +149,8 @@ class ConsultationsView extends React.Component {
         <div className="field">
           <label className="label">Diagnosis</label>
           <article className="message">
-            <div 
-                className="message-body"
-                style={{ whiteSpace: 'pre-line' }}
-            >
-                {content.notes}
+            <div className="message-body" style={{ whiteSpace: "pre-line" }}>
+              {content.notes}
             </div>
           </article>
         </div>
@@ -164,18 +158,15 @@ class ConsultationsView extends React.Component {
         <div className="field">
           <label className="label">Plan</label>
           <article className="message">
-            <div 
-                className="message-body"
-                style={{ whiteSpace: 'pre-line' }}
-            >
-                {content.addendum}
+            <div className="message-body" style={{ whiteSpace: "pre-line" }}>
+              {content.addendum}
             </div>
           </article>
         </div>
 
         <hr />
 
-{/*         {content.women_clinic_checkbox && (
+        {/*         {content.women_clinic_checkbox && (
           <div className="field">
             <label className="label">Breast Problem</label>
             <article className="message">
@@ -420,7 +411,7 @@ class VisitPrescriptionsTable extends React.Component {
     let { content: prescriptions } = this.props;
 
     let prescriptionRows = prescriptions.map((prescription) => {
-      console.log(prescription)
+      console.log(prescription);
       let name = prescription?.medicine?.medicine_name;
       let quantity = prescription.quantity;
       // let doctor = prescription.doctor
@@ -476,8 +467,14 @@ class PatientView extends React.Component {
         <div className="field">
           <label className="label">Age</label>
           <article className="message">
-            <div className="message-body">{content.fields.date_of_birth ? 
-              Math.abs(new Date(Date.now() - new Date(content.fields.date_of_birth)).getUTCFullYear() - 1970) : "No DOB" }
+            <div className="message-body">
+              {content.fields.date_of_birth
+                ? Math.abs(
+                    new Date(
+                      Date.now() - new Date(content.fields.date_of_birth),
+                    ).getUTCFullYear() - 1970,
+                  )
+                : "No DOB"}
             </div>
           </article>
         </div>

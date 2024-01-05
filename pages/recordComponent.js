@@ -1,6 +1,4 @@
-//record.js;
-
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import _ from "lodash";
 import Modal from "react-modal";
@@ -18,85 +16,77 @@ import Router from "next/router";
 
 Modal.setAppElement("#__next");
 
-class Record extends React.Component {
-  constructor() {
-    super();
+const Record = () => {
+  const [state, setState] = useState({
+    mounted: false,
+    patient: {},
+    medications: [],
+    visits: [],
+    visitID: null,
+    consults: [],
+    orders: [],
+    referredFor: [],
+    vitals: {},
+    formDetails: {},
+    medicationDetails: {},
+    formModalOpen: false,
+    isEditing: false,
+    viewModalOpen: false,
+    modalContent: {},
+  });
+  console.log("1: ", state);
+  const handleVisitChange = useCallback((event) => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
 
-    this.state = {
-      mounted: false,
-      patient: {},
-      medications: [],
-      visits: [],
-      visitID: null,
-      consults: [],
-      orders: [],
-      referredFor: [],
-      vitals: {},
-      formDetails: {},
-      medicationDetails: {},
-      formModalOpen: false,
-      isEditing: false,
-      viewModalOpen: false,
-      modalContent: {},
-    };
+  useEffect(() => {
+    onRefresh();
+  }, []);
 
-    this.handleVisitChange = this.handleVisitChange.bind(this);
-  }
-
-  componentDidMount() {
-    this.onRefresh();
-  }
-
-  async onRefresh() {
+  async function onRefresh() {
     const router = Router;
     const { query } = router;
     let { id: patientId } = query;
-    // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
-
-    // gets all visit data
     let { data: visits } = await axios.get(
       `${API_URL}/visits?patient=${patientId}`,
     );
-
-    // sorts
-    let visitsSorted = visits.sort((a, b) => {
-      return b.id - a.id;
-    });
-
-    this.setState({
+    let visitsSorted = visits.sort((a, b) => b.id - a.id);
+    setState((prevState) => ({
+      ...prevState,
       patient: patient[0],
       visits: visitsSorted,
-    });
-
+    }));
     if (visitsSorted.length > 0) {
       let visitID = visitsSorted[0].id;
-      this.loadVisitDetails(visitID);
-      this.loadMedicationStock();
+      loadVisitDetails(visitID);
+      loadMedicationStock();
     }
+    console.log("refresh: ", state);
   }
 
-  toggleViewModal(viewType = null, consult = {}) {
-    this.setState({
-      viewModalOpen: !this.state.viewModalOpen,
+  function toggleViewModal(viewType = null, consult = {}) {
+    setState((prevState) => ({
+      ...prevState,
+      viewModalOpen: !state.viewModalOpen,
       viewType,
       consult,
-    });
+    }));
   }
 
-  renderViewModal() {
-    let { vitals, viewModalOpen, consult, viewType } = this.state;
+  function renderViewModal() {
+    let { vitals, viewModalOpen, consult, viewType } = state;
     let modalContent =
       viewType == "vitals" ? (
         <VitalsView content={vitals} />
       ) : (
         <ConsultationsView content={consult} />
       );
-
     return (
       <Modal
         isOpen={viewModalOpen}
-        onRequestClose={() => this.toggleViewModal()}
+        onRequestClose={() => toggleViewModal()}
         style={viewModalStyles}
       >
         {modalContent}
@@ -104,19 +94,15 @@ class Record extends React.Component {
     );
   }
 
-  async loadMedicationStock() {
+  async function loadMedicationStock() {
     let { data: medications } = await axios.get(`${API_URL}/medications`);
-
     let { data: orders } = await axios.get(
       `${API_URL}/orders?order_status=PENDING`,
     );
-    // key -> medicine pk
-    // value -> total reserved
     let reservedMedications = {};
     orders.forEach((order) => {
       let medicationID = order.medicine;
       let quantityReserved = order.quantity;
-
       if (typeof reservedMedications[medicationID] === "undefined") {
         reservedMedications[medicationID] = quantityReserved;
       } else {
@@ -124,53 +110,47 @@ class Record extends React.Component {
           reservedMedications[medicationID] + quantityReserved;
       }
     });
-
-    this.setState({ medications, reservedMedications });
+    setState((prevState) => ({
+      ...prevState,
+      medications,
+      reservedMedications,
+    }));
   }
 
-  async loadVisitDetails(visitID) {
+  async function loadVisitDetails(visitID) {
     let { data: consults } = await axios.get(
       `${API_URL}/consults?visit=${visitID}`,
     );
-
     let { data: prescriptions } = await axios.get(
       `${API_URL}/orders?visit=${visitID}`,
     );
-
     let consultsEnriched = consults.map((consult) => {
-      let consultPrescriptions = prescriptions.filter((prescription) => {
-        return prescription.consult.id === consult.id;
-      });
-
+      let consultPrescriptions = prescriptions.filter(
+        (prescription) => prescription.consult.id === consult.id,
+      );
       return {
         ...consult,
         prescriptions: consultPrescriptions,
       };
     });
-
     let { data: vitals } = await axios.get(
       `${API_URL}/vitals?visit=${visitID}`,
     );
-
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       consults: consultsEnriched,
       vitals: vitals[0] || {},
       visitPrescriptions: consultsEnriched.flatMap((x) => x.prescriptions),
       mounted: true,
       visitID,
-    });
+    }));
   }
 
-  handleVisitChange(event) {
-    const value = event.target.value;
-    this.loadVisitDetails(value);
-  }
-
-  renderHeader() {
-    let { patient, visits } = this.state;
+  function renderHeader() {
+    let { patient, visits } = state;
+    console.log("Render: ", state);
     let visitOptions = visits.map((visit) => {
       let date = moment(visit.date).format("DD MMMM YYYY");
-
       return (
         <option key={visit.id} value={visit.id}>
           {date}
@@ -202,7 +182,7 @@ class Record extends React.Component {
             </article>
             <label className="label">Visit on</label>
             <div className="select is-fullwidth">
-              <select name={"medication"} onChange={this.handleVisitChange}>
+              <select name={"medication"} onChange={handleVisitChange}>
                 {visitOptions}
               </select>
             </div>
@@ -219,13 +199,13 @@ class Record extends React.Component {
     );
   }
 
-  renderFirstColumn() {
-    let { patient } = this.state;
+  function renderFirstColumn() {
+    let { patient } = state;
     return <PatientView content={patient} />;
   }
 
-  renderSecondColumn() {
-    let { vitals, consults, visitPrescriptions } = this.state;
+  function renderSecondColumn() {
+    let { vitals, consults, visitPrescriptions } = state;
     let consultRows = consults.map((consult) => {
       let type = consult.type;
       let subType = consult.sub_type == null ? "General" : consult.sub_type;
@@ -242,9 +222,9 @@ class Record extends React.Component {
           <td>
             <button
               className="button is-dark level-item"
-              onClick={() => this.toggleViewModal("consult", consult)}
+              onClick={() => toggleViewModal("consult", consult)}
             >
-              View
+              Viewer
             </button>
           </td>
         </tr>
@@ -262,9 +242,7 @@ class Record extends React.Component {
               <button
                 className="button is-dark level-item"
                 style={{ marginTop: 15 }}
-                onClick={() => {
-                  this.toggleViewModal("vitals");
-                }}
+                onClick={() => toggleViewModal("vitals")}
               >
                 View
               </button>
@@ -291,8 +269,8 @@ class Record extends React.Component {
     );
   }
 
-  renderPrescriptionTable() {
-    let { orders } = this.state;
+  function renderPrescriptionTable() {
+    let { orders } = state;
 
     let orderRows = orders.map((order, index) => {
       let name = order.medicine.medicine_name;
@@ -307,7 +285,7 @@ class Record extends React.Component {
               <div className="level-left">
                 <button
                   className="button is-dark level-item"
-                  onClick={() => this.toggleFormModal(order)}
+                  onClick={() => toggleFormModal(order)}
                 >
                   Edit
                 </button>
@@ -315,7 +293,7 @@ class Record extends React.Component {
                   className="button is-dark level-item"
                   onClick={() => {
                     orders.splice(index, 1);
-                    this.setState({ orders });
+                    setState({ orders });
                   }}
                 >
                   Delete
@@ -340,8 +318,8 @@ class Record extends React.Component {
     );
   }
 
-  render() {
-    if (!this.state.mounted)
+  function render() {
+    if (!state.mounted)
       return (
         <div
           style={{
@@ -365,22 +343,24 @@ class Record extends React.Component {
           marginRight: 25,
         }}
       >
-        {this.renderViewModal()}
+        {renderViewModal()}
         <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient</h1>
-        {this.renderHeader()}
+        {renderHeader()}
 
         <hr />
 
         <div className="column is-12">
           <div className="columns is-12">
-            {this.renderFirstColumn()}
-            {this.renderSecondColumn()}
+            {renderFirstColumn()}
+            {renderSecondColumn()}
           </div>
         </div>
       </div>
     );
   }
-}
+
+  return <>{render()}</>;
+};
 
 const viewModalStyles = {
   content: {
