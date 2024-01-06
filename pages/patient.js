@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import _ from "lodash";
 import Router from "next/router";
@@ -21,39 +21,30 @@ import toast from "react-hot-toast";
 
 Modal.setAppElement("#__next");
 
-class Patient extends React.Component {
-  constructor() {
-    super();
+const Patient = () => {
+  const [state, setState] = useState({
+    mounted: false,
+    patient: {},
+    medications: [],
+    visits: [],
+    visitID: null,
+    consults: [],
+    orders: [],
+    referredFor: [],
+    vitals: {},
+    formDetails: { diagnoses: [] },
+    medicationDetails: {},
+    formModalOpen: false,
+    isEditing: false,
+    viewModalOpen: false,
+    modalContent: {},
+  });
 
-    this.state = {
-      mounted: false,
-      patient: {},
-      medications: [],
-      visits: [],
-      visitID: null,
-      consults: [],
-      orders: [],
-      referredFor: [],
-      vitals: {},
-      formDetails: { diagnoses: [] },
-      medicationDetails: {},
-      formModalOpen: false,
-      isEditing: false,
-      viewModalOpen: false,
-      modalContent: {},
-    };
+  useEffect(() => {
+    onRefresh();
+  }, []);
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handlePrescriptionChange = this.handlePrescriptionChange.bind(this);
-    this.handleVisitChange = this.handleVisitChange.bind(this);
-    this.updateFormDetails = this.updateFormDetails.bind(this);
-  }
-
-  componentDidMount() {
-    this.onRefresh();
-  }
-
-  async onRefresh() {
+  async function onRefresh() {
     // let { id: patientId } = this.props.query;
     const router = Router;
     const { query } = router;
@@ -64,7 +55,7 @@ class Patient extends React.Component {
 
     // gets all visit data
     let { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientId}`
+      `${API_URL}/visits?patient=${patientId}`,
     );
 
     // sorts
@@ -72,26 +63,28 @@ class Patient extends React.Component {
       return b.id - a.id;
     });
 
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       patient: patient[0],
       visits: visitsSorted,
-    });
+    }));
 
     let visitID = visitsSorted[0].id;
-    this.loadVisitDetails(visitID);
-    this.loadMedicationStock();
+    loadVisitDetails(visitID);
+    loadMedicationStock();
   }
 
-  toggleViewModal(viewType = null, consult = {}) {
-    this.setState({
-      viewModalOpen: !this.state.viewModalOpen,
+  function toggleViewModal(viewType = null, consult = {}) {
+    setState((prevState) => ({
+      ...prevState,
+      viewModalOpen: !state.viewModalOpen,
       viewType,
       consult,
-    });
+    }));
   }
 
-  renderViewModal() {
-    let { vitals, viewModalOpen, consult, viewType } = this.state;
+  function renderViewModal() {
+    let { vitals, viewModalOpen, consult, viewType } = state;
 
     let modalContent =
       viewType == "vitals" ? (
@@ -103,7 +96,7 @@ class Patient extends React.Component {
     return (
       <Modal
         isOpen={viewModalOpen}
-        onRequestClose={() => this.toggleViewModal()}
+        onRequestClose={() => toggleViewModal()}
         style={viewModalStyles}
         contentLabel="Example Modal"
       >
@@ -112,21 +105,22 @@ class Patient extends React.Component {
     );
   }
 
-  toggleFormModal(order = {}) {
-    this.loadMedicationStock();
+  function toggleFormModal(order = {}) {
+    loadMedicationStock();
 
-    this.setState({
-      formModalIsOpen: !this.state.formModalIsOpen,
+    setState((prevState) => ({
+      ...prevState,
+      formModalIsOpen: !state.formModalIsOpen,
       medicationDetails: order,
       isEditing: Object.keys(order).length > 0,
-    });
+    }));
   }
 
-  async loadMedicationStock() {
+  async function loadMedicationStock() {
     let { data: medications } = await axios.get(`${API_URL}/medications`);
 
     let { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`
+      `${API_URL}/orders?order_status=PENDING`,
     );
 
     // key -> medicine pk
@@ -144,10 +138,14 @@ class Patient extends React.Component {
       }
     });
 
-    this.setState({ medications, reservedMedications });
+    setState((prevState) => ({
+      ...prevState,
+      medications,
+      reservedMedications,
+    }));
   }
 
-  renderFormModal() {
+  function renderFormModal() {
     let {
       patient,
       isEditing,
@@ -156,7 +154,7 @@ class Patient extends React.Component {
       formModalIsOpen,
       reservedMedications,
       orders,
-    } = this.state;
+    } = state;
     let options = medications
       .filter((medication) => {
         for (let i = 0; i < orders.length; i++) {
@@ -188,28 +186,28 @@ class Patient extends React.Component {
     return (
       <Modal
         isOpen={formModalIsOpen}
-        onRequestClose={() => this.toggleFormModal()}
+        onRequestClose={() => toggleFormModal()}
         style={formModalStyles}
         contentLabel="Example Modal"
       >
         <PrescriptionForm
           allergies={patient.fields.drug_allergy}
-          handleInputChange={this.handlePrescriptionChange}
+          handleInputChange={handlePrescriptionChange}
           formDetails={medicationDetails}
           isEditing={isEditing}
           medicationOptions={options}
           medications={medications}
           reservedMedications={reservedMedications}
-          onSubmit={() => this.submitNewPrescription()}
+          onSubmit={() => submitNewPrescription()}
         />
       </Modal>
     );
   }
 
-  handlePrescriptionChange(event) {
-    let { medicationDetails } = this.state;
+  function handlePrescriptionChange(e) {
+    let { medicationDetails } = state;
 
-    const target = event.target;
+    const target = e.target;
     const value = target.value;
     const name = target.name;
 
@@ -223,13 +221,14 @@ class Patient extends React.Component {
       medicationDetails[name] = value;
     }
 
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       medicationDetails,
-    });
+    }));
   }
 
-  submitNewPrescription() {
-    let { orders, medicationDetails, isEditing } = this.state;
+  function submitNewPrescription() {
+    let { orders, medicationDetails, isEditing } = state;
 
     if (isEditing) {
       // go find that order
@@ -240,20 +239,21 @@ class Patient extends React.Component {
       // edit that order
     } else orders.push({ ...medicationDetails, order_status: "PENDING" });
 
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       orders: orders,
       medicationDetails: {},
       formModalIsOpen: false,
-    });
+    }));
   }
 
-  async loadVisitDetails(visitID) {
+  async function loadVisitDetails(visitID) {
     let { data: consults } = await axios.get(
-      `${API_URL}/consults?visit=${visitID}`
+      `${API_URL}/consults?visit=${visitID}`,
     );
 
     let { data: prescriptions } = await axios.get(
-      `${API_URL}/orders?visit=${visitID}`
+      `${API_URL}/orders?visit=${visitID}`,
     );
 
     let consultsEnriched = consults.map((consult) => {
@@ -268,23 +268,24 @@ class Patient extends React.Component {
     });
 
     let { data: vitals } = await axios.get(
-      `${API_URL}/vitals?visit=${visitID}`
+      `${API_URL}/vitals?visit=${visitID}`,
     );
 
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       consults: consultsEnriched,
       vitals: vitals[0] || {},
       visitPrescriptions: consultsEnriched.flatMap((x) => x.prescriptions),
       mounted: true,
       visitID,
-    });
+    }));
   }
 
-  async submitForm() {
+  async function submitForm() {
     const router = Router;
     const { query } = router;
     const { form } = query;
-    let { formDetails, visitID, orders } = this.state;
+    let { formDetails, visitID, orders } = state;
 
     orders.forEach((order) => {
       axios.patch(`${API_URL}/medications/${order.medicine}`, {
@@ -379,39 +380,40 @@ class Patient extends React.Component {
     Router.push("/queue");
   }
 
-  updateFormDetails(diagnoses) {
+  function updateFormDetails(diagnoses) {
     // update the form details
-    let { formDetails } = this.state;
+    let { formDetails } = state;
     formDetails = { ...formDetails, diagnoses: diagnoses };
 
-    this.setState({ formDetails });
+    setState((prevState) => ({ ...prevState, formDetails }));
   }
 
-  handleInputChange(event) {
-    let { formDetails } = this.state;
+  function handleInputChange(e) {
+    let { formDetails } = state;
 
-    const target = event.target;
+    const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
 
     formDetails[name] = value;
 
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       formDetails,
-    });
+    }));
   }
 
-  handleVisitChange(event) {
-    const value = event.target.value;
+  function handleVisitChange(e) {
+    const value = e.target.value;
 
     // pull the latest visit
 
     // this.setState({ visitID: value });
-    this.loadVisitDetails(value);
+    loadVisitDetails(value);
   }
 
-  renderHeader() {
-    let { patient, visits } = this.state;
+  function renderHeader() {
+    let { patient, visits } = state;
     let visitOptions = visits.map((visit) => {
       let date = moment(visit.visit_date).format("DD MMMM YYYY");
 
@@ -446,7 +448,7 @@ class Patient extends React.Component {
             </article>
             <label className="label">Visit on</label>
             <div className="select is-fullwidth">
-              <select name={"medication"} onChange={this.handleVisitChange}>
+              <select name={"medication"} onChange={handleVisitChange}>
                 {visitOptions}
               </select>
             </div>
@@ -464,8 +466,8 @@ class Patient extends React.Component {
                 {patient.fields.date_of_birth
                   ? Math.abs(
                       new Date(
-                        Date.now() - new Date(patient.fields.date_of_birth)
-                      ).getUTCFullYear() - 1970
+                        Date.now() - new Date(patient.fields.date_of_birth),
+                      ).getUTCFullYear() - 1970,
                     )
                   : "No DOB"}
               </div>
@@ -477,8 +479,8 @@ class Patient extends React.Component {
     );
   }
 
-  renderFirstColumn() {
-    let { vitals, consults, visitPrescriptions } = this.state;
+  function renderFirstColumn() {
+    let { vitals, consults, visitPrescriptions } = state;
     let consultRows = consults.map((consult) => {
       // let type = consult.type;
       // let subType = consult.sub_type == null ? "General" : consult.sub_type;
@@ -496,7 +498,7 @@ class Patient extends React.Component {
           <td>
             <button
               className="button is-dark level-item"
-              onClick={() => this.toggleViewModal("consult", consult)}
+              onClick={() => toggleViewModal("consult", consult)}
             >
               View
             </button>
@@ -537,13 +539,13 @@ class Patient extends React.Component {
     );
   }
 
-  renderSecondColumn() {
+  function renderSecondColumn() {
     //let { form } = this.props.query;
     const router = Router;
     const { query } = router;
     const { form } = query;
 
-    let { formDetails, orders, patient } = this.state;
+    let { formDetails, orders, patient } = state;
 
     let formContent = () => {
       switch (form) {
@@ -551,7 +553,7 @@ class Patient extends React.Component {
           return (
             <VitalsForm
               formDetails={formDetails}
-              handleInputChange={this.handleInputChange}
+              handleInputChange={handleInputChange}
               patient={patient}
             />
           );
@@ -560,17 +562,17 @@ class Patient extends React.Component {
           return (
             <div>
               <MedicalForm
-                updateFormDetails={this.updateFormDetails}
+                updateFormDetails={updateFormDetails}
                 formDetails={formDetails}
-                handleInputChange={this.handleInputChange}
+                handleInputChange={handleInputChange}
               />
               <hr />
               <label className="label">Prescriptions</label>
-              {orders.length > 0 ? this.renderPrescriptionTable() : "None"}
+              {orders.length > 0 ? renderPrescriptionTable() : "None"}
               <button
                 className="button is-dark level-item"
                 style={{ marginTop: 15 }}
-                onClick={() => this.toggleFormModal()}
+                onClick={() => toggleFormModal()}
               >
                 Add
               </button>
@@ -588,7 +590,7 @@ class Patient extends React.Component {
         <button
           className="button is-dark is-medium level-item"
           style={{ marginTop: 15 }}
-          onClick={() => this.submitForm()}
+          onClick={() => submitForm()}
         >
           Submit
         </button>
@@ -596,8 +598,8 @@ class Patient extends React.Component {
     );
   }
 
-  renderPrescriptionTable() {
-    let { orders } = this.state;
+  function renderPrescriptionTable() {
+    let { orders } = state;
 
     let orderRows = orders.map((order, index) => {
       let name = order.medicine_name;
@@ -612,7 +614,7 @@ class Patient extends React.Component {
               <div className="level-left">
                 <button
                   className="button is-dark level-item"
-                  onClick={() => this.toggleFormModal(order)}
+                  onClick={() => toggleFormModal(order)}
                 >
                   Edit
                 </button>
@@ -620,7 +622,7 @@ class Patient extends React.Component {
                   className="button is-dark level-item"
                   onClick={() => {
                     orders.splice(index, 1);
-                    this.setState({ orders });
+                    setState((prevState) => ({ ...prevState, orders }));
                   }}
                 >
                   Delete
@@ -646,8 +648,9 @@ class Patient extends React.Component {
     );
   }
 
-  render() {
-    if (!this.state.mounted) return null;
+  function render() {
+    console.log("STATE:", state);
+    if (!state.mounted) return null;
 
     return (
       <div
@@ -657,10 +660,10 @@ class Patient extends React.Component {
           marginRight: 25,
         }}
       >
-        {this.renderFormModal()}
-        {this.renderViewModal()}
+        {renderFormModal()}
+        {renderViewModal()}
         <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient</h1>
-        {this.renderHeader()}
+        {renderHeader()}
         <b>
           Please remember to press the submit button at the end of the form!
         </b>
@@ -669,14 +672,15 @@ class Patient extends React.Component {
 
         <div className="column is-12">
           <div className="columns is-12">
-            {this.renderFirstColumn()}
-            {this.renderSecondColumn()}
+            {renderFirstColumn()}
+            {renderSecondColumn()}
           </div>
         </div>
       </div>
     );
   }
-}
+  return <>{render()}</>;
+};
 
 const formModalStyles = {
   content: {

@@ -37,7 +37,7 @@ class Prescription extends React.Component {
     let { data: visit } = await axios.get(`${API_URL}/visits/${visitId}`);
 
     let { data: consultations } = await axios.get(
-      `${API_URL}/consults?visit=${visitId}`
+      `${API_URL}/consults?visit=${visitId}`,
     );
     let { data: medications } = await axios.get(`${API_URL}/medications`);
 
@@ -55,7 +55,7 @@ class Prescription extends React.Component {
         medicationsDict,
         consultations,
       },
-      () => this.loadMedicationStock()
+      () => this.loadMedicationStock(),
     );
   }
 
@@ -64,11 +64,11 @@ class Prescription extends React.Component {
     let visitId = visit.id;
 
     let { data: orders } = await axios.get(
-      `${API_URL}/orders?visit=${visitId}&order_status=PENDING`
+      `${API_URL}/orders?visit=${visitId}&order_status=PENDING`,
     );
     let { data: medications } = await axios.get(`${API_URL}/medications`);
     let { data: allOrders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`
+      `${API_URL}/orders?order_status=PENDING`,
     );
     // key -> medicine pk
     // value -> total reserved
@@ -102,7 +102,7 @@ class Prescription extends React.Component {
       };
 
       orderUpdates.push(() =>
-        axios.patch(`${API_URL}/orders/${order.id}`, orderPayload)
+        axios.patch(`${API_URL}/orders/${order.id}`, orderPayload),
       );
     });
 
@@ -110,7 +110,7 @@ class Prescription extends React.Component {
       status: "finished",
     };
     orderUpdates.push(() =>
-      axios.patch(`${API_URL}/visits/${visit.id}`, visitPayload)
+      axios.patch(`${API_URL}/visits/${visit.id}`, visitPayload),
     );
 
     Promise.all(medicationUpdates.map((x) => x()))

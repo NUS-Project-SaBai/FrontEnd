@@ -164,12 +164,12 @@ class Patients extends React.Component {
         picture: await urltoFile(
           imageDetails,
           "patient_screenshot.jpg",
-          "image/jpg"
+          "image/jpg",
         ),
       };
       const patientFormData = new FormData();
       Object.keys(payload).forEach((key) =>
-        patientFormData.append(key, payload[key])
+        patientFormData.append(key, payload[key]),
       );
 
       let { data: response } = await axios.post(
@@ -179,7 +179,7 @@ class Patients extends React.Component {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (typeof response.error == "undefined") {
@@ -268,7 +268,7 @@ class Patients extends React.Component {
       inputLength === 0
         ? []
         : patients.filter((patient) =>
-            patient.filterString.toLowerCase().includes(inputValue)
+            patient.filterString.toLowerCase().includes(inputValue),
           );
     return query;
   }

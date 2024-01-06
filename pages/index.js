@@ -15,6 +15,6 @@ const Index = () => {
   // User is logged in, perform client-side redirect to '/patients'
 
   return null;
-}
+};
 
 export default withAuth(Index);

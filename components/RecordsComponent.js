@@ -13,7 +13,8 @@ const RecordsComponent = () => {
     const newFilterString = event.target.value.toLowerCase();
     const filteredPatients = patients.filter((patient) => {
       const { name, contact_no, village_prefix, pk } = patient.fields;
-      const patientFilter = `${village_prefix}${pk} ${name} ${contact_no}`.toLowerCase();
+      const patientFilter =
+        `${village_prefix}${pk} ${name} ${contact_no}`.toLowerCase();
       return patientFilter.includes(newFilterString);
     });
 
@@ -37,7 +38,9 @@ const RecordsComponent = () => {
 
   const renderTableContent = () => {
     return patientsFiltered.map((patient) => {
-      const Id = `${patient.fields.village_prefix}${patient.pk.toString().padStart(3, "0")}`;
+      const Id = `${patient.fields.village_prefix}${patient.pk
+        .toString()
+        .padStart(3, "0")}`;
       const imageUrl = `${CLOUDINARY_URL}/${patient.fields.picture}`;
       const fullName = patient.fields.name;
       const progress = (
