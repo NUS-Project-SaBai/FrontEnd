@@ -1,36 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import moment from "moment";
 import withAuth from "../utils/auth";
 
-class Queue extends React.Component {
-  constructor() {
-    super();
+function Queue() {
+  const [visits, setVisits] = useState([]);
+  const [visitsFiltered, setVisitsFiltered] = useState([]);
+  const [filterString, setFilterString] = useState("");
 
-    this.state = {
-      visits: [],
-      visitsFiltered: [],
-      filterString: "",
-    };
+  useEffect(() => {
+    onRefresh();
+  }, []);
 
-    this.onFilterChange = this.onFilterChange.bind(this);
+  async function onRefresh() {
+    let { data: visitsData } = await axios.get(
+      `${API_URL}/visits?status=started`,
+    );
+    setVisits(visitsData);
+    setVisitsFiltered(visitsData);
   }
 
-  async componentDidMount() {
-    await this.onRefresh();
-  }
-
-  async onRefresh() {
-    let { data: visits } = await axios.get(`${API_URL}/visits?status=started`);
-
-    this.setState({ visits, visitsFiltered: visits });
-  }
-
-  async handleDelete(visit_id, patient_id) {
-    const { visits, visitsFiltered } = this.state;
-
+  async function handleDelete(visit_id, patient_id) {
     const confirmed = window.confirm(
       "Are you sure you want to delete this visit?",
     );
@@ -51,18 +43,15 @@ class Queue extends React.Component {
       const updatedVisitsFiltered = visitsFiltered.filter(
         (visit) => visit.id !== visit_id,
       );
-      this.setState({
-        visits: updatedVisits,
-        visitsFiltered: updatedVisitsFiltered,
-      });
+      setVisits(updatedVisits);
+      setVisitsFiltered(updatedVisitsFiltered);
     } catch (error) {
       console.error(error);
     }
   }
 
-  renderTableContent() {
-    let { visitsFiltered } = this.state;
-    let reversedVisitsFiltered = visitsFiltered.reverse();
+  function renderTableContent() {
+    let reversedVisitsFiltered = [...visitsFiltered].reverse();
     let visitsRows = reversedVisitsFiltered.map((visit, idx) => {
       let Id = `${visit.patient.village_prefix}${visit.patient.id
         .toString()
@@ -134,8 +123,7 @@ class Queue extends React.Component {
     return visitsRows;
   }
 
-  onFilterChange(event) {
-    let { visits } = this.state;
+  function onFilterChange(e) {
     let filteredVisits = visits.filter((visit) => {
       let patientId1 =
         `${visit.patient.village_prefix}${visit.patient.id}`.toLowerCase();
@@ -143,55 +131,52 @@ class Queue extends React.Component {
         `${visit.patient.village_prefix}`.toLowerCase() +
         `${visit.patient.id}`.padStart(3, `0`);
       let name = `${visit.patient.name}`.toLowerCase();
-      let searchValue = event.target.value.toLowerCase();
+      let searchValue = e.target.value.toLowerCase();
       return (
         patientId1.includes(searchValue) ||
         patientId2.includes(searchValue) ||
         name.includes(searchValue)
       );
     });
-
-    this.setState({ visitsFiltered: filteredVisits });
+    setVisitsFiltered(filteredVisits);
   }
 
-  render() {
-    return (
-      <div
-        style={{
-          marginTop: 15,
-          marginLeft: 25,
-          marginRight: 25,
-        }}
-      >
-        <div className="column is-12">
-          <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient Records</h1>
-          <div className="field">
-            <div className="control">
-              <input
-                className="input is-medium"
-                type="text"
-                placeholder="Search Patient"
-                onChange={this.onFilterChange}
-              />
-            </div>
+  return (
+    <div
+      style={{
+        marginTop: 15,
+        marginLeft: 25,
+        marginRight: 25,
+      }}
+    >
+      <div className="column is-12">
+        <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient Records</h1>
+        <div className="field">
+          <div className="control">
+            <input
+              className="input is-medium"
+              type="text"
+              placeholder="Search Patient"
+              onChange={onFilterChange}
+            />
           </div>
-          <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Photo</th>
-                <th>Full Name</th>
-                <th>Record</th>
-                <th>New Vitals</th>
-                <th>New Consultation</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderTableContent()}</tbody>
-          </table>
         </div>
+        <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Photo</th>
+              <th>Full Name</th>
+              <th>Record</th>
+              <th>New Vitals</th>
+              <th>New Consultation</th>
+            </tr>
+          </thead>
+          <tbody>{renderTableContent()}</tbody>
+        </table>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default withAuth(Queue);
