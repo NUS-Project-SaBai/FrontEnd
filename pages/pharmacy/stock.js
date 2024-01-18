@@ -10,35 +10,31 @@ import toast from "react-hot-toast";
 
 Modal.setAppElement("#__next");
 
-class Stock extends React.Component {
-  constructor() {
-    super();
+function Stock() {
 
-    this.state = {
-      medications: [],
-      medicationsFiltered: [],
-      medicationDetails: {
-        medicine_name: "",
-        reserve_quantity: 0,
-        quantity: 0,
-        quantityChange: 0,
-        notes: "",
-        remarks: "",
-      },
-      modalIsOpen: false,
-      filterString: "",
-    };
-
-    this.onFilterChange = this.onFilterChange.bind(this);
-    this.handleMedicationChange = this.handleMedicationChange.bind(this);
-  }
-
+  const [medications, setMedications] = useState([]);
+  const [medicationsFiltered, setMedicationsFiltered] = useState([]);
+  const [medicationDetails, setMedicationDetails] = useState({
+    medicine_name: "",
+    reserve_quantity: 0,
+    quantity: 0,
+    quantityChange: 0,
+    notes: "",
+    remarks: ""
+  });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [filterString, setFilterString] = useState("");
+  
+  // what is this function for?
   componentDidMount() {
     this.onRefresh();
   }
 
   async onRefresh() {
     let { data: medications } = await axios.get(`${API_URL}/medications`);
+    
+    setMedicationsFiltered(medications);
+    // ?? why set medications state to medications?
     this.setState({ medications, medicationsFiltered: medications });
   }
 
