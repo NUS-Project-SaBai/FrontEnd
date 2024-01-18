@@ -2,25 +2,21 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
-import moment from "moment";
 import withAuth from "../utils/auth";
 
 function Queue() {
   const [visits, setVisits] = useState([]);
   const [visitsFiltered, setVisitsFiltered] = useState([]);
-  const [filterString, setFilterString] = useState("");
 
   useEffect(() => {
-    onRefresh();
+    axios
+      .get(`${API_URL}/visits?status=started`)
+      .then((response) => {
+        setVisits(response.data);
+        setVisitsFiltered(response.data);
+      })
+      .catch((error) => console.error("Error loading page", error));
   }, []);
-
-  async function onRefresh() {
-    let { data: visitsData } = await axios.get(
-      `${API_URL}/visits?status=started`,
-    );
-    setVisits(visitsData);
-    setVisitsFiltered(visitsData);
-  }
 
   async function handleDelete(visit_id, patient_id) {
     const confirmed = window.confirm(

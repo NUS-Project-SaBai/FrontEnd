@@ -34,7 +34,7 @@ const Record = () => {
     viewModalOpen: false,
     modalContent: {},
   });
-  console.log("1: ", state);
+
   const handleVisitChange = useCallback((event) => {
     const value = event.target.value;
     loadVisitDetails(value);
@@ -63,7 +63,6 @@ const Record = () => {
       loadVisitDetails(visitID);
       loadMedicationStock();
     }
-    console.log("refresh: ", state);
   }
 
   function toggleViewModal(viewType = null, consult = {}) {
