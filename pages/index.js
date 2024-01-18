@@ -4,6 +4,7 @@ import Redirect from "./api/redirect";
 import withAuth from "../utils/auth";
 
 const Index = () => {
+  // test
   const router = useRouter();
 
   useEffect(() => {
@@ -14,6 +15,6 @@ const Index = () => {
   // User is logged in, perform client-side redirect to '/patients'
 
   return null;
-}
+};
 
 export default withAuth(Index);
