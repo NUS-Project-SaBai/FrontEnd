@@ -28,13 +28,6 @@ function Queue() {
 
     try {
       await axios.delete(`${API_URL}/visits/${visit_id}`);
-      // let payload = {
-      //   patient: patient_id,
-      //   status: "ended",
-      //   visit_date: moment().format("YYYY-MM-DD"),
-      // };
-
-      // await axios.post(`${API_URL}/visits`, payload);
       const updatedVisits = visits.filter((visit) => visit.id !== visit_id);
       const updatedVisitsFiltered = visitsFiltered.filter(
         (visit) => visit.id !== visit_id,
@@ -47,74 +40,95 @@ function Queue() {
   }
 
   function renderTableContent() {
-    let reversedVisitsFiltered = [...visitsFiltered].reverse();
-    let visitsRows = reversedVisitsFiltered.map((visit, idx) => {
-      let Id = `${visit.patient.village_prefix}${visit.patient.id
-        .toString()
-        .padStart(3, "0")}`;
-      let imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
-      let fullName = visit.patient.name;
-      let progress = (
-        <button
-          className="button is-dark level-item"
-          onClick={() => Router.push(`/records?id=${visit.patient.id}`)}
-        >
-          View
-        </button>
-      );
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(2); //Change to 10
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    let reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data
+    let visitsRows = reversedVisitsFiltered
+      .slice(startIndex, endIndex)
+      .map((visit, idx) => {
+        let Id = `${visit.patient.village_prefix}${visit.patient.id
+          .toString()
+          .padStart(3, "0")}`;
+        let imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
+        let fullName = visit.patient.name;
+        let progress = (
+          <button
+            className="button is-dark level-item"
+            onClick={() => Router.push(`/records?id=${visit.patient.id}`)}
+          >
+            View
+          </button>
+        );
 
-      let vitals = (
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            {" "}
+        let vitals = (
+          <div className="field is-grouped">
+            <div className="control is-expanded">
+              {" "}
+              <button
+                className="button is-dark level-item"
+                onClick={() =>
+                  Router.push(`/patient?id=${visit.patient.id}&form=vitals`)
+                }
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        );
+
+        let consultation = (
+          <div className="field is-grouped">
+            <div className="control is-expanded">
+              {" "}
+              <button
+                className="button is-dark level-item"
+                onClick={() =>
+                  Router.push(`/patient?id=${visit.patient.id}&form=medical`)
+                }
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        );
+
+        return (
+          <tr key={idx}>
+            <td>{Id}</td>
+            <td>
+              <figure className="image is-96x96">
+                <img
+                  src={imageUrl}
+                  alt="Placeholder image"
+                  style={{ height: 96, width: 96, objectFit: "cover" }}
+                />
+              </figure>
+            </td>
+            <td>{fullName}</td>
+
+            <td>{progress}</td>
+            <td>{vitals}</td>
+            <td>{consultation}</td>
             <button
-              className="button is-dark level-item"
-              onClick={() =>
-                Router.push(`/patient?id=${visit.patient.id}&form=vitals`)
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={
+                currentPage ===
+                Math.ceil(reversedVisitsFiltered.length / itemsPerPage)
               }
             >
-              Create
+              Next
             </button>
-          </div>
-        </div>
-      );
-
-      let consultation = (
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            {" "}
-            <button
-              className="button is-dark level-item"
-              onClick={() =>
-                Router.push(`/patient?id=${visit.patient.id}&form=medical`)
-              }
-            >
-              Create
-            </button>
-          </div>
-        </div>
-      );
-
-      return (
-        <tr key={idx}>
-          <td>{Id}</td>
-          <td>
-            <figure className="image is-96x96">
-              <img
-                src={imageUrl}
-                alt="Placeholder image"
-                style={{ height: 96, width: 96, objectFit: "cover" }}
-              />
-            </figure>
-          </td>
-          <td>{fullName}</td>
-
-          <td>{progress}</td>
-          <td>{vitals}</td>
-          <td>{consultation}</td>
-        </tr>
-      );
-    });
+          </tr>
+        );
+      });
 
     return visitsRows;
   }
