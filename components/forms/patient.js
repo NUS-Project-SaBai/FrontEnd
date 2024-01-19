@@ -411,7 +411,7 @@ function PrescriptionForm({
   reservedMedications,
 }) {
   function calculateMedicineCurrentStock(medicine) {
-    let medication = medications.filter((med) => {
+    const medication = medications.filter((med) => {
       return medicine == med.pk;
     });
 

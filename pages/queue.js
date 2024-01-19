@@ -45,16 +45,16 @@ function Queue() {
     const [itemsPerPage, setItemsPerPage] = useState(2); //Change to 10 after development
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    let reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent
-    let visitsRows = reversedVisitsFiltered
+    const reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent
+    const visitsRows = reversedVisitsFiltered
       .slice(startIndex, endIndex)
       .map((visit, idx) => {
-        let Id = `${visit.patient.village_prefix}${visit.patient.id
+        const Id = `${visit.patient.village_prefix}${visit.patient.id
           .toString()
           .padStart(3, "0")}`;
-        let imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
-        let fullName = visit.patient.name;
-        let progress = (
+        const imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
+        const fullName = visit.patient.name;
+        const progress = (
           <button
             className="button is-dark level-item"
             onClick={() => Router.push(`/records?id=${visit.patient.id}`)}
@@ -63,7 +63,7 @@ function Queue() {
           </button>
         );
 
-        let vitals = (
+        const vitals = (
           <div className="field is-grouped">
             <div className="control is-expanded">
               {" "}
@@ -79,7 +79,7 @@ function Queue() {
           </div>
         );
 
-        let consultation = (
+        const consultation = (
           <div className="field is-grouped">
             <div className="control is-expanded">
               {" "}
@@ -149,14 +149,14 @@ function Queue() {
   }
 
   function onFilterChange(e) {
-    let filteredVisits = visits.filter((visit) => {
-      let patientId1 =
+    const filteredVisits = visits.filter((visit) => {
+      const patientId1 =
         `${visit.patient.village_prefix}${visit.patient.id}`.toLowerCase();
-      let patientId2 =
+      const patientId2 =
         `${visit.patient.village_prefix}`.toLowerCase() +
         `${visit.patient.id}`.padStart(3, `0`);
-      let name = `${visit.patient.name}`.toLowerCase();
-      let searchValue = e.target.value.toLowerCase();
+      const name = `${visit.patient.name}`.toLowerCase();
+      const searchValue = e.target.value.toLowerCase();
       return (
         patientId1.includes(searchValue) ||
         patientId2.includes(searchValue) ||

@@ -18,10 +18,10 @@ function ConsultationsTable({ consultRows }) {
 
 function ConsultationsView({ content }) {
   const renderPrescriptions = (prescriptions) => {
-    let prescriptionRows = prescriptions.map((prescription) => {
-      let name = prescription?.medicine?.medicine_name;
-      let quantity = prescription.quantity;
-      let notes = prescription.notes;
+    const prescriptionRows = prescriptions.map((prescription) => {
+      const name = prescription?.medicine?.medicine_name;
+      const quantity = prescription.quantity;
+      const notes = prescription.notes;
 
       return (
         <tr key={prescription.id}>
@@ -47,8 +47,6 @@ function ConsultationsView({ content }) {
   };
 
   function renderMedicalConsultation(consult) {
-    let prescriptions = consult.prescriptions;
-
     return (
       <div>
         <div className="field">
@@ -77,8 +75,8 @@ function ConsultationsView({ content }) {
 
   if (Object.keys(content).length === 0) return null;
 
-  let type = content.type;
-  let prescriptions = content.prescriptions;
+  const type = content.type;
+  const prescriptions = content.prescriptions;
 
   return (
     <div className="column is-12">
@@ -324,10 +322,10 @@ function VitalsView({ content }) {
 }
 
 function VisitPrescriptionsTable({ content: prescriptions }) {
-  let prescriptionRows = prescriptions.map((prescription) => {
+  const prescriptionRows = prescriptions.map((prescription) => {
     console.log(prescription);
-    let name = prescription?.medicine?.medicine_name;
-    let quantity = prescription.quantity;
+    const name = prescription?.medicine?.medicine_name;
+    const quantity = prescription.quantity;
     // let doctor = prescription.doctor
 
     return (
