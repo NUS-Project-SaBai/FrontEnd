@@ -5,6 +5,7 @@ import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 
 function Queue() {
+  //Queue Page
   const [visits, setVisits] = useState([]);
   const [visitsFiltered, setVisitsFiltered] = useState([]);
 
@@ -41,10 +42,10 @@ function Queue() {
 
   function renderTableContent() {
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(2); //Change to 10
+    const [itemsPerPage, setItemsPerPage] = useState(2); //Change to 10 after development
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    let reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data
+    let reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent
     let visitsRows = reversedVisitsFiltered
       .slice(startIndex, endIndex)
       .map((visit, idx) => {
@@ -111,26 +112,40 @@ function Queue() {
             <td>{progress}</td>
             <td>{vitals}</td>
             <td>{consultation}</td>
-            <button
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={
-                currentPage ===
-                Math.ceil(reversedVisitsFiltered.length / itemsPerPage)
-              }
-            >
-              Next
-            </button>
           </tr>
         );
       });
 
-    return visitsRows;
+    return (
+      <>
+        {visitsRows}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
+          }}
+        >
+          <button
+            className="button is-dark level-item"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <button
+            className="button is-dark level-item"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={
+              currentPage ===
+              Math.ceil(reversedVisitsFiltered.length / itemsPerPage)
+            }
+          >
+            Next
+          </button>
+        </div>
+      </>
+    );
   }
 
   function onFilterChange(e) {
