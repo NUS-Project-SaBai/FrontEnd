@@ -6,7 +6,7 @@ import withAuth from "../utils/auth";
 
 function Queue() {
   //Queue Page
-  const [visits, setVisits] = useState([]);
+  const [visits, setVisits] = useState([]); //Shouldnt this pull based on Patients not Visits
   const [visitsFiltered, setVisitsFiltered] = useState([]);
 
   useEffect(() => {
@@ -20,6 +20,7 @@ function Queue() {
   }, []);
 
   async function handleDelete(visit_id, patient_id) {
+    //Not yet implementd
     const confirmed = window.confirm(
       "Are you sure you want to delete this visit?",
     );
@@ -45,6 +46,7 @@ function Queue() {
     const [itemsPerPage, setItemsPerPage] = useState(2); //Change to 10 after development
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
+    //Above consts for pagination
     const reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent
     const visitsRows = reversedVisitsFiltered
       .slice(startIndex, endIndex)
@@ -57,7 +59,7 @@ function Queue() {
         const progress = (
           <button
             className="button is-dark level-item"
-            onClick={() => Router.push(`/records?id=${visit.patient.id}`)}
+            onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
           >
             View
           </button>

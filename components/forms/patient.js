@@ -233,7 +233,7 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
 }
 
 function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
-  const [showWomenClinicDetails, setShowWomenClinicDetails] = useState(false);
+  const [showWomenClinicDetails, setShowWomenClinicDetails] = useState(false); //Not sure what this does yet
 
   function handleCheckboxChange(e) {
     const { checked } = e.target;
@@ -246,14 +246,17 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
   }
 
   function handleClick(e) {
+    //Update form details resulting in rendering of page
     updateFormDetails([...formDetails.diagnoses, { details: "", type: "" }]);
   }
 
   function handleDelete(index) {
+    //Delete diagnosis
     updateFormDetails([...formDetails.diagnoses].filter((_, i) => i != index));
   }
 
   function handleDiagnosisChange(e, index) {
+    //used to update diagnosis inputs
     const newDiagnoses = formDetails.diagnoses.map((diagnosis, i) => {
       if (index !== i) return diagnosis;
       return { ...diagnosis, [e.target.name]: e.target.value };
@@ -262,6 +265,7 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
   }
 
   function diagnosisToAdd() {
+    //Generate textfields for diagnosis
     return formDetails.diagnoses.map((diagnosis, index) => {
       return (
         <div className="field" key={index}>

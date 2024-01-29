@@ -314,14 +314,14 @@ const Patient = () => {
 
     for (let i = 0; i < formDetails.diagnoses.length; i++) {
       diagnosisFormat += `DIAGNOSIS ${i + 1}
-        ${formDetails.diagnoses[i].details}
-        ${
-          !formDetails.diagnoses[i].type
-            ? "Cardiovascular"
-            : formDetails.diagnoses[i].type
-        }
-        
-        `;
+          ${formDetails.diagnoses[i].details}
+          ${
+            !formDetails.diagnoses[i].type
+              ? "Cardiovascular"
+              : formDetails.diagnoses[i].type
+          }
+          
+          `;
     }
 
     var formPayload = {
@@ -335,9 +335,9 @@ const Patient = () => {
 
     if (formDetails.referred_for) {
       const referrals = `
-        Referred For: ${formDetails.referred_for} 
-        Notes: 
-        ${formDetails.referred_notes || "No Notes Provided"}`;
+          Referred For: ${formDetails.referred_for} 
+          Notes: 
+          ${formDetails.referred_notes || "No Notes Provided"}`;
       formPayload = {
         ...formPayload,
         referrals: referrals,
@@ -493,7 +493,7 @@ const Patient = () => {
       return (
         <tr key={consult.id}>
           {/* <td>{type}</td>
-          <td>{subType}</td> */}
+            <td>{subType}</td> */}
           <td>{doctor}</td>
           <td>{referredFor}</td>
           <td>
@@ -659,6 +659,7 @@ const Patient = () => {
           marginTop: 27.5,
           marginLeft: 25,
           marginRight: 25,
+          overflowX: "hidden", //remove horizontal scrollbar
         }}
       >
         {renderFormModal()}
