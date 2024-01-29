@@ -47,19 +47,21 @@ const Record = () => {
   async function onRefresh() {
     const router = Router;
     const { query } = router;
-    let { id: patientId } = query;
-    let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
-    let { data: visits } = await axios.get(
+    const { id: patientId } = query;
+    const { data: patient } = await axios.get(
+      `${API_URL}/patients/${patientId}`,
+    );
+    const { data: visits } = await axios.get(
       `${API_URL}/visits?patient=${patientId}`,
     );
-    let visitsSorted = visits.sort((a, b) => b.id - a.id);
+    const visitsSorted = visits.sort((a, b) => b.id - a.id);
     setState((prevState) => ({
       ...prevState,
       patient: patient[0],
       visits: visitsSorted,
     }));
     if (visitsSorted.length > 0) {
-      let visitID = visitsSorted[0].id;
+      const visitID = visitsSorted[0].id;
       loadVisitDetails(visitID);
       loadMedicationStock();
     }
@@ -75,8 +77,8 @@ const Record = () => {
   }
 
   function renderViewModal() {
-    let { vitals, viewModalOpen, consult, viewType } = state;
-    let modalContent =
+    const { vitals, viewModalOpen, consult, viewType } = state;
+    const modalContent =
       viewType == "vitals" ? (
         <VitalsView content={vitals} />
       ) : (
@@ -94,14 +96,14 @@ const Record = () => {
   }
 
   async function loadMedicationStock() {
-    let { data: medications } = await axios.get(`${API_URL}/medications`);
-    let { data: orders } = await axios.get(
+    const { data: medications } = await axios.get(`${API_URL}/medications`);
+    const { data: orders } = await axios.get(
       `${API_URL}/orders?order_status=PENDING`,
     );
-    let reservedMedications = {};
+    const reservedMedications = {};
     orders.forEach((order) => {
-      let medicationID = order.medicine;
-      let quantityReserved = order.quantity;
+      const medicationID = order.medicine;
+      const quantityReserved = order.quantity;
       if (typeof reservedMedications[medicationID] === "undefined") {
         reservedMedications[medicationID] = quantityReserved;
       } else {
@@ -117,14 +119,14 @@ const Record = () => {
   }
 
   async function loadVisitDetails(visitID) {
-    let { data: consults } = await axios.get(
+    const { data: consults } = await axios.get(
       `${API_URL}/consults?visit=${visitID}`,
     );
-    let { data: prescriptions } = await axios.get(
+    const { data: prescriptions } = await axios.get(
       `${API_URL}/orders?visit=${visitID}`,
     );
-    let consultsEnriched = consults.map((consult) => {
-      let consultPrescriptions = prescriptions.filter(
+    const consultsEnriched = consults.map((consult) => {
+      const consultPrescriptions = prescriptions.filter(
         (prescription) => prescription.consult.id === consult.id,
       );
       return {
@@ -132,7 +134,7 @@ const Record = () => {
         prescriptions: consultPrescriptions,
       };
     });
-    let { data: vitals } = await axios.get(
+    const { data: vitals } = await axios.get(
       `${API_URL}/vitals?visit=${visitID}`,
     );
     setState((prevState) => ({
@@ -146,10 +148,10 @@ const Record = () => {
   }
 
   function renderHeader() {
-    let { patient, visits } = state;
+    const { patient, visits } = state;
     console.log("Render: ", state);
-    let visitOptions = visits.map((visit) => {
-      let date = moment(visit.date).format("DD MMMM YYYY");
+    const visitOptions = visits.map((visit) => {
+      const date = moment(visit.date).format("DD MMMM YYYY");
       return (
         <option key={visit.id} value={visit.id}>
           {date}
@@ -199,17 +201,17 @@ const Record = () => {
   }
 
   function renderFirstColumn() {
-    let { patient } = state;
+    const { patient } = state;
     return <PatientView content={patient} />;
   }
 
   function renderSecondColumn() {
-    let { vitals, consults, visitPrescriptions } = state;
-    let consultRows = consults.map((consult) => {
-      let type = consult.type;
-      let subType = consult.sub_type == null ? "General" : consult.sub_type;
-      let doctor = consult.doctor.username;
-      let referredFor =
+    const { vitals, consults, visitPrescriptions } = state;
+    const consultRows = consults.map((consult) => {
+      const type = consult.type;
+      const subType = consult.sub_type == null ? "General" : consult.sub_type;
+      const doctor = consult.doctor.username;
+      const referredFor =
         consult.referrals == null || consult.referrals == ""
           ? "None"
           : consult.referrals.split("\n")[0].split(" ")[2];
@@ -269,11 +271,11 @@ const Record = () => {
   }
 
   function renderPrescriptionTable() {
-    let { orders } = state;
+    const { orders } = state;
 
-    let orderRows = orders.map((order, index) => {
-      let name = order.medicine.medicine_name;
-      let quantity = order.quantity;
+    const orderRows = orders.map((order, index) => {
+      const name = order.medicine.medicine_name;
+      const quantity = order.quantity;
 
       return (
         <tr key={order.id}>
