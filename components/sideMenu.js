@@ -14,7 +14,7 @@ const SideMenu = (props) => (
     <p className="menu-label sideMenuItem">Services</p>
     <ul className="menu-list">
       <li>
-        <Link href="/patients" replace>
+        <Link href="/registration" replace>
           Registration
         </Link>
       </li>
