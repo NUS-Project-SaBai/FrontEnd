@@ -347,36 +347,9 @@ const Patient = () => {
     var consultId;
     var orderPromises;
 
-    switch (form) {
-      case "vitals":
-        delete formPayload.notes;
-        await axios.post(`${API_URL}/vitals`, formPayload);
-        toast.success("Vitals completed!");
-        break;
-      case "medical":
-        let { data: medicalConsult } = await axios.post(`${API_URL}/consults`, {
-          ...formPayload,
-          doctor: window.localStorage.getItem("userID"),
-          type: "medical",
-        });
-
-        consultId = medicalConsult.id;
-        orderPromises = [];
-
-        orders.forEach((order) => {
-          let orderPayload = {
-            ...order,
-            visit: visitID,
-            doctor: window.localStorage.getItem("userID"),
-            consult: consultId,
-          };
-          orderPromises.push(axios.post(`${API_URL}/orders`, orderPayload));
-        });
-
-        await Promise.all(orderPromises);
-        toast.success("Medical Consult Completed!");
-        break;
-    }
+    delete formPayload.notes;
+    await axios.post(`${API_URL}/vitals`, formPayload);
+    toast.success("Vitals completed!");
 
     Router.push("/queue");
   }
@@ -549,37 +522,13 @@ const Patient = () => {
     let { formDetails, orders, patient } = state;
 
     let formContent = () => {
-      switch (form) {
-        case "vitals":
-          return (
-            <VitalsForm
-              formDetails={formDetails}
-              handleInputChange={handleInputChange}
-              patient={patient}
-            />
-          );
-
-        case "medical":
-          return (
-            <div>
-              <MedicalForm
-                updateFormDetails={updateFormDetails}
-                formDetails={formDetails}
-                handleInputChange={handleInputChange}
-              />
-              <hr />
-              <label className="label">Prescriptions</label>
-              {orders.length > 0 ? renderPrescriptionTable() : "None"}
-              <button
-                className="button is-dark level-item"
-                style={{ marginTop: 15 }}
-                onClick={() => toggleFormModal()}
-              >
-                Add
-              </button>
-            </div>
-          );
-      }
+      return (
+        <VitalsForm
+          formDetails={formDetails}
+          handleInputChange={handleInputChange}
+          patient={patient}
+        />
+      );
     };
 
     return (
