@@ -72,7 +72,9 @@ function Queue() {
               <button
                 className="button is-dark level-item"
                 onClick={() =>
-                  Router.push(`/patient?id=${visit.patient.id}&form=vitals`)
+                  Router.push(
+                    `/patientVital?id=${visit.patient.id}&form=vitals`,
+                  )
                 }
               >
                 Create
@@ -88,7 +90,9 @@ function Queue() {
               <button
                 className="button is-dark level-item"
                 onClick={() =>
-                  Router.push(`/patient?id=${visit.patient.id}&form=medical`)
+                  Router.push(
+                    `/patientMedical?id=${visit.patient.id}&form=medical`, //testMedical
+                  )
                 }
               >
                 Create
