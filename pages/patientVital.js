@@ -4,11 +4,7 @@ import _ from "lodash";
 import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
-import {
-  VitalsForm,
-  MedicalForm,
-  PrescriptionForm,
-} from "../components/forms/patient";
+import { VitalsForm } from "../components/forms/patient";
 import {
   ConsultationsTable,
   ConsultationsView,
@@ -71,7 +67,6 @@ const Patient = () => {
 
     let visitID = visitsSorted[0].id;
     loadVisitDetails(visitID);
-    loadMedicationStock();
   }
 
   function toggleViewModal(viewType = null, consult = {}) {
@@ -103,148 +98,6 @@ const Patient = () => {
         {modalContent}
       </Modal>
     );
-  }
-
-  function toggleFormModal(order = {}) {
-    loadMedicationStock();
-
-    setState((prevState) => ({
-      ...prevState,
-      formModalIsOpen: !state.formModalIsOpen,
-      medicationDetails: order,
-      isEditing: Object.keys(order).length > 0,
-    }));
-  }
-
-  async function loadMedicationStock() {
-    let { data: medications } = await axios.get(`${API_URL}/medications`);
-
-    let { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`,
-    );
-
-    // key -> medicine pk
-    // value -> total reserved
-    let reservedMedications = {};
-    orders.forEach((order) => {
-      let medicationID = order.medicine;
-      let quantityReserved = order.quantity;
-
-      if (typeof reservedMedications[medicationID] === "undefined") {
-        reservedMedications[medicationID] = quantityReserved;
-      } else {
-        reservedMedications[medicationID] =
-          reservedMedications[medicationID] + quantityReserved;
-      }
-    });
-
-    setState((prevState) => ({
-      ...prevState,
-      medications,
-      reservedMedications,
-    }));
-  }
-
-  function renderFormModal() {
-    let {
-      patient,
-      isEditing,
-      medications,
-      medicationDetails,
-      formModalIsOpen,
-      reservedMedications,
-      orders,
-    } = state;
-    let options = medications
-      .filter((medication) => {
-        for (let i = 0; i < orders.length; i++) {
-          if (orders[i].medicine == medication.pk) return false;
-        }
-        return true;
-      })
-      .map((medication) => {
-        let name = medication.fields.medicine_name;
-        let pKey = medication.pk;
-
-        var value = "";
-        if (Object.keys(medicationDetails).length > 0)
-          value = `${medicationDetails.medicine} ${medicationDetails.medicine_name}`;
-
-        if (value == `${pKey} ${name}`)
-          return (
-            <option key={pKey} value={`${pKey} ${name}`}>
-              {name}
-            </option>
-          );
-        return (
-          <option key={pKey} value={`${pKey} ${name}`}>
-            {name}
-          </option>
-        );
-      });
-
-    return (
-      <Modal
-        isOpen={formModalIsOpen}
-        onRequestClose={() => toggleFormModal()}
-        style={formModalStyles}
-        contentLabel="Example Modal"
-      >
-        <PrescriptionForm
-          allergies={patient.fields.drug_allergy}
-          handleInputChange={handlePrescriptionChange}
-          formDetails={medicationDetails}
-          isEditing={isEditing}
-          medicationOptions={options}
-          medications={medications}
-          reservedMedications={reservedMedications}
-          onSubmit={() => submitNewPrescription()}
-        />
-      </Modal>
-    );
-  }
-
-  function handlePrescriptionChange(e) {
-    let { medicationDetails } = state;
-
-    const target = e.target;
-    const value = target.value;
-    const name = target.name;
-
-    if (name === "medication") {
-      let pKey = value.split(" ")[0];
-      let medicineName = value.split(" ").slice(1).join(" ");
-
-      medicationDetails["medicine"] = pKey;
-      medicationDetails["medicine_name"] = medicineName;
-    } else {
-      medicationDetails[name] = value;
-    }
-
-    setState((prevState) => ({
-      ...prevState,
-      medicationDetails,
-    }));
-  }
-
-  function submitNewPrescription() {
-    let { orders, medicationDetails, isEditing } = state;
-
-    if (isEditing) {
-      // go find that order
-      let index = orders.findIndex((order) => {
-        order.medication == medicationDetails.medication;
-      });
-      orders[index] = medicationDetails;
-      // edit that order
-    } else orders.push({ ...medicationDetails, order_status: "PENDING" });
-
-    setState((prevState) => ({
-      ...prevState,
-      orders: orders,
-      medicationDetails: {},
-      formModalIsOpen: false,
-    }));
   }
 
   async function loadVisitDetails(visitID) {
@@ -283,16 +136,7 @@ const Patient = () => {
 
   async function submitForm() {
     //Post 405 error
-    const router = Router;
-    const { query } = router;
-    const { form } = query;
-    let { formDetails, visitID, orders } = state;
-
-    orders.forEach((order) => {
-      axios.patch(`${API_URL}/medications/${order.medicine}`, {
-        quantityChange: -parseInt(order.quantity),
-      });
-    });
+    let { formDetails, visitID } = state;
 
     //We still haven't figured out a way to let the backend handle new fields
     //which we want to create. Hence, we are using existing fields (problems, diagnosis, notes)
@@ -310,24 +154,9 @@ const Patient = () => {
 
     console.log(formDetails);
 
-    let diagnosisFormat = "";
-
-    for (let i = 0; i < formDetails.diagnoses.length; i++) {
-      diagnosisFormat += `DIAGNOSIS ${i + 1}
-          ${formDetails.diagnoses[i].details}
-          ${
-            !formDetails.diagnoses[i].type
-              ? "Cardiovascular"
-              : formDetails.diagnoses[i].type
-          }
-          
-          `;
-    }
-
     var formPayload = {
       visit: visitID,
       ...formDetails,
-      notes: diagnosisFormat,
     };
 
     //For Referrals, we are also using a standardised text format to store information
@@ -335,8 +164,8 @@ const Patient = () => {
 
     if (formDetails.referred_for) {
       const referrals = `
-          Referred For: ${formDetails.referred_for} 
-          Notes: 
+          Referred For: ${formDetails.referred_for}
+          Notes:
           ${formDetails.referred_notes || "No Notes Provided"}`;
       formPayload = {
         ...formPayload,
@@ -344,22 +173,10 @@ const Patient = () => {
       };
     }
 
-    var consultId;
-    var orderPromises;
-
-    delete formPayload.notes;
     await axios.post(`${API_URL}/vitals`, formPayload);
     toast.success("Vitals completed!");
 
     Router.push("/queue");
-  }
-
-  function updateFormDetails(diagnoses) {
-    // update the form details
-    let { formDetails } = state;
-    formDetails = { ...formDetails, diagnoses: diagnoses };
-
-    setState((prevState) => ({ ...prevState, formDetails }));
   }
 
   function handleInputChange(e) {
@@ -517,23 +334,16 @@ const Patient = () => {
     //let { form } = this.props.query;
     const router = Router;
     const { query } = router;
-    const { form } = query;
 
-    let { formDetails, orders, patient } = state;
+    let { formDetails, patient } = state;
 
-    let formContent = () => {
-      return (
+    return (
+      <div className="column is-7">
         <VitalsForm
           formDetails={formDetails}
           handleInputChange={handleInputChange}
           patient={patient}
         />
-      );
-    };
-
-    return (
-      <div className="column is-7">
-        {formContent()}
 
         <hr />
 
@@ -545,56 +355,6 @@ const Patient = () => {
           Submit
         </button>
       </div>
-    );
-  }
-
-  function renderPrescriptionTable() {
-    let { orders } = state;
-
-    let orderRows = orders.map((order, index) => {
-      let name = order.medicine_name;
-      let quantity = order.quantity;
-
-      return (
-        <tr key={order.id}>
-          <td>{name}</td>
-          <td>{quantity}</td>
-          <td>
-            <div className="levels">
-              <div className="level-left">
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => toggleFormModal(order)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => {
-                    orders.splice(index, 1);
-                    setState((prevState) => ({ ...prevState, orders }));
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </td>
-        </tr>
-      );
-    });
-
-    return (
-      <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <thead>
-          <tr>
-            <th>Medicine Name</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>{orderRows}</tbody>
-      </table>
     );
   }
 
@@ -611,7 +371,6 @@ const Patient = () => {
           overflowX: "hidden", //remove horizontal scrollbar
         }}
       >
-        {renderFormModal()}
         {renderViewModal()}
         <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient</h1>
         {renderHeader()}
@@ -631,18 +390,6 @@ const Patient = () => {
     );
   }
   return <>{render()}</>;
-};
-
-const formModalStyles = {
-  content: {
-    left: "35%",
-    right: "17.5%",
-    top: "12.5%",
-    bottom: "12.5%",
-  },
-  overlay: {
-    zIndex: 4,
-  },
 };
 
 const viewModalStyles = {
