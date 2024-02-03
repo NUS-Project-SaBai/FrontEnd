@@ -114,7 +114,6 @@ function Queue() {
               </figure>
             </td>
             <td>{fullName}</td>
-
             <td>{progress}</td>
             <td>{vitals}</td>
             <td>{consultation}</td>

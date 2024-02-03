@@ -1,234 +1,174 @@
 import React, { useState } from "react";
+import { InputField } from "../views/InputField";
 
 function VitalsForm({ handleInputChange, formDetails, patient }) {
+  const fields = [
+    {
+      name: "height",
+      label: "Height (Decimal eg. 160.5)",
+      value: formDetails.height,
+    },
+    {
+      name: "weight",
+      label: "Weight (Decimal eg. 60.2)",
+      value: formDetails.weight,
+    },
+    {
+      name: "systolic",
+      label: "Systolic (Number eg. 10)",
+      value: formDetails.systolic,
+    },
+    {
+      name: "diastolic",
+      label: "Diastolic (Number eg. 10)",
+      value: formDetails.diastolic,
+    },
+    {
+      name: "temperature",
+      label: "Temperature (Decimal eg. 36.5)",
+      value: formDetails.temperature,
+    },
+    {
+      name: "heart_rate",
+      label: "Heart Rate (Number eg. 120)",
+      value: formDetails.heart_rate,
+    },
+    {
+      name: "left_eye_degree",
+      label: "Left Eye (Fraction eg. 6/6)",
+      value: formDetails.left_eye_degree,
+    },
+    {
+      name: "right_eye_degree",
+      label: "Right Eye (Fraction eg. 6/12)",
+      value: formDetails.right_eye_degree,
+    },
+    {
+      name: "left_eye_pinhole",
+      label: "Left Eye Pinhole (Fraction eg. 6/6)",
+      value: formDetails.left_eye_pinhole,
+    },
+    {
+      name: "right_eye_pinhole",
+      label: "Right Eye Pinhole (Fraction eg. 6/12)",
+      value: formDetails.right_eye_pinhole,
+    },
+    // Add more fields as needed
+  ];
+
   return (
-    <div>
-      <label className="label">Vitals</label>
-      <div className="field is-grouped">
-        <div className="control is-expanded">
-          <label className="label">Height (Decimal eg. 160.5)</label>
-          <div className="control">
-            <input
-              name="height"
-              className="input"
-              type="number"
-              onWheel={(e) => e.target.blur()}
-              onChange={handleInputChange}
-              value={formDetails.height}
-            />
-          </div>
-        </div>
-
-        <div className="control is-expanded">
-          <label className="label">Weight (Decimal eg. 60.2)</label>
-          <div className="control">
-            <input
-              name="weight"
-              className="input"
-              type="number"
-              onWheel={(e) => e.target.blur()}
-              onChange={handleInputChange}
-              value={formDetails.weight}
-            />
-          </div>
-        </div>
+    <form>
+      <div>
+        <label className="label">Vitals</label>
       </div>
-
-      <div className="field is-grouped">
-        <div className="control is-expanded">
-          <label className="label">Systolic (Number eg. 10)</label>
-          <div className="control">
-            <input
-              name="systolic"
-              className="input"
+      <div>
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+          <InputField
+            name="height"
+            label="Height (Decimal eg. 160.5)"
+            type="number"
+            value={formDetails.height}
+            onChange={handleInputChange}
+          />
+          <InputField
+            name="weight"
+            label="Weight (Decimal eg. 60.2)"
+            type="number"
+            value={formDetails.weight}
+            onChange={handleInputChange}
+          />
+          {fields.map((field) => (
+            <InputField
+              key={field.name}
+              name={field.name}
+              label={field.label}
               type="number"
-              onWheel={(e) => e.target.blur()}
+              value={field.value}
               onChange={handleInputChange}
-              value={formDetails.systolic}
             />
-          </div>
+          ))}
         </div>
 
-        <div className="control is-expanded">
-          <label className="label">Diastolic (Number eg. 10)</label>
-          <div className="control">
-            <input
-              name="diastolic"
-              className="input"
-              type="number"
-              onWheel={(e) => e.target.blur()}
-              onChange={handleInputChange}
-              value={formDetails.diastolic}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="field is-grouped">
-        <div className="control is-expanded">
-          <label className="label">Temperature (Decimal eg. 36.5)</label>
-          <div className="control">
-            <input
-              name="temperature"
-              className="input"
-              type="number"
-              onWheel={(e) => e.target.blur()}
-              onChange={handleInputChange}
-              value={formDetails.temperature}
-            />
-          </div>
-        </div>
-
-        <div className="control is-expanded">
-          <label className="label">Heart Rate (Number eg. 120)</label>
-          <div className="control">
-            <input
-              name="heart_rate"
-              className="input"
-              type="number"
-              onWheel={(e) => e.target.blur()}
-              onChange={handleInputChange}
-              value={formDetails.heart_rate}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="field is-grouped">
-        <div className="control is-expanded">
-          <label className="label">Left Eye (Fraction eg. 6/6)</label>
-          <div className="control">
-            <input
-              name="left_eye_degree"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.left_eye_degree}
-            />
-          </div>
-        </div>
-
-        <div className="control is-expanded">
-          <label className="label">Right Eye (Fraction eg. 6/12)</label>
-          <div className="control">
-            <input
-              name="right_eye_degree"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.right_eye_degree}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="field is-grouped">
-        <div className="control is-expanded">
-          <label className="label">Left Eye Pinhole (Fraction eg. 6/6)</label>
-          <div className="control">
-            <input
-              name="left_eye_pinhole"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.left_eye_pinhole}
-            />
-          </div>
-        </div>
-
-        <div className="control is-expanded">
-          <label className="label">Right Eye Pinhole (Fraction eg. 6/12)</label>
-          <div className="control">
-            <input
-              name="right_eye_pinhole"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.right_eye_pinhole}
-            />
-          </div>
-        </div>
-      </div>
-
-      {patient.fields.date_of_birth &&
-        Math.abs(
-          new Date(
-            Date.now() - new Date(patient.fields.date_of_birth),
-          ).getUTCFullYear() - 1970,
-        ) >= 40 && (
-          <div className="field is-grouped">
-            <div className="control is-expanded">
-              <label className="label"> Has Diabetes?</label>
-              <div className="select">
-                <select name="diabetes_mellitus" onChange={handleInputChange}>
-                  <option>Please Select...</option>
-                  <option value="No">No</option>
-                  <option value="Yes">Yes</option>
-                </select>
+        {patient.fields.date_of_birth &&
+          Math.abs(
+            new Date(
+              Date.now() - new Date(patient.fields.date_of_birth),
+            ).getUTCFullYear() - 1970,
+          ) >= 40 && (
+            <div className="field is-grouped">
+              <div className="control is-expanded">
+                <label className="label"> Has Diabetes?</label>
+                <div className="select">
+                  <select name="diabetes_mellitus" onChange={handleInputChange}>
+                    <option>Please Select...</option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-      <label className="label">STAT Investigations</label>
-      <div className="field is-grouped">
-        <div className="control is-expanded">
-          <label className="label">Urine Dip Test (Text eg. Anyth)</label>
-          <div className="control">
-            <input
-              name="urine_test"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.urine_test}
-            />
+        <label className="label">STAT Investigations</label>
+        <div className="field is-grouped">
+          <div className="control is-expanded">
+            <label className="label">Urine Dip Test (Text eg. Anyth)</label>
+            <div className="control">
+              <input
+                name="urine_test"
+                className="input"
+                type="text"
+                onChange={handleInputChange}
+                value={formDetails.urine_test}
+              />
+            </div>
+          </div>
+
+          <div className="control is-expanded">
+            <label className="label">Hemocue Hb Count (Decimal eg. 13.2)</label>
+            <div className="control">
+              <input
+                name="hemocue_count"
+                className="input"
+                type="text"
+                onChange={handleInputChange}
+                value={formDetails.hemocue_count}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="control is-expanded">
-          <label className="label">Hemocue Hb Count (Decimal eg. 13.2)</label>
-          <div className="control">
-            <input
-              name="hemocue_count"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.hemocue_count}
-            />
+        <div className="field is-grouped">
+          <div className="control is-expanded">
+            <label className="label">
+              Capillary Blood Glucose (Decimal eg. 13.2)
+            </label>
+            <div className="control">
+              <input
+                name="blood_glucose"
+                className="input"
+                type="text"
+                onChange={handleInputChange}
+                value={formDetails.blood_glucose}
+              />
+            </div>
+          </div>
+
+          <div className="control is-expanded">
+            <label className="label">Others (Text eg. Anyth)</label>
+            <div className="control">
+              <input
+                name="others"
+                className="input"
+                type="text"
+                onChange={handleInputChange}
+                value={formDetails.others}
+              />
+            </div>
           </div>
         </div>
       </div>
-
-      <div className="field is-grouped">
-        <div className="control is-expanded">
-          <label className="label">
-            Capillary Blood Glucose (Decimal eg. 13.2)
-          </label>
-          <div className="control">
-            <input
-              name="blood_glucose"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.blood_glucose}
-            />
-          </div>
-        </div>
-
-        <div className="control is-expanded">
-          <label className="label">Others (Text eg. Anyth)</label>
-          <div className="control">
-            <input
-              name="others"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.others}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    </form>
   );
 }
 
