@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { InputField } from "../views/InputField";
+import { InputField } from "../textContainers.js/InputField";
 
 function VitalsForm({ handleInputChange, formDetails, patient }) {
   const vitalFields = [

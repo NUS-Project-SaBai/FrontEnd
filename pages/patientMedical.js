@@ -5,12 +5,10 @@ import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
 import { MedicalForm, PrescriptionForm } from "../components/forms/patient";
-import {
-  ConsultationsTable,
-  ConsultationsView,
-  VitalsView,
-  VisitPrescriptionsTable,
-} from "../components/views/patient";
+import { ConsultationsView } from "@/components/views/Consultations/ConsultationsView";
+import { VitalsView } from "@/components/views/Vitals/VitalsView";
+import { ConsultationsTable } from "@/components/views/Consultations/ConsultationsTable";
+import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitPrescriptionsTable";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
