@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { InputField } from "../views/InputField";
 
 function VitalsForm({ handleInputChange, formDetails, patient }) {
-  const fields = [
+  const vitalFields = [
     {
       name: "height",
       label: "Height (Decimal eg. 160.5)",
@@ -56,28 +56,37 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
     // Add more fields as needed
   ];
 
+  const statFields = [
+    {
+      name: "urine_test",
+      label: "Urine Dip Test (Text eg. Anyth)",
+      value: formDetails.urine_test,
+    },
+    {
+      name: "hemocue_count",
+      label: "Weight (Decimal eg. 60.2)",
+      value: formDetails.hemocue_count,
+    },
+    {
+      name: "blood_glucose",
+      label: "Capillary Blood Glucose (Decimal eg. 13.2)",
+      value: formDetails.blood_glucose,
+    },
+    {
+      name: "others",
+      label: "Others (Text eg. Anyth)",
+      value: formDetails.others,
+    },
+  ];
+
   return (
     <form>
       <div>
         <label className="label">Vitals</label>
       </div>
       <div>
-        <div class="grid gap-6 mb-6 md:grid-cols-2">
-          <InputField
-            name="height"
-            label="Height (Decimal eg. 160.5)"
-            type="number"
-            value={formDetails.height}
-            onChange={handleInputChange}
-          />
-          <InputField
-            name="weight"
-            label="Weight (Decimal eg. 60.2)"
-            type="number"
-            value={formDetails.weight}
-            onChange={handleInputChange}
-          />
-          {fields.map((field) => (
+        <div class="grid gap-6 md:grid-cols-2">
+          {vitalFields.map((field) => (
             <InputField
               key={field.name}
               name={field.name}
@@ -87,6 +96,23 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
               onChange={handleInputChange}
             />
           ))}
+        </div>
+        <div>
+          <label className="label">STAT Investigations</label>
+        </div>
+        <div>
+          <div class="grid gap-6 md:grid-cols-2">
+            {statFields.map((field) => (
+              <InputField
+                key={field.name}
+                name={field.name}
+                label={field.label}
+                type="number"
+                value={field.value}
+                onChange={handleInputChange}
+              />
+            ))}
+          </div>
         </div>
 
         {patient.fields.date_of_birth &&
@@ -108,65 +134,6 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
               </div>
             </div>
           )}
-
-        <label className="label">STAT Investigations</label>
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">Urine Dip Test (Text eg. Anyth)</label>
-            <div className="control">
-              <input
-                name="urine_test"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.urine_test}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Hemocue Hb Count (Decimal eg. 13.2)</label>
-            <div className="control">
-              <input
-                name="hemocue_count"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.hemocue_count}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">
-              Capillary Blood Glucose (Decimal eg. 13.2)
-            </label>
-            <div className="control">
-              <input
-                name="blood_glucose"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.blood_glucose}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Others (Text eg. Anyth)</label>
-            <div className="control">
-              <input
-                name="others"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.others}
-              />
-            </div>
-          </div>
-        </div>
       </div>
     </form>
   );
