@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { InputField } from "../textContainers.js/InputField";
-
+import { InputBox } from "../textContainers.js/InputBox";
+import { CreateButton } from "../textContainers.js/CreateButton";
+import { DeleteButton } from "../textContainers.js/DeleteButton";
 function VitalsForm({ handleInputChange, formDetails, patient }) {
   const vitalFields = [
     {
@@ -85,7 +87,7 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
         <label className="label">Vitals</label>
       </div>
       <div>
-        <div class="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           {vitalFields.map((field) => (
             <InputField
               key={field.name}
@@ -101,7 +103,7 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
           <label className="label">STAT Investigations</label>
         </div>
         <div>
-          <div class="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2">
             {statFields.map((field) => (
               <InputField
                 key={field.name}
@@ -165,148 +167,130 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
   function handleDiagnosisChange(e, index) {
     //used to update diagnosis inputs
     const newDiagnoses = formDetails.diagnoses.map((diagnosis, i) => {
-      if (index !== i) return diagnosis;
-      return { ...diagnosis, [e.target.name]: e.target.value };
+      return index !== i
+        ? diagnosis
+        : { ...diagnosis, [e.target.name]: e.target.value };
     });
     updateFormDetails(newDiagnoses);
   }
 
   function diagnosisToAdd() {
+    const diagnosisOptions = [
+      "Cardiovascular",
+      "Dermatology",
+      "Ear Nose Throat",
+      "Endocrine",
+      "Eye",
+      "Gastrointestinal",
+      "Haematology",
+      "Infectious Diseases",
+      "Renal & Genitourinary",
+      "Respiratory",
+      "Musculoskeletal",
+      "Neurology",
+      "Obstetrics & Gynaecology",
+      "Oral Health",
+      "Others",
+    ];
     //Generate textfields for diagnosis
-    return formDetails.diagnoses.map((diagnosis, index) => {
-      return (
-        <div className="field" key={index}>
-          <label className="label">Diagnosis {index + 1}</label>
-          <div className="control">
-            <textarea
-              name="details"
-              placeholder="Type your notes here..."
-              className="textarea"
-              onChange={(e) => handleDiagnosisChange(e, index)}
-              value={diagnosis.details}
-            />
-          </div>
-          <div className="select">
-            <select
-              name="type"
-              onChange={(e) => handleDiagnosisChange(e, index)}
-              value={diagnosis.type}
-            >
-              <option disabled>Please select....</option>
-              <option value="Cardiovascular">Cardiovascular</option>
-              <option value="Dermatology">Dermatology</option>
-              <option value="Ear Nose Throat">Ear Nose Throat</option>
-              <option value="Endocrine">Endocrine</option>
-              <option value="Eye">Eye</option>
-              <option value="Gastrointestinal">Gastrointestinal</option>
-              <option value="Haematology">Haematology</option>
-              <option value="Infectious Diseases">Infectious Diseases</option>
-              <option value="Renal & Genitourinary">
-                Renal & Genitourinary
-              </option>
-              <option value="Respiratory">Respiratory</option>
-              <option value="Musculoskeletal ">Musculoskeletal </option>
-              <option value="Neurology">Neurology</option>
-              <option value="Obstetrics & Gynaecology">
-                Obstetrics & Gynaecology
-              </option>
-              <option value="Oral Health">Oral Health</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-          <button
-            className="button is-dark"
-            style={{ marginTop: 10, marginLeft: 10 }}
-            onClick={() => handleDelete(index)}
-          >
-            Delete Assessment
-          </button>
-        </div>
-      );
-    });
+    const renderDiagnosis = (diagnosis, index) => (
+      <div className="field" key={index}>
+        <InputBox
+          key="details"
+          name="details"
+          label={`Diagnosis ${index + 1}`}
+          type="text"
+          value={formDetails.details}
+          onChange={(e) => handleDiagnosisChange(e, index)}
+          placeholder="Type your notes here..."
+        />
+
+        <select
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
+          name="type"
+          onChange={(e) => handleDiagnosisChange(e, index)}
+          value={diagnosis.type}
+        >
+          <option disabled>Please select....</option>
+          {diagnosisOptions.map((option, optionIndex) => (
+            <option key={optionIndex} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+
+        <DeleteButton
+          text="Delete Assessment"
+          onClick={() => handleDelete(index)}
+        />
+      </div>
+    );
+    return formDetails.diagnoses.map(renderDiagnosis);
   }
 
   return (
     <div>
       <label className="label">Medical Consultation Form</label>
-
-      <div className="field">
-        <label className="label">Past Medical History</label>
-        <div className="control">
-          <textarea
-            name="problems"
-            className="textarea"
-            placeholder="Type your problems here..."
-            onChange={handleInputChange}
-            value={formDetails.problems}
-          />
-        </div>
-      </div>
-
-      <div className="field">
-        <label className="label">Consultation</label>
-        <div className="control">
-          <textarea
-            name="diagnosis"
-            className="textarea"
-            placeholder="Type your diagnosis here..."
-            onChange={handleInputChange}
-            value={formDetails.diagnosis}
-          />
-        </div>
-      </div>
+      <InputBox
+        key="problems"
+        name="problems"
+        label="Past Medical History"
+        type="text"
+        value={formDetails.problems}
+        onChange={handleInputChange}
+        placeholder="Type your problems here..."
+      />
+      <InputBox
+        key="diagnosis"
+        name="diagnosis"
+        label="Consultation"
+        type="text"
+        value={formDetails.diagnosis}
+        onChange={handleInputChange}
+        placeholder="Type your diagnosis here..."
+      />
 
       <hr />
       <label className="label">Assessment</label>
 
       {diagnosisToAdd()}
 
-      <button className="button is-dark" onClick={(e) => handleClick(e)}>
-        Add New Diagnosis
-      </button>
+      <CreateButton text="Add New Diagnosis" onClick={(e) => handleClick(e)} />
+      <hr />
+
+      <InputBox
+        key="addendum"
+        name="addendum"
+        label="Plan"
+        type="text"
+        value={formDetails.addendum}
+        onChange={handleInputChange}
+        placeholder="Type your plan here..."
+      />
 
       <hr />
 
-      <div className="field">
-        <label className="label">Plan</label>
-        <div className="control">
-          <textarea
-            name="addendum"
-            className="textarea"
-            placeholder="Type your plan here..."
-            onChange={handleInputChange}
-            value={formDetails.addendum}
-          />
-        </div>
-      </div>
+      <label className="label">* Referred for (within clinic)</label>
+      <select
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
+        name="type"
+        onChange={handleInputChange}
+      >
+        <option>Please select....</option>
+        <option value="Diagnostic">Diagnostic</option>
+        <option value="Acute">Acute</option>
+        <option value="Chronic">Chronic</option>
+      </select>
 
-      <hr />
-
-      <div className="field">
-        <label className="label">* Referred for (within clinic)</label>
-        <div className="control" style={{ marginBottom: 20 }}>
-          <div className="select">
-            <select name="referred_for" onChange={handleInputChange}>
-              <option>Please select....</option>
-              <option value="Diagnostic">Diagnostic</option>
-              <option value="Acute">Acute</option>
-              <option value="Chronic">Chronic</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div className="field">
-        <label className="label">Referral Notes</label>
-        <div className="control">
-          <textarea
-            name="referred_notes"
-            className="textarea"
-            placeholder="Type your referral notes here..."
-            onChange={handleInputChange}
-            value={formDetails.referred_notes}
-          />
-        </div>
-      </div>
+      <InputBox
+        key="referred_notes"
+        name="referred_notes"
+        label="Referral Notes"
+        type="text"
+        value={formDetails.referred_notes}
+        onChange={handleInputChange}
+        placeholder="Type your referral notes here..."
+      />
     </div>
   );
 }
