@@ -12,6 +12,7 @@ import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitP
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
+import { CreateButton } from "@/components/textContainers.js/CreateButton";
 
 Modal.setAppElement("#__next");
 
@@ -345,13 +346,7 @@ const Patient = () => {
 
         <hr />
 
-        <button
-          className="button is-dark is-medium level-item"
-          style={{ marginTop: 15 }}
-          onClick={() => submitForm()}
-        >
-          Submit
-        </button>
+        <CreateButton text={"Submit"} onClick={() => submitForm()} />
       </div>
     );
   }
@@ -387,7 +382,7 @@ const Patient = () => {
       </div>
     );
   }
-  return <>{render()}</>;
+  return render();
 };
 
 const viewModalStyles = {
