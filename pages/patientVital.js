@@ -136,30 +136,12 @@ const Patient = () => {
   async function submitForm() {
     //Post 405 error
     let { formDetails, visitID } = state;
-
-    //We still haven't figured out a way to let the backend handle new fields
-    //which we want to create. Hence, we are using existing fields (problems, diagnosis, notes)
-    //to store the data which we want to store :
-    //NEW:                         STORED IN OLD FIELD OF:
-    //Past Med History      ->     Problems
-    //Consultation          ->     Diagnosis
-    //Diagnosis (1 + 2 + 3) ->     Notes
-    //Plan                  ->     Addendum
-
-    //For Diagnosis (1 + 2 + 3), we have insufficient old fields to store the data in.
-    //Hence, we are using a standardised text format to store the three possibilities
-    //of diagnosis. By using this standardised format, we can use data manipulation
-    //later on to retrieve and split the data as neccessary
-
     console.log(formDetails);
 
     var formPayload = {
       visit: visitID,
       ...formDetails,
     };
-
-    //For Referrals, we are also using a standardised text format to store information
-    //from referred_for and referred_notes
 
     if (formDetails.referred_for) {
       const referrals = `
@@ -299,16 +281,14 @@ const Patient = () => {
 
     return (
       <div className="column is-5">
-        <div className="columns">
-          {typeof vitals === "undefined" ? (
-            <>
-              <label className="label">Vital Signs</label>
-              <h2>Not Done</h2>
-            </>
-          ) : (
-            <VitalsView content={vitals} />
-          )}
-        </div>
+        {typeof vitals === "undefined" ? (
+          <>
+            <label className="label">Vital Signs</label>
+            <h2>Not Done</h2>
+          </>
+        ) : (
+          <VitalsView content={vitals} />
+        )}
 
         <hr />
         <label className="label">Consultations</label>

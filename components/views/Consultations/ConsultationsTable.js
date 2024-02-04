@@ -3,7 +3,6 @@ export function ConsultationsTable({ consultRows }) {
     <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
       <thead>
         <tr>
-          {/* <th>Type</th> */}
           <th>Doctor</th>
           <th>Referred For</th>
           <th>Action</th>

@@ -1,3 +1,4 @@
+import { DisplayField } from "@/components/textContainers.js/DispayField";
 import React from "react";
 
 export function ConsultationsView({ content }) {
@@ -33,26 +34,17 @@ export function ConsultationsView({ content }) {
   function renderMedicalConsultation(consult) {
     return (
       <div>
-        <div className="field">
-          <label className="label">Problems</label>
-          <article className="message">
-            <div className="message-body">{consult.problems}</div>
-          </article>
-        </div>
-
-        <div className="field">
-          <label className="label">Diagnosis</label>
-          <article className="message">
-            <div className="message-body">{consult.diagnosis}</div>
-          </article>
-        </div>
-
-        <div className="field">
-          <label className="label">Notes</label>
-          <article className="message">
-            <div className="message-body">{consult.notes}</div>
-          </article>
-        </div>
+        <DisplayField
+          key={"problems"}
+          label={"Problems"}
+          content={consult.problems}
+        />
+        <DisplayField
+          key={"diagnosis"}
+          label={"Diagnosis"}
+          content={consult.diagnosis}
+        />
+        <DisplayField key={"notes"} label={"Notes"} content={consult.notes} />
       </div>
     );
   }
@@ -63,78 +55,50 @@ export function ConsultationsView({ content }) {
   const prescriptions = content.prescriptions;
 
   return (
-    <div className="column is-12">
-      <h1 style={{ color: "black", fontSize: "1.5em" }}>Consultation</h1>
-      <div className="field">
-        <label className="label">Done by</label>
-        <article className="message">
-          <div className="message-body">{content.doctor.username}</div>
-        </article>
-      </div>
-
-      <hr />
+    <div className="grid gap-y-2">
+      <label className="block text-xl font-medium text-gray-700 mb-0 ">
+        Consultation
+      </label>
+      <DisplayField
+        key={"doctor"}
+        label={"Done by"}
+        content={content.doctor.username}
+      />
 
       {type === "medical" ? renderMedicalConsultation(content) : null}
 
-      <hr />
+      <DisplayField
+        key={"referrals"}
+        label={"Referrals"}
+        content={content.referrals}
+      />
 
-      <div className="field">
-        <label className="label">Referrals</label>
-        <article className="message">
-          <div className="message-body" style={{ whiteSpace: "pre-line" }}>
-            {content.referrals}
-          </div>
-        </article>
-      </div>
+      <DisplayField
+        key={"problems"}
+        label={"Past Medical History"}
+        content={content.problems}
+      />
 
-      <hr />
+      <DisplayField
+        key={"diagnosis"}
+        label={"Consultation"}
+        content={content.diagnosis}
+      />
 
-      <div className="field">
-        <label className="label">Past Medical History</label>
-        <article className="message">
-          <div className="message-body">{content.problems}</div>
-        </article>
-      </div>
+      <DisplayField key={"notes"} label={"Diagnosis"} content={content.notes} />
 
-      <hr />
+      <DisplayField
+        key={"addendum"}
+        label={"Plan"}
+        content={content.addendum}
+      />
 
-      <div className="field">
-        <label className="label">Consultation</label>
-        <article className="message">
-          <div className="message-body">{content.diagnosis}</div>
-        </article>
-      </div>
-
-      <hr />
-
-      <div className="field">
-        <label className="label">Diagnosis</label>
-        <article className="message">
-          <div className="message-body" style={{ whiteSpace: "pre-line" }}>
-            {content.notes}
-          </div>
-        </article>
-      </div>
-
-      <div className="field">
-        <label className="label">Plan</label>
-        <article className="message">
-          <div className="message-body" style={{ whiteSpace: "pre-line" }}>
-            {content.addendum}
-          </div>
-        </article>
-      </div>
-
-      <hr />
-
-      <div className="field">
-        <label className="label">Prescriptions</label>
-        {prescriptions.length > 0 ? (
-          renderPrescriptions(prescriptions)
-        ) : (
-          <h2>None</h2>
-        )}
-      </div>
+      <label className="label">Prescriptions</label>
+      {prescriptions.length > 0 ? (
+        renderPrescriptions(prescriptions)
+      ) : (
+        <h2>None Prescibed</h2>
+      )}
 
       <hr />
     </div>

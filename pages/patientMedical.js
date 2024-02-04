@@ -496,16 +496,14 @@ const Patient = () => {
 
     return (
       <div className="column is-5">
-        <div className="columns">
-          {typeof vitals === "undefined" ? (
-            <>
-              <label className="label">Vital Signs</label>
-              <h2>Not Done</h2>
-            </>
-          ) : (
-            <VitalsView content={vitals} />
-          )}
-        </div>
+        {typeof vitals === "undefined" ? (
+          <>
+            <label className="label">Vital Signs</label>
+            <h2>Not Done</h2>
+          </>
+        ) : (
+          <VitalsView content={vitals} />
+        )}
 
         <hr />
         <label className="label">Consultations</label>
