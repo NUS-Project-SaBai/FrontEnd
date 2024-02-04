@@ -478,24 +478,24 @@ const Patient = () => {
           : consult.referrals.split("\n")[0].split(" ")[2];
       return (
         <tr key={consult.id}>
-          {/* <td>{type}</td>
-            <td>{subType}</td> */}
-          <td>{doctor}</td>
-          <td>{referredFor}</td>
-          <td>
-            <button
-              className="button is-dark level-item"
+          <td class="py-2 px-2 border-b border-gray-200 align-middle">
+            {doctor}
+          </td>
+          <td class="py-2 px-2 border-b border-gray-200 align-middle">
+            {referredFor}
+          </td>
+          <td class="px-2 border-b border-gray-200 align-middle">
+            <CreateButton
+              text={"View"}
               onClick={() => toggleViewModal("consult", consult)}
-            >
-              View
-            </button>
+            />
           </td>
         </tr>
       );
     });
 
     return (
-      <div className="column is-5">
+      <div>
         {typeof vitals === "undefined" ? (
           <>
             <label className="label">Vital Signs</label>

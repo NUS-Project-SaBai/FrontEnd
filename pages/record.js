@@ -6,6 +6,7 @@ import moment from "moment";
 import { ConsultationsView } from "@/components/views/Consultations/ConsultationsView";
 import { VitalsView } from "@/components/views/Vitals/VitalsView";
 import { ConsultationsTable } from "@/components/views/Consultations/ConsultationsTable";
+import { CreateButton } from "@/components/textContainers.js/CreateButton";
 import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitPrescriptionsTable";
 import { PatientView } from "../components/views/patient";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
@@ -215,16 +216,18 @@ const Record = () => {
           : consult.referrals.split("\n")[0].split(" ")[2];
 
       return (
-        <tr key={consult.pk}>
-          <td>{doctor}</td>
-          <td>{referredFor}</td>
-          <td>
-            <button
-              className="button is-dark level-item"
+        <tr key={consult.id}>
+          <td class="py-2 px-2 border-b border-gray-200 align-middle">
+            {doctor}
+          </td>
+          <td class="py-2 px-2 border-b border-gray-200 align-middle">
+            {referredFor}
+          </td>
+          <td class="px-2 border-b border-gray-200 align-middle">
+            <CreateButton
+              text={"View"}
               onClick={() => toggleViewModal("consult", consult)}
-            >
-              Viewer
-            </button>
+            />
           </td>
         </tr>
       );
