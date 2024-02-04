@@ -12,6 +12,7 @@ import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitP
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
+import { CreateButton } from "@/components/textContainers.js/CreateButton";
 
 Modal.setAppElement("#__next");
 
@@ -473,7 +474,7 @@ const Patient = () => {
       let doctor = consult.doctor.username;
       let referredFor =
         consult.referrals == null || consult.referrals == ""
-          ? "None"
+          ? "No referrals"
           : consult.referrals.split("\n")[0].split(" ")[2];
       return (
         <tr key={consult.id}>
@@ -527,11 +528,8 @@ const Patient = () => {
 
   function renderSecondColumn() {
     //let { form } = this.props.query;
-    const router = Router;
-    const { query } = router;
-    const { form } = query;
 
-    let { formDetails, orders, patient } = state;
+    let { formDetails, orders } = state;
 
     let formContent = () => {
       return (
@@ -543,14 +541,13 @@ const Patient = () => {
           />
           <hr />
           <label className="label">Prescriptions</label>
-          {orders.length > 0 ? renderPrescriptionTable() : "None"}
-          <button
-            className="button is-dark level-item"
-            style={{ marginTop: 15 }}
+          {orders.length > 0 ? renderPrescriptionTable() : "No Prescriptions"}
+
+          <hr />
+          <CreateButton
+            text={"Add Prescriptions"}
             onClick={() => toggleFormModal()}
-          >
-            Add
-          </button>
+          />
         </div>
       );
     };
@@ -561,13 +558,7 @@ const Patient = () => {
 
         <hr />
 
-        <button
-          className="button is-dark is-medium level-item"
-          style={{ marginTop: 15 }}
-          onClick={() => submitForm()}
-        >
-          Submit
-        </button>
+        <CreateButton text={"Submit"} onClick={() => submitForm()} />
       </div>
     );
   }
