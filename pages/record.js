@@ -12,6 +12,7 @@ import { PatientView } from "../components/views/patient";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import Router from "next/router";
+import { ViewButton } from "@/components/textContainers.js/ViewButton";
 
 Modal.setAppElement("#__next");
 
@@ -224,7 +225,7 @@ const Record = () => {
             {referredFor}
           </td>
           <td class="px-2 border-b border-gray-200 align-middle">
-            <CreateButton
+            <ViewButton
               text={"View"}
               onClick={() => toggleViewModal("consult", consult)}
             />

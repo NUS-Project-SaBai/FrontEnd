@@ -3,6 +3,7 @@ import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
+import { ViewButton } from "@/components/textContainers.js/ViewButton";
 
 function Queue() {
   //Queue Page
@@ -57,12 +58,10 @@ function Queue() {
         const imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
         const fullName = visit.patient.name;
         const progress = (
-          <button
-            className="button is-dark level-item"
+          <ViewButton
+            text={"View"}
             onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
-          >
-            View
-          </button>
+          />
         );
 
         const vitals = (

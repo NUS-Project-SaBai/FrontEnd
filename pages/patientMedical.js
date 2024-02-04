@@ -13,6 +13,7 @@ import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
 import { CreateButton } from "@/components/textContainers.js/CreateButton";
+import { ViewButton } from "@/components/textContainers.js/ViewButton";
 
 Modal.setAppElement("#__next");
 
@@ -485,7 +486,7 @@ const Patient = () => {
             {referredFor}
           </td>
           <td class="px-2 border-b border-gray-200 align-middle">
-            <CreateButton
+            <ViewButton
               text={"View"}
               onClick={() => toggleViewModal("consult", consult)}
             />
