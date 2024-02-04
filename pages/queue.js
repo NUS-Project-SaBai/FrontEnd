@@ -4,6 +4,7 @@ import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import { ViewButton } from "@/components/textContainers.js/ViewButton";
+import { CreateButton } from "@/components/textContainers.js/CreateButton";
 
 function Queue() {
   //Queue Page
@@ -68,16 +69,14 @@ function Queue() {
           <div className="field is-grouped">
             <div className="control is-expanded">
               {" "}
-              <button
-                className="button is-dark level-item"
+              <CreateButton
+                text={"Create"}
                 onClick={() =>
                   Router.push(
                     `/patientVital?id=${visit.patient.id}&form=vitals`,
                   )
                 }
-              >
-                Create
-              </button>
+              />
             </div>
           </div>
         );
@@ -86,16 +85,14 @@ function Queue() {
           <div className="field is-grouped">
             <div className="control is-expanded">
               {" "}
-              <button
-                className="button is-dark level-item"
+              <CreateButton
+                text={"Create"}
                 onClick={() =>
                   Router.push(
-                    `/patientMedical?id=${visit.patient.id}&form=medical`, //testMedical
+                    `/patientMedical?id=${visit.patient.id}&form=medical`,
                   )
                 }
-              >
-                Create
-              </button>
+              />
             </div>
           </div>
         );

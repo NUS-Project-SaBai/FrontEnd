@@ -1,52 +1,23 @@
 import React from "react";
+import { DisplayField } from "../textContainers.js/DispayField";
 
 function PatientView({ content }) {
-  return (
-    <div className="column is-3">
-      <div className="field">
-        <label className="label">IC Number</label>
-        <article className="message">
-          <div className="message-body">{content.fields.local_name}</div>
-        </article>
-      </div>
-
-      <div className="field">
-        <label className="label">Gender</label>
-        <article className="message">
-          <div className="message-body">{content.fields.gender}</div>
-        </article>
-      </div>
-
-      <div className="field">
-        <label className="label">Age</label>
-        <article className="message">
-          <div className="message-body">
-            {content.fields.date_of_birth
-              ? Math.abs(
-                  new Date(
-                    Date.now() - new Date(content.fields.date_of_birth),
-                  ).getUTCFullYear() - 1970,
-                )
-              : "No DOB"}
-          </div>
-        </article>
-      </div>
-
-      <div className="field">
-        <label className="label">Date of Birth</label>
-        <article className="message">
-          <div className="message-body">{content.fields.date_of_birth}</div>
-        </article>
-      </div>
-
-      <div className="field">
-        <label className="label">Allergies</label>
-        <article className="message">
-          <div className="message-body">{content.fields.drug_allergy}</div>
-        </article>
-      </div>
+  const fieldsArray = [
+    { label: "IC Number", key: "local_name" },
+    { label: "Gender", key: "gender" },
+    { label: "Age", key: "date_of_birth" },
+    { label: "Date of Birth", key: "date_of_birth" },
+    { label: "Allergies", key: "drug_allergy" },
+  ];
+  return fieldsArray.map((field, index) => (
+    <div className="grid-cols-1">
+      <DisplayField
+        key={index}
+        label={field.label}
+        content={content.fields[field.key]}
+      />
     </div>
-  );
+  ));
 }
 
 export { PatientView };

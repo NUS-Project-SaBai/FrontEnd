@@ -201,15 +201,24 @@ const Record = () => {
   }
 
   function renderFirstColumn() {
-    const { patient } = state;
-    return <PatientView content={patient} />;
+    const { vitals, patient } = state;
+
+    return (
+      <div>
+        <label className="label">View Detailed Signs</label>
+        {typeof vitals === "undefined" ? (
+          <h2>Not Done</h2>
+        ) : (
+          <ViewButton text={"View"} onClick={() => toggleViewModal("vitals")} />
+        )}
+        <PatientView content={patient} /> ;
+      </div>
+    );
   }
 
   function renderSecondColumn() {
     const { vitals, consults, visitPrescriptions } = state;
     const consultRows = consults.map((consult) => {
-      const type = consult.type;
-      const subType = consult.sub_type == null ? "General" : consult.sub_type;
       const doctor = consult.doctor.username;
       const referredFor =
         consult.referrals == null || consult.referrals == ""
@@ -235,24 +244,7 @@ const Record = () => {
     });
 
     return (
-      <div className="column is-9">
-        <div className="columns">
-          <div className="column is-6">
-            <label className="label">Vital Signs</label>
-            {typeof vitals === "undefined" ? (
-              <h2>Not Done</h2>
-            ) : (
-              <button
-                className="button is-dark level-item"
-                style={{ marginTop: 15 }}
-                onClick={() => toggleViewModal("vitals")}
-              >
-                View
-              </button>
-            )}
-          </div>
-        </div>
-
+      <div>
         <hr />
         <label className="label">Consultations</label>
         {consults.length > 0 ? (
@@ -352,11 +344,9 @@ const Record = () => {
 
         <hr />
 
-        <div className="column is-12">
-          <div className="columns is-12">
-            {renderFirstColumn()}
-            {renderSecondColumn()}
-          </div>
+        <div className="grid grid-cols-2 gap-x-6">
+          <div>{renderFirstColumn()}</div>
+          <div>{renderSecondColumn()}</div>
         </div>
       </div>
     );
