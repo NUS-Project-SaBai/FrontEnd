@@ -409,7 +409,7 @@ class Registration extends React.Component {
             </button>
           </div>
           <div className="right-column">
-            <h1>Registration</h1>
+            <h1 id="registration_font">Registration</h1>
             <div>
               <Autosuggest
                 suggestions={suggestions}
@@ -422,61 +422,63 @@ class Registration extends React.Component {
             </div>
             {typeof patient.pk !== "undefined" && (
               <div className="columns">
-              <div className="column is-2">
-                <figure className="image is-1by1">
-                  <img
-                    src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
-                    alt="Placeholder image"
-                    className="has-ratio"
-                    style={{ height: 200, width: 200, objectFit: "cover" }}
-                  />
-                </figure>
-              </div>
-              <div className="column is-5">
-                <label className="label">ID</label>
-                <article className="message">
-                  <div className="message-body">{`${
-                    patient.fields.village_prefix
-                  }${patient.pk.toString().padStart(3, "0")}`}</div>
-                </article>
-                <label className="label">Name</label>
-                <article className="message">
-                  <div className="message-body">{patient.fields.name}</div>
-                </article>
-                <label className="label">IC Number</label>
-                <article className="message">
-                  <div className="message-body">{patient.fields.local_name}</div>
-                </article>
-                <label className="label">Gender</label>
-                <article className="message">
-                  <div className="message-body">{patient.fields.gender}</div>
-                </article>
-                <label className="label">Date of Birth</label>
-                <article className="message">
-                  <div className="message-body">
-                    {patient.fields.date_of_birth}
-                  </div>
-                </article>
-                <label className="label">Drug Allergies</label>
-                <article className="message">
-                  <div className="message-body">
-                    {patient.fields.drug_allergy}
-                  </div>
-                </article>
-              </div>
-              <div
-                className="column is-5"
-                // style={{ backgroundColor: "yellow" }}
-              >
-                <label className="label">Start a Visit</label>
-                <button
-                  className="button is-dark is-medium level-item"
-                  onClick={() => this.submitNewVisit()}
+                <div className="column is-2">
+                  <figure className="image is-1by1">
+                    <img
+                      src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
+                      alt="Placeholder image"
+                      className="has-ratio"
+                      style={{ height: 200, width: 200, objectFit: "cover" }}
+                    />
+                  </figure>
+                </div>
+                <div className="column is-5">
+                  <label className="label">ID</label>
+                  <article className="message">
+                    <div className="message-body">{`${
+                      patient.fields.village_prefix
+                    }${patient.pk.toString().padStart(3, "0")}`}</div>
+                  </article>
+                  <label className="label">Name</label>
+                  <article className="message">
+                    <div className="message-body">{patient.fields.name}</div>
+                  </article>
+                  <label className="label">IC Number</label>
+                  <article className="message">
+                    <div className="message-body">
+                      {patient.fields.local_name}
+                    </div>
+                  </article>
+                  <label className="label">Gender</label>
+                  <article className="message">
+                    <div className="message-body">{patient.fields.gender}</div>
+                  </article>
+                  <label className="label">Date of Birth</label>
+                  <article className="message">
+                    <div className="message-body">
+                      {patient.fields.date_of_birth}
+                    </div>
+                  </article>
+                  <label className="label">Drug Allergies</label>
+                  <article className="message">
+                    <div className="message-body">
+                      {patient.fields.drug_allergy}
+                    </div>
+                  </article>
+                </div>
+                <div
+                  className="column is-5"
+                  // style={{ backgroundColor: "yellow" }}
                 >
-                  Start
-                </button>
+                  <label className="label">Start a Visit</label>
+                  <button
+                    className="button is-dark is-medium level-item"
+                    onClick={() => this.submitNewVisit()}
+                  >
+                    Start
+                  </button>
+                </div>
               </div>
-            </div>
             )}
           </div>
         </div>
