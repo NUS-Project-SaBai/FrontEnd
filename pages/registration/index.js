@@ -399,99 +399,87 @@ class Registration extends React.Component {
           toggleCameraOpen={this.toggleCameraOpen}
           customStyles={customStyles}
         />
-        <div className="column is-12">
-          <h1 style={{ color: "black", fontSize: "1.5em" }}>Registration</h1>
-          <div className="columns is-vcentered">
-            <div className="column is-12">
-              <div class="levels" style={{ marginBottom: 10 }}>
-                <div class="level-left">
-                  <button
-                    class="button is-dark is-medium level-item"
-                    style={{ display: "inline-block", verticalAlign: "top" }}
-                    onClick={this.openScanModal}
-                  >
-                    Scan Face
-                  </button>
-                  <button
-                    class="button is-dark is-medium level-item"
-                    onClick={this.openModal}
-                  >
-                    New Patient
-                  </button>
-                </div>
+        <div className="registration-container">
+          <div className="left-column">
+            <button className="button" onClick={this.openScanModal}>
+              Scan Face
+            </button>
+            <button className="button" onClick={this.openModal}>
+              New Patient
+            </button>
+          </div>
+          <div className="right-column">
+            <h1>Registration</h1>
+            <div>
+              <Autosuggest
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                getSuggestionValue={this.getSuggestionValue}
+                renderSuggestion={this.renderSuggestion}
+                inputProps={inputProps}
+              />
+            </div>
+            {typeof patient.pk !== "undefined" && (
+              <div className="columns">
+              <div className="column is-2">
+                <figure className="image is-1by1">
+                  <img
+                    src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
+                    alt="Placeholder image"
+                    className="has-ratio"
+                    style={{ height: 200, width: 200, objectFit: "cover" }}
+                  />
+                </figure>
               </div>
-
-              <div>
-                <Autosuggest
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                  getSuggestionValue={this.getSuggestionValue}
-                  renderSuggestion={this.renderSuggestion}
-                  inputProps={inputProps}
-                />
+              <div className="column is-5">
+                <label className="label">ID</label>
+                <article className="message">
+                  <div className="message-body">{`${
+                    patient.fields.village_prefix
+                  }${patient.pk.toString().padStart(3, "0")}`}</div>
+                </article>
+                <label className="label">Name</label>
+                <article className="message">
+                  <div className="message-body">{patient.fields.name}</div>
+                </article>
+                <label className="label">IC Number</label>
+                <article className="message">
+                  <div className="message-body">{patient.fields.local_name}</div>
+                </article>
+                <label className="label">Gender</label>
+                <article className="message">
+                  <div className="message-body">{patient.fields.gender}</div>
+                </article>
+                <label className="label">Date of Birth</label>
+                <article className="message">
+                  <div className="message-body">
+                    {patient.fields.date_of_birth}
+                  </div>
+                </article>
+                <label className="label">Drug Allergies</label>
+                <article className="message">
+                  <div className="message-body">
+                    {patient.fields.drug_allergy}
+                  </div>
+                </article>
+              </div>
+              <div
+                className="column is-5"
+                // style={{ backgroundColor: "yellow" }}
+              >
+                <label className="label">Start a Visit</label>
+                <button
+                  className="button is-dark is-medium level-item"
+                  onClick={() => this.submitNewVisit()}
+                >
+                  Start
+                </button>
               </div>
             </div>
+            )}
           </div>
         </div>
-        {typeof patient.pk !== "undefined" && (
-          <div className="columns">
-            <div className="column is-2">
-              <figure className="image is-1by1">
-                <img
-                  src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
-                  alt="Placeholder image"
-                  className="has-ratio"
-                  style={{ height: 200, width: 200, objectFit: "cover" }}
-                />
-              </figure>
-            </div>
-            <div className="column is-5">
-              <label className="label">ID</label>
-              <article className="message">
-                <div className="message-body">{`${
-                  patient.fields.village_prefix
-                }${patient.pk.toString().padStart(3, "0")}`}</div>
-              </article>
-              <label className="label">Name</label>
-              <article className="message">
-                <div className="message-body">{patient.fields.name}</div>
-              </article>
-              <label className="label">IC Number</label>
-              <article className="message">
-                <div className="message-body">{patient.fields.local_name}</div>
-              </article>
-              <label className="label">Gender</label>
-              <article className="message">
-                <div className="message-body">{patient.fields.gender}</div>
-              </article>
-              <label className="label">Date of Birth</label>
-              <article className="message">
-                <div className="message-body">
-                  {patient.fields.date_of_birth}
-                </div>
-              </article>
-              <label className="label">Drug Allergies</label>
-              <article className="message">
-                <div className="message-body">
-                  {patient.fields.drug_allergy}
-                </div>
-              </article>
-            </div>
-            <div
-              className="column is-5"
-              // style={{ backgroundColor: "yellow" }}
-            >
-              <label className="label">Start a Visit</label>
-              <button
-                className="button is-dark is-medium level-item"
-                onClick={() => this.submitNewVisit()}
-              >
-                Start
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
