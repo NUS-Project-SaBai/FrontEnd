@@ -6,7 +6,7 @@ import moment from "moment";
 import { ConsultationsView } from "@/components/views/Consultations/ConsultationsView";
 import { VitalsView } from "@/components/views/Vitals/VitalsView";
 import { ConsultationsTable } from "@/components/views/Consultations/ConsultationsTable";
-import { CreateButton } from "@/components/textContainers.js/CreateButton";
+
 import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitPrescriptionsTable";
 import { PatientView } from "../components/views/patient";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";

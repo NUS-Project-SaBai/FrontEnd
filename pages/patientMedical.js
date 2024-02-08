@@ -552,7 +552,7 @@ const Patient = () => {
     };
 
     return (
-      <div className="column is-7">
+      <div>
         {formContent()}
 
         <hr />
@@ -635,11 +635,9 @@ const Patient = () => {
 
         <hr />
 
-        <div className="column is-12">
-          <div className="columns is-12">
-            {renderFirstColumn()}
-            {renderSecondColumn()}
-          </div>
+        <div className="grid grid-cols-2 gap-x-4">
+          <div>{renderFirstColumn()}</div>
+          <div>{renderSecondColumn()}</div>
         </div>
       </div>
     );
