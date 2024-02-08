@@ -33,14 +33,14 @@ const Registration = () => {
   const [patients, setPatients] = useState([]);
   const [patient, setPatient] = useState({});
   const [scanModalIsOpen, setScanModalIsOpen] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [webcam, setWebcam] = useState(null);
   const [imageDetails, setImageDetails] = useState(null);
   const [formDetails, setFormDetails] = useState({
-                                          gender: "Male",
-                                          village_prefix: "SV",
-                                        });
+    gender: "Male",
+    village_prefix: "SV",
+  });
 
   const componentDidMount = () => {
     onRefresh();
@@ -53,8 +53,8 @@ const Registration = () => {
   };
 
   /**
-     * Webcam functions
-     */
+   * Webcam functions
+   */
 
   const webcamSetRef = (webcam) => {
     setWebcam(webcam);
@@ -100,12 +100,12 @@ const Registration = () => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const inputName = target.name;
-    
+
     setFormDetails((prevDetails) => ({
       ...prevDetails,
       [inputName]: value,
     }));
-  }
+  };
 
   const submitNewPatient = async () => {
     let checklist = [
@@ -163,14 +163,14 @@ const Registration = () => {
         setImageDetails(null);
         toast.success("New patient created!");
         closeModal();
-        setPatient("test");   // redundant code?
+        setPatient("test"); // redundant code?
         setPatient(response[0]);
         autoSubmitNewVisit(response[0]);
       } else {
         toast.error("Please retake photo!");
       }
     }
-  }
+  };
 
   const submitNewVisit = async () => {
     let payload = {
@@ -182,7 +182,7 @@ const Registration = () => {
 
     setPatient({});
     toast("Visit started!");
-  }
+  };
 
   const autoSubmitNewVisit = async (patient) => {
     // future helper function
@@ -196,33 +196,33 @@ const Registration = () => {
     };
     await axios.post(`${API_URL}/visits`, payload);
     toast.success("New visit created for patient!");
-  }
+  };
 
   /**
-     * Modal functions
-     */
+   * Modal functions
+   */
 
   const openModal = () => {
     setModalIsOpen(true);
-  }
+  };
 
   const closeModal = () => {
     setModalIsOpen(false);
-  }
+  };
 
   const openScanModal = () => {
     setScanModalIsOpen(true);
-  }
+  };
 
   const closeScanModal = () => {
     setScanModalIsOpen(false);
-  }
+  };
 
   /**
    * Auto Suggestions functions
    */
 
-  const  getSuggestions = (filter) => {
+  const getSuggestions = (filter) => {
     let inputValue = filter.trim().toLowerCase();
     let inputLength = inputValue.length;
     let query =
@@ -232,7 +232,7 @@ const Registration = () => {
             patient.filterString.toLowerCase().includes(inputValue)
           );
     return query;
-  }
+  };
 
   const renderSuggestion = (suggestion) => {
     let name = suggestion.fields.name;
@@ -267,14 +267,14 @@ const Registration = () => {
         </div>
       </div>
     );
-  }
+  };
 
   // When suggestion is clicked, Autosuggest needs to populate the input
   // based on the clicked suggestion. Teach Autosuggest how to calculate the
   // input value for every given suggestion.
   const getSuggestionValue = (suggestion) => {
     return suggestion.fields.name;
-  }
+  };
 
   const onChange = (event, { newValue }) => {
     setValue(newValue);
@@ -426,7 +426,7 @@ const Registration = () => {
       </div>
     </div>
   );
-}
+};
 
 
 /**
