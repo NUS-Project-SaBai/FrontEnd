@@ -44,7 +44,7 @@ const Registration = () => {
 
   useEffect(() => {
     onRefresh();
-  });
+  }, []);
 
   const onRefresh = async () => {
     let { data: patients } = await axios.get(`${API_URL}/patients`);
