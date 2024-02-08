@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Autosuggest from "react-autosuggest";
 import axios from "axios";
 import _ from "lodash";
@@ -42,9 +42,9 @@ const Registration = () => {
     village_prefix: "SV",
   });
 
-  const componentDidMount = () => {
+  useEffect(() => {
     onRefresh();
-  };
+  });
 
   const onRefresh = async () => {
     let { data: patients } = await axios.get(`${API_URL}/patients`);
