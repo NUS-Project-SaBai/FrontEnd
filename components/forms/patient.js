@@ -125,7 +125,7 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
           ) >= 40 && (
             <div className="field is-grouped">
               <div className="control is-expanded">
-                <label className="label"> Has Diabetes?</label>
+                <label className="label"> Diabetes?</label>
                 <div className="select">
                   <select name="diabetes_mellitus" onChange={handleInputChange}>
                     <option>Please Select...</option>

@@ -7,23 +7,29 @@ export function VisitPrescriptionsTable({ content: prescriptions }) {
 
     return (
       <tr key={prescription.id}>
-        <td>{name}</td>
-        <td>{quantity}</td>
-        {/* <td>{doctor}</td> */}
+        <td class="py-2 px-2 border-b border-gray-200 align-middle">{name}</td>
+        <td class="py-2 px-2 border-b border-gray-200 align-middle">
+          {quantity}
+        </td>
       </tr>
     );
   });
 
   return (
-    <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-      <thead>
-        <tr>
-          <th>Medicine Name</th>
-          <th>Quantity</th>
-          {/* <th>Doctor</th> */}
-        </tr>
-      </thead>
-      <tbody>{prescriptionRows}</tbody>
-    </table>
+    <div class="shadow-lg rounded-lg overflow-hidden ">
+      <table className="w-full table-auto">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="w-1/3 py-2 px-2 text-left text-gray-600 font-bold uppercase">
+              Medicine Name
+            </th>
+            <th class="w-1/3 py-2 px-2 text-left text-gray-600 font-bold uppercase">
+              Quantity
+            </th>
+          </tr>
+        </thead>
+        <tbody>{prescriptionRows}</tbody>
+      </table>
+    </div>
   );
 }

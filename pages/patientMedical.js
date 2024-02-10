@@ -507,7 +507,7 @@ const Patient = () => {
         )}
 
         <hr />
-        <label className="label">Consultations</label>
+        <label className="label mt-4">Consultations</label>
         {consults.length > 0 ? (
           <ConsultationsTable consultRows={consultRows} />
         ) : (
@@ -515,7 +515,7 @@ const Patient = () => {
         )}
 
         <hr />
-        <label className="label">Prescriptions</label>
+        <label className="label mt-4">Prescriptions</label>
         {visitPrescriptions.length > 0 ? (
           <VisitPrescriptionsTable content={visitPrescriptions} />
         ) : (
@@ -635,7 +635,7 @@ const Patient = () => {
 
         <hr />
 
-        <div className="grid grid-cols-2 gap-x-4">
+        <div className="grid grid-cols-2 gap-x-4 mb-4">
           <div>{renderFirstColumn()}</div>
           <div>{renderSecondColumn()}</div>
         </div>

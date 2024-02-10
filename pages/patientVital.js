@@ -292,7 +292,7 @@ const Patient = () => {
         )}
 
         <hr />
-        <label className="label">Consultations</label>
+        <label className="label mt-4">Consultations</label>
         {consults.length > 0 ? (
           <ConsultationsTable consultRows={consultRows} />
         ) : (
@@ -300,7 +300,7 @@ const Patient = () => {
         )}
 
         <hr />
-        <label className="label">Prescriptions</label>
+        <label className="label mt-4">Prescriptions</label>
         {visitPrescriptions.length > 0 ? (
           <VisitPrescriptionsTable content={visitPrescriptions} />
         ) : (
@@ -355,7 +355,7 @@ const Patient = () => {
         <hr />
 
         <div className="column is-12">
-          <div className="columns is-12">
+          <div className="columns is-12 mb-4">
             {renderFirstColumn()}
             {renderSecondColumn()}
           </div>
