@@ -9,51 +9,61 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
       name: "height",
       label: "Height (Decimal eg. 160.5)",
       value: formDetails.height,
+      type: "number",
     },
     {
       name: "weight",
       label: "Weight (Decimal eg. 60.2)",
       value: formDetails.weight,
+      type: "number",
     },
     {
       name: "systolic",
       label: "Systolic (Number eg. 10)",
       value: formDetails.systolic,
+      type: "number",
     },
     {
       name: "diastolic",
       label: "Diastolic (Number eg. 10)",
       value: formDetails.diastolic,
+      type: "number",
     },
     {
       name: "temperature",
       label: "Temperature (Decimal eg. 36.5)",
       value: formDetails.temperature,
+      type: "number",
     },
     {
       name: "heart_rate",
       label: "Heart Rate (Number eg. 120)",
       value: formDetails.heart_rate,
+      type: "number",
     },
     {
       name: "left_eye_degree",
       label: "Left Eye (Fraction eg. 6/6)",
       value: formDetails.left_eye_degree,
+      type: "text",
     },
     {
       name: "right_eye_degree",
       label: "Right Eye (Fraction eg. 6/12)",
       value: formDetails.right_eye_degree,
+      type: "text",
     },
     {
       name: "left_eye_pinhole",
       label: "Left Eye Pinhole (Fraction eg. 6/6)",
       value: formDetails.left_eye_pinhole,
+      type: "text",
     },
     {
       name: "right_eye_pinhole",
       label: "Right Eye Pinhole (Fraction eg. 6/12)",
       value: formDetails.right_eye_pinhole,
+      type: "text",
     },
     // Add more fields as needed
   ];
@@ -63,21 +73,25 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
       name: "urine_test",
       label: "Urine Dip Test (Text eg. Anyth)",
       value: formDetails.urine_test,
+      type: "text",
     },
     {
       name: "hemocue_count",
       label: "Weight (Decimal eg. 60.2)",
       value: formDetails.hemocue_count,
+      type: "number",
     },
     {
       name: "blood_glucose",
       label: "Capillary Blood Glucose (Decimal eg. 13.2)",
       value: formDetails.blood_glucose,
+      type: "number",
     },
     {
       name: "others",
       label: "Others (Text eg. Anyth)",
       value: formDetails.others,
+      type: "text",
     },
   ];
 
@@ -93,7 +107,7 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
               key={field.name}
               name={field.name}
               label={field.label}
-              type="number"
+              type={field.type}
               value={field.value}
               onChange={handleInputChange}
             />
@@ -109,7 +123,7 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
                 key={field.name}
                 name={field.name}
                 label={field.label}
-                type="number"
+                type={field.type}
                 value={field.value}
                 onChange={handleInputChange}
               />
