@@ -31,7 +31,7 @@ export function ConsultationsView({ content }) {
     );
   };
 
-  function renderMedicalConsultation(consult) {
+  const renderMedicalConsultation = (consult) => {
     return (
       <div>
         <DisplayField
@@ -47,9 +47,7 @@ export function ConsultationsView({ content }) {
         <DisplayField key={"notes"} label={"Notes"} content={consult.notes} />
       </div>
     );
-  }
-
-  if (Object.keys(content).length === 0) return null;
+  };
 
   const type = content.type;
   const prescriptions = content.prescriptions;
@@ -62,7 +60,7 @@ export function ConsultationsView({ content }) {
       <DisplayField
         key={"doctor"}
         label={"Done by"}
-        content={content.doctor.username}
+        content={content.doctor?.username}
       />
 
       {type === "medical" ? renderMedicalConsultation(content) : null}
@@ -94,7 +92,7 @@ export function ConsultationsView({ content }) {
       />
 
       <label className="label">Prescriptions</label>
-      {prescriptions.length > 0 ? (
+      {prescriptions?.length > 0 ? (
         renderPrescriptions(prescriptions)
       ) : (
         <h2>None Prescibed</h2>

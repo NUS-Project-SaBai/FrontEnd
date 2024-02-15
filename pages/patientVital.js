@@ -79,15 +79,9 @@ const Patient = () => {
   }
 
   function renderViewModal() {
-    let { vitals, viewModalOpen, consult, viewType } = state;
+    let { vitals, viewModalOpen } = state;
 
-    let modalContent =
-      viewType == "vitals" ? (
-        <VitalsView content={vitals} />
-      ) : (
-        <ConsultationsView content={consult} />
-      );
-
+    let modalContent = <VitalsView content={vitals} />;
     return (
       <Modal
         isOpen={viewModalOpen}
