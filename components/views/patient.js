@@ -1,5 +1,5 @@
 import React from "react";
-import { DisplayField } from "../textContainers.js/DispayField";
+import { DisplayField } from "../textContainers/DispayField";
 
 function PatientView({ content }) {
   const fieldsArray = [

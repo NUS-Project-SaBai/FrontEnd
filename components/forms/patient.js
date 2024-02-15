@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { InputField } from "../textContainers.js/InputField";
-import { InputBox } from "../textContainers.js/InputBox";
-import { CreateButton } from "../textContainers.js/CreateButton";
-import { DeleteButton } from "../textContainers.js/DeleteButton";
+import { InputField } from "../textContainers/InputField";
+import { InputBox } from "../textContainers/InputBox";
+import { CreateButton } from "../textContainers/CreateButton";
+import { DeleteButton } from "../textContainers/DeleteButton";
 function VitalsForm({ handleInputChange, formDetails, patient }) {
   const vitalFields = [
     {

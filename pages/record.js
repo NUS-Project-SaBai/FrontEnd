@@ -12,7 +12,7 @@ import { PatientView } from "../components/views/patient";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import Router from "next/router";
-import { ViewButton } from "@/components/textContainers.js/ViewButton";
+import { ViewButton } from "@/components/textContainers/ViewButton";
 
 Modal.setAppElement("#__next");
 

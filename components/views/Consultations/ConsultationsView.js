@@ -1,4 +1,4 @@
-import { DisplayField } from "@/components/textContainers.js/DispayField";
+import { DisplayField } from "@/components/textContainers/DispayField";
 import React from "react";
 
 export function ConsultationsView({ content }) {

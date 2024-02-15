@@ -12,8 +12,8 @@ import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitP
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
-import { CreateButton } from "@/components/textContainers.js/CreateButton";
-import { ViewButton } from "@/components/textContainers.js/ViewButton";
+import { CreateButton } from "@/components/textContainers/CreateButton";
+import { ViewButton } from "@/components/textContainers/ViewButton";
 
 Modal.setAppElement("#__next");
 
