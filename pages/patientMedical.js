@@ -14,6 +14,7 @@ import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
 import { CreateButton } from "@/components/textContainers/CreateButton";
 import { ViewButton } from "@/components/textContainers/ViewButton";
+import { DeleteButton } from "@/components/textContainers/DeleteButton";
 
 Modal.setAppElement("#__next");
 
@@ -568,24 +569,18 @@ const Patient = () => {
           <td>{name}</td>
           <td>{quantity}</td>
           <td>
-            <div className="levels">
-              <div className="level-left">
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => toggleFormModal(order)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => {
-                    orders.splice(index, 1);
-                    setState((prevState) => ({ ...prevState, orders }));
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
+            <div className="grid grid-cols-2 gap-x-6 mx-2">
+              <CreateButton
+                text="Edit"
+                onClick={() => toggleFormModal(order)}
+              />
+              <DeleteButton
+                text="Delete"
+                onClick={() => {
+                  orders.splice(index, 1);
+                  setState((prevState) => ({ ...prevState, orders }));
+                }}
+              />
             </div>
           </td>
         </tr>

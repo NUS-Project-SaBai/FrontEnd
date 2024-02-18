@@ -211,7 +211,7 @@ const Record = () => {
         ) : (
           <ViewButton text={"View"} onClick={() => toggleViewModal("vitals")} />
         )}
-        <PatientView content={patient} /> ;
+        <PatientView content={patient} />
       </div>
     );
   }

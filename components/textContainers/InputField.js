@@ -3,7 +3,7 @@ export function InputField({ name, label, type, value, onChange }) {
     <div>
       <label className="block text-xm font-medium mb-2">{label}</label>
       <input
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  w-full p-3 "
+        className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg  w-full p-3 "
         placeholder={name}
         name={name}
         type={type}

@@ -3,6 +3,7 @@ import { InputField } from "../textContainers/InputField";
 import { InputBox } from "../textContainers/InputBox";
 import { CreateButton } from "../textContainers/CreateButton";
 import { DeleteButton } from "../textContainers/DeleteButton";
+import { DisplayField } from "../textContainers/DispayField";
 function VitalsForm({ handleInputChange, formDetails, patient }) {
   const vitalFields = [
     {
@@ -77,7 +78,7 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
     },
     {
       name: "hemocue_count",
-      label: "Weight (Decimal eg. 60.2)",
+      label: "Hemocue Hb Count (Number)",
       value: formDetails.hemocue_count,
       type: "number",
     },
@@ -220,12 +221,12 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
         />
 
         <select
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
+          className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
           name="type"
           onChange={(e) => handleDiagnosisChange(e, index)}
           value={diagnosis.type}
         >
-          <option disabled>Please select....</option>
+          <option>Please select....</option>
           {diagnosisOptions.map((option, optionIndex) => (
             <option key={optionIndex} value={option}>
               {option}
@@ -286,7 +287,7 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
 
       <label className="label">* Referred for (within clinic)</label>
       <select
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
+        className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
         name="type"
         onChange={handleInputChange}
       >
@@ -335,64 +336,67 @@ function PrescriptionForm({
 
   return (
     <div className="column is-12">
-      <h1 style={{ color: "black", fontSize: "1.5em" }}>Prescription</h1>
+      <h1 className="text-black text-2xl font-bold mb-4">Prescription</h1>
 
-      <div className="field">
-        <label className="label">Allergies</label>
-        <h2 style={{ color: "red" }}>{allergies}</h2>
-      </div>
+      <DisplayField
+        label="Allergies"
+        content={<h2 className="text-red-600">{allergies}</h2>}
+      />
 
-      <div className="field">
+      <div className="field mb-6">
         <label className="label">Medicine</label>
-        <div className="select is-fullwidth">
-          <select name={"medication"} onChange={handleInputChange}>
+        <div className="relative">
+          <select
+            name={"medication"}
+            onChange={handleInputChange}
+            className="block appearance-none w-full bg-white border border-gray-300 text-gray-900 py-2 px-3 rounded-lg leading-tight focus:outline-none focus:border-blue-500"
+          >
             <option value={"0 Dummy"}>-</option>
             {medicationOptions}
           </select>
-        </div>
-      </div>
-
-      <div className="field is-grouped">
-        <div className="control is-expanded">
-          <label className="label">In Stock</label>
-          <h2>{calculateMedicineCurrentStock(formDetails.medicine)}</h2>
-        </div>
-
-        <div className="control is-expanded">
-          <label className="label">Quantity to be ordered</label>
-          <div className="control">
-            <input
-              name="quantity"
-              className="input"
-              type="number"
-              onWheel={(e) => e.target.blur()}
-              onChange={handleInputChange}
-              value={formDetails.quantity}
-            />
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg
+              className="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.293 13.707a1 1 0 01-1.414-1.414L9.586 12 7.293 9.707a1 1 0 111.414-1.414L11 10.586l2.293-2.293a1 1 0 111.414 1.414L12.414 12l2.293 2.293a1 1 0 010 1.414 1 1 0 01-1.414 0L11 13.414l-2.293 2.293z"
+                clipRule="evenodd"
+              />
+            </svg>
           </div>
         </div>
       </div>
 
-      <div className="field">
-        <label className="label">Dosage Instructions</label>
-        <div className="control">
-          <textarea
-            name="notes"
-            className="textarea"
-            placeholder="Textarea"
+      <div className="flex mb-6">
+        <div className="w-1/2 pr-2">
+          <DisplayField
+            label="In Stock"
+            content={calculateMedicineCurrentStock(formDetails.medicine)}
+          />
+        </div>
+        <div className="w-1/2 pl-2">
+          <InputField
+            label="Quantity to be ordered"
             onChange={handleInputChange}
-            value={formDetails.notes}
+            value={formDetails.quantity}
+            type="number"
+            name="quantity"
           />
         </div>
       </div>
 
-      <button
-        className="button is-dark is-medium level-item"
-        style={{ marginTop: 15 }}
-        onClick={onSubmit}
-      >
-        {isEditing ? "Edit" : "Add"}
-      </button>
+      <InputBox
+        label="Dosage Instructions"
+        name="notes"
+        placeholder="Dosage Instruction"
+        onChange={handleInputChange}
+        value={formDetails.notes}
+      />
+
+      <CreateButton text={isEditing ? "Edit" : "Add"} onClick={onSubmit} />
     </div>
   );
 }
