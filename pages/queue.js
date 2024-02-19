@@ -1,39 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
-import moment from "moment";
 import withAuth from "../utils/auth";
+import { ViewButton } from "@/components/textContainers/ViewButton";
+import { CreateButton } from "@/components/textContainers/CreateButton";
 
-class Queue extends React.Component {
+function Queue() {
+  //Queue Page
+  const [visits, setVisits] = useState([]); //Shouldnt this pull based on Patients not Visits
+  const [visitsFiltered, setVisitsFiltered] = useState([]);
 
-  constructor() {
-    super();
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/visits?status=started`)
+      .then((response) => {
+        setVisits(response.data);
+        setVisitsFiltered(response.data);
+      })
+      .catch((error) => console.error("Error loading page", error));
+  }, []);
 
-    this.state = {
-      visits: [],
-      visitsFiltered: [],
-      filterString: "",
-    };
-
-    this.onFilterChange = this.onFilterChange.bind(this);
-  }
-
-  async componentDidMount() {
-    await this.onRefresh();
-  }
-
-  async onRefresh() {
-    let { data: visits } = await axios.get(`${API_URL}/visits?status=started`);
-
-    this.setState({ visits, visitsFiltered: visits });
-  }
-
-  async handleDelete(visit_id, patient_id) {
-    const { visits, visitsFiltered } = this.state;
-
+  async function handleDelete(visit_id, patient_id) {
+    //Not yet implementd
     const confirmed = window.confirm(
-      "Are you sure you want to delete this visit?"
+      "Are you sure you want to delete this visit?",
     );
     if (!confirmed) {
       return;
@@ -41,155 +32,177 @@ class Queue extends React.Component {
 
     try {
       await axios.delete(`${API_URL}/visits/${visit_id}`);
-      // let payload = {
-      //   patient: patient_id,
-      //   status: "ended",
-      //   visit_date: moment().format("YYYY-MM-DD"),
-      // };
-  
-      // await axios.post(`${API_URL}/visits`, payload);
       const updatedVisits = visits.filter((visit) => visit.id !== visit_id);
       const updatedVisitsFiltered = visitsFiltered.filter(
-        (visit) => visit.id !== visit_id
+        (visit) => visit.id !== visit_id,
       );
-      this.setState({
-        visits: updatedVisits,
-        visitsFiltered: updatedVisitsFiltered,
-      });
+      setVisits(updatedVisits);
+      setVisitsFiltered(updatedVisitsFiltered);
     } catch (error) {
       console.error(error);
     }
   }
 
-  renderTableContent() {
-    let { visitsFiltered } = this.state;
-    let reversedVisitsFiltered = visitsFiltered.reverse();
-    let visitsRows = reversedVisitsFiltered.map((visit, idx) => {
-      let Id = `${visit.patient.village_prefix}${visit.patient.id
-        .toString()
-        .padStart(3, "0")}`;
-      let imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
-      let fullName = visit.patient.name;
-      let progress = (
-        <button
-          className="button is-dark level-item"
-          onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
-        >
-          View
-        </button>
-      );
+  function renderTableContent() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(2); //Change to 10 after development
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    //Above consts for pagination
+    const reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent
+    const visitsRows = reversedVisitsFiltered
+      .slice(startIndex, endIndex)
+      .map((visit, idx) => {
+        const Id = `${visit.patient.village_prefix}${visit.patient.id
+          .toString()
+          .padStart(3, "0")}`;
+        const imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
+        const fullName = visit.patient.name;
+        const progress = (
+          <ViewButton
+            text={"View"}
+            onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
+          />
+        );
 
-      let vitals = (
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            {" "}
-            <button
-              className="button is-dark level-item"
-              onClick={() =>
-                Router.push(`/patient?id=${visit.patient.id}&form=vitals`)
-              }
-            >
-              Create
-            </button>
-          </div>
-        </div>
-      );
-
-      let consultation = (
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            {" "}
-            <button
-              className="button is-dark level-item"
-              onClick={() =>
-                Router.push(`/patient?id=${visit.patient.id}&form=medical`)
-              }
-            >
-              Create
-            </button>
-          </div>
-        </div>
-      );
-
-      return (
-        <tr key={idx}>
-          <td>{Id}</td>
-          <td>
-            <figure className="image is-96x96">
-              <img
-                src={imageUrl}
-                alt="Placeholder image"
-                style={{ height: 96, width: 96, objectFit: "cover" }}
-              />
-            </figure>
-          </td>
-          <td>{fullName}</td>
-
-          <td>{progress}</td>
-          <td>{vitals}</td>
-          <td>{consultation}</td>
-        </tr>
-      );
-    });
-
-    return visitsRows;
-  }
-
-  onFilterChange(event) {
-    let { visits } = this.state;
-    let filteredVisits = visits.filter((visit) => {
-      let patientId1 =
-        `${visit.patient.village_prefix}${visit.patient.id}`.toLowerCase();
-      let patientId2 = 
-        `${visit.patient.village_prefix}`.toLowerCase()
-        + `${visit.patient.id}`.padStart(3, `0`);
-      let name = `${visit.patient.name}`.toLowerCase();
-      let searchValue = event.target.value.toLowerCase();
-      return patientId1.includes(searchValue) || patientId2.includes(searchValue)
-            || name.includes(searchValue);
-    });
-
-    this.setState({ visitsFiltered: filteredVisits });
-  }
-
-  render() {
-    return (
-      <div
-        style={{
-          marginTop: 15,
-          marginLeft: 25,
-          marginRight: 25,
-        }}
-      >
-        <div className="column is-12">
-          <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient Records</h1>
-          <div className="field">
-            <div className="control">
-              <input
-                className="input is-medium"
-                type="text"
-                placeholder="Search Patient"
-                onChange={this.onFilterChange}
+        const vitals = (
+          <div className="field is-grouped">
+            <div className="control is-expanded">
+              {" "}
+              <CreateButton
+                text={"Create"}
+                onClick={() =>
+                  Router.push(
+                    `/patientVital?id=${visit.patient.id}&form=vitals`,
+                  )
+                }
               />
             </div>
           </div>
-          <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Photo</th>
-                <th>Full Name</th>
-                <th>Record</th>
-                <th>New Vitals</th>
-                <th>New Consultation</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderTableContent()}</tbody>
-          </table>
+        );
+
+        const consultation = (
+          <div className="field is-grouped">
+            <div className="control is-expanded">
+              {" "}
+              <CreateButton
+                text={"Create"}
+                onClick={() =>
+                  Router.push(
+                    `/patientMedical?id=${visit.patient.id}&form=medical`,
+                  )
+                }
+              />
+            </div>
+          </div>
+        );
+
+        return (
+          <tr key={idx}>
+            <td>{Id}</td>
+            <td>
+              <figure className="image is-96x96">
+                <img
+                  src={imageUrl}
+                  alt="Placeholder image"
+                  style={{ height: 96, width: 96, objectFit: "cover" }}
+                />
+              </figure>
+            </td>
+            <td>{fullName}</td>
+            <td>{progress}</td>
+            <td>{vitals}</td>
+            <td>{consultation}</td>
+          </tr>
+        );
+      });
+
+    return (
+      <>
+        {visitsRows}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
+          }}
+        >
+          <button
+            className="button is-dark level-item"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <button
+            className="button is-dark level-item"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={
+              currentPage ===
+              Math.ceil(reversedVisitsFiltered.length / itemsPerPage)
+            }
+          >
+            Next
+          </button>
         </div>
-      </div>
+      </>
     );
   }
+
+  function onFilterChange(e) {
+    const filteredVisits = visits.filter((visit) => {
+      const patientId1 =
+        `${visit.patient.village_prefix}${visit.patient.id}`.toLowerCase();
+      const patientId2 =
+        `${visit.patient.village_prefix}`.toLowerCase() +
+        `${visit.patient.id}`.padStart(3, `0`);
+      const name = `${visit.patient.name}`.toLowerCase();
+      const searchValue = e.target.value.toLowerCase();
+      return (
+        patientId1.includes(searchValue) ||
+        patientId2.includes(searchValue) ||
+        name.includes(searchValue)
+      );
+    });
+    setVisitsFiltered(filteredVisits);
+  }
+
+  return (
+    <div
+      style={{
+        marginTop: 15,
+        marginLeft: 25,
+        marginRight: 25,
+      }}
+    >
+      <div className="column is-12">
+        <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient Records</h1>
+        <div className="field">
+          <div className="control">
+            <input
+              className="input is-medium"
+              type="text"
+              placeholder="Search Patient"
+              onChange={onFilterChange}
+            />
+          </div>
+        </div>
+        <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Photo</th>
+              <th>Full Name</th>
+              <th>Record</th>
+              <th>New Vitals</th>
+              <th>New Consultation</th>
+            </tr>
+          </thead>
+          <tbody>{renderTableContent()}</tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
 
 export default withAuth(Queue);
