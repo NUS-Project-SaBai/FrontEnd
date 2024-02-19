@@ -13,8 +13,8 @@ import {
 import { urltoFile } from "../../utils/helpers";
 import withAuth from "../../utils/auth";
 import AppWebcam from "../../utils/webcam";
-import PatientModal from "./PatientModal";
-import ScanModal from "./ScanModal";
+import PatientModal from "../registration/PatientModal";
+import ScanModal from "../registration/ScanModal";
 
 const customStyles = {
   content: {
