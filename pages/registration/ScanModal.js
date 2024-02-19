@@ -33,7 +33,11 @@ const ScanModal = ({
     const scanPatientFormData = new FormData();
     scanPatientFormData.append(
       "picture",
+<<<<<<< HEAD:pages/registration/ScanModal.js
       await urltoFile(imageDetails, "patient_screenshot.jpg", "image/jpg")
+=======
+      await urltoFile(imageDetails, "patient_screenshot.jpg", "image/jpg"),
+>>>>>>> 27e4bb6f6482f409f92c5521c926352a3dcacf2e:pages/patients/ScanModal.js
     );
 
     const response = await axios

@@ -1,172 +1,145 @@
-import React from "react";
+import React, { useState } from "react";
+import { InputField } from "../textContainers/InputField";
+import { InputBox } from "../textContainers/InputBox";
+import { CreateButton } from "../textContainers/CreateButton";
+import { DeleteButton } from "../textContainers/DeleteButton";
+function VitalsForm({ handleInputChange, formDetails, patient }) {
+  const vitalFields = [
+    {
+      name: "height",
+      label: "Height (Decimal eg. 160.5)",
+      value: formDetails.height,
+      type: "number",
+    },
+    {
+      name: "weight",
+      label: "Weight (Decimal eg. 60.2)",
+      value: formDetails.weight,
+      type: "number",
+    },
+    {
+      name: "systolic",
+      label: "Systolic (Number eg. 10)",
+      value: formDetails.systolic,
+      type: "number",
+    },
+    {
+      name: "diastolic",
+      label: "Diastolic (Number eg. 10)",
+      value: formDetails.diastolic,
+      type: "number",
+    },
+    {
+      name: "temperature",
+      label: "Temperature (Decimal eg. 36.5)",
+      value: formDetails.temperature,
+      type: "number",
+    },
+    {
+      name: "heart_rate",
+      label: "Heart Rate (Number eg. 120)",
+      value: formDetails.heart_rate,
+      type: "number",
+    },
+    {
+      name: "left_eye_degree",
+      label: "Left Eye (Fraction eg. 6/6)",
+      value: formDetails.left_eye_degree,
+      type: "text",
+    },
+    {
+      name: "right_eye_degree",
+      label: "Right Eye (Fraction eg. 6/12)",
+      value: formDetails.right_eye_degree,
+      type: "text",
+    },
+    {
+      name: "left_eye_pinhole",
+      label: "Left Eye Pinhole (Fraction eg. 6/6)",
+      value: formDetails.left_eye_pinhole,
+      type: "text",
+    },
+    {
+      name: "right_eye_pinhole",
+      label: "Right Eye Pinhole (Fraction eg. 6/12)",
+      value: formDetails.right_eye_pinhole,
+      type: "text",
+    },
+    // Add more fields as needed
+  ];
 
-class VitalsForm extends React.Component {
-  constructor() {
-    super();
-  }
+  const statFields = [
+    {
+      name: "urine_test",
+      label: "Urine Dip Test (Text eg. Anyth)",
+      value: formDetails.urine_test,
+      type: "text",
+    },
+    {
+      name: "hemocue_count",
+      label: "Weight (Decimal eg. 60.2)",
+      value: formDetails.hemocue_count,
+      type: "number",
+    },
+    {
+      name: "blood_glucose",
+      label: "Capillary Blood Glucose (Decimal eg. 13.2)",
+      value: formDetails.blood_glucose,
+      type: "number",
+    },
+    {
+      name: "others",
+      label: "Others (Text eg. Anyth)",
+      value: formDetails.others,
+      type: "text",
+    },
+  ];
 
-  render() {
-    let { handleInputChange, formDetails, patient } = this.props;
-    return (
+  return (
+    <form>
       <div>
         <label className="label">Vitals</label>
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">Height (Decimal eg. 160.5)</label>
-            <div className="control">
-              <input
-                name="height"
-                className="input"
-                type="number"
-                onWheel={(e) => e.target.blur()}
-                onChange={handleInputChange}
-                value={formDetails.height}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Weight (Decimal eg. 60.2)</label>
-            <div className="control">
-              <input
-                name="weight"
-                className="input"
-                type="number"
-                onWheel={(e) => e.target.blur()}
-                onChange={handleInputChange}
-                value={formDetails.weight}
-              />
-            </div>
-          </div>
+      </div>
+      <div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {vitalFields.map((field) => (
+            <InputField
+              key={field.name}
+              name={field.name}
+              label={field.label}
+              type={field.type}
+              value={field.value}
+              onChange={handleInputChange}
+            />
+          ))}
         </div>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">Systolic (Number eg. 10)</label>
-            <div className="control">
-              <input
-                name="systolic"
-                className="input"
-                type="number"
-                onWheel={(e) => e.target.blur()}
-                onChange={handleInputChange}
-                value={formDetails.systolic}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Diastolic (Number eg. 10)</label>
-            <div className="control">
-              <input
-                name="diastolic"
-                className="input"
-                type="number"
-                onWheel={(e) => e.target.blur()}
-                onChange={handleInputChange}
-                value={formDetails.diastolic}
-              />
-            </div>
-          </div>
+        <div>
+          <label className="label">STAT Investigations</label>
         </div>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">Temperature (Decimal eg. 36.5)</label>
-            <div className="control">
-              <input
-                name="temperature"
-                className="input"
-                type="number"
-                onWheel={(e) => e.target.blur()}
+        <div>
+          <div className="grid gap-6 md:grid-cols-2">
+            {statFields.map((field) => (
+              <InputField
+                key={field.name}
+                name={field.name}
+                label={field.label}
+                type={field.type}
+                value={field.value}
                 onChange={handleInputChange}
-                value={formDetails.temperature}
               />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Heart Rate (Number eg. 120)</label>
-            <div className="control">
-              <input
-                name="heart_rate"
-                className="input"
-                type="number"
-                onWheel={(e) => e.target.blur()}
-                onChange={handleInputChange}
-                value={formDetails.heart_rate}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">Left Eye (Fraction eg. 6/6)</label>
-            <div className="control">
-              <input
-                name="left_eye_degree"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.left_eye_degree}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Right Eye (Fraction eg. 6/12)</label>
-            <div className="control">
-              <input
-                name="right_eye_degree"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.right_eye_degree}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">Left Eye Pinhole (Fraction eg. 6/6)</label>
-            <div className="control">
-              <input
-                name="left_eye_pinhole"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.left_eye_pinhole}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">
-              Right Eye Pinhole (Fraction eg. 6/12)
-            </label>
-            <div className="control">
-              <input
-                name="right_eye_pinhole"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.right_eye_pinhole}
-              />
-            </div>
+            ))}
           </div>
         </div>
 
         {patient.fields.date_of_birth &&
           Math.abs(
             new Date(
-              Date.now() - new Date(patient.fields.date_of_birth)
-            ).getUTCFullYear() - 1970
+              Date.now() - new Date(patient.fields.date_of_birth),
+            ).getUTCFullYear() - 1970,
           ) >= 40 && (
             <div className="field is-grouped">
               <div className="control is-expanded">
-                <label className="label"> Has Diabetes?</label>
+                <label className="label"> Diabetes?</label>
                 <div className="select">
                   <select name="diabetes_mellitus" onChange={handleInputChange}>
                     <option>Please Select...</option>
@@ -177,589 +150,177 @@ class VitalsForm extends React.Component {
               </div>
             </div>
           )}
-
-        {/* <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">Cataract (Text eg. Anyth)</label>
-            <div className="control">
-              <input
-                name="cataracts"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.cataracts}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Eye Pressure (Text eg. Anyth)</label>
-            <div className="control">
-              <input
-                name="eye_pressure"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.eye_pressure}
-              />
-            </div>
-          </div>
-        </div>
-
-        <br></br>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">HIV Positive (Text eg. Positive)</label>
-            <div className="control">
-              <input
-                name="hiv_positive"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.hiv_positive}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">PTB Positive (Text eg. Positive)</label>
-            <div className="control">
-              <input
-                name="ptb_positive"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.ptb_positive}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="control is-expanded">
-          <label className="label">HEPC Positive (Text eg. Positive)</label>
-          <div className="control">
-            <input
-              name="hepc_positive"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.hepc_positive}
-            />
-          </div>
-        </div>
-
-        <br></br>
-
-        <label className="label">Psychology Tests</label>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">PHQ-9 (Number(0-27) eg. 7)</label>
-            <div className="control">
-              <input
-                name="phq_9"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.phq_9}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">GAD-7 (Number(0-21) eg. 4)</label>
-            <div className="control">
-              <input
-                name="gad_7"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.gad_7}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="control is-expanded">
-          <label className="label">SDQ (Number eg. 34)</label>
-          <div className="control">
-            <input
-              name="sdq"
-              className="input"
-              type="text"
-              onChange={handleInputChange}
-              value={formDetails.sdq}
-            />
-          </div>
-        </div> */}
-
-        <label className="label">STAT Investigations</label>
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">Urine Dip Test (Text eg. Anyth)</label>
-            <div className="control">
-              <input
-                name="urine_test"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.urine_test}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Hemocue Hb Count (Decimal eg. 13.2)</label>
-            <div className="control">
-              <input
-                name="hemocue_count"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.hemocue_count}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">
-              Capillary Blood Glucose (Decimal eg. 13.2)
-            </label>
-            <div className="control">
-              <input
-                name="blood_glucose"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.blood_glucose}
-              />
-            </div>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Others (Text eg. Anyth)</label>
-            <div className="control">
-              <input
-                name="others"
-                className="input"
-                type="text"
-                onChange={handleInputChange}
-                value={formDetails.others}
-              />
-            </div>
-          </div>
-        </div>
       </div>
-    );
-  }
+    </form>
+  );
 }
 
-class MedicalForm extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      showWomenClinicDetails: false,
-    };
+function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
+  const [showWomenClinicDetails, setShowWomenClinicDetails] = useState(false); //Not sure what this does yet
+
+  function handleCheckboxChange(e) {
+    const { checked } = e.target;
+    setShowWomenClinicDetails(checked);
   }
 
-  handleCheckboxChange = (event) => {
-    const { checked } = event.target;
-    this.setState({ showWomenClinicDetails: checked });
-  };
+  function handleCheckboxAndInputChange(e) {
+    handleCheckboxChange(e);
+    handleInputChange(e);
+  }
 
-  handleCheckboxAndInputChange = (event) => {
-    this.handleCheckboxChange(event);
-    handleInputChange(event);
-  };
-
-  handleClick = (e) => {
-    let { formDetails, updateFormDetails } = this.props;
-
+  function handleClick(e) {
+    //Update form details resulting in rendering of page
     updateFormDetails([...formDetails.diagnoses, { details: "", type: "" }]);
-  };
+  }
 
-  handleDelete = (index) => {
-    let { formDetails, updateFormDetails } = this.props;
-
+  function handleDelete(index) {
+    //Delete diagnosis
     updateFormDetails([...formDetails.diagnoses].filter((_, i) => i != index));
-  };
+  }
 
-  handleDiagnosisChange = (e, index) => {
-    let { updateFormDetails, formDetails } = this.props;
-
+  function handleDiagnosisChange(e, index) {
+    //used to update diagnosis inputs
     const newDiagnoses = formDetails.diagnoses.map((diagnosis, i) => {
-      if (index !== i) return diagnosis;
-      return { ...diagnosis, [e.target.name]: e.target.value };
+      return index !== i
+        ? diagnosis
+        : { ...diagnosis, [e.target.name]: e.target.value };
     });
     updateFormDetails(newDiagnoses);
-  };
-
-  diagnosisToAdd() {
-    let { formDetails } = this.props;
-
-    return formDetails.diagnoses.map((diagnosis, index) => {
-      return (
-        <div className="field" key={index}>
-          <label className="label">Diagnosis {index + 1}</label>
-          <div className="control">
-            <textarea
-              name="details"
-              placeholder="Type your notes here..."
-              className="textarea"
-              onChange={(e) => this.handleDiagnosisChange(e, index)}
-              value={diagnosis.details}
-            />
-          </div>
-          <div className="select">
-            <select
-              name="type"
-              onChange={(e) => this.handleDiagnosisChange(e, index)}
-              value={diagnosis.type}
-            >
-              <option disabled>Please select....</option>
-              <option value="Cardiovascular">Cardiovascular</option>
-              <option value="Dermatology">Dermatology</option>
-              <option value="Ear Nose Throat">Ear Nose Throat</option>
-              <option value="Endocrine">Endocrine</option>
-              <option value="Eye">Eye</option>
-              <option value="Gastrointestinal">Gastrointestinal</option>
-              <option value="Haematology">Haematology</option>
-              <option value="Infectious Diseases">Infectious Diseases</option>
-              <option value="Renal & Genitourinary">
-                Renal & Genitourinary
-              </option>
-              <option value="Respiratory">Respiratory</option>
-              <option value="Musculoskeletal ">Musculoskeletal </option>
-              <option value="Neurology">Neurology</option>
-              <option value="Obstetrics & Gynaecology">
-                Obstetrics & Gynaecology
-              </option>
-              <option value="Oral Health">Oral Health</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-          <button className="button is-dark" style={{ marginTop: 10, marginLeft: 10}} onClick={() => this.handleDelete(index)}>
-            Delete Assessment
-          </button>
-        </div>
-      );
-    });
   }
 
-  render() {
-    let { handleInputChange, formDetails } = this.props;
-    const { showWomenClinicDetails } = this.state;
-    //console.log(formDetails);
-    return (
-      <div>
-        {/* <label className="label">Patient Photo Details</label>
+  function diagnosisToAdd() {
+    const diagnosisOptions = [
+      "Cardiovascular",
+      "Dermatology",
+      "Ear Nose Throat",
+      "Endocrine",
+      "Eye",
+      "Gastrointestinal",
+      "Haematology",
+      "Infectious Diseases",
+      "Renal & Genitourinary",
+      "Respiratory",
+      "Musculoskeletal",
+      "Neurology",
+      "Obstetrics & Gynaecology",
+      "Oral Health",
+      "Others",
+    ];
+    //Generate textfields for diagnosis
+    const renderDiagnosis = (diagnosis, index) => (
+      <div className="field" key={index}>
+        <InputBox
+          key="details"
+          name="details"
+          label={`Diagnosis ${index + 1}`}
+          type="text"
+          value={formDetails.details}
+          onChange={(e) => handleDiagnosisChange(e, index)}
+          placeholder="Type your notes here..."
+        />
 
-        <div className="field">
-          <label className="label">Photo URL</label>
-          <div className="control">
-            <textarea
-              name="photo_url"
-              className="textarea"
-              placeholder="Insert Photo URL here..."
-              onChange={handleInputChange}
-              value={formDetails.photo_url}
-            />
-          </div>
-        </div> */}
+        <select
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
+          name="type"
+          onChange={(e) => handleDiagnosisChange(e, index)}
+          value={diagnosis.type}
+        >
+          <option disabled>Please select....</option>
+          {diagnosisOptions.map((option, optionIndex) => (
+            <option key={optionIndex} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
 
-        <label className="label">Medical Consultation Form</label>
-
-        <div className="field">
-          <label className="label">Past Medical History</label>
-          <div className="control">
-            <textarea
-              name="problems"
-              className="textarea"
-              placeholder="Type your problems here..."
-              onChange={handleInputChange}
-              value={formDetails.problems}
-            />
-          </div>
-        </div>
-
-        <div className="field">
-          <label className="label">Consultation</label>
-          <div className="control">
-            <textarea
-              name="diagnosis"
-              className="textarea"
-              placeholder="Type your diagnosis here..."
-              onChange={handleInputChange}
-              value={formDetails.diagnosis}
-            />
-          </div>
-        </div>
-
-        <hr />
-        <label className="label">Assessment</label>
-
-        {this.diagnosisToAdd()}
-
-        <button className="button is-dark" onClick={(e) => this.handleClick(e)}>Add New Diagnosis</button>
-
-        {/* <div className="field">
-          <label className="label">Diagnosis 1</label>
-          <div className="control">
-            <textarea
-              name="diagnosis1"
-              placeholder="Type your notes here..."
-              className='textarea'
-              onChange={handleInputChange}
-              value={formDetails.diagnosis1}
-            />
-          </div>
-          <div className='select'>
-                <select 
-                    name="diagnosisType1"
-                    onChange={handleInputChange}
-                    value={formDetails.diagnosisType1}
-                    defaultValue={'DEFAULT'}
-                >
-                    <option value="DEFAULT" disabled >Please select....</option>
-                    <option value="Cardiovascular">Cardiovascular</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="Ear Nose Throat">Ear Nose Throat</option>
-                    <option value="Endocrine">Endocrine</option>
-                    <option value="Eye">Eye</option>
-                    <option value="Gastrointestinal">Gastrointestinal</option>
-                    <option value="Haematology">Haematology</option>
-                    <option value="Infectious Diseases">Infectious Diseases</option>
-                    <option value="Renal & Genitourinary">Renal & Genitourinary</option>
-                    <option value="Respiratory">Respiratory</option>
-                    <option value="Musculoskeletal ">Musculoskeletal </option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Obstetrics & Gynaecology">Obstetrics & Gynaecology</option>
-                    <option value="Oral Health">Oral Health</option>
-                    <option value="Others">Others</option>
-                </select>
-            </div>
-        </div>
-
-        <div className="field">
-          <label className="label">Diagnosis 2</label>
-          <div className="control">
-            <textarea
-              name="diagnosis2"
-              placeholder="Type your notes here..."
-              className='textarea'
-              onChange={handleInputChange}
-              value={formDetails.diagnosis2}
-            />
-          </div>
-          <div className='select'>
-                <select 
-                    name="diagnosisType2"
-                    onChange={handleInputChange}
-                    value={formDetails.diagnosisType2}
-                >
-                    <option value="Cardiovascular">Cardiovascular</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="Ear Nose Throat">Ear Nose Throat</option>
-                    <option value="Endocrine">Endocrine</option>
-                    <option value="Eye">Eye</option>
-                    <option value="Gastrointestinal">Gastrointestinal</option>
-                    <option value="Haematology">Haematology</option>
-                    <option value="Infectious Diseases">Infectious Diseases</option>
-                    <option value="Renal & Genitourinary">Renal & Genitourinary</option>
-                    <option value="Respiratory">Respiratory</option>
-                    <option value="Musculoskeletal ">Musculoskeletal </option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Obstetrics & Gynaecology">Obstetrics & Gynaecology</option>
-                    <option value="Oral Health">Oral Health</option>
-                    <option value="Others">Others</option>
-                </select>
-            </div>
-        </div>
-
-        <div className="field">
-          <label className="label">Diagnosis 3</label>
-          <div className="control">
-            <textarea
-              name="diagnosis3"
-              placeholder="Type your notes here..."
-              className='textarea'
-              onChange={handleInputChange}
-              value={formDetails.diagnosis3}
-            />
-          </div>
-          <div className='select'>
-                <select 
-                    name="diagnosisType3"
-                    onChange={handleInputChange}
-                    value={formDetails.diagnosisType3}
-                >
-                    <option value="Cardiovascular">Cardiovascular</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="Ear Nose Throat">Ear Nose Throat</option>
-                    <option value="Endocrine">Endocrine</option>
-                    <option value="Eye">Eye</option>
-                    <option value="Gastrointestinal">Gastrointestinal</option>
-                    <option value="Haematology">Haematology</option>
-                    <option value="Infectious Diseases">Infectious Diseases</option>
-                    <option value="Renal & Genitourinary">Renal & Genitourinary</option>
-                    <option value="Respiratory">Respiratory</option>
-                    <option value="Musculoskeletal ">Musculoskeletal </option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Obstetrics & Gynaecology">Obstetrics & Gynaecology</option>
-                    <option value="Oral Health">Oral Health</option>
-                    <option value="Others">Others</option>
-                </select>
-            </div>
-        </div> */}
-
-        <hr />
-
-        <div className="field">
-          <label className="label">Plan</label>
-          <div className="control">
-            <textarea
-              name="addendum"
-              className="textarea"
-              placeholder="Type your plan here..."
-              onChange={handleInputChange}
-              value={formDetails.addendum}
-            />
-          </div>
-        </div>
-
-        <hr />
-
-        {/* <div className="field">
-          <label className="label">
-            <input
-              name="women_clinic_checkbox"
-              type="checkbox"
-              checked={showWomenClinicDetails}
-              onChange={this.handleCheckboxAndInputChange}
-              style={{ marginRight: "10px" }}
-              value={formDetails.women_clinic_checkbox}
-            />
-            Women's Clinic Triage
-          </label>
-        </div>
-
-        {showWomenClinicDetails && (
-          <div className="field">
-            <label className="label">Additional Information</label>
-            <div className="control">
-              <div className="columns">
-                <div className="column">
-                  <label className="checkbox">
-                    <input
-                      type="checkbox"
-                      name="breast_problem"
-                      style={{ marginRight: "10px" }}
-                      onChange={handleInputChange}
-                      value={formDetails.breast_problem}
-                    />
-                    Breast Problem
-                  </label>
-                </div>
-                <div className="column">
-                  <label className="checkbox">
-                    <input
-                      type="checkbox"
-                      name="genital_area_problem"
-                      style={{ marginRight: "10px" }}
-                      onChange={handleInputChange}
-                      value={formDetails.genital_area_problem}
-                    />
-                    Genital Area Problem
-                  </label>
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column">
-                  <label className="checkbox">
-                    <input
-                      type="checkbox"
-                      name="menstruation_problem"
-                      style={{ marginRight: "10px" }}
-                      onChange={handleInputChange}
-                      value={formDetails.menstruation_problem}
-                    />
-                    Menstruation Problem
-                  </label>
-                </div>
-                <div className="column">
-                  {/* <label className="checkbox">
-                    <input
-                      type="checkbox"
-                      name="Others"
-                      style={{ marginRight: "10px" }}
-                    />
-                    Others
-                  </label> */}
-        {/*<textarea
-                    name="others_details"
-                    className="textarea"
-                    placeholder="Others..."
-                    onChange={handleInputChange}
-                    value={formDetails.others_details}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <hr /> */}
-
-        <div className="field">
-          <label className="label">* Referred for (within clinic)</label>
-          <div className="control" style={{ marginBottom: 20 }}>
-            <div className="select">
-              <select name="referred_for" onChange={handleInputChange}>
-                <option>Please select....</option>
-                <option value="Diagnostic">Diagnostic</option>
-                <option value="Acute">Acute</option>
-                <option value="Chronic">Chronic</option>
-              </select>
-            </div>
-            {/* <input
-              name="referred_for"
-              className="input"
-              type="text"
-              placeholder="Type specialty here..."
-              onChange={handleInputChange}
-              value={formDetails.referred_for}
-            /> */}
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Referral Notes</label>
-          <div className="control">
-            <textarea
-              name="referred_notes"
-              className="textarea"
-              placeholder="Type your referral notes here..."
-              onChange={handleInputChange}
-              value={formDetails.referred_notes}
-            />
-          </div>
-        </div>
+        <DeleteButton
+          text="Delete Assessment"
+          onClick={() => handleDelete(index)}
+        />
       </div>
     );
+    return formDetails.diagnoses.map(renderDiagnosis);
   }
+
+  return (
+    <div>
+      <label className="label">Medical Consultation Form</label>
+      <InputBox
+        key="problems"
+        name="problems"
+        label="Past Medical History"
+        type="text"
+        value={formDetails.problems}
+        onChange={handleInputChange}
+        placeholder="Type your problems here..."
+      />
+      <InputBox
+        key="diagnosis"
+        name="diagnosis"
+        label="Consultation"
+        type="text"
+        value={formDetails.diagnosis}
+        onChange={handleInputChange}
+        placeholder="Type your diagnosis here..."
+      />
+
+      <hr />
+      <label className="label">Assessment</label>
+
+      {diagnosisToAdd()}
+
+      <CreateButton text="Add New Diagnosis" onClick={(e) => handleClick(e)} />
+      <hr />
+
+      <InputBox
+        key="addendum"
+        name="addendum"
+        label="Plan"
+        type="text"
+        value={formDetails.addendum}
+        onChange={handleInputChange}
+        placeholder="Type your plan here..."
+      />
+
+      <hr />
+
+      <label className="label">* Referred for (within clinic)</label>
+      <select
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
+        name="type"
+        onChange={handleInputChange}
+      >
+        <option>Please select....</option>
+        <option value="Diagnostic">Diagnostic</option>
+        <option value="Acute">Acute</option>
+        <option value="Chronic">Chronic</option>
+      </select>
+
+      <InputBox
+        key="referred_notes"
+        name="referred_notes"
+        label="Referral Notes"
+        type="text"
+        value={formDetails.referred_notes}
+        onChange={handleInputChange}
+        placeholder="Type your referral notes here..."
+      />
+    </div>
+  );
 }
 
-class PrescriptionForm extends React.Component {
-  constructor() {
-    super();
-  }
-
-  calculateMedicineCurrentStock(medicine) {
-    let { medications } = this.props;
-
-    let medication = medications.filter((med) => {
+function PrescriptionForm({
+  allergies,
+  handleInputChange,
+  formDetails,
+  medicationOptions,
+  onSubmit,
+  isEditing,
+  medications,
+  reservedMedications,
+}) {
+  function calculateMedicineCurrentStock(medicine) {
+    const medication = medications.filter((med) => {
       return medicine == med.pk;
     });
 
@@ -767,85 +328,73 @@ class PrescriptionForm extends React.Component {
     return 0;
   }
 
-  calculateMedicineReservedStock(medicine) {
-    let { reservedMedications } = this.props;
-
+  function calculateMedicineReservedStock(medicine) {
     if (typeof reservedMedications[medicine] === "undefined") return 0;
     else return reservedMedications[medicine];
   }
 
-  render() {
-    let {
-      allergies,
-      handleInputChange,
-      formDetails,
-      medicationOptions,
-      onSubmit,
-      isEditing,
-    } = this.props;
-    return (
-      <div className="column is-12">
-        <h1 style={{ color: "black", fontSize: "1.5em" }}>Prescription</h1>
+  return (
+    <div className="column is-12">
+      <h1 style={{ color: "black", fontSize: "1.5em" }}>Prescription</h1>
 
-        <div className="field">
-          <label className="label">Allergies</label>
-          <h2 style={{ color: "red" }}>{allergies}</h2>
+      <div className="field">
+        <label className="label">Allergies</label>
+        <h2 style={{ color: "red" }}>{allergies}</h2>
+      </div>
+
+      <div className="field">
+        <label className="label">Medicine</label>
+        <div className="select is-fullwidth">
+          <select name={"medication"} onChange={handleInputChange}>
+            <option value={"0 Dummy"}>-</option>
+            {medicationOptions}
+          </select>
+        </div>
+      </div>
+
+      <div className="field is-grouped">
+        <div className="control is-expanded">
+          <label className="label">In Stock</label>
+          <h2>{calculateMedicineCurrentStock(formDetails.medicine)}</h2>
         </div>
 
-        <div className="field">
-          <label className="label">Medicine</label>
-          <div className="select is-fullwidth">
-            <select name={"medication"} onChange={handleInputChange}>
-              <option value={"0 Dummy"}>-</option>
-              {medicationOptions}
-            </select>
-          </div>
-        </div>
-
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            <label className="label">In Stock</label>
-            <h2>{this.calculateMedicineCurrentStock(formDetails.medicine)}</h2>
-          </div>
-
-          <div className="control is-expanded">
-            <label className="label">Quantity to be ordered</label>
-            <div className="control">
-              <input
-                name="quantity"
-                className="input"
-                type="number"
-                onWheel={(e) => e.target.blur()}
-                onChange={handleInputChange}
-                value={formDetails.quantity}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="field">
-          <label className="label">Dosage Instructions</label>
+        <div className="control is-expanded">
+          <label className="label">Quantity to be ordered</label>
           <div className="control">
-            <textarea
-              name="notes"
-              className="textarea"
-              placeholder="Textarea"
+            <input
+              name="quantity"
+              className="input"
+              type="number"
+              onWheel={(e) => e.target.blur()}
               onChange={handleInputChange}
-              value={formDetails.notes}
+              value={formDetails.quantity}
             />
           </div>
         </div>
-
-        <button
-          className="button is-dark is-medium level-item"
-          style={{ marginTop: 15 }}
-          onClick={onSubmit}
-        >
-          {isEditing ? "Edit" : "Add"}
-        </button>
       </div>
-    );
-  }
+
+      <div className="field">
+        <label className="label">Dosage Instructions</label>
+        <div className="control">
+          <textarea
+            name="notes"
+            className="textarea"
+            placeholder="Textarea"
+            onChange={handleInputChange}
+            value={formDetails.notes}
+          />
+        </div>
+      </div>
+
+      <button
+        className="button is-dark is-medium level-item"
+        style={{ marginTop: 15 }}
+        onClick={onSubmit}
+      >
+        {isEditing ? "Edit" : "Add"}
+      </button>
+    </div>
+  );
 }
 
 export { VitalsForm, MedicalForm, PrescriptionForm };

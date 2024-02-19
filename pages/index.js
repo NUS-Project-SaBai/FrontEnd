@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import Redirect from "./api/redirect";
 import withAuth from "../utils/auth";
 
 const Index = () => {
@@ -11,9 +10,7 @@ const Index = () => {
     router.push("/registration");
   }, [router]);
 
-  // User is logged in, perform client-side redirect to '/patients'
-
   return null;
-}
+};
 
 export default withAuth(Index);
