@@ -68,6 +68,17 @@ const Stock = () => {
     }));
   };
 
+  const updateMedicationDetails = (medicationDetails) => {
+    medicationDetails.map((medicationDetails) => {
+      medicationDetails.medicine_name =
+        medicationDetails.medicine_name.charAt(0).toUpperCase() +
+        medicationDetails.medicine_name.slice(1);
+      medicationDetails.quantity =
+        medicationDetails.quantity + medicationDetails.quantityChange;
+      setMedicationDetails(medicationDetails);
+    });
+  };
+
   const onSubmitForm = async () => {
     try {
       let endpoint = `${API_URL}/medications`;
@@ -83,6 +94,7 @@ const Stock = () => {
       await axios[method](endpoint, medicationDetails);
       toast.success(message);
       toggleModal();
+      updateMedicationDetails(medicationDetails);
       fetchMedications();
     } catch (error) {
       console.error(error);
@@ -111,7 +123,7 @@ const Stock = () => {
       <tr key={medication.pk}>
         <td>{medication.fields.medicine_name}</td>
         <td>{medication.fields.quantity}</td>
-        <td>
+        <td className="level-left">
           <button
             className="button is-dark level-item"
             onClick={() =>
@@ -121,7 +133,7 @@ const Stock = () => {
             Edit
           </button>
           <button
-            className="button is-dark level-item"
+            className="button is-danger level-item"
             onClick={() => handleDelete(medication.pk)}
           >
             Delete
@@ -131,7 +143,7 @@ const Stock = () => {
     ));
 
   return (
-    <div>
+    <div style={prescriptionModalStyles.format}>
       {modalIsOpen && (
         <Modal
           isOpen={modalIsOpen}
@@ -145,6 +157,7 @@ const Stock = () => {
           />
         </Modal>
       )}
+      <h1 style={{ color: "black", fontSize: "1.5em" }}>Medicine Stock</h1>
       <input
         className="input is-medium"
         type="text"
@@ -153,12 +166,12 @@ const Stock = () => {
       />
       <button
         className="button is-dark level-item"
-        style={{ display: "inline-block", verticalAlign: "top" }}
+        style={prescriptionModalStyles.newMedicine}
         onClick={() => toggleModal()}
       >
         New Medicine
       </button>
-      <table>
+      <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
         <thead>
           <tr>
             <th>Name</th>
@@ -178,6 +191,17 @@ const prescriptionModalStyles = {
     right: "17.5%",
     top: "25%",
     bottom: "25%",
+  },
+  format: {
+    marginTop: 20,
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  newMedicine: {
+    display: "inline-block",
+    verticalAlign: "top",
+    marginBottom: 10,
+    marginTop: 10,
   },
 };
 
