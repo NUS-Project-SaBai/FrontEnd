@@ -129,28 +129,30 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
                 onChange={handleInputChange}
               />
             ))}
+            {patient.fields.date_of_birth &&
+              Math.abs(
+                new Date(
+                  Date.now() - new Date(patient.fields.date_of_birth),
+                ).getUTCFullYear() - 1970,
+              ) >= 40 && (
+                <div className="field is-grouped">
+                  <div className="control is-expanded">
+                    <label className="label"> Diabetes?</label>
+
+                    <select
+                      className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mt-4"
+                      name="diabetes_mellitus"
+                      onChange={handleInputChange}
+                    >
+                      <option>Please Select...</option>
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
+                    </select>
+                  </div>
+                </div>
+              )}
           </div>
         </div>
-
-        {patient.fields.date_of_birth &&
-          Math.abs(
-            new Date(
-              Date.now() - new Date(patient.fields.date_of_birth),
-            ).getUTCFullYear() - 1970,
-          ) >= 40 && (
-            <div className="field is-grouped">
-              <div className="control is-expanded">
-                <label className="label"> Diabetes?</label>
-                <div className="select">
-                  <select name="diabetes_mellitus" onChange={handleInputChange}>
-                    <option>Please Select...</option>
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          )}
       </div>
     </form>
   );
@@ -221,7 +223,7 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
         />
 
         <select
-          className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
+          className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4"
           name="type"
           onChange={(e) => handleDiagnosisChange(e, index)}
           value={diagnosis.type}
