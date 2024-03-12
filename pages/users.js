@@ -6,6 +6,7 @@ import withAuth from "../utils/auth";
 
 Modal.setAppElement("#__next");
 
+// Currently not in use
 class Users extends React.Component {
   constructor() {
     super();
