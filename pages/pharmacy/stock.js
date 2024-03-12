@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import moment from "moment";
 import axios from "axios";
@@ -10,85 +10,93 @@ import toast from "react-hot-toast";
 
 Modal.setAppElement("#__next");
 
-class Stock extends React.Component {
-  constructor() {
-    super();
+const prescriptionModalStyles = {
+  content: {
+    left: "35%",
+    right: "17.5%",
+    top: "25%",
+    bottom: "25%",
+  },
+};
 
-    this.state = {
-      medications: [],
-      medicationsFiltered: [],
-      medicationDetails: {
-        medicine_name: "",
-        reserve_quantity: 0,
-        quantity: 0,
-        quantityChange: 0,
-        notes: "",
-        remarks: "",
-      },
-      modalIsOpen: false,
-      filterString: "",
-    };
+const Stock = () => {
+  const [medications, setMedications] = useState([]); // List of medications in stock
+  const [medicationsFiltered, setMedicationsFiltered] = useState([]); // Medications displayed based on the search bar
+  const [medicationDetails, setMedicationDetails] = useState({
+    medicine_name: "",
+    reserve_quantity: 0,
+    quantity: 0,
+    quantityChange: 0,
+    notes: "",
+    remarks: "",
+  }); // State is used to adjust what is displayed when toggling modal
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [filterString, setFilterString] = useState("");
 
-    this.onFilterChange = this.onFilterChange.bind(this);
-    this.handleMedicationChange = this.handleMedicationChange.bind(this);
-  }
+  useEffect(() => {
+    onRefresh();
+  }, []);
 
-  componentDidMount() {
-    this.onRefresh();
-  }
+  const onRefresh = async () => {
+    try {
+      const { data } = await axios.get(`${API_URL}/medications`);
+      setMedications(data);
+      setMedicationsFiltered(data);
+    } catch (error) {
+      console.error("Failed to fetch medications:", error);
+    }
+  };
 
-  async onRefresh() {
-    let { data: medications } = await axios.get(`${API_URL}/medications`);
-    this.setState({ medications, medicationsFiltered: medications });
-  }
+  const onSubmitForm = async () => {
+    if (!medicationDetails.medicine_name) {
+      toast.error("Medicine name cannot be empty.");
+      return;
+    }
 
-  async onSubmitForm() {
-    let { medicationDetails } = this.state;
-    let quantityChange = medicationDetails.quantityChange;
-    let nameEnriched =
+    const quantityChange = medicationDetails.quantityChange;
+    const nameEnriched =
       medicationDetails.medicine_name.charAt(0).toUpperCase() +
       medicationDetails.medicine_name.slice(1);
-    medicationDetails.medicine_name = nameEnriched;
-    if (medicationDetails.pk) {
-      let key = medicationDetails.pk;
-      let quantity =
-        parseInt(medicationDetails.quantity) + parseInt(quantityChange);
+
+    const updatedDetails = {
+      ...medicationDetails,
+      medicine_name: nameEnriched,
+    };
+
+    if (updatedDetails.pk) {
+      const key = updatedDetails.pk;
+      const quantity =
+        parseInt(updatedDetails.quantity) + parseInt(quantityChange);
       if (quantity >= 0) {
-        // edit case
-        // medicationDetails.quantity = quantity;
-
-        // medicationDetails.changeQuantity = 0;
-        // delete medicationDetails["pk"];
-
-        await axios
-          .patch(`${API_URL}/medications/${key}`, {
+        try {
+          await axios.patch(`${API_URL}/medications/${key}`, {
             quantityChange: parseInt(quantityChange),
-          })
-          .then(() => toast.success("Medication updated!"))
-          .catch(() => {
-            toast.error("Encountered an error!");
-            this.toggleModal();
-            this.onRefresh();
           });
+          toast.success("Medication Quantity updated!");
+        } catch (error) {
+          toast.error("Encountered an error!");
+        }
       } else {
         toast.error("Insufficient medication!");
       }
     } else if (quantityChange >= 0) {
-      //new medication case
-      medicationDetails.quantity = quantityChange;
-      await axios.post(`${API_URL}/medications`, medicationDetails);
-      toast.success("New Medication created!");
+      updatedDetails.quantity = quantityChange;
+      try {
+        await axios.post(`${API_URL}/medications`, updatedDetails);
+        toast.success("New Medication created!");
+      } catch (error) {
+        toast.error("Failed to create medication!");
+      }
     } else {
       toast.error("Invalid number!");
     }
 
-    this.toggleModal();
-    this.onRefresh();
-  }
+    toggleModal();
+    onRefresh();
+  };
 
-  async handleDelete(pk) {
-    const { medications, medicationsFiltered } = this.state;
-
+  async function handleDelete(pk) {
+    // Delete medication
     const confirmed = window.confirm(
       "Are you sure you want to delete this medication?",
     );
@@ -104,81 +112,79 @@ class Stock extends React.Component {
       const updatedMedicationsFiltered = medicationsFiltered.filter(
         (medication) => medication.pk !== pk,
       );
-      this.setState({
-        medications: updatedMedications,
-        medicationsFiltered: updatedMedicationsFiltered,
-      });
+      setMedications(updatedMedications);
+      setMedicationsFiltered(updatedMedicationsFiltered);
+
       toast.success("Medication successfully deleted!");
     } catch (error) {
       console.error(error);
     }
   }
 
-  onFilterChange(event) {
-    let { medications } = this.state;
-
-    let medicationsFiltered = medications.filter((medication) => {
-      let medicineName = medication.fields.medicine_name.toLowerCase();
+  function onFilterChange(event) {
+    // When editing search bar
+    const filteredMedications = medications.filter((medication) => {
+      const medicineName = medication.fields.medicine_name.toLowerCase();
 
       return medicineName.includes(event.target.value.toLowerCase());
     });
 
-    this.setState({ medicationsFiltered });
+    setMedicationsFiltered(filteredMedications);
   }
 
-  /**
-   * open the modal
-   * load the appropriate medication
-   */
-  toggleModal(edit = false, medication = {}) {
-    let changes = {
-      modalIsOpen: !this.state.modalIsOpen,
+  function createNewMedication() {
+    setMedicationDetails({
+      medicine_name: "",
+      reserve_quantity: 0,
+      quantity: 0,
+      quantityChange: 0,
+      notes: "",
+      remarks: "",
+    });
+    toggleModal(medicationDetails);
+  }
+
+  function toggleModal(medication = {}) {
+    setMedicationDetails(medication);
+    setModalIsOpen((prevModalIsOpen) => !prevModalIsOpen);
+  }
+
+  function handleMedicationChange(event) {
+    // When modifying an entry in MedicationForm
+    const newMedicationDetails = {
+      ...medicationDetails,
+      [event.target.name]: event.target.value,
     };
-    changes.medicationDetails = medication;
-    this.setState(changes);
+    setMedicationDetails(newMedicationDetails);
   }
 
-  renderModal() {
-    let { medicationDetails, modalIsOpen } = this.state;
+  function renderModal() {
+    // Loads the form to edit name, quantity and notes
     return (
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={() => this.toggleModal()}
+        onRequestClose={toggleModal}
         style={prescriptionModalStyles}
       >
         <MedicationForm
           formDetails={medicationDetails}
-          handleInputChange={this.handleMedicationChange}
-          onSubmit={() => this.onSubmitForm()}
+          handleInputChange={handleMedicationChange}
+          onSubmit={onSubmitForm}
         />
       </Modal>
     );
   }
 
-  handleMedicationChange(event) {
-    let { medicationDetails } = this.state;
-
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    medicationDetails[name] = value;
-
-    this.setState({
-      medicationDetails,
-    });
-  }
-
-  renderRows() {
-    let { medicationsFiltered: medications } = this.state;
-    let tableRows = medications.map((medication) => {
-      let medicationDetails = {
+  function renderRows() {
+    // Displays the list of medications in stock
+    const tableRows = medicationsFiltered.map((medication) => {
+      const medicationDetails = {
         ...medication.fields,
         pk: medication.pk,
         quantityChange: 0,
       };
-      let name = medicationDetails.medicine_name;
-      let quantity = medicationDetails.quantity;
+      const name = medicationDetails.medicine_name;
+      const quantity = medicationDetails.quantity;
 
       return (
         <tr>
@@ -189,14 +195,14 @@ class Stock extends React.Component {
               <div className="level-left">
                 <button
                   className="button is-dark level-item"
-                  onClick={() => this.toggleModal(true, medicationDetails)}
+                  onClick={() => toggleModal(medicationDetails)}
                 >
                   Edit
                 </button>
 
                 <button
                   className="button is-danger level-item"
-                  onClick={() => this.handleDelete(medicationDetails.pk)}
+                  onClick={() => handleDelete(medicationDetails.pk)}
                 >
                   Delete
                 </button>
@@ -209,62 +215,51 @@ class Stock extends React.Component {
     return tableRows;
   }
 
-  render() {
-    return (
-      <div
-        style={{
-          marginTop: 15,
-          marginLeft: 25,
-          marginRight: 25,
-          // position: "relative"
-        }}
-      >
-        {this.renderModal()}
-        <div className="column is-12">
-          <h1 style={{ color: "black", fontSize: "1.5em" }}>Medicine Stock</h1>
-          <div className="control">
-            <input
-              className="input is-medium"
-              type="text"
-              placeholder="Search Medications"
-              onChange={this.onFilterChange}
-            />
-          </div>
-          <div className="levels" style={{ marginBottom: 10, marginTop: 10 }}>
-            <div className="level-left">
-              <button
-                className="button is-dark level-item"
-                style={{ display: "inline-block", verticalAlign: "top" }}
-                onClick={() => this.toggleModal()}
-              >
-                New Medicine
-              </button>
-            </div>
-          </div>
-
-          <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderRows()}</tbody>
-          </table>
+  return (
+    <div
+      style={{
+        marginTop: 15,
+        marginLeft: 25,
+        marginRight: 25,
+        // position: "relative"
+      }}
+    >
+      {renderModal()}
+      <div className="column is-12">
+        <h1 style={{ color: "black", fontSize: "1.5em" }}>Medicine Stock</h1>
+        <div className="control">
+          <input
+            className="input is-medium"
+            type="text"
+            placeholder="Search Medications"
+            onChange={onFilterChange}
+          />
         </div>
-      </div>
-    );
-  }
-}
+        <div className="levels" style={{ marginBottom: 10, marginTop: 10 }}>
+          <div className="level-left">
+            <button
+              className="button is-dark level-item"
+              style={{ display: "inline-block", verticalAlign: "top" }}
+              onClick={createNewMedication}
+            >
+              New Medicine
+            </button>
+          </div>
+        </div>
 
-const prescriptionModalStyles = {
-  content: {
-    left: "35%",
-    right: "17.5%",
-    top: "25%",
-    bottom: "25%",
-  },
+        <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>{renderRows()}</tbody>
+        </table>
+      </div>
+    </div>
+  );
 };
 
 export default withAuth(Stock);
