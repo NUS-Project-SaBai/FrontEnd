@@ -7,7 +7,7 @@ const Index = () => {
 
   useEffect(() => {
     // User is logged in
-    router.push("/patients");
+    router.push("/registration");
   }, [router]);
 
   return null;

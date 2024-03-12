@@ -122,4 +122,67 @@ $button-color: white;
   background-repeat: no-repeat;
 }
 
+//Styles for Registration Page
+.registration-container {
+  display: flex;
+  height: 100vh;
+}
+
+.left-column {
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
+  //justify-content: center;
+  width: 500px;
+  padding: 10px;
+}
+
+.left-column button {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 2.2em;
+  padding: 20px 20px;
+}
+
+.right-column {
+  flex: 1;
+  padding: 10px;
+}
+
+.right-column h1 {
+  color: black;
+  font-size: 1.5em;
+}
+
+.autosuggest-container {
+  margin-top: 15px;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.patient-details {
+  margin-top: 15px;
+  display: flex;
+}
+
+.patient-details .column {
+  flex: 1;
+  padding: 10px;
+}
+
+.patient-details img {
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+}
+
+.button-start-visit {
+  background-color: darkslategray;
+  color: white;
+}
+
+#registration_font {
+  font-size: 40px;
+}
+
 @import "../node_modules/bulma/bulma.sass";
