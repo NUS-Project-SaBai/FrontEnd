@@ -1,60 +1,78 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-const SideMenu = (props) => (
-  <aside className="menu sideMenu">
-    <div className="level sideMenuTop">
-      <div className="level-left">
-        <figure className="image is-64x64 level-item">
-          <img src="/sabaiLogo.png" />
-        </figure>
+const SideMenu = (props) => {
+  const router = useRouter();
 
-        <h1 className="level-item sideMenuTitle">Sa'Bai '23</h1>
+  const isActive = (href) => {
+    return router.pathname.startsWith(href);
+  };
+
+  return (
+    <aside className="menu sideMenu">
+      <div className="level sideMenuTop">
+        <div className="level-left">
+          <figure className="image is-64x64 level-item">
+            <img src="/sabaiLogo.png" alt="Sa'Bai Logo" />
+          </figure>
+          <h1 className="level-item sideMenuTitle">Sa'Bai '23</h1>
+        </div>
       </div>
-    </div>
-    <p className="menu-label sideMenuItem">Services</p>
-    <ul className="menu-list">
-      <li>
-        <Link href="/registration" replace>
-          Registration
-        </Link>
-      </li>
-      <li>
-        <Link href="/queue" replace>
-          Patient Records
-        </Link>
-      </li>
-      {/* <li>
-        <Link href="/records" replace>
-          Records
-        </Link>
-      </li> */}
-    </ul>
-    <p className="menu-label sideMenuItem">Pharmacy</p>
-    <ul className="menu-list">
-      <li>
-        <Link href="/pharmacy/orders" replace>
-          Orders
-        </Link>
-      </li>
-      <li>
-        <Link href="/pharmacy/stock" replace>
-          Stock
-        </Link>
-      </li>
-    </ul>
-    <p className="menu-label sideMenuItem">Others</p>
-    <ul className="menu-list">
-      {/* uncomment to show users tab */}
-      {/* <li>
-        <Link href="/users" replace>
-          Users
-        </Link>
-      </li> */}
-      <li>
-        <a href="/api/auth/logout">Logout</a>
-      </li>
-    </ul>
-  </aside>
-);
+      <p className="menu-label sideMenuItem">Services</p>
+      <ul className="menu-list">
+        <li className={isActive("/registration") ? "bg-yellow-500" : ""}>
+          <Link href="/registration" replace>
+            <div>
+              <a>Registration</a>
+            </div>
+          </Link>
+        </li>
+        <li className={isActive("/queue") ? "bg-yellow-500" : ""}>
+          <Link href="/queue" replace>
+            <div>
+              <a>Patient Records</a>
+            </div>
+          </Link>
+        </li>
+        {/* Add more sidebar options as needed */}
+      </ul>
+      <p className="menu-label sideMenuItem">Pharmacy</p>
+      <ul className="menu-list">
+        <li className={isActive("/pharmacy/orders") ? "bg-yellow-500" : ""}>
+          <Link href="/pharmacy/orders" replace>
+            <div>
+              <a>Orders</a>
+            </div>
+          </Link>
+        </li>
+        <li className={isActive("/pharmacy/stock") ? "bg-yellow-500" : ""}>
+          <Link href="/pharmacy/stock" replace>
+            <div>
+              <a>Stock</a>
+            </div>
+          </Link>
+        </li>
+      </ul>
+      <p className="menu-label sideMenuItem">Others</p>
+      <ul className="menu-list">
+        {/* uncomment to show users tab */}
+        {/* <li>
+          <Link href="/users" replace>
+            <div className={isActive('/users') ? 'active' : ''}>
+              <a>Users</a>
+            </div>
+          </Link>
+        </li> */}
+        <li>
+          <Link href="/api/auth/logout">
+            <div>
+              <a>Logout</a>
+            </div>
+          </Link>
+        </li>
+      </ul>
+    </aside>
+  );
+};
 
 export default SideMenu;
