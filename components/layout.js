@@ -31,7 +31,7 @@ function Layout(props) {
       open={sidebarOpen}
       docked={sidebarDocked}
       onSetOpen={onSetSidebarOpen}
-      styles={{ sidebar: { background: "#180424" } }}
+      styles={{ sidebar: { background: "#075985" } }} //Tailwind sky-800
       transitions={false}
       suppressHydrationWarning={true}
     >

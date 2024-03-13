@@ -18,7 +18,7 @@ const SideMenu = (props) => {
           <h1 className="level-item sideMenuTitle">Sa'Bai '23</h1>
         </div>
       </div>
-      <p className="menu-label sideMenuItem">Services</p>
+      <p className="text-white ml-4 text-xl font-bold my-0">Services</p>
       <ul className="menu-list">
         <li className={isActive("/registration") ? "bg-yellow-500" : ""}>
           <Link href="/registration" replace>
@@ -45,7 +45,7 @@ const SideMenu = (props) => {
         </li>
         {/* Add more sidebar options as needed */}
       </ul>
-      <p className="menu-label sideMenuItem">Pharmacy</p>
+      <p className="text-white ml-4 text-xl font-bold my-1">Pharmacy</p>
       <ul className="menu-list">
         <li className={isActive("/pharmacy/orders") ? "bg-yellow-500" : ""}>
           <Link href="/pharmacy/orders" replace>
@@ -62,7 +62,7 @@ const SideMenu = (props) => {
           </Link>
         </li>
       </ul>
-      <p className="menu-label sideMenuItem">Others</p>
+      <p className="text-white ml-4 text-xl font-bold my-1">Others</p>
       <ul className="menu-list">
         {/* uncomment to show users tab */}
         {/* <li>
