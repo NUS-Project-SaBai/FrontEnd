@@ -8,9 +8,9 @@ import { VitalsView } from "@/components/views/Vitals/VitalsView";
 import { ConsultationsTable } from "@/components/views/Consultations/ConsultationsTable";
 
 import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitPrescriptionsTable";
-import { PatientView } from "../components/views/patient";
-import { API_URL, CLOUDINARY_URL } from "../utils/constants";
-import withAuth from "../utils/auth";
+import { PatientView } from "../../components/views/patient";
+import { API_URL, CLOUDINARY_URL } from "../../utils/constants";
+import withAuth from "../../utils/auth";
 import Router from "next/router";
 import { ViewButton } from "@/components/textContainers/ViewButton";
 

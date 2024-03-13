@@ -4,25 +4,22 @@ import SideMenu from "./sideMenu";
 import withAuth from "../utils/auth";
 
 function Layout(props) {
-  const [mql, setMql] = useState(null);
-  const [sidebarDocked, setSidebarDocked] = useState(null);
+  const [sidebarDocked, setSidebarDocked] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const mql = window.matchMedia(`(min-width: 800px)`);
+    const mediaQueryChanged = () => {
+      setSidebarDocked(mql.matches);
+      setSidebarOpen(false);
+    };
     mql.addListener(mediaQueryChanged);
-    setMql(mql);
     setSidebarDocked(mql.matches);
 
     return () => {
       mql.removeListener(mediaQueryChanged);
     };
   }, []);
-
-  const mediaQueryChanged = () => {
-    setSidebarDocked(mql.matches);
-    setSidebarOpen(false);
-  };
 
   const onSetSidebarOpen = (open) => {
     setSidebarOpen(open);
@@ -34,7 +31,7 @@ function Layout(props) {
       open={sidebarOpen}
       docked={sidebarDocked}
       onSetOpen={onSetSidebarOpen}
-      styles={{ sidebar: { background: "#180424" } }}
+      styles={{ sidebar: { background: "#075985" } }} //Tailwind sky-800
       transitions={false}
       suppressHydrationWarning={true}
     >
