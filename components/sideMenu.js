@@ -27,7 +27,16 @@ const SideMenu = (props) => {
             </div>
           </Link>
         </li>
-        <li className={isActive("/queue") ? "bg-yellow-500" : ""}>
+        <li
+          className={
+            isActive("/queue") ||
+            isActive("/record") ||
+            isActive("/patientMedical") ||
+            isActive("/patientVital")
+              ? "bg-yellow-500"
+              : ""
+          }
+        >
           <Link href="/queue" replace>
             <div>
               <a>Patient Records</a>

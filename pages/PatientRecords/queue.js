@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Router from "next/router";
-import { API_URL, CLOUDINARY_URL } from "../utils/constants";
-import withAuth from "../utils/auth";
+import { API_URL, CLOUDINARY_URL } from "../../utils/constants";
+import withAuth from "../../utils/auth";
 import { ViewButton } from "@/components/textContainers/ViewButton";
 import { CreateButton } from "@/components/textContainers/CreateButton";
 
