@@ -7,6 +7,8 @@ import { MedicationForm } from "../../components/forms/stock";
 import { API_URL } from "../../utils/constants";
 import withAuth from "../../utils/auth";
 import toast from "react-hot-toast";
+import { CreateButton } from "@/components/textContainers/CreateButton";
+import { DeleteButton } from "@/components/textContainers/DeleteButton";
 
 Modal.setAppElement("#__next");
 
@@ -190,24 +192,16 @@ const Stock = () => {
         <tr>
           <td>{name}</td>
           <td>{quantity}</td>
-          <td>
-            <div className="levels">
-              <div className="level-left">
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => toggleModal(medicationDetails)}
-                >
-                  Edit
-                </button>
+          <td className="space-x-6">
+            <CreateButton
+              text="Edit Quantity"
+              onClick={() => toggleModal(medicationDetails)}
+            />
 
-                <button
-                  className="button is-danger level-item"
-                  onClick={() => handleDelete(medicationDetails.pk)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
+            <DeleteButton
+              text="Delete"
+              onClick={() => handleDelete(medicationDetails.pk)}
+            />
           </td>
         </tr>
       );
@@ -239,13 +233,10 @@ const Stock = () => {
         </div>
         <div className="levels" style={{ marginBottom: 10, marginTop: 10 }}>
           <div className="level-left">
-            <button
-              className="button is-dark level-item"
-              style={{ display: "inline-block", verticalAlign: "top" }}
+            <CreateButton
+              text="Add New Medicine"
               onClick={createNewMedication}
-            >
-              New Medicine
-            </button>
+            />
           </div>
         </div>
 
