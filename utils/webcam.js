@@ -34,7 +34,7 @@ const AppWebcam = ({ webcamSetRef, webcamCapture }) => (
         marginTop: 15,
       }}
     >
-      <button className="button is-dark is-medium" onClick={webcamCapture}>
+      <button className="button is-black is-medium" onClick={webcamCapture}>
         <span style={{ marginRight: 15 }}>Capture</span>
         <CameraIcon />
       </button>

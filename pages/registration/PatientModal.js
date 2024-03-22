@@ -159,12 +159,12 @@ const PatientModal = ({
               {renderWebcam()}
             </div>
           )}
-          <div className="flex items-center justify-center">
-            <CreateButton
-              text={cameraIsOpen ? "Cancel" : "Take Photo"}
-              onClick={toggleCameraOpen}
-              className="mt-2"
-            />
+          <div className="flex items-center justify-center mt-2">
+            {cameraIsOpen ? (
+              <DeleteButton text="Cancel" onClick={toggleCameraOpen} />
+            ) : (
+              <CreateButton text="Take Photo" onClick={toggleCameraOpen} />
+            )}
           </div>
         </div>
       </div>

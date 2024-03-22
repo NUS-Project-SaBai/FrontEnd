@@ -22,11 +22,7 @@ const SideMenu = (props) => {
       <p className="text-white ml-4 text-3xl font-bold my-0">Services</p>
       <ul className="menu-list">
         <li className={isActive("/registration") ? "bg-yellow-500" : ""}>
-          <Link
-            href="/registration"
-            className="border grid grid-cols-2 gap-4 justify-between text-xl"
-            replace
-          >
+          <Link href="/registration" className="text-xl" replace>
             Registration
             <RegistrationIcon />
           </Link>
