@@ -132,8 +132,8 @@ const Orders = () => {
   return (
     <div style={{ marginTop: 15, marginLeft: 25, marginRight: 25 }}>
       <div className="column is-12">
-        <h1 style={{ color: "black", fontSize: "1.5em" }}>
-          Approve/Reject Orders
+        <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+          Orders
         </h1>
         <div className="field">
           <div className="control">

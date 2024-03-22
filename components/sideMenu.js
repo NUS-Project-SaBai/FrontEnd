@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import RegistrationIcon from "./icons/RegistrationIcon";
 
 const SideMenu = (props) => {
   const router = useRouter();
@@ -18,13 +19,16 @@ const SideMenu = (props) => {
           <h1 className="level-item sideMenuTitle">Sa'Bai '23</h1>
         </div>
       </div>
-      <p className="text-white ml-4 text-xl font-bold my-0">Services</p>
+      <p className="text-white ml-4 text-3xl font-bold my-0">Services</p>
       <ul className="menu-list">
         <li className={isActive("/registration") ? "bg-yellow-500" : ""}>
-          <Link href="/registration" replace>
-            <div>
-              <a>Registration</a>
-            </div>
+          <Link
+            href="/registration"
+            className="border grid grid-cols-2 gap-4 justify-between text-xl"
+            replace
+          >
+            Registration
+            <RegistrationIcon />
           </Link>
         </li>
         <li
@@ -37,32 +41,26 @@ const SideMenu = (props) => {
               : ""
           }
         >
-          <Link href="/queue" replace>
-            <div>
-              <a>Patient Records</a>
-            </div>
+          <Link href="/queue" className="text-xl" replace>
+            Patient records
           </Link>
         </li>
         {/* Add more sidebar options as needed */}
       </ul>
-      <p className="text-white ml-4 text-xl font-bold my-1">Pharmacy</p>
+      <p className="text-white ml-4 text-3xl font-bold my-1">Pharmacy</p>
       <ul className="menu-list">
         <li className={isActive("/pharmacy/orders") ? "bg-yellow-500" : ""}>
-          <Link href="/pharmacy/orders" replace>
-            <div>
-              <a>Orders</a>
-            </div>
+          <Link href="/pharmacy/orders" className="text-xl" replace>
+            Orders
           </Link>
         </li>
         <li className={isActive("/pharmacy/stock") ? "bg-yellow-500" : ""}>
-          <Link href="/pharmacy/stock" replace>
-            <div>
-              <a>Stock</a>
-            </div>
+          <Link href="/pharmacy/stock" className="text-xl" replace>
+            Stock
           </Link>
         </li>
       </ul>
-      <p className="text-white ml-4 text-xl font-bold my-1">Others</p>
+      <p className="text-white ml-4 text-3xl font-bold my-1">Others</p>
       <ul className="menu-list">
         {/* uncomment to show users tab */}
         {/* <li>
@@ -73,10 +71,8 @@ const SideMenu = (props) => {
           </Link>
         </li> */}
         <li>
-          <Link href="/api/auth/logout">
-            <div>
-              <a>Logout</a>
-            </div>
+          <Link href="/api/auth/logout" className="text-xl">
+            Logout
           </Link>
         </li>
       </ul>

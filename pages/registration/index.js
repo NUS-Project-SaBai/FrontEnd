@@ -343,13 +343,11 @@ const Registration = () => {
         customStyles={customStyles}
       />
       <div>
-        <div className="flex items-center space-x-3">
-          <CreateButton text="Scan Face" onClick={openScanModal} />
-          <CreateButton text="New Patient" onClick={openModal} />
-        </div>
-        <div className="">
-          <h1 id="registration_font">Registration</h1>
-          <div>
+        <div>
+          <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+            Registration
+          </h1>
+          <div className="flex items-center justify-center  mb-2">
             <Autosuggest
               suggestions={suggestions}
               onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -358,6 +356,13 @@ const Registration = () => {
               renderSuggestion={renderSuggestion}
               inputProps={inputProps}
             />
+          </div>
+          <div className="flex items-center justify-center mb-6 gap-3">
+            <CreateButton
+              text="Start Facial Recognition"
+              onClick={openScanModal}
+            />
+            <CreateButton text="New Patient" onClick={openModal} />
           </div>
           {typeof patient.pk !== "undefined" && (
             <div className="columns">

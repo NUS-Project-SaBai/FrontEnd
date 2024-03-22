@@ -1,5 +1,7 @@
 import Modal from "react-modal";
 import VenueOptions from "./VenueOptions";
+import { CreateButton } from "@/components/textContainers/CreateButton";
+import { DeleteButton } from "@/components/textContainers/DeleteButton";
 
 const PatientModal = ({
   modalIsOpen,
@@ -119,22 +121,19 @@ const PatientModal = ({
           <div className="levels" style={{ marginTop: 10 }}>
             <div className="level-left">
               <div className="level-item">
-                <button
-                  className="button is-dark is-medium"
+                <CreateButton
+                  text="Submit"
                   onClick={submitNewPatient}
-                  // onClick={this.submitNewPatientAndStartVisit}
-                >
-                  Submit
-                </button>
+                  className="mt-4"
+                />
               </div>
 
               <div className="level-item">
-                <button
-                  className="button is-dark is-medium"
+                <DeleteButton
+                  text="Close"
                   onClick={closeModal}
-                >
-                  Close
-                </button>
+                  className="mt-4"
+                />
               </div>
             </div>
           </div>
@@ -160,18 +159,12 @@ const PatientModal = ({
               {renderWebcam()}
             </div>
           )}
-          <div
-            style={{
-              textAlign: "center",
-            }}
-          >
-            <button
-              className="button is-dark is-medium"
+          <div className="flex items-center justify-center">
+            <CreateButton
+              text={cameraIsOpen ? "Cancel" : "Take Photo"}
               onClick={toggleCameraOpen}
-              style={{ marginTop: cameraIsOpen ? 60 : 15 }}
-            >
-              {cameraIsOpen ? "Cancel" : "Take Photo"}
-            </button>
+              className="mt-2"
+            />
           </div>
         </div>
       </div>

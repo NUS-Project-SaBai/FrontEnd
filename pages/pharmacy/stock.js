@@ -226,7 +226,9 @@ const Stock = () => {
     >
       {renderModal()}
       <div className="column is-12">
-        <h1 style={{ color: "black", fontSize: "1.5em" }}>Medicine Stock</h1>
+        <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+          Medication Stock
+        </h1>
         <div className="control">
           <input
             className="input is-medium"
