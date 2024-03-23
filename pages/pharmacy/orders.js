@@ -145,7 +145,7 @@ const Orders = () => {
         </div>
         <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
           <thead>
-            <tr>
+            <tr className="bg-sky-200">
               <th>ID</th>
               <th>Photo</th>
               <th>Full Name</th>

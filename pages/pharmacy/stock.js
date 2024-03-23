@@ -242,7 +242,7 @@ const Stock = () => {
 
         <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
           <thead>
-            <tr>
+            <tr className="bg-sky-200">
               <th>Name</th>
               <th>Quantity</th>
               <th>Actions</th>
