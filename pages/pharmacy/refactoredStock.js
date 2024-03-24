@@ -118,30 +118,6 @@ const Stock = () => {
     }
   };
 
-  const renderRows = () =>
-    medicationsFiltered.map((medication) => (
-      <tr key={medication.pk}>
-        <td>{medication.fields.medicine_name}</td>
-        <td>{medication.fields.quantity}</td>
-        <td className="level-left">
-          <button
-            className="button is-dark level-item"
-            onClick={() =>
-              toggleModal(true, { ...medication.fields, pk: medication.pk })
-            }
-          >
-            Edit
-          </button>
-          <button
-            className="button is-danger level-item"
-            onClick={() => handleDelete(medication.pk)}
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    ));
-
   return (
     <div style={prescriptionModalStyles.format}>
       {modalIsOpen && (
@@ -179,7 +155,11 @@ const Stock = () => {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>{renderRows()}</tbody>
+        <tbody>
+          {medicationsFiltered.map((medication) => (
+            <stockRow medication={medication} key={medication.pk} />
+          ))}
+        </tbody>
       </table>
     </div>
   );
