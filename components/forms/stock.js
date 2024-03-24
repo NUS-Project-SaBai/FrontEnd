@@ -1,9 +1,12 @@
 import React from "react";
+import { CreateButton } from "../textContainers/CreateButton";
 
 export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
   return (
     <div>
-      <label className="label">Medication</label>
+      <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-2">
+        Edit Medication
+      </label>
 
       <div className="field">
         <label className="label">Medicine Name</label>
@@ -55,13 +58,7 @@ export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
           />
         </div>
       </div>
-
-      <div className="level-left">
-        <button className="button is-dark is-medium" onClick={onSubmit}>
-          Submit
-        </button>
-      </div>
+      <CreateButton onClick={onSubmit} text="Submit" />
     </div>
   );
 }
-

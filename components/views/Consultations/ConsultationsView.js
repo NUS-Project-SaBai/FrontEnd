@@ -20,7 +20,7 @@ export function ConsultationsView({ content }) {
     return (
       <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
         <thead>
-          <tr>
+          <tr className="bg-sky-200">
             <th>Medicine Name</th>
             <th>Quantity</th>
             <th>Notes</th>
@@ -54,8 +54,8 @@ export function ConsultationsView({ content }) {
 
   return (
     <div className="grid gap-y-2">
-      <label className="block text-xl font-medium text-gray-700 mb-0 ">
-        Consultation
+      <label className="text-3xl font-bold text-center text-sky-800 mb-2">
+        Consultation Details
       </label>
       <DisplayField
         key={"doctor"}

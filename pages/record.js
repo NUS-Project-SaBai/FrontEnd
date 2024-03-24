@@ -209,7 +209,10 @@ const Record = () => {
         {typeof vitals === "undefined" ? (
           <h2>Not Done</h2>
         ) : (
-          <ViewButton text={"View"} onClick={() => toggleViewModal("vitals")} />
+          <ViewButton
+            text={"View Vitals"}
+            onClick={() => toggleViewModal("vitals")}
+          />
         )}
         <PatientView content={patient} />
       </div>
@@ -226,14 +229,10 @@ const Record = () => {
           : consult.referrals.split("\n")[0].split(" ")[2];
 
       return (
-        <tr key={consult.id}>
-          <td className="py-2 px-2 border-b border-gray-200 align-middle">
-            {doctor}
-          </td>
-          <td className="py-2 px-2 border-b border-gray-200 align-middle">
-            {referredFor}
-          </td>
-          <td className="px-2 border-b border-gray-200 align-middle">
+        <tr key={consult.id} className="text-center">
+          <td className="py-2 px-2 border-b align-middle">{doctor}</td>
+          <td className="py-2 px-2 border-b align-middle">{referredFor}</td>
+          <td className="px-2 border-b align-middle">
             <ViewButton
               text={"View"}
               onClick={() => toggleViewModal("consult", consult)}

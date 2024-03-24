@@ -474,13 +474,9 @@ const Patient = () => {
           : consult.referrals.split("\n")[0].split(" ")[2];
       return (
         <tr key={consult.id}>
-          <td className="py-2 px-2 border-b border-gray-200 align-middle">
-            {doctor}
-          </td>
-          <td className="py-2 px-2 border-b border-gray-200 align-middle">
-            {referredFor}
-          </td>
-          <td className="px-2 border-b border-gray-200 align-middle">
+          <td className="py-2 px-2 border-b align-middle">{doctor}</td>
+          <td className="py-2 px-2 border-b align-middle">{referredFor}</td>
+          <td className="px-2 border-b align-middle">
             <ViewButton
               text={"View"}
               onClick={() => toggleViewModal("consult", consult)}
