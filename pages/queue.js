@@ -6,6 +6,7 @@ import withAuth from "../utils/auth";
 
 import { render } from "react-dom";
 import { Button } from "@/components/textContainers/Button";
+import { InputField } from "@/components/textContainers/InputField";
 
 function Queue() {
   //Queue Page
@@ -142,10 +143,10 @@ function Queue() {
       </h1>
       <div className="field">
         <div className="control">
-          <input
-            className="input is-medium"
+          <InputField
             type="text"
-            placeholder="Search Patient"
+            name="Input Patient/ID to Search"
+            label="Search for Patient/ID"
             onChange={onFilterChange}
           />
         </div>

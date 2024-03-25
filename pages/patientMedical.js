@@ -491,16 +491,17 @@ const Patient = () => {
 
     let formContent = () => {
       return (
-        <div>
+        <div className="space-y-2">
           <MedicalForm
             updateFormDetails={updateFormDetails}
             formDetails={formDetails}
             handleInputChange={handleInputChange}
           />
           <hr />
-          <label className="label">Prescriptions</label>
+          <label className="block text-sm font-medium text-gray-900 mt-4">
+            Prescriptions
+          </label>
           {orders.length > 0 ? renderPrescriptionTable() : "No Prescriptions"}
-
           <hr />
           <Button
             colour="green"
@@ -529,40 +530,77 @@ const Patient = () => {
 
       return (
         <tr key={order.id}>
-          <td>{name}</td>
-          <td>{quantity}</td>
-          <td>
-            <div className="grid grid-cols-2 gap-x-6 mx-2">
-              <Button
-                colour="green"
-                text="Edit"
-                onClick={() => toggleFormModal(order)}
-              />
-              <Button
-                colour="red"
-                text="Delete"
-                onClick={() => {
-                  orders.splice(index, 1);
-                  setState((prevState) => ({ ...prevState, orders }));
-                }}
-              />
-            </div>
+          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+            {name}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {quantity}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            <Button
+              colour="green"
+              text="Edit"
+              onClick={() => toggleFormModal(order)}
+            />
+            <Button
+              colour="red"
+              text="Delete"
+              onClick={() => {
+                orders.splice(index, 1);
+                setState((prevState) => ({ ...prevState, orders }));
+              }}
+            />
           </td>
         </tr>
       );
     });
 
     return (
-      <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <thead>
-          <tr>
-            <th>Medicine Name</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>{orderRows}</tbody>
-      </table>
+      <div
+        style={{
+          marginTop: 15,
+          marginLeft: 25,
+          marginRight: 25,
+          // position: "relative"
+        }}
+      >
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="mt-2 flow-root">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle">
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                      >
+                        Medicine
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                      >
+                        Quantity
+                      </th>
+
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {orderRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 

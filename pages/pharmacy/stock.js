@@ -8,6 +8,7 @@ import { API_URL } from "../../utils/constants";
 import withAuth from "../../utils/auth";
 import toast from "react-hot-toast";
 import { Button } from "@/components/textContainers/Button";
+import { InputField } from "@/components/textContainers/InputField";
 
 Modal.setAppElement("#__next");
 
@@ -195,7 +196,7 @@ const Stock = () => {
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {quantity}
           </td>
-          <td className="space-x-6">
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
             <Button
               colour="green"
               text="Edit Quantity"
@@ -229,14 +230,14 @@ const Stock = () => {
         Medication Stock
       </h1>
       <div className="control">
-        <input
-          className="input is-medium"
+        <InputField
+          label="Search for Medicine"
           type="text"
-          placeholder="Search Medications"
+          name="Input Medication to Search"
           onChange={onFilterChange}
         />
       </div>
-      <div>
+      <div className="mt-2">
         <Button
           colour="green"
           text="Add New Medicine"
@@ -255,13 +256,13 @@ const Stock = () => {
                       scope="col"
                       className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                     >
-                      Quantity
+                      Medication Name
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                     >
-                      Medication Name
+                      Quantity
                     </th>
 
                     <th

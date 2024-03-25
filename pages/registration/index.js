@@ -299,8 +299,9 @@ const Registration = () => {
     type: "search",
     value,
     onChange: onChange,
-    className: "input is-medium level-item",
-    style: { width: 500 },
+    className:
+      "block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+    style: { width: "100%" },
   };
 
   return (
@@ -348,7 +349,7 @@ const Registration = () => {
           <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
             Registration
           </h1>
-          <div className="flex items-center justify-center  mb-2">
+          <div className="flex items-center justify-center mb-2">
             <Autosuggest
               suggestions={suggestions}
               onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -365,7 +366,6 @@ const Registration = () => {
               onClick={openScanModal}
             />
             <Button colour="green" text="New Patient" onClick={openModal} />
-            <Button text="trial" colour="sky" onClick={openModal} />
           </div>
           {typeof patient.pk !== "undefined" && (
             <div className="columns">

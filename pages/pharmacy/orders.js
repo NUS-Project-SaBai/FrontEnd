@@ -3,6 +3,7 @@ import axios from "axios";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import { Button } from "@/components/textContainers/Button";
+import { InputField } from "@/components/textContainers/InputField";
 
 const Orders = () => {
   const [visits, setVisits] = useState([]);
@@ -110,7 +111,7 @@ const Orders = () => {
                 {prescriptions}
               </ul>
             </td>
-            <td className="space-x-6">
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
               <Button
                 colour="green"
                 text="Prescribe"
@@ -139,10 +140,10 @@ const Orders = () => {
       </h1>
       <div className="field">
         <div className="control">
-          <input
-            className="input is-medium"
+          <InputField
             type="text"
-            placeholder="Search Patient"
+            name="Input Patient/ID to Search"
+            label="Search for Patient/ID"
             onChange={onFilterChange}
           />
         </div>

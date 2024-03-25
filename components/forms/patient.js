@@ -210,7 +210,7 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
     ];
     //Generate textfields for diagnosis
     const renderDiagnosis = (diagnosis, index) => (
-      <div className="field" key={index}>
+      <div key={index} className="space-y-2 mb-2">
         <InputBox
           key="details"
           name="details"
@@ -222,12 +222,14 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
         />
 
         <select
-          className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4"
+          className={`border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4 ${
+            diagnosis.type === "Please select..." ? "bg-red-100" : ""
+          }`}
           name="type"
           onChange={(e) => handleDiagnosisChange(e, index)}
           value={diagnosis.type}
         >
-          <option>Please select....</option>
+          <option>Please select...</option>
           {diagnosisOptions.map((option, optionIndex) => (
             <option key={optionIndex} value={option}>
               {option}
@@ -267,8 +269,9 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
         placeholder="Type your diagnosis here..."
       />
 
-      <hr />
-      <label className="label">Assessment</label>
+      <label className="block text-sm font-medium text-gray-900 mt-4">
+        Assessment
+      </label>
 
       {diagnosisToAdd()}
 
@@ -277,7 +280,6 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
         text="Add New Diagnosis"
         onClick={(e) => handleClick(e)}
       />
-      <hr />
 
       <InputBox
         key="addendum"
@@ -289,13 +291,14 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
         placeholder="Type your plan here..."
       />
 
-      <hr />
+      <hr className="mt-2" />
 
       <label className="label">* Referred for (within clinic)</label>
       <select
         className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
         name="type"
         onChange={handleInputChange}
+        value={formDetails.type}
       >
         <option>Please select....</option>
         <option value="Diagnostic">Diagnostic</option>
