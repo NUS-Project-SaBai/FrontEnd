@@ -1,4 +1,4 @@
-import { ViewButton } from "@/components/textContainers/ViewButton";
+import { Button } from "@/components/textContainers/Button";
 
 export function ConsultationsTable({ content: consults, buttonFunction }) {
   const consultRows = consults.map((consult) => {
@@ -17,7 +17,8 @@ export function ConsultationsTable({ content: consults, buttonFunction }) {
           {referredFor}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          <ViewButton
+          <Button
+            colour="indigo"
             text={"View"}
             onClick={() => buttonFunction("consult", consult)}
           />

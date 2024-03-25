@@ -1,5 +1,6 @@
 import React from "react";
-import { CreateButton } from "../textContainers/CreateButton";
+
+import { Button } from "../textContainers/Button";
 
 export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
   return (
@@ -58,7 +59,7 @@ export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
           />
         </div>
       </div>
-      <CreateButton onClick={onSubmit} text="Submit" />
+      <Button onClick={onSubmit} text="Submit" colour="green" />
     </div>
   );
 }

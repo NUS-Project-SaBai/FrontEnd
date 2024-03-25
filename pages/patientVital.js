@@ -12,8 +12,7 @@ import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitP
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
-import { CreateButton } from "@/components/textContainers/CreateButton";
-import { ViewButton } from "@/components/textContainers/ViewButton";
+import { Button } from "@/components/textContainers/Button";
 
 Modal.setAppElement("#__next");
 
@@ -278,16 +277,14 @@ const Patient = () => {
     let { formDetails, patient } = state;
 
     return (
-      <div>
+      <div className="space-y-2">
         <VitalsForm
           formDetails={formDetails}
           handleInputChange={handleInputChange}
           patient={patient}
         />
 
-        <hr />
-
-        <CreateButton text={"Submit"} onClick={() => submitForm()} />
+        <Button colour="green" text={"Submit"} onClick={() => submitForm()} />
       </div>
     );
   }

@@ -3,8 +3,7 @@ import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
-import { ViewButton } from "@/components/textContainers/ViewButton";
-import { CreateButton } from "@/components/textContainers/CreateButton";
+
 import { render } from "react-dom";
 import { Button } from "@/components/textContainers/Button";
 
@@ -60,27 +59,30 @@ function Queue() {
         const imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
         const fullName = visit.patient.name;
         const progress = (
-          <ViewButton
+          <Button
             text={"View"}
             onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
+            colour="indigo"
           />
         );
 
         const vitals = (
-          <CreateButton
+          <Button
             text={"Create"}
             onClick={() =>
               Router.push(`/patientVital?id=${visit.patient.id}&form=vitals`)
             }
+            colour="green"
           />
         );
 
         const consultation = (
-          <CreateButton
+          <Button
             text={"Create"}
             onClick={() =>
               Router.push(`/patientMedical?id=${visit.patient.id}&form=medical`)
             }
+            colour="green"
           />
         );
 

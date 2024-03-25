@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
-import { CreateButton } from "@/components/textContainers/CreateButton";
-import { DeleteButton } from "@/components/textContainers/DeleteButton";
+import { Button } from "@/components/textContainers/Button";
 
 const Orders = () => {
   const [visits, setVisits] = useState([]);
@@ -112,14 +111,16 @@ const Orders = () => {
               </ul>
             </td>
             <td className="space-x-6">
-              <CreateButton
+              <Button
+                colour="green"
                 text="Prescribe"
                 onClick={() =>
                   handlePrescriptionAction(correctPrescription, "approve")
                 }
               />
 
-              <DeleteButton
+              <Button
+                colour="red"
                 text="Reject"
                 onClick={() =>
                   handlePrescriptionAction(correctPrescription, "cancel")

@@ -7,8 +7,7 @@ import { MedicationForm } from "../../components/forms/stock";
 import { API_URL } from "../../utils/constants";
 import withAuth from "../../utils/auth";
 import toast from "react-hot-toast";
-import { CreateButton } from "@/components/textContainers/CreateButton";
-import { DeleteButton } from "@/components/textContainers/DeleteButton";
+import { Button } from "@/components/textContainers/Button";
 
 Modal.setAppElement("#__next");
 
@@ -197,12 +196,14 @@ const Stock = () => {
             {quantity}
           </td>
           <td className="space-x-6">
-            <CreateButton
+            <Button
+              colour="green"
               text="Edit Quantity"
               onClick={() => toggleModal(medicationDetails)}
             />
 
-            <DeleteButton
+            <Button
+              colour="red"
               text="Delete"
               onClick={() => handleDelete(medicationDetails.pk)}
             />
@@ -236,7 +237,11 @@ const Stock = () => {
         />
       </div>
       <div>
-        <CreateButton text="Add New Medicine" onClick={createNewMedication} />
+        <Button
+          colour="green"
+          text="Add New Medicine"
+          onClick={createNewMedication}
+        />
       </div>
 
       <div className="px-4 sm:px-6 lg:px-8">

@@ -11,8 +11,8 @@ export function Button({ text, onClick, colour }) {
 /*
 Comments are for tailwind to recognise the colours
 bg-indigo-800
-bg-indigo-500
-bg-indigo-600
+hover:bg-indigo-500
+focus-visible:outline-indigo-600
 
 bg-sky-800
 hover:bg-sky-500
@@ -21,4 +21,12 @@ focus-visible:outline-sky-600
 bg-blue-800
 hover:bg-blue-500
 focus-visible:outline-blue-600
+
+bg-green-800
+hover:bg-green-500
+focus-visible:outline-green-600
+
+bg-red-800
+hover:bg-red-500
+focus-visible:outline-red-600
 */

@@ -12,9 +12,7 @@ import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitP
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
-import { CreateButton } from "@/components/textContainers/CreateButton";
-import { ViewButton } from "@/components/textContainers/ViewButton";
-import { DeleteButton } from "@/components/textContainers/DeleteButton";
+import { Button } from "@/components/textContainers/Button";
 
 Modal.setAppElement("#__next");
 
@@ -504,7 +502,8 @@ const Patient = () => {
           {orders.length > 0 ? renderPrescriptionTable() : "No Prescriptions"}
 
           <hr />
-          <CreateButton
+          <Button
+            colour="green"
             text={"Add Prescriptions"}
             onClick={() => toggleFormModal()}
           />
@@ -513,12 +512,10 @@ const Patient = () => {
     };
 
     return (
-      <div>
+      <div className="space-y-2">
         {formContent()}
 
-        <hr />
-
-        <CreateButton text={"Submit"} onClick={() => submitForm()} />
+        <Button colour="green" text={"Submit"} onClick={() => submitForm()} />
       </div>
     );
   }
@@ -536,11 +533,13 @@ const Patient = () => {
           <td>{quantity}</td>
           <td>
             <div className="grid grid-cols-2 gap-x-6 mx-2">
-              <CreateButton
+              <Button
+                colour="green"
                 text="Edit"
                 onClick={() => toggleFormModal(order)}
               />
-              <DeleteButton
+              <Button
+                colour="red"
                 text="Delete"
                 onClick={() => {
                   orders.splice(index, 1);

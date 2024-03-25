@@ -12,7 +12,8 @@ import { PatientView } from "../components/views/patient";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import Router from "next/router";
-import { ViewButton } from "@/components/textContainers/ViewButton";
+
+import { Button } from "@/components/textContainers/Button";
 
 Modal.setAppElement("#__next");
 
@@ -209,9 +210,10 @@ const Record = () => {
         {typeof vitals === "undefined" ? (
           <h2>Not Done</h2>
         ) : (
-          <ViewButton
+          <Button
             text={"View Vitals"}
             onClick={() => toggleViewModal("vitals")}
+            colour="indigo"
           />
         )}
         <PatientView content={patient} />

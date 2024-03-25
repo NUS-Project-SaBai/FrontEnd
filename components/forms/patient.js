@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { InputField } from "../textContainers/InputField";
 import { InputBox } from "../textContainers/InputBox";
-import { CreateButton } from "../textContainers/CreateButton";
-import { DeleteButton } from "../textContainers/DeleteButton";
 import { DisplayField } from "../textContainers/DispayField";
+import { Button } from "../textContainers/Button";
 function VitalsForm({ handleInputChange, formDetails, patient }) {
   const vitalFields = [
     {
@@ -236,7 +235,8 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
           ))}
         </select>
 
-        <DeleteButton
+        <Button
+          colour="red"
           text="Delete Assessment"
           onClick={() => handleDelete(index)}
         />
@@ -272,7 +272,11 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
 
       {diagnosisToAdd()}
 
-      <CreateButton text="Add New Diagnosis" onClick={(e) => handleClick(e)} />
+      <Button
+        colour="green"
+        text="Add New Diagnosis"
+        onClick={(e) => handleClick(e)}
+      />
       <hr />
 
       <InputBox
@@ -398,7 +402,11 @@ function PrescriptionForm({
         value={formDetails.notes}
       />
 
-      <CreateButton text={isEditing ? "Edit" : "Add"} onClick={onSubmit} />
+      <Button
+        colour="green"
+        text={isEditing ? "Edit" : "Add"}
+        onClick={onSubmit}
+      />
     </div>
   );
 }

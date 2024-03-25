@@ -15,7 +15,7 @@ import withAuth from "../../utils/auth";
 import AppWebcam from "../../utils/webcam";
 import PatientModal from "./PatientModal";
 import ScanModal from "./ScanModal";
-import { CreateButton } from "@/components/textContainers/CreateButton";
+
 import { Button } from "@/components/textContainers/Button";
 
 const customStyles = {
@@ -359,11 +359,12 @@ const Registration = () => {
             />
           </div>
           <div className="flex items-center justify-center mb-6 gap-3">
-            <CreateButton
+            <Button
+              colour="green"
               text="Start Facial Recognition"
               onClick={openScanModal}
             />
-            <CreateButton text="New Patient" onClick={openModal} />
+            <Button colour="green" text="New Patient" onClick={openModal} />
             <Button text="trial" colour="sky" onClick={openModal} />
           </div>
           {typeof patient.pk !== "undefined" && (
