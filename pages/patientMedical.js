@@ -13,6 +13,7 @@ import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
 import { Button } from "@/components/textContainers/Button";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 Modal.setAppElement("#__next");
 
@@ -394,10 +395,10 @@ const Patient = () => {
   }
 
   function renderHeader() {
-    let { patient, visits } = state;
-    let visitOptions = visits.map((visit) => {
-      let date = moment(visit.visit_date).format("DD MMMM YYYY");
-
+    const { patient, visits } = state;
+    console.log("Render: ", state);
+    const visitOptions = visits.map((visit) => {
+      const date = moment(visit.date).format("DD MMMM YYYY");
       return (
         <option key={visit.id} value={visit.id}>
           {date}
@@ -406,56 +407,44 @@ const Patient = () => {
     });
 
     return (
-      <div className="column is-12">
-        <div className="columns is-12">
-          <div className="column is-2">
-            <img
-              src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
-              alt="Placeholder image"
-              className="has-ratio"
-              style={{
-                height: 200,
-                width: 200,
-                objectFit: "cover",
-              }}
-            />
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-12 md:col-span-2">
+          <img
+            src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
+            alt="Placeholder image"
+            className="h-48 w-48 object-cover rounded-md"
+          />
+        </div>
+        <div className="col-span-12 md:col-span-3">
+          <div>
+            <label className="block text-gray-700">Village ID</label>
+            <p className="text-lg font-medium">{`${
+              patient.fields.village_prefix
+            }${patient.pk.toString().padStart(3, "0")}`}</p>
           </div>
-          <div className="column is-3">
-            <label className="label">Village ID</label>
-            <article className="message">
-              <div className="message-body">{`${
-                patient.fields.village_prefix
-              }${patient.pk.toString().padStart(3, "0")}`}</div>
-            </article>
-            <label className="label">Visit on</label>
-            <div className="select is-fullwidth">
-              <select name={"medication"} onChange={handleVisitChange}>
+          <div className="mt-4">
+            <label className="block text-gray-700">Visit on</label>
+            <div className="relative">
+              <select
+                name="medication"
+                onChange={handleVisitChange}
+                className="block w-full bg-white border border-gray-300 rounded-md py-2 px-4 appearance-none focus:outline-none focus:border-blue-500"
+              >
                 {visitOptions}
               </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <ChevronDownIcon className="h-5 w-5" />
+              </div>
             </div>
           </div>
-          <div className="column is-3">
-            <label className="label">Name</label>
-            <article className="message">
-              <div className="message-body">{patient.fields.name}</div>
-            </article>
-          </div>
-          <div className="column is-3">
-            <label className="label">Age</label>
-            <article className="message">
-              <div className="message-body">
-                {patient.fields.date_of_birth
-                  ? Math.abs(
-                      new Date(
-                        Date.now() - new Date(patient.fields.date_of_birth),
-                      ).getUTCFullYear() - 1970,
-                    )
-                  : "No DOB"}
-              </div>
-            </article>
-          </div>
-          <div className="column is-3"></div>
         </div>
+        <div className="col-span-12 md:col-span-3">
+          <div>
+            <label className="block text-gray-700">Name</label>
+            <p className="text-lg font-medium">{patient.fields.name}</p>
+          </div>
+        </div>
+        <div className="col-span-12 md:col-span-4"></div>
       </div>
     );
   }
