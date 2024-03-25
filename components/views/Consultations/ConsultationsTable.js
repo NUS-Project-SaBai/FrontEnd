@@ -1,5 +1,6 @@
 import { ViewButton } from "@/components/textContainers/ViewButton";
-export function ConsultationsTable({ content: consults }) {
+
+export function ConsultationsTable({ content: consults, buttonFunction }) {
   const consultRows = consults.map((consult) => {
     const doctor = consult.doctor.username;
     const referredFor =
@@ -18,7 +19,7 @@ export function ConsultationsTable({ content: consults }) {
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
           <ViewButton
             text={"View"}
-            onClick={() => toggleViewModal("consult", consult)}
+            onClick={() => buttonFunction("consult", consult)}
           />
         </td>
       </tr>

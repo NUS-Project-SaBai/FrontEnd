@@ -221,10 +221,12 @@ const Record = () => {
 
   function renderSecondColumn() {
     const { vitals, consults, visitPrescriptions } = state;
-
     return (
       <div className="space-y-8">
-        <ConsultationsTable content={consults} />
+        <ConsultationsTable
+          content={consults}
+          buttonFunction={toggleViewModal}
+        />
         <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
     );

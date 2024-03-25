@@ -260,7 +260,10 @@ const Patient = () => {
           <VitalsView content={vitals} />
         )}
 
-        <ConsultationsTable content={consults} />
+        <ConsultationsTable
+          content={consults}
+          buttonFunction={toggleViewModal}
+        />
 
         <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
