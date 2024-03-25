@@ -271,7 +271,7 @@ const Patient = () => {
     });
 
     return (
-      <div className="column is-5">
+      <div>
         {typeof vitals === "undefined" ? (
           <>
             <label className="label">Vital Signs</label>
@@ -281,13 +281,10 @@ const Patient = () => {
           <VitalsView content={vitals} />
         )}
 
-        <hr />
-        <label className="label mt-4">Consultations</label>
-        {consults.length > 0 ? (
-          <ConsultationsTable consultRows={consultRows} />
-        ) : (
-          <h2>Not Done</h2>
-        )}
+        <ConsultationsTable
+          consultLength={consults.length}
+          content={consultRows}
+        />
 
         <hr />
         <label className="label mt-4">Prescriptions</label>

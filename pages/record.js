@@ -229,10 +229,14 @@ const Record = () => {
           : consult.referrals.split("\n")[0].split(" ")[2];
 
       return (
-        <tr key={consult.id} className="text-center">
-          <td className="py-2 px-2 border-b align-middle">{doctor}</td>
-          <td className="py-2 px-2 border-b align-middle">{referredFor}</td>
-          <td className="px-2 border-b align-middle">
+        <tr key={consult.id}>
+          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+            {doctor}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {referredFor}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             <ViewButton
               text={"View"}
               onClick={() => toggleViewModal("consult", consult)}
@@ -244,13 +248,10 @@ const Record = () => {
 
     return (
       <div>
-        <hr />
-        <label className="label">Consultations</label>
-        {consults.length > 0 ? (
-          <ConsultationsTable consultRows={consultRows} />
-        ) : (
-          <h2>Not Done</h2>
-        )}
+        <ConsultationsTable
+          consultLength={consults.length}
+          content={consultRows}
+        />
 
         <hr />
         <label className="label">Prescriptions</label>

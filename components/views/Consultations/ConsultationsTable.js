@@ -1,22 +1,46 @@
-export function ConsultationsTable({ consultRows }) {
-  return (
-    <div className="shadow-lg rounded-lg overflow-hidden mb-4">
-      <table className="w-full">
-        <thead>
-          <tr className="bg-sky-200">
-            <th className="w-1/3 py-2 px-2 text-center font-bold uppercase">
-              Doctor
-            </th>
-            <th className="w-1/3 py-2 px-2 text-center font-bold uppercase">
-              Referred For
-            </th>
-            <th className="w-1/3 py-2 px-2 text-center font-bold uppercase">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>{consultRows}</tbody>
-      </table>
+export function ConsultationsTable({ consultLength, content }) {
+  return consultLength <= 0 ? (
+    <h2>Not Done</h2>
+  ) : (
+    <div>
+      <label className="text-base font-semibold leading-6 text-gray-900">
+        Consultations
+      </label>
+      <div className="mt-4 flow-root">
+        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    >
+                      Doctor
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Referral Type
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {content}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

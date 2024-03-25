@@ -498,12 +498,11 @@ const Patient = () => {
         )}
 
         <hr />
-        <label className="label mt-4">Consultations</label>
-        {consults.length > 0 ? (
-          <ConsultationsTable consultRows={consultRows} />
-        ) : (
-          <h2>Not Done</h2>
-        )}
+
+        <ConsultationsTable
+          consultLength={consults.length}
+          content={consultRows}
+        />
 
         <hr />
         <label className="label mt-4">Prescriptions</label>
