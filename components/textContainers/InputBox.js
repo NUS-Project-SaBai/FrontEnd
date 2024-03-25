@@ -5,7 +5,7 @@ export function InputBox({ name, label, type, value, onChange, placeholder }) {
         htmlFor={name}
         className="block text-sm font-medium text-gray-900 mt-4"
       >
-        {label} 123
+        {label}
       </label>
       <div className="">
         <textarea
