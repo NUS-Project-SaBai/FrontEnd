@@ -221,95 +221,12 @@ const Record = () => {
 
   function renderSecondColumn() {
     const { vitals, consults, visitPrescriptions } = state;
-    const consultRows = consults.map((consult) => {
-      const doctor = consult.doctor.username;
-      const referredFor =
-        consult.referrals == null || consult.referrals == ""
-          ? "None"
-          : consult.referrals.split("\n")[0].split(" ")[2];
-
-      return (
-        <tr key={consult.id}>
-          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-            {doctor}
-          </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            {referredFor}
-          </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            <ViewButton
-              text={"View"}
-              onClick={() => toggleViewModal("consult", consult)}
-            />
-          </td>
-        </tr>
-      );
-    });
 
     return (
-      <div>
-        <ConsultationsTable
-          consultLength={consults.length}
-          content={consultRows}
-        />
-
-        <hr />
-        <label className="label">Prescriptions</label>
-        {visitPrescriptions.length > 0 ? (
-          <VisitPrescriptionsTable content={visitPrescriptions} />
-        ) : (
-          <h2>Not Done</h2>
-        )}
+      <div className="space-y-8">
+        <ConsultationsTable content={consults} />
+        <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
-    );
-  }
-
-  function renderPrescriptionTable() {
-    const { orders } = state;
-
-    const orderRows = orders.map((order, index) => {
-      const name = order.medicine.medicine_name;
-      const quantity = order.quantity;
-
-      return (
-        <tr key={order.id}>
-          <td>{name}</td>
-          <td>{quantity}</td>
-          <td>
-            <div className="levels">
-              <div className="level-left">
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => toggleFormModal(order)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => {
-                    orders.splice(index, 1);
-                    setState({ orders });
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </td>
-        </tr>
-      );
-    });
-    return (
-      <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <thead>
-          <tr>
-            <th>Medicine Name</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>{orderRows}</tbody>
-      </table>
     );
   }
 

@@ -1,6 +1,37 @@
-export function ConsultationsTable({ consultLength, content }) {
-  return consultLength <= 0 ? (
-    <h2>Not Done</h2>
+import { ViewButton } from "@/components/textContainers/ViewButton";
+export function ConsultationsTable({ content: consults }) {
+  const consultRows = consults.map((consult) => {
+    const doctor = consult.doctor.username;
+    const referredFor =
+      consult.referrals == null || consult.referrals == ""
+        ? "None"
+        : consult.referrals.split("\n")[0].split(" ")[2];
+
+    return (
+      <tr key={consult.id}>
+        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+          {doctor}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          {referredFor}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          <ViewButton
+            text={"View"}
+            onClick={() => toggleViewModal("consult", consult)}
+          />
+        </td>
+      </tr>
+    );
+  });
+
+  return consults.length == 0 ? (
+    <div>
+      <label className="text-base font-semibold leading-6 text-gray-900">
+        Consultations
+      </label>
+      <h2>Not Done</h2>
+    </div>
   ) : (
     <div>
       <label className="text-base font-semibold leading-6 text-gray-900">
@@ -34,7 +65,7 @@ export function ConsultationsTable({ consultLength, content }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {content}
+                  {consultRows}
                 </tbody>
               </table>
             </div>

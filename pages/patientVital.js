@@ -248,30 +248,9 @@ const Patient = () => {
 
   function renderFirstColumn() {
     let { vitals, consults, visitPrescriptions } = state;
-    let consultRows = consults.map((consult) => {
-      // let type = consult.type;
-      // let subType = consult.sub_type == null ? "General" : consult.sub_type;
-      let doctor = consult.doctor.username;
-      let referredFor =
-        consult.referrals == null || consult.referrals == ""
-          ? "None"
-          : consult.referrals.split("\n")[0].split(" ")[2];
-      return (
-        <tr key={consult.id}>
-          <td className="py-2 px-2 border-b align-middle">{doctor}</td>
-          <td className="py-2 px-2 border-b align-middle">{referredFor}</td>
-          <td className="px-2 border-b align-middle">
-            <ViewButton
-              text={"View"}
-              onClick={() => toggleViewModal("consult", consult)}
-            />
-          </td>
-        </tr>
-      );
-    });
 
     return (
-      <div>
+      <div className="space-y-8">
         {typeof vitals === "undefined" ? (
           <>
             <label className="label">Vital Signs</label>
@@ -281,18 +260,9 @@ const Patient = () => {
           <VitalsView content={vitals} />
         )}
 
-        <ConsultationsTable
-          consultLength={consults.length}
-          content={consultRows}
-        />
+        <ConsultationsTable content={consults} />
 
-        <hr />
-        <label className="label mt-4">Prescriptions</label>
-        {visitPrescriptions.length > 0 ? (
-          <VisitPrescriptionsTable content={visitPrescriptions} />
-        ) : (
-          <h2>Not Done</h2>
-        )}
+        <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
     );
   }
@@ -305,7 +275,7 @@ const Patient = () => {
     let { formDetails, patient } = state;
 
     return (
-      <div className="column is-7">
+      <div>
         <VitalsForm
           formDetails={formDetails}
           handleInputChange={handleInputChange}
@@ -330,6 +300,7 @@ const Patient = () => {
           marginLeft: 25,
           marginRight: 25,
           overflowX: "hidden", //remove horizontal scrollbar
+          overflowY: "hidden",
         }}
       >
         {renderViewModal()}
@@ -343,11 +314,9 @@ const Patient = () => {
 
         <hr />
 
-        <div className="column is-12">
-          <div className="columns is-12 mb-4">
-            {renderFirstColumn()}
-            {renderSecondColumn()}
-          </div>
+        <div className="grid grid-cols-2 gap-x-4 mb-4">
+          <div>{renderFirstColumn()}</div>
+          <div>{renderSecondColumn()}</div>
         </div>
       </div>
     );

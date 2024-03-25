@@ -464,30 +464,9 @@ const Patient = () => {
 
   function renderFirstColumn() {
     let { vitals, consults, visitPrescriptions } = state;
-    let consultRows = consults.map((consult) => {
-      // let type = consult.type;
-      // let subType = consult.sub_type == null ? "General" : consult.sub_type;
-      let doctor = consult.doctor.username;
-      let referredFor =
-        consult.referrals == null || consult.referrals == ""
-          ? "No referrals"
-          : consult.referrals.split("\n")[0].split(" ")[2];
-      return (
-        <tr key={consult.id}>
-          <td className="py-2 px-2 border-b align-middle">{doctor}</td>
-          <td className="py-2 px-2 border-b align-middle">{referredFor}</td>
-          <td className="px-2 border-b align-middle">
-            <ViewButton
-              text={"View"}
-              onClick={() => toggleViewModal("consult", consult)}
-            />
-          </td>
-        </tr>
-      );
-    });
 
     return (
-      <div>
+      <div className="space-y-8">
         {typeof vitals === "undefined" ? (
           <>
             <label className="label">Vital Signs</label>
@@ -497,20 +476,9 @@ const Patient = () => {
           <VitalsView content={vitals} />
         )}
 
-        <hr />
+        <ConsultationsTable content={consults} />
 
-        <ConsultationsTable
-          consultLength={consults.length}
-          content={consultRows}
-        />
-
-        <hr />
-        <label className="label mt-4">Prescriptions</label>
-        {visitPrescriptions.length > 0 ? (
-          <VisitPrescriptionsTable content={visitPrescriptions} />
-        ) : (
-          <h2>Not Done</h2>
-        )}
+        <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
     );
   }
