@@ -190,8 +190,12 @@ const Stock = () => {
 
       return (
         <tr>
-          <td>{name}</td>
-          <td>{quantity}</td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {name}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {quantity}
+          </td>
           <td className="space-x-6">
             <CreateButton
               text="Edit Quantity"
@@ -219,37 +223,57 @@ const Stock = () => {
       }}
     >
       {renderModal()}
-      <div className="column is-12">
-        <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-          Medication Stock
-        </h1>
-        <div className="control">
-          <input
-            className="input is-medium"
-            type="text"
-            placeholder="Search Medications"
-            onChange={onFilterChange}
-          />
-        </div>
-        <div className="levels" style={{ marginBottom: 10, marginTop: 10 }}>
-          <div className="level-left">
-            <CreateButton
-              text="Add New Medicine"
-              onClick={createNewMedication}
-            />
+
+      <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+        Medication Stock
+      </h1>
+      <div className="control">
+        <input
+          className="input is-medium"
+          type="text"
+          placeholder="Search Medications"
+          onChange={onFilterChange}
+        />
+      </div>
+      <div>
+        <CreateButton text="Add New Medicine" onClick={createNewMedication} />
+      </div>
+
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="mt-2 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Quantity
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Medication Name
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {renderRows()}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-
-        <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-          <thead>
-            <tr className="bg-sky-200">
-              <th>Name</th>
-              <th>Quantity</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{renderRows()}</tbody>
-        </table>
       </div>
     </div>
   );

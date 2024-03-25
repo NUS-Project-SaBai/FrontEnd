@@ -93,19 +93,23 @@ const Orders = () => {
 
         return (
           <tr key={visit.id}>
-            <td>{Id}</td>
-            <td>
-              <figure className="image is-96x96">
-                <img
-                  src={imageUrl}
-                  alt="Patient"
-                  style={{ height: 96, width: 96, objectFit: "cover" }}
-                />
-              </figure>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+              {Id}
             </td>
-            <td>{fullName}</td>
             <td>
-              <ul>{prescriptions}</ul>
+              <img
+                src={imageUrl}
+                alt="Patient"
+                className="object-cover h-28 w-28"
+              />
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {fullName}
+            </td>
+            <td>
+              <ul className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                {prescriptions}
+              </ul>
             </td>
             <td className="space-x-6">
               <CreateButton
@@ -128,33 +132,67 @@ const Orders = () => {
   };
 
   return (
-    <div style={{ marginTop: 15, marginLeft: 25, marginRight: 25 }}>
-      <div className="column is-12">
-        <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-          Orders
-        </h1>
-        <div className="field">
-          <div className="control">
-            <input
-              className="input is-medium"
-              type="text"
-              placeholder="Search Patient"
-              onChange={onFilterChange}
-            />
+    <div className="mx-4 my-2">
+      <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+        Orders
+      </h1>
+      <div className="field">
+        <div className="control">
+          <input
+            className="input is-medium"
+            type="text"
+            placeholder="Search Patient"
+            onChange={onFilterChange}
+          />
+        </div>
+      </div>
+
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="mt-2 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-base font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                    >
+                      ID
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Photo
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Full Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Record
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {renderTableContent()}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-          <thead>
-            <tr className="bg-sky-200">
-              <th>ID</th>
-              <th>Photo</th>
-              <th>Full Name</th>
-              <th>Prescriptions</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{renderTableContent()}</tbody>
-        </table>
       </div>
     </div>
   );

@@ -5,6 +5,8 @@ import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import { ViewButton } from "@/components/textContainers/ViewButton";
 import { CreateButton } from "@/components/textContainers/CreateButton";
+import { render } from "react-dom";
+import { Button } from "@/components/textContainers/Button";
 
 function Queue() {
   //Queue Page
@@ -84,20 +86,28 @@ function Queue() {
 
         return (
           <tr key={Id}>
-            <td>{Id}</td>
-            <td>
-              <figure className="image is-96x96">
-                <img
-                  src={imageUrl}
-                  alt="Placeholder image"
-                  style={{ height: 96, width: 96, objectFit: "cover" }}
-                />
-              </figure>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+              {Id}
             </td>
-            <td>{fullName}</td>
-            <td>{progress}</td>
-            <td>{vitals}</td>
-            <td>{consultation}</td>
+            <td>
+              <img
+                src={imageUrl}
+                alt="Placeholder image"
+                className="object-cover h-28 w-28"
+              />
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {fullName}
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {progress}
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {vitals}
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {consultation}
+            </td>
           </tr>
         );
       });
@@ -124,60 +134,94 @@ function Queue() {
   }
 
   return (
-    <div
-      style={{
-        marginTop: 15,
-        marginLeft: 25,
-        marginRight: 25,
-      }}
-    >
-      <div className="column is-12">
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          List of Patients
-        </h1>
-        <div className="field">
-          <div className="control">
-            <input
-              className="input is-medium"
-              type="text"
-              placeholder="Search Patient"
-              onChange={onFilterChange}
-            />
+    <div className="mx-4 mt-2">
+      <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+        List of Patients
+      </h1>
+      <div className="field">
+        <div className="control">
+          <input
+            className="input is-medium"
+            type="text"
+            placeholder="Search Patient"
+            onChange={onFilterChange}
+          />
+        </div>
+      </div>
+
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="mt-2 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-base font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                    >
+                      ID
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Photo
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Full Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Record
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Vitals
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Consultation
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {renderTableContent()}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-
-        <table className="table is-bordered is-narrow is-hoverable is-fullwidth ">
-          <thead>
-            <tr className="bg-sky-200">
-              <th className="text-white">ID</th>
-              <th>Photo</th>
-              <th>Full Name</th>
-              <th>Record</th>
-              <th>New Vitals</th>
-              <th>New Consultation</th>
-            </tr>
-          </thead>
-          <tbody>{renderTableContent()}</tbody>
-        </table>
-      </div>
-      <div className="flex space-x-2">
-        <button
-          className="button is-dark level-item"
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <button
-          className="button is-dark level-item"
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={
-            currentPage ===
-            Math.ceil(reversedVisitsFiltered.length / itemsPerPage)
-          }
-        >
-          Next
-        </button>
+        <span className="isolate inline-flex rounded-md shadow-sm mt-2">
+          <button
+            type="button"
+            className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={
+              currentPage ===
+              Math.ceil(reversedVisitsFiltered.length / itemsPerPage)
+            }
+          >
+            Next
+          </button>
+        </span>
       </div>
     </div>
   );

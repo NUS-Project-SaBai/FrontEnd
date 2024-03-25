@@ -16,6 +16,7 @@ import AppWebcam from "../../utils/webcam";
 import PatientModal from "./PatientModal";
 import ScanModal from "./ScanModal";
 import { CreateButton } from "@/components/textContainers/CreateButton";
+import { Button } from "@/components/textContainers/Button";
 
 const customStyles = {
   content: {
@@ -363,6 +364,7 @@ const Registration = () => {
               onClick={openScanModal}
             />
             <CreateButton text="New Patient" onClick={openModal} />
+            <Button text="trial" colour="sky" onClick={openModal} />
           </div>
           {typeof patient.pk !== "undefined" && (
             <div className="columns">

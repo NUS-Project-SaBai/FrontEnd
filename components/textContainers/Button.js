@@ -17,4 +17,8 @@ bg-indigo-600
 bg-sky-800
 hover:bg-sky-500
 focus-visible:outline-sky-600
+
+bg-blue-800
+hover:bg-blue-500
+focus-visible:outline-blue-600
 */
