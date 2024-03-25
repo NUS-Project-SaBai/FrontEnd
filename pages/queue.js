@@ -93,7 +93,7 @@ function Queue() {
               <img
                 src={imageUrl}
                 alt="Placeholder image"
-                className="object-cover h-28 w-28"
+                className="object-cover h-28 w-28 my-2"
               />
             </td>
             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

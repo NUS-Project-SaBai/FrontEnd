@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import { useUser } from "@auth0/nextjs-auth0/client";
 import {
   IdentificationIcon,
   PencilIcon,
@@ -59,6 +59,7 @@ function classNames(...classes) {
 export default function SideMenu() {
   const router = useRouter();
   const [navItems, setNavItems] = useState(navigation);
+  const { user, isLoading } = useUser();
 
   useEffect(() => {
     const updatedNavItems = navItems.map((item) => ({
@@ -67,6 +68,8 @@ export default function SideMenu() {
     }));
     setNavItems(updatedNavItems);
   }, [router.pathname]);
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 h-full">
@@ -135,7 +138,7 @@ export default function SideMenu() {
                 alt=""
               />
               <span className="sr-only">Your profile</span>
-              <span aria-hidden="true">Tom Cook</span>
+              <span aria-hidden="true">{user ? user.name : "Loading..."}</span>
             </a>
           </li>
         </ul>
