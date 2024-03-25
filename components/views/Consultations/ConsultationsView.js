@@ -1,34 +1,10 @@
 import { DisplayField } from "@/components/textContainers/DispayField";
 import React from "react";
+import { VisitPrescriptionsTable } from "../Prescriptions/VisitPrescriptionsTable";
 
 export function ConsultationsView({ content }) {
   const renderPrescriptions = (prescriptions) => {
-    const prescriptionRows = prescriptions.map((prescription) => {
-      const name = prescription?.medicine?.medicine_name;
-      const quantity = prescription.quantity;
-      const notes = prescription.notes;
-
-      return (
-        <tr key={prescription.id}>
-          <td>{name}</td>
-          <td>{quantity}</td>
-          <td>{notes}</td>
-        </tr>
-      );
-    });
-
-    return (
-      <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <thead>
-          <tr className="bg-sky-200">
-            <th>Medicine Name</th>
-            <th>Quantity</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody>{prescriptionRows}</tbody>
-      </table>
-    );
+    return <VisitPrescriptionsTable content={prescriptions} />;
   };
 
   const renderMedicalConsultation = (consult) => {

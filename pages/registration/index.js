@@ -301,7 +301,6 @@ const Registration = () => {
     onChange: onChange,
     className:
       "block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-    style: { width: "100%" },
   };
 
   return (
@@ -349,7 +348,7 @@ const Registration = () => {
           <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
             Registration
           </h1>
-          <div className="flex items-center justify-center mb-2">
+          <div className="flex items-center justify-center mb-2 w-full">
             <Autosuggest
               suggestions={suggestions}
               onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -357,6 +356,8 @@ const Registration = () => {
               getSuggestionValue={getSuggestionValue}
               renderSuggestion={renderSuggestion}
               inputProps={inputProps}
+              className="w-full"
+              style={{ width: "100%", height: "100%" }}
             />
           </div>
           <div className="flex items-center justify-center mb-6 gap-3">
