@@ -134,8 +134,8 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
                   Date.now() - new Date(patient.fields.date_of_birth),
                 ).getUTCFullYear() - 1970,
               ) >= 40 && (
-                <div className="field is-grouped">
-                  <div className="control is-expanded">
+                <div>
+                  <div>
                     <label className="label"> Diabetes?</label>
 
                     <select
@@ -344,7 +344,7 @@ function PrescriptionForm({
   }
 
   return (
-    <div className="column is-12">
+    <div>
       <h1 className="text-black text-2xl font-bold mb-4">Prescription</h1>
 
       <DisplayField
