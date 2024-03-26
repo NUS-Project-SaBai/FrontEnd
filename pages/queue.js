@@ -3,8 +3,6 @@ import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
-
-import { render } from "react-dom";
 import { Button } from "@/components/textContainers/Button";
 import { InputField } from "@/components/textContainers/InputField";
 
@@ -13,7 +11,7 @@ function Queue() {
   const [visits, setVisits] = useState([]); //Shouldnt this pull based on Patients not Visits
   const [visitsFiltered, setVisitsFiltered] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2; //Change to 10 after development
+  const itemsPerPage = 4; //Change to 10 after development
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent

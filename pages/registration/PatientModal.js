@@ -1,6 +1,8 @@
 import Modal from "react-modal";
 import VenueOptions from "./VenueOptions";
 import { Button } from "@/components/textContainers/Button";
+import { InputField } from "@/components/textContainers/InputField";
+import { InputBox } from "@/components/textContainers/InputBox";
 
 const PatientModal = ({
   modalIsOpen,
@@ -21,125 +23,73 @@ const PatientModal = ({
       style={customStyles}
       contentLabel="Example Modal"
     >
-      <div className="columns">
-        <div className="column is-8">
-          <form>
-            <div className="field">
-              <label className="label">
-                Name (english + local if possible)
-              </label>
-              <div className="control">
-                <input
-                  name="name"
-                  className="input"
-                  type="text"
-                  onChange={handleInputChange}
-                  value={formDetails.name}
-                />
-              </div>
-            </div>
+      <div className="grid grid-cols-2">
+        <InputField
+          name="name"
+          label="Name (english + local if possible)"
+          type="text"
+          onChange={handleInputChange}
+          value={formDetails.name}
+        />
 
-            <div className="field">
-              <label className="label">IC Number</label>
-              <div className="control">
-                <input
-                  name="local_name"
-                  className="input"
-                  type="text"
-                  onChange={handleInputChange}
-                  value={formDetails.local_name}
-                />
-              </div>
-            </div>
+        <InputField
+          name="local_name"
+          label="IC Number"
+          type="text"
+          onChange={handleInputChange}
+          value={formDetails.local_name}
+        />
 
-            <div className="field">
-              <label className="label">Gender</label>
-              <div className="control">
-                <div className="select">
-                  <select name="gender" onChange={handleInputChange}>
-                    <option
-                      selected={formDetails.gender === "Male"}
-                      value="Male"
-                    >
-                      Male
-                    </option>
-                    <option
-                      selected={formDetails.gender === "Female"}
-                      value="Female"
-                    >
-                      Female
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
+        <InputField
+          label="Contact Number"
+          name="contact_no"
+          className="input"
+          type="tel"
+          onChange={handleInputChange}
+          value={formDetails.contact_no}
+        />
 
-            <div className="field is-grouped">
-              <div className="control is-expanded">
-                <label className="label">Contact Number</label>
-                <div className="control">
-                  <input
-                    name="contact_no"
-                    className="input"
-                    type="tel"
-                    onChange={handleInputChange}
-                    value={formDetails.contact_no}
-                  />
-                </div>
-              </div>
+        <InputField
+          label="Date of Birth"
+          name="date_of_birth"
+          className="input"
+          type="date"
+          onChange={handleInputChange}
+          value={formDetails.date_of_birth}
+        />
 
-              <div className="control is-expanded">
-                <label className="label">Date of Birth</label>
-                <div className="control">
-                  <input
-                    name="date_of_birth"
-                    className="input"
-                    type="date"
-                    onChange={handleInputChange}
-                    value={formDetails.date_of_birth}
-                  />
-                </div>
-              </div>
-            </div>
+        <div className="field">
+          <label
+            htmlFor="Gender"
+            className="block text-sm font-medium leading-6 text-gray-900"
+          >
+            Gender
+          </label>
 
-            <VenueOptions handleInputChange={handleInputChange} />
-
-            <div className="field">
-              <label className="label">Drug Allergies</label>
-              <div className="control">
-                <textarea
-                  name="drug_allergy"
-                  className="textarea"
-                  placeholder="Textarea"
-                  onChange={handleInputChange}
-                  value={formDetails.drug_allergy}
-                />
-              </div>
-            </div>
-          </form>
-          <div className="levels" style={{ marginTop: 10 }}>
-            <div className="level-left">
-              <div className="level-item">
-                <Button
-                  colour="green"
-                  text="Submit"
-                  onClick={submitNewPatient}
-                  className="mt-4"
-                />
-              </div>
-
-              <div className="level-item">
-                <Button
-                  colour="red"
-                  text="Close"
-                  onClick={closeModal}
-                  className="mt-4"
-                />
-              </div>
-            </div>
-          </div>
+          <select
+            className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            name="gender"
+            onChange={handleInputChange}
+          >
+            <option selected={formDetails.gender === "Male"} value="Male">
+              Male
+            </option>
+            <option selected={formDetails.gender === "Female"} value="Female">
+              Female
+            </option>
+          </select>
         </div>
 
+        <VenueOptions handleInputChange={handleInputChange} />
+
+        <InputBox
+          label="Drug Allergies"
+          name="drug_allergy"
+          className="textarea"
+          placeholder="Textarea"
+          onChange={handleInputChange}
+          value={formDetails.drug_allergy}
+        />
         <div className="column is-4">
           {!cameraIsOpen && (
             <div
@@ -173,6 +123,15 @@ const PatientModal = ({
           </div>
         </div>
       </div>
+
+      <Button
+        colour="green"
+        text="Submit"
+        onClick={submitNewPatient}
+        className="mt-4"
+      />
+
+      <Button colour="red" text="Close" onClick={closeModal} className="mt-4" />
     </Modal>
   );
 };

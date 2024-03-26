@@ -267,7 +267,7 @@ const Record = () => {
         </h1>
         {renderHeader()}
 
-        <hr />
+        <hr className="mt-2" />
 
         <div className="grid grid-cols-2 gap-x-6">
           <div>{renderFirstColumn()}</div>

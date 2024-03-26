@@ -82,11 +82,7 @@ const Orders = () => {
             {prescription.quantity}
             <br />
             {prescription.notes && (
-              <>
-                Notes: {prescription.notes}
-                <br />
-                <br />
-              </>
+              <div className="truncate">Notes: {prescription.notes}</div>
             )}
           </li>
         ));
