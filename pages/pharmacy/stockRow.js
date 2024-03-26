@@ -1,22 +1,21 @@
 import React from "react";
 
-export const stockRow = (medication) => {
+export const StockRow = ({ medication, handleDelete, handleEdit }) => {
+  const { medicine_name, quantity, pk } = medication;
   return (
-    <tr key={medication.pk}>
-      <td>{medication.fields.medicine_name}</td>
-      <td>{medication.fields.quantity}</td>
+    <tr key={pk}>
+      <td>{medicine_name}</td>
+      <td>{quantity}</td>
       <td className="level-left">
         <button
           className="button is-dark level-item"
-          onClick={() =>
-            toggleModal(true, { ...medication.fields, pk: medication.pk })
-          }
+          onClick={() => handleEdit()}
         >
           Edit
         </button>
         <button
           className="button is-danger level-item"
-          onClick={() => handleDelete(medication.pk)}
+          onClick={() => handleDelete()}
         >
           Delete
         </button>

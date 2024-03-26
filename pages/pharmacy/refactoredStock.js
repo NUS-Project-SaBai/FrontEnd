@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { MedicationForm } from "../../components/forms/stock";
+import { StockRow } from "./stockRow";
 import { API_URL } from "../../utils/constants";
 import withAuth from "../../utils/auth";
 
@@ -27,9 +28,10 @@ const Stock = () => {
 
   const fetchMedications = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/medications`);
-      setMedications(data);
-      setMedicationsFiltered(data);
+      const { data: medication } = await axios.get(`${API_URL}/medications`);
+      setMedications(...medication);
+      setMedicationsFiltered(...medication);
+      console.log(medication);
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch medications.");
@@ -157,7 +159,7 @@ const Stock = () => {
         </thead>
         <tbody>
           {medicationsFiltered.map((medication) => (
-            <stockRow medication={medication} key={medication.pk} />
+            <StockRow medication={medication} key={medication.pk} />
           ))}
         </tbody>
       </table>
