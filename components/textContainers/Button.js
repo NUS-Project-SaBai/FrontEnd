@@ -29,4 +29,8 @@ focus-visible:outline-green-600
 bg-red-800
 hover:bg-red-500
 focus-visible:outline-red-600
+
+bg-orange-800
+hover:bg-orange-500
+focus-visible:outline-orange-600
 */

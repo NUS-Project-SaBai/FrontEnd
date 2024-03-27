@@ -2,10 +2,17 @@ import React from "react";
 import { DisplayField } from "../textContainers/DispayField";
 
 function PatientView({ content }) {
+  const calculate_age = (dob) => {
+    const birthDate = new Date(dob);
+    const difference = Date.now() - birthDate.getTime();
+    const age = new Date(difference);
+
+    return Math.abs(age.getUTCFullYear() - 1970);
+  };
   const fieldsArray = [
     { label: "IC Number", key: "local_name" },
     { label: "Gender", key: "gender" },
-    { label: "Age", key: "date_of_birth" },
+    { label: "Age", key: "date_of_birth", calculate: calculate_age },
     { label: "Date of Birth", key: "date_of_birth" },
     { label: "Allergies", key: "drug_allergy" },
   ];
@@ -14,7 +21,11 @@ function PatientView({ content }) {
       <DisplayField
         key={index}
         label={field.label}
-        content={content.fields[field.key]}
+        content={
+          field.calculate
+            ? field.calculate(content.fields[field.key])
+            : content.fields[field.key]
+        }
       />
     </div>
   ));
