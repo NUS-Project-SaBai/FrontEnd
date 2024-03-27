@@ -245,22 +245,20 @@ const Registration = () => {
 
     return (
       <div
-        className="card cursor-pointer"
+        className="card cursor-pointer grid grid-cols-2"
         onClick={() => setPatient(suggestion)}
       >
-        <div className="card-content">
-          <figure className="image is-96x96">
-            <img
-              // src="https://bulma.io/images/placeholders/96x96.png"
-              src={`${CLOUDINARY_URL}/${imageURL}`}
-              alt="Placeholder image"
-              style={{ height: 96, width: 96, objectFit: "cover" }}
-            />
-          </figure>
+        <div className="self-center">
+          <img
+            src={`${CLOUDINARY_URL}/${imageURL}`}
+            alt="Placeholder image"
+            className="object-cover h-28 w-28 my-2"
+          />
         </div>
-        <div className="media-content">
-          <div className="title is-4 text-lg font-semibold">{name}</div>
-          <div className="subtitle is-6">{id}</div>
+
+        <div className="flex flex-col justify-center ml-2">
+          <div className="text-s font-medium text-gray-900">{id}</div>
+          <div className="text-s font-medium text-gray-900">{name}</div>
         </div>
       </div>
     );
@@ -298,15 +296,18 @@ const Registration = () => {
       "block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
   };
 
+  const autosuggestTheme = {
+    container: "react-autosuggest__container w-full",
+    input: "react-autosuggest__input form-input w-full",
+    suggestionsContainer:
+      "react-autosuggest__suggestions-container w-full mt-2 border border-gray-300 rounded-md",
+    suggestionsList: "react-autosuggest__suggestions-list w-full space-y-2 p-2",
+    suggestion:
+      "react-autosuggest__suggestion block w-full hover:bg-blue-100 transition-colors duration-300 ease-in-out p-2 border border-gray-300 rounded-md",
+  };
+
   return (
-    <div
-      style={{
-        marginTop: 15,
-        marginLeft: 25,
-        marginRight: 25,
-        // position: "relative"
-      }}
-    >
+    <div className="mx-4">
       <PatientModal
         modalIsOpen={modalIsOpen}
         formDetails={formDetails}
@@ -351,8 +352,7 @@ const Registration = () => {
               getSuggestionValue={getSuggestionValue}
               renderSuggestion={renderSuggestion}
               inputProps={inputProps}
-              className="w-full"
-              style={{ width: "100%", height: "100%" }}
+              theme={autosuggestTheme}
             />
           </div>
           <div className="flex items-center justify-center mb-6 gap-3">
@@ -373,7 +373,7 @@ const Registration = () => {
                   style={{ height: 200, width: 200, objectFit: "cover" }}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-2">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
                 <DisplayField
                   label="ID"
                   content={`${patient.fields.village_prefix}${patient.pk
