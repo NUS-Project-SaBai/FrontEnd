@@ -15,7 +15,7 @@ import withAuth from "../../utils/auth";
 import AppWebcam from "../../utils/webcam";
 import PatientModal from "./PatientModal";
 import ScanModal from "./ScanModal";
-
+import { DisplayField } from "@/components/textContainers/DispayField";
 import { Button } from "@/components/textContainers/Button";
 
 const customStyles = {
@@ -364,62 +364,41 @@ const Registration = () => {
             <Button colour="green" text="New Patient" onClick={openModal} />
           </div>
           {typeof patient.pk !== "undefined" && (
-            <div className="columns">
-              <div className="column is-2">
-                <figure className="image is-1by1">
-                  <img
-                    src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
-                    alt="Placeholder image"
-                    className="has-ratio"
-                    style={{ height: 200, width: 200, objectFit: "cover" }}
-                  />
-                </figure>
+            <div>
+              <div>
+                <img
+                  src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
+                  alt="Placeholder image"
+                  className="has-ratio"
+                  style={{ height: 200, width: 200, objectFit: "cover" }}
+                />
               </div>
-              <div className="column is-5">
-                <label className="label">ID</label>
-                <article className="message">
-                  <div className="message-body">{`${
-                    patient.fields.village_prefix
-                  }${patient.pk.toString().padStart(3, "0")}`}</div>
-                </article>
-                <label className="label">Name</label>
-                <article className="message">
-                  <div className="message-body">{patient.fields.name}</div>
-                </article>
-                <label className="label">IC Number</label>
-                <article className="message">
-                  <div className="message-body">
-                    {patient.fields.local_name}
-                  </div>
-                </article>
-                <label className="label">Gender</label>
-                <article className="message">
-                  <div className="message-body">{patient.fields.gender}</div>
-                </article>
-                <label className="label">Date of Birth</label>
-                <article className="message">
-                  <div className="message-body">
-                    {patient.fields.date_of_birth}
-                  </div>
-                </article>
-                <label className="label">Drug Allergies</label>
-                <article className="message">
-                  <div className="message-body">
-                    {patient.fields.drug_allergy}
-                  </div>
-                </article>
-              </div>
-              <div
-                className="column is-5"
-                // style={{ backgroundColor: "yellow" }}
-              >
-                <label className="label">Start a Visit</label>
-                <button
-                  className="button is-dark is-medium level-item"
+              <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-2">
+                <DisplayField
+                  label="ID"
+                  content={`${patient.fields.village_prefix}${patient.pk
+                    .toString()
+                    .padStart(3, "0")}`}
+                />
+                <DisplayField label="Name" content={patient.fields.name} />
+                <DisplayField
+                  label="IC Number"
+                  content={patient.fields.local_name}
+                />
+                <DisplayField label="Gender" content={patient.fields.gender} />
+                <DisplayField
+                  label="Date of Birth"
+                  content={patient.fields.date_of_birth}
+                />
+                <DisplayField
+                  label="Drug Allergies"
+                  content={patient.fields.drug_allergy}
+                />
+                <Button
+                  text="Create New Visit"
                   onClick={() => submitNewVisit()}
-                >
-                  Start
-                </button>
+                  colour="green"
+                />
               </div>
             </div>
           )}
