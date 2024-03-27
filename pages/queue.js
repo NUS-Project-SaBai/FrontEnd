@@ -11,7 +11,7 @@ function Queue() {
   const [visits, setVisits] = useState([]); //Shouldnt this pull based on Patients not Visits
   const [visitsFiltered, setVisitsFiltered] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4; //Change to 10 after development
+  const itemsPerPage = 8; //Change to 10 after development
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent

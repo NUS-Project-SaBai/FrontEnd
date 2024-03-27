@@ -11,7 +11,7 @@ import {
 } from "../../utils/constants";
 import { urltoFile } from "../../utils/helpers";
 import Link from "next/link";
-import SearchIcon from "../../components/icons/SearchIcon";
+import { Button } from "@/components/textContainers/Button";
 
 const ScanModal = ({
   modalIsOpen,
@@ -67,74 +67,43 @@ const ScanModal = ({
       contentLabel="Example Modal"
     >
       <div>
-        <h1 style={{ color: "black", fontSize: "1.5em", marginBottom: 15 }}>
+        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Scan Face
         </h1>
-        <div className="columns">
-          <div className="column is-6">
-            {!cameraIsOpen && (
-              <div
-                style={{
-                  margin: "0 auto",
-                  height: 250,
-                  width: 250,
-                  backgroundColor: "grey",
-                }}
-              >
-                {imageDetails != null && <img src={imageDetails} />}
-              </div>
-            )}
-
-            {cameraIsOpen && <div className="control">{renderWebcam()}</div>}
+        <div>
+          {!cameraIsOpen && (
             <div
               style={{
-                fisplay: "flex",
-                justifyContent: "center",
-                margin: "0px auto 0px",
-                width: "60%",
+                margin: "0 auto",
+                height: 250,
+                width: 250,
+                backgroundColor: "grey",
               }}
             >
-              <div
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <button
-                  className={`button is-medium ${
-                    cameraIsOpen ? "is-danger" : "is-dark"
-                  }`}
-                  onClick={toggleCameraOpen}
-                  style={{ marginTop: 15 }}
-                >
-                  <span>{cameraIsOpen ? "Cancel" : "Take Photo"}</span>
-                </button>
-              </div>
-              <div
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <button
-                  className="button is-dark is-medium"
-                  onClick={() => scanPatient()}
-                  style={{
-                    marginTop: 15,
-                  }}
-                >
-                  <span
-                    style={{
-                      marginRight: 15,
-                    }}
-                  >
-                    Search
-                  </span>
-                  <SearchIcon />
-                </button>
-              </div>
+              {imageDetails != null && <img src={imageDetails} />}
             </div>
+          )}
+
+          {cameraIsOpen && <div>{renderWebcam()}</div>}
+          <div className="flex items-center justify-center mt-2 space-x-2">
+            {cameraIsOpen ? (
+              <Button text="Cancel" colour="red" onClick={toggleCameraOpen} />
+            ) : (
+              <Button
+                text="Take Photo"
+                colour="green"
+                onClick={toggleCameraOpen}
+              />
+            )}
+
+            <Button
+              text="Search Image"
+              onClick={() => scanPatient()}
+              colour="green"
+            />
           </div>
         </div>
-        <hr />
+        <hr className="my-4" />
 
         <label className="label">Results</label>
         {matchedPatientData ? (

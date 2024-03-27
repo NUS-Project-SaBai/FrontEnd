@@ -245,27 +245,22 @@ const Registration = () => {
 
     return (
       <div
-        className="card"
-        style={{ width: 500, margin: 0, padding: 0 }}
+        className="card cursor-pointer"
         onClick={() => setPatient(suggestion)}
       >
         <div className="card-content">
-          <div className="media">
-            <div className="media-left">
-              <figure className="image is-96x96">
-                <img
-                  // src="https://bulma.io/images/placeholders/96x96.png"
-                  src={`${CLOUDINARY_URL}/${imageURL}`}
-                  alt="Placeholder image"
-                  style={{ height: 96, width: 96, objectFit: "cover" }}
-                />
-              </figure>
-            </div>
-            <div className="media-content">
-              <div className="title is-4">{name}</div>
-              <div className="subtitle is-6">{id}</div>
-            </div>
-          </div>
+          <figure className="image is-96x96">
+            <img
+              // src="https://bulma.io/images/placeholders/96x96.png"
+              src={`${CLOUDINARY_URL}/${imageURL}`}
+              alt="Placeholder image"
+              style={{ height: 96, width: 96, objectFit: "cover" }}
+            />
+          </figure>
+        </div>
+        <div className="media-content">
+          <div className="title is-4 text-lg font-semibold">{name}</div>
+          <div className="subtitle is-6">{id}</div>
         </div>
       </div>
     );

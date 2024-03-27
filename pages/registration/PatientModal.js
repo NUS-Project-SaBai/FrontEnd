@@ -87,7 +87,7 @@ const PatientModal = ({
             value={formDetails.date_of_birth}
           />
           <VenueOptions handleInputChange={handleInputChange} />
-          <div className="column is-4">
+          <div>
             {!cameraIsOpen && (
               <div
                 style={{
@@ -102,7 +102,7 @@ const PatientModal = ({
             )}
 
             {cameraIsOpen && (
-              <div className="control">
+              <div>
                 {/* <WebcamCapture /> */}
                 {renderWebcam()}
               </div>

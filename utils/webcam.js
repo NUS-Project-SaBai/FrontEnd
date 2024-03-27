@@ -1,5 +1,5 @@
 import Webcam from "react-webcam";
-import CameraIcon from "../components/icons/CameraIcon";
+
 import { Button } from "@/components/textContainers/Button";
 
 const videoConstraints = {
