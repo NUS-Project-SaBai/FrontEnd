@@ -4,7 +4,7 @@ const VenueOptions = ({ handleInputChange }) => (
   <div>
     <label
       htmlFor="Village"
-      className="block text-sm font-medium leading-6 text-gray-900"
+      className="block text-xs font-medium text-gray-900"
     >
       Village
     </label>
