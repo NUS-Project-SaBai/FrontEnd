@@ -1,6 +1,6 @@
 import React from "react";
 
-export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
+const MedicationForm = ({ onSubmit, handleInputChange, formDetails }) => {
   return (
     <div>
       <label className="label">Medication</label>
@@ -63,5 +63,6 @@ export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
       </div>
     </div>
   );
-}
+};
 
+export default MedicationForm;

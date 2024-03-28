@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { MedicationForm } from "../../components/forms/stock";
-import { StockRow } from "./stockRow";
+import MedicationForm from "../../components/forms/stock";
+import StockRow from "./stockRow";
 import { API_URL } from "../../utils/constants";
 import withAuth from "../../utils/auth";
 
