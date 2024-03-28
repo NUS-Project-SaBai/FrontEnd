@@ -20,6 +20,7 @@ const Stock = () => {
     quantityChange: 0,
     notes: "",
     remarks: "",
+    pk: null,
   });
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const Stock = () => {
   const toggleModal = (edit = false, medication = {}) => {
     setModalIsOpen(!modalIsOpen);
     if (edit) {
-      setMedicationDetails(medication);
+      setMedicationDetails({ ...medication });
     } else {
       setMedicationDetails({
         medicine_name: "",
@@ -57,6 +58,7 @@ const Stock = () => {
         quantityChange: 0,
         notes: "",
         remarks: "",
+        pk: null,
       });
     }
   };
@@ -73,10 +75,13 @@ const Stock = () => {
     medicationDetails.medicine_name =
       medicationDetails.medicine_name.charAt(0).toUpperCase() +
       medicationDetails.medicine_name.slice(1);
-    medicationDetails.quantity =
-      parseInt(medicationDetails.quantity) +
-      parseInt(medicationDetails.quantityChange);
-    setMedicationDetails(medicationDetails);
+    medicationDetails.quantityChange = medicationDetails.quantityChange
+      ? parseInt(medicationDetails.quantityChange)
+      : 0;
+    medicationDetails.reserve_quantity = parseInt(
+      medicationDetails.reserve_quantity
+    );
+    setMedicationDetails({ ...medicationDetails });
   };
 
   const onSubmitForm = async () => {
@@ -90,7 +95,6 @@ const Stock = () => {
         method = "patch";
         message = "Medication updated!";
       }
-
       updateMedicationDetails(medicationDetails);
       await axios[method](endpoint, medicationDetails);
       toast.success(message);
@@ -111,7 +115,11 @@ const Stock = () => {
     try {
       await axios.delete(`${API_URL}/medications/${pk}`);
       toast.success("Medication successfully deleted!");
-      fetchMedications(); // Refresh list after deletion
+      const updatedMedications = medications.filter(
+        (medication) => medication.fields.pk !== pk
+      );
+      setMedications([...updatedMedications]);
+      setMedicationsFiltered([...updatedMedications]);
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete medication!");
@@ -129,7 +137,7 @@ const Stock = () => {
           <MedicationForm
             formDetails={medicationDetails}
             handleInputChange={handleMedicationChange}
-            onSubmit={onSubmitForm}
+            onSubmit={() => onSubmitForm()}
           />
         </Modal>
       )}
@@ -156,14 +164,17 @@ const Stock = () => {
           </tr>
         </thead>
         <tbody>
-          {medicationsFiltered.map((medication) => (
-            <StockRow
-              medication={medication.fields}
-              handleDelete={() => handleDelete(medication.pk)}
-              handleEdit={() => toggleModal(true, medication.fields)}
-              key={medication.pk}
-            />
-          ))}
+          {medicationsFiltered.map((medication) => {
+            medication.fields.pk = medication.pk;
+            return (
+              <StockRow
+                medication={medication.fields}
+                handleDelete={() => handleDelete(medication.pk)}
+                handleEdit={() => toggleModal(true, medication.fields)}
+                key={medication.pk}
+              />
+            );
+          })}
         </tbody>
       </table>
     </div>
