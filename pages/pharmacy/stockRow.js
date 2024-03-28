@@ -1,6 +1,6 @@
 import React from "react";
 
-export const StockRow = ({ medication, handleDelete, handleEdit }) => {
+const StockRow = ({ medication, handleDelete, handleEdit }) => {
   const { medicine_name, quantity, pk } = medication;
   return (
     <tr>
@@ -23,3 +23,5 @@ export const StockRow = ({ medication, handleDelete, handleEdit }) => {
     </tr>
   );
 };
+
+export default StockRow;
