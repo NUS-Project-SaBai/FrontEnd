@@ -351,7 +351,6 @@ const Registration = () => {
         customStyles={customStyles}
       />
       <div>
-        
         {loading ? (
           <Loading />
         ) : (
@@ -397,7 +396,7 @@ const Registration = () => {
                   />
                   <DisplayField label="Name" content={patient.fields.name} />
                   <DisplayField
-                    label="IC Number"
+                    label="ID Number"
                     content={patient.fields.identification_number}
                   />
                   <DisplayField

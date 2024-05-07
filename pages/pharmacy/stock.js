@@ -189,7 +189,7 @@ const Stock = () => {
       const quantity = medicationDetails.quantity;
 
       return (
-        <tr>
+        <tr key={name + quantity}>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {name}
           </td>
