@@ -128,10 +128,10 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
                 onChange={handleInputChange}
               />
             ))}
-            {patient.fields.date_of_birth &&
+            {patient.date_of_birth &&
               Math.abs(
                 new Date(
-                  Date.now() - new Date(patient.fields.date_of_birth),
+                  Date.now() - new Date(patient.date_of_birth),
                 ).getUTCFullYear() - 1970,
               ) >= 40 && (
                 <div>

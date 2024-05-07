@@ -108,7 +108,7 @@ const ScanModal = ({
         <label className="label">Results</label>
         {matchedPatientData ? (
           <div>
-            <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+            <table>
               <thead>
                 <tr>
                   <th>ID</th>

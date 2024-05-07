@@ -67,7 +67,6 @@ export function ConsultationsView({ content }) {
         content={content.addendum}
       />
 
-      <label className="label">Prescriptions</label>
       {prescriptions?.length > 0 ? (
         renderPrescriptions(prescriptions)
       ) : (

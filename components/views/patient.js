@@ -16,6 +16,7 @@ function PatientView({ content }) {
     { label: "Date of Birth", key: "date_of_birth" },
     { label: "Allergies", key: "drug_allergy" },
   ];
+  console.log(fieldsArray);
   return fieldsArray.map((field, index) => (
     <div className="grid-cols-1">
       <DisplayField
@@ -23,8 +24,8 @@ function PatientView({ content }) {
         label={field.label}
         content={
           field.calculate
-            ? field.calculate(content.fields[field.key])
-            : content.fields[field.key]
+            ? field.calculate(content[field.key])
+            : content[field.key]
         }
       />
     </div>

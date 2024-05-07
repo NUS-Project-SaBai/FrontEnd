@@ -61,7 +61,7 @@ const Patient = () => {
 
     setState((prevState) => ({
       ...prevState,
-      patient: patient[0],
+      patient: patient,
       visits: visitsSorted,
     }));
 
@@ -181,7 +181,7 @@ const Patient = () => {
         contentLabel="Example Modal"
       >
         <PrescriptionForm
-          allergies={patient.fields.drug_allergy}
+          allergies={patient.drug_allergy}
           handleInputChange={handlePrescriptionChange}
           formDetails={medicationDetails}
           isEditing={isEditing}
@@ -410,7 +410,7 @@ const Patient = () => {
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-12 md:col-span-2">
           <img
-            src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
+            src={`${CLOUDINARY_URL}/${patient.picture}`}
             alt="Placeholder image"
             className="h-48 w-48 object-cover rounded-md"
           />
@@ -419,8 +419,8 @@ const Patient = () => {
           <div>
             <label className="block text-gray-700">Village ID</label>
             <p className="text-lg font-medium">{`${
-              patient.fields.village_prefix
-            }${patient.pk.toString().padStart(3, "0")}`}</p>
+              patient.village_prefix
+            }${patient.id.toString().padStart(3, "0")}`}</p>
           </div>
           <div className="mt-4">
             <label className="block text-gray-700">Visit on</label>
@@ -441,7 +441,7 @@ const Patient = () => {
         <div className="col-span-12 md:col-span-3">
           <div>
             <label className="block text-gray-700">Name</label>
-            <p className="text-lg font-medium">{patient.fields.name}</p>
+            <p className="text-lg font-medium">{patient.name}</p>
           </div>
         </div>
         <div className="col-span-12 md:col-span-4"></div>
