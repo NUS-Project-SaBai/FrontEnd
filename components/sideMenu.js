@@ -107,10 +107,10 @@ export default function SideMenu() {
               Locations (Not Functional Yet)
             </div>
             <ul role="list" className="-mx-2 mt-2 space-y-1">
-              {locations.map((team) => (
-                <li key={locations.name}>
+              {locations.map((location) => (
+                <li key={location.id}>
                   <a
-                    href={locations.href}
+                    href={location.href}
                     className={classNames(
                       locations.current
                         ? "bg-gray-800 text-white"
@@ -119,9 +119,9 @@ export default function SideMenu() {
                     )}
                   >
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-                      {locations.initial}
+                      {location.initial}
                     </span>
-                    <span className="truncate">{locations.name}</span>
+                    <span className="truncate">{location.id}</span>
                   </a>
                 </li>
               ))}
