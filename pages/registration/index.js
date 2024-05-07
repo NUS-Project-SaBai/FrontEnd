@@ -40,6 +40,11 @@ const Registration = () => {
   const [webcam, setWebcam] = useState(null);
   const [imageDetails, setImageDetails] = useState(null);
   const [formDetails, setFormDetails] = useState({
+    name: "",
+    identification_number: "",
+    contact_no: "",
+    date_of_birth: moment().format("YYYY-MM-DD"),
+    drug_allergy: "",
     gender: "Male",
     village_prefix: "SV",
   });
