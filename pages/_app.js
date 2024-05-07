@@ -29,4 +29,17 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
+// Add an event listener to the document
+document.addEventListener(
+  "wheel",
+  function (event) {
+    // Check if the target element is a number input
+    if (event.target.type === "number") {
+      // Prevent the default scrolling behavior
+      event.preventDefault();
+    }
+  },
+  { passive: false },
+); // Ensure that the listener is not passive
+
 export default MyApp;
