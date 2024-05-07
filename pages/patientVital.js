@@ -48,6 +48,7 @@ const Patient = () => {
 
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
+    
 
     // gets all visit data
     let { data: visits } = await axios.get(
