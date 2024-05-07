@@ -16,7 +16,9 @@ const VenueOptions = ({ handleInputChange }) => (
       default={Object.keys(venueOptions)[0]}
     >
       {Object.entries(venueOptions).map(([key, value]) => (
-        <option value={key}>{value}</option>
+        <option value={key} key={value}>
+          {value}
+        </option>
       ))}{" "}
     </select>
 

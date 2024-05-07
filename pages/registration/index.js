@@ -112,7 +112,7 @@ const Registration = () => {
   const submitNewPatient = async () => {
     let checklist = [
       "name",
-      "local_name",
+      "identification_number",
       "gender",
       "contact_no",
       "date_of_birth",
@@ -383,7 +383,7 @@ const Registration = () => {
                 <DisplayField label="Name" content={patient.fields.name} />
                 <DisplayField
                   label="IC Number"
-                  content={patient.fields.local_name}
+                  content={patient.fields.identification_number}
                 />
                 <DisplayField label="Gender" content={patient.fields.gender} />
                 <DisplayField
@@ -394,6 +394,7 @@ const Registration = () => {
                   label="Drug Allergies"
                   content={patient.fields.drug_allergy}
                 />
+
                 <Button
                   text="Create New Visit"
                   onClick={() => submitNewVisit()}

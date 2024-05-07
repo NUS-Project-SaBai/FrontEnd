@@ -32,15 +32,15 @@ const PatientModal = ({
           value={formDetails.name}
         />
         <InputField
-          name="local_name"
+          name="identification_number"
           label="IC Number"
           type="text"
           onChange={handleInputChange}
-          value={formDetails.local_name}
+          value={formDetails.identification_number}
         />
         <InputField
-          label="Contact Number"
           name="contact_no"
+          label="Contact Number"
           className="input"
           type="tel"
           onChange={handleInputChange}
