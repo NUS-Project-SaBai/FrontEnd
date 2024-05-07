@@ -5,18 +5,15 @@ import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
 import { MedicalForm, PrescriptionForm } from "../components/forms/patient";
-import {
-  ConsultationsTable
-} from "../components/views/Consultations/ConsultationsTable";
-import {
-  ConsultationsView 
-} from "../components/views/Consultations/ConsultationsView"
-import {
-  VitalsView
-} from "../components/views/Vitals/VitalsView"
+import { ConsultationsView } from "@/components/views/Consultations/ConsultationsView";
+import { VitalsView } from "@/components/views/Vitals/VitalsView";
+import { ConsultationsTable } from "@/components/views/Consultations/ConsultationsTable";
+import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitPrescriptionsTable";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
+import { Button } from "@/components/textContainers/Button";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 Modal.setAppElement("#__next");
 
@@ -52,14 +49,10 @@ const Patient = () => {
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
 
-    console.dir({patient})
-
     // gets all visit data
     let { data: visits } = await axios.get(
       `${API_URL}/visits?patient=${patientId}`,
     );
-
-    console.dir({visits})
 
     // sorts
     let visitsSorted = visits.sort((a, b) => {
@@ -87,15 +80,9 @@ const Patient = () => {
   }
 
   function renderViewModal() {
-    let { vitals, viewModalOpen, consult, viewType } = state;
+    let { viewModalOpen, consult } = state;
 
-    let modalContent =
-      viewType == "vitals" ? (
-        <VitalsView content={vitals} />
-      ) : (
-        <ConsultationsView content={consult} />
-      );
-
+    let modalContent = <ConsultationsView content={consult} />;
     return (
       <Modal
         isOpen={viewModalOpen}
@@ -122,10 +109,9 @@ const Patient = () => {
   async function loadMedicationStock() {
     let { data: medications } = await axios.get(`${API_URL}/medications`);
 
-    let { data: orders   } = await axios.get(
+    let { data: orders } = await axios.get(
       `${API_URL}/orders?order_status=PENDING`,
     );
-    console.dir(orders)
 
     // key -> medicine pk
     // value -> total reserved
@@ -195,7 +181,7 @@ const Patient = () => {
         contentLabel="Example Modal"
       >
         <PrescriptionForm
-          allergies={patient?.drug_allergy}
+          allergies={patient.drug_allergy}
           handleInputChange={handlePrescriptionChange}
           formDetails={medicationDetails}
           isEditing={isEditing}
@@ -409,10 +395,10 @@ const Patient = () => {
   }
 
   function renderHeader() {
-    let { patient, visits } = state;
-    let visitOptions = visits.map((visit) => {
-      let date = moment(visit.visit_date).format("DD MMMM YYYY");
-
+    const { patient, visits } = state;
+    console.log("Render: ", state);
+    const visitOptions = visits.map((visit) => {
+      const date = moment(visit.date).format("DD MMMM YYYY");
       return (
         <option key={visit.id} value={visit.id}>
           {date}
@@ -421,163 +407,105 @@ const Patient = () => {
     });
 
     return (
-      <div className="column is-12">
-        <div className="columns is-12">
-          <div className="column is-2">
-            <img
-              src={`${CLOUDINARY_URL}/${patient?.picture}`}
-              alt="Placeholder image"
-              className="has-ratio"
-              style={{
-                height: 200,
-                width: 200,
-                objectFit: "cover",
-              }}
-            />
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-12 md:col-span-2">
+          <img
+            src={`${CLOUDINARY_URL}/${patient.picture}`}
+            alt="Placeholder image"
+            className="h-48 w-48 object-cover rounded-md"
+          />
+        </div>
+        <div className="col-span-12 md:col-span-3">
+          <div>
+            <label className="block text-gray-700">Village ID</label>
+            <p className="text-lg font-medium">{`${
+              patient.village_prefix
+            }${patient.id.toString().padStart(3, "0")}`}</p>
           </div>
-          <div className="column is-3">
-            <label className="label">Village ID</label>
-            <article className="message">
-              <div className="message-body">{`${
-                patient?.village_prefix
-              }${patient?.pk?.toString().padStart(3, "0")}`}</div>
-            </article>
-            <label className="label">Visit on</label>
-            <div className="select is-fullwidth">
-              <select name={"medication"} onChange={handleVisitChange}>
+          <div className="mt-4">
+            <label className="block text-gray-700">Visit on</label>
+            <div className="relative">
+              <select
+                name="medication"
+                onChange={handleVisitChange}
+                className="block w-full bg-white border border-gray-300 rounded-md py-2 px-4 appearance-none focus:outline-none focus:border-blue-500"
+              >
                 {visitOptions}
               </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <ChevronDownIcon className="h-5 w-5" />
+              </div>
             </div>
           </div>
-          <div className="column is-3">
-            <label className="label">Name</label>
-            <article className="message">
-              <div className="message-body">{patient?.name}</div>
-            </article>
-          </div>
-          <div className="column is-3">
-            <label className="label">Age</label>
-            <article className="message">
-              <div className="message-body">
-                {patient?.date_of_birth
-                  ? Math.abs(
-                      new Date(
-                        Date.now() - new Date(patient?.date_of_birth),
-                      ).getUTCFullYear() - 1970,
-                    )
-                  : "No DOB"}
-              </div>
-            </article>
-          </div>
-          <div className="column is-3"></div>
         </div>
+        <div className="col-span-12 md:col-span-3">
+          <div>
+            <label className="block text-gray-700">Name</label>
+            <p className="text-lg font-medium">{patient.name}</p>
+          </div>
+        </div>
+        <div className="col-span-12 md:col-span-4"></div>
       </div>
     );
   }
 
   function renderFirstColumn() {
     let { vitals, consults, visitPrescriptions } = state;
-    let consultRows = consults.map((consult) => {
-      // let type = consult.type;
-      // let subType = consult.sub_type == null ? "General" : consult.sub_type;
-      let doctor = consult.doctor.username;
-      let referredFor =
-        consult.referrals == null || consult.referrals == ""
-          ? "None"
-          : consult.referrals.split("\n")[0].split(" ")[2];
-      return (
-        <tr key={consult.id}>
-          {/* <td>{type}</td>
-            <td>{subType}</td> */}
-          <td>{doctor}</td>
-          <td>{referredFor}</td>
-          <td>
-            <button
-              className="button is-dark level-item"
-              onClick={() => toggleViewModal("consult", consult)}
-            >
-              View
-            </button>
-          </td>
-        </tr>
-      );
-    });
 
     return (
-      <div className="column is-5">
-        <div className="columns">
-          {typeof vitals === "undefined" ? (
-            <>
-              <label className="label">Vital Signs</label>
-              <h2>Not Done</h2>
-            </>
-          ) : (
-            <VitalsView content={vitals} />
-          )}
-        </div>
-
-        <hr />
-        <label className="label">Consultations</label>
-        {consults.length > 0 ? (
-          <ConsultationsTable consultRows={consultRows} />
+      <div className="space-y-8">
+        {typeof vitals === "undefined" ? (
+          <>
+            <label className="label">Vital Signs</label>
+            <h2>Not Done</h2>
+          </>
         ) : (
-          <h2>Not Done</h2>
+          <VitalsView content={vitals} />
         )}
 
-        <hr />
-        <label className="label">Prescriptions</label>
-        {visitPrescriptions.length > 0 ? (
-          <VisitPrescriptionsTable content={visitPrescriptions} />
-        ) : (
-          <h2>Not Done</h2>
-        )}
+        <ConsultationsTable
+          content={consults}
+          buttonFunction={toggleViewModal}
+        />
+
+        <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
     );
   }
 
   function renderSecondColumn() {
     //let { form } = this.props.query;
-    const router = Router;
-    const { query } = router;
-    const { form } = query;
 
-    let { formDetails, orders, patient } = state;
+    let { formDetails, orders } = state;
 
     let formContent = () => {
       return (
-        <div>
+        <div className="space-y-2">
           <MedicalForm
             updateFormDetails={updateFormDetails}
             formDetails={formDetails}
             handleInputChange={handleInputChange}
           />
           <hr />
-          <label className="label">Prescriptions</label>
-          {orders.length > 0 ? renderPrescriptionTable() : "None"}
-          <button
-            className="button is-dark level-item"
-            style={{ marginTop: 15 }}
+          <label className="block text-sm font-medium text-gray-900 mt-4">
+            Prescriptions
+          </label>
+          {orders.length > 0 ? renderPrescriptionTable() : "No Prescriptions"}
+          <hr />
+          <Button
+            colour="green"
+            text={"Add Prescriptions"}
             onClick={() => toggleFormModal()}
-          >
-            Add
-          </button>
+          />
         </div>
       );
     };
 
     return (
-      <div className="column is-7">
+      <div className="space-y-2">
         {formContent()}
 
-        <hr />
-
-        <button
-          className="button is-dark is-medium level-item"
-          style={{ marginTop: 15 }}
-          onClick={() => submitForm()}
-        >
-          Submit
-        </button>
+        <Button colour="green" text={"Submit"} onClick={() => submitForm()} />
       </div>
     );
   }
@@ -591,44 +519,77 @@ const Patient = () => {
 
       return (
         <tr key={order.id}>
-          <td>{name}</td>
-          <td>{quantity}</td>
-          <td>
-            <div className="levels">
-              <div className="level-left">
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => toggleFormModal(order)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="button is-dark level-item"
-                  onClick={() => {
-                    orders.splice(index, 1);
-                    setState((prevState) => ({ ...prevState, orders }));
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
+          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+            {name}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {quantity}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            <Button
+              colour="green"
+              text="Edit"
+              onClick={() => toggleFormModal(order)}
+            />
+            <Button
+              colour="red"
+              text="Delete"
+              onClick={() => {
+                orders.splice(index, 1);
+                setState((prevState) => ({ ...prevState, orders }));
+              }}
+            />
           </td>
         </tr>
       );
     });
 
     return (
-      <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <thead>
-          <tr>
-            <th>Medicine Name</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>{orderRows}</tbody>
-      </table>
+      <div
+        style={{
+          marginTop: 15,
+          marginLeft: 25,
+          marginRight: 25,
+          // position: "relative"
+        }}
+      >
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="mt-2 flow-root">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle">
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                      >
+                        Medicine
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                      >
+                        Quantity
+                      </th>
+
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {orderRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -647,7 +608,9 @@ const Patient = () => {
       >
         {renderFormModal()}
         {renderViewModal()}
-        <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient</h1>
+        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+          Patient Medical
+        </h1>
         {renderHeader()}
         <b>
           Please remember to press the submit button at the end of the form!
@@ -655,11 +618,9 @@ const Patient = () => {
 
         <hr />
 
-        <div className="column is-12">
-          <div className="columns is-12">
-            {renderFirstColumn()}
-            {renderSecondColumn()}
-          </div>
+        <div className="grid grid-cols-2 gap-x-4 mb-4">
+          <div>{renderFirstColumn()}</div>
+          <div>{renderSecondColumn()}</div>
         </div>
       </div>
     );
