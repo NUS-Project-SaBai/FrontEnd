@@ -18,7 +18,7 @@ function PatientView({ content }) {
   ];
   console.log(fieldsArray);
   return fieldsArray.map((field, index) => (
-    <div className="grid-cols-1">
+    <div className="grid-cols-1" key = {index}>
       <DisplayField
         key={index}
         label={field.label}
