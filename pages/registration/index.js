@@ -17,6 +17,7 @@ import PatientModal from "./PatientModal";
 import ScanModal from "./ScanModal";
 import { DisplayField } from "@/components/textContainers/DispayField";
 import { Button } from "@/components/textContainers/Button";
+import Loading from "@/components/Loading";
 
 const customStyles = {
   content: {
@@ -30,6 +31,7 @@ const customStyles = {
 Modal.setAppElement("#__next");
 
 const Registration = () => {
+  const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [patients, setPatients] = useState([]);
@@ -115,6 +117,7 @@ const Registration = () => {
   };
 
   const submitNewPatient = async () => {
+    closeModal();
     let checklist = [
       "name",
       "identification_number",
@@ -137,6 +140,7 @@ const Registration = () => {
     } else if (imageDetails == null) {
       toast.error(NO_PHOTO_MESSAGE);
     } else {
+      setLoading(true);
       let payload = {
         ...formDetails,
         picture: await urltoFile(
@@ -173,6 +177,7 @@ const Registration = () => {
         setPatient("test"); // redundant code?
         setPatient(response[0]);
         autoSubmitNewVisit(response[0]);
+        setLoading(false);
       } else {
         toast.error("Please retake photo!");
       }
@@ -329,6 +334,7 @@ const Registration = () => {
         submitNewPatient={submitNewPatient}
         toggleCameraOpen={toggleCameraOpen}
         customStyles={customStyles}
+        loading={loading}
       />
       <ScanModal
         modalIsOpen={scanModalIsOpen}
@@ -345,70 +351,78 @@ const Registration = () => {
         customStyles={customStyles}
       />
       <div>
-        <div>
-          <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-            Registration
-          </h1>
-          <div className="flex items-center justify-center mb-2 w-full">
-            <Autosuggest
-              suggestions={suggestions}
-              onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-              onSuggestionsClearRequested={onSuggestionsClearRequested}
-              getSuggestionValue={getSuggestionValue}
-              renderSuggestion={renderSuggestion}
-              inputProps={inputProps}
-              theme={autosuggestTheme}
-            />
-          </div>
-          <div className="flex items-center justify-center mb-6 gap-3">
-            <Button
-              colour="green"
-              text="Start Facial Recognition"
-              onClick={openScanModal}
-            />
-            <Button colour="green" text="New Patient" onClick={openModal} />
-          </div>
-          {typeof patient.pk !== "undefined" && (
-            <div>
-              <div>
-                <img
-                  src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
-                  alt="Placeholder image"
-                  className="has-ratio"
-                  style={{ height: 200, width: 200, objectFit: "cover" }}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
-                <DisplayField
-                  label="ID"
-                  content={`${patient.fields.village_prefix}${patient.pk
-                    .toString()
-                    .padStart(3, "0")}`}
-                />
-                <DisplayField label="Name" content={patient.fields.name} />
-                <DisplayField
-                  label="IC Number"
-                  content={patient.fields.identification_number}
-                />
-                <DisplayField label="Gender" content={patient.fields.gender} />
-                <DisplayField
-                  label="Date of Birth"
-                  content={patient.fields.date_of_birth}
-                />
-                <DisplayField
-                  label="Drug Allergies"
-                  content={patient.fields.drug_allergy}
-                />
-
-                <Button
-                  text="Create New Visit"
-                  onClick={() => submitNewVisit()}
-                  colour="green"
-                />
-              </div>
+        
+        {loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+              Registration
+            </h1>
+            <div className="flex items-center justify-center mb-2 w-full">
+              <Autosuggest
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                inputProps={inputProps}
+                theme={autosuggestTheme}
+              />
             </div>
-          )}
-        </div>
+            <div className="flex items-center justify-center mb-6 gap-3">
+              <Button
+                colour="green"
+                text="Start Facial Recognition"
+                onClick={openScanModal}
+              />
+              <Button colour="green" text="New Patient" onClick={openModal} />
+            </div>
+            {typeof patient.pk !== "undefined" && (
+              <div>
+                <div>
+                  <img
+                    src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
+                    alt="Placeholder image"
+                    className="has-ratio"
+                    style={{ height: 200, width: 200, objectFit: "cover" }}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
+                  <DisplayField
+                    label="ID"
+                    content={`${patient.fields.village_prefix}${patient.pk
+                      .toString()
+                      .padStart(3, "0")}`}
+                  />
+                  <DisplayField label="Name" content={patient.fields.name} />
+                  <DisplayField
+                    label="IC Number"
+                    content={patient.fields.identification_number}
+                  />
+                  <DisplayField
+                    label="Gender"
+                    content={patient.fields.gender}
+                  />
+                  <DisplayField
+                    label="Date of Birth"
+                    content={patient.fields.date_of_birth}
+                  />
+                  <DisplayField
+                    label="Drug Allergies"
+                    content={patient.fields.drug_allergy}
+                  />
+
+                  <Button
+                    text="Create New Visit"
+                    onClick={() => submitNewVisit()}
+                    colour="green"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

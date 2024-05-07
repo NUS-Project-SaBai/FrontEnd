@@ -15,6 +15,7 @@ const PatientModal = ({
   submitNewPatient,
   toggleCameraOpen,
   customStyles,
+  loading
 }) => {
   return (
     <Modal
@@ -118,7 +119,8 @@ const PatientModal = ({
       <hr className="my-2" />
       <div className="space-x-4">
         <Button colour="green" text="Submit" onClick={submitNewPatient} />
-
+ 
+       
         <Button colour="red" text="Close" onClick={closeModal} />
       </div>
     </Modal>
