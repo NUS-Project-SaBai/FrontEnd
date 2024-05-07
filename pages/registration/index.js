@@ -45,7 +45,7 @@ const Registration = () => {
     name: "",
     identification_number: "",
     contact_no: "",
-    date_of_birth: moment().format("YYYY-MM-DD"),
+    date_of_birth: "",
     drug_allergy: "",
     gender: "Male",
     village_prefix: "SV",
