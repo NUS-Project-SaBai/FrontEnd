@@ -6,11 +6,14 @@ import Modal from "react-modal";
 import moment from "moment";
 import { MedicalForm, PrescriptionForm } from "../components/forms/patient";
 import {
-  ConsultationsTable,
-  ConsultationsView,
-  VitalsView,
-  VisitPrescriptionsTable,
-} from "../components/views/patient";
+  ConsultationsTable
+} from "../components/views/Consultations/ConsultationsTable";
+import {
+  ConsultationsView 
+} from "../components/views/Consultations/ConsultationsView"
+import {
+  VitalsView
+} from "../components/views/Vitals/VitalsView"
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
 import withAuth from "../utils/auth";
 import toast from "react-hot-toast";
@@ -49,10 +52,14 @@ const Patient = () => {
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
 
+    console.dir({patient})
+
     // gets all visit data
     let { data: visits } = await axios.get(
       `${API_URL}/visits?patient=${patientId}`,
     );
+
+    console.dir({visits})
 
     // sorts
     let visitsSorted = visits.sort((a, b) => {
@@ -61,7 +68,7 @@ const Patient = () => {
 
     setState((prevState) => ({
       ...prevState,
-      patient: patient[0],
+      patient: patient,
       visits: visitsSorted,
     }));
 
@@ -115,9 +122,10 @@ const Patient = () => {
   async function loadMedicationStock() {
     let { data: medications } = await axios.get(`${API_URL}/medications`);
 
-    let { data: ord   } = await axios.get(
+    let { data: orders   } = await axios.get(
       `${API_URL}/orders?order_status=PENDING`,
     );
+    console.dir(orders)
 
     // key -> medicine pk
     // value -> total reserved
@@ -187,7 +195,7 @@ const Patient = () => {
         contentLabel="Example Modal"
       >
         <PrescriptionForm
-          allergies={patient.fields.drug_allergy}
+          allergies={patient?.drug_allergy}
           handleInputChange={handlePrescriptionChange}
           formDetails={medicationDetails}
           isEditing={isEditing}
@@ -417,7 +425,7 @@ const Patient = () => {
         <div className="columns is-12">
           <div className="column is-2">
             <img
-              src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
+              src={`${CLOUDINARY_URL}/${patient?.picture}`}
               alt="Placeholder image"
               className="has-ratio"
               style={{
@@ -431,8 +439,8 @@ const Patient = () => {
             <label className="label">Village ID</label>
             <article className="message">
               <div className="message-body">{`${
-                patient.fields.village_prefix
-              }${patient.pk.toString().padStart(3, "0")}`}</div>
+                patient?.village_prefix
+              }${patient?.pk?.toString().padStart(3, "0")}`}</div>
             </article>
             <label className="label">Visit on</label>
             <div className="select is-fullwidth">
@@ -444,17 +452,17 @@ const Patient = () => {
           <div className="column is-3">
             <label className="label">Name</label>
             <article className="message">
-              <div className="message-body">{patient.fields.name}</div>
+              <div className="message-body">{patient?.name}</div>
             </article>
           </div>
           <div className="column is-3">
             <label className="label">Age</label>
             <article className="message">
               <div className="message-body">
-                {patient.fields.date_of_birth
+                {patient?.date_of_birth
                   ? Math.abs(
                       new Date(
-                        Date.now() - new Date(patient.fields.date_of_birth),
+                        Date.now() - new Date(patient?.date_of_birth),
                       ).getUTCFullYear() - 1970,
                     )
                   : "No DOB"}
