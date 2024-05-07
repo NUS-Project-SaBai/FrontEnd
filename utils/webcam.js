@@ -1,5 +1,6 @@
 import Webcam from "react-webcam";
-import CameraIcon from "../components/icons/CameraIcon";
+
+import { Button } from "@/components/textContainers/Button";
 
 const videoConstraints = {
   width: 720,
@@ -9,35 +10,17 @@ const videoConstraints = {
 
 const AppWebcam = ({ webcamSetRef, webcamCapture }) => (
   <>
-    <div
-      style={{
-        height: 250,
-        width: 250,
-        margin: "0 auto",
-      }}
-    >
-      <div>
-        <Webcam
-          audio={false}
-          height={250}
-          width={250}
-          ref={webcamSetRef}
-          screenshotFormat="image/jpeg"
-          screenshotQuality={1}
-          videoConstraints={videoConstraints}
-        />
-      </div>
-    </div>
-    <div
-      style={{
-        textAlign: "center",
-        marginTop: 15,
-      }}
-    >
-      <button className="button is-dark is-medium" onClick={webcamCapture}>
-        <span style={{ marginRight: 15 }}>Capture</span>
-        <CameraIcon />
-      </button>
+    <div className="flex flex-col items-center justify-center space-y-2">
+      <Webcam
+        audio={false}
+        height={250}
+        width={250}
+        ref={webcamSetRef}
+        screenshotFormat="image/jpeg"
+        screenshotQuality={1}
+        videoConstraints={videoConstraints}
+      />
+      <Button text="Capture" onClick={webcamCapture} colour="green" />
     </div>
   </>
 );

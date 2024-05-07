@@ -6,6 +6,7 @@ import withAuth from "../utils/auth";
 
 Modal.setAppElement("#__next");
 
+// Currently not in use
 class Users extends React.Component {
   constructor() {
     super();
@@ -137,7 +138,7 @@ class Users extends React.Component {
     const { users, usersFiltered } = this.state;
 
     const confirmed = window.confirm(
-      "Are you sure you want to delete this user?"
+      "Are you sure you want to delete this user?",
     );
     if (!confirmed) {
       return;
@@ -147,7 +148,7 @@ class Users extends React.Component {
       await axios.delete(`${API_URL}/users/${pk}`);
       const updatedUsers = users.filter((user) => user.pk !== pk);
       const updatedUsersFiltered = usersFiltered.filter(
-        (user) => user.pk !== pk
+        (user) => user.pk !== pk,
       );
       this.setState({
         users: updatedUsers,

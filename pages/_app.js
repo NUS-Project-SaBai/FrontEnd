@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Layout from "../components/layout";
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
-import "../styles/styles.scss";
+
 import "../styles/globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { Toaster } from "react-hot-toast";

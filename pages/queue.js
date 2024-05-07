@@ -1,38 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "../utils/constants";
-import moment from "moment";
 import withAuth from "../utils/auth";
+import { Button } from "@/components/textContainers/Button";
+import { InputField } from "@/components/textContainers/InputField";
 
-class Queue extends React.Component {
-  constructor() {
-    super();
+function Queue() {
+  //Queue Page
+  const [visits, setVisits] = useState([]); //Shouldnt this pull based on Patients not Visits
+  const [visitsFiltered, setVisitsFiltered] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2; //Change to 10 after development
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent
 
-    this.state = {
-      visits: [],
-      visitsFiltered: [],
-      filterString: "",
-    };
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/visits?status=started`)
+      .then((response) => {
+        setVisits(response.data);
+        setVisitsFiltered(response.data);
+      })
+      .catch((error) => console.error("Error loading page", error));
+  }, []);
 
-    this.onFilterChange = this.onFilterChange.bind(this);
-  }
-
-  async componentDidMount() {
-    await this.onRefresh();
-  }
-
-  async onRefresh() {
-    let { data: visits } = await axios.get(`${API_URL}/visits?status=started`);
-
-    this.setState({ visits, visitsFiltered: visits });
-  }
-
-  async handleDelete(visit_id, patient_id) {
-    const { visits, visitsFiltered } = this.state;
-
+  async function handleDelete(visit_id, patient_id) {
+    //Not yet implementd
     const confirmed = window.confirm(
-      "Are you sure you want to delete this visit?"
+      "Are you sure you want to delete this visit?",
     );
     if (!confirmed) {
       return;
@@ -40,158 +37,195 @@ class Queue extends React.Component {
 
     try {
       await axios.delete(`${API_URL}/visits/${visit_id}`);
-      // let payload = {
-      //   patient: patient_id,
-      //   status: "ended",
-      //   visit_date: moment().format("YYYY-MM-DD"),
-      // };
-
-      // await axios.post(`${API_URL}/visits`, payload);
       const updatedVisits = visits.filter((visit) => visit.id !== visit_id);
       const updatedVisitsFiltered = visitsFiltered.filter(
-        (visit) => visit.id !== visit_id
+        (visit) => visit.id !== visit_id,
       );
-      this.setState({
-        visits: updatedVisits,
-        visitsFiltered: updatedVisitsFiltered,
-      });
+      setVisits(updatedVisits);
+      setVisitsFiltered(updatedVisitsFiltered);
     } catch (error) {
       console.error(error);
     }
   }
 
-  renderTableContent() {
-    let { visitsFiltered } = this.state;
-    let reversedVisitsFiltered = visitsFiltered.reverse();
-    let visitsRows = reversedVisitsFiltered.map((visit, idx) => {
-      let Id = `${visit.patient.village_prefix}${visit.patient.id
-        .toString()
-        .padStart(3, "0")}`;
-      let imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
-      let fullName = visit.patient.name;
-      let progress = (
-        <button
-          className="button is-dark level-item"
-          onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
-        >
-          View
-        </button>
-      );
+  function renderTableContent() {
+    const visitsRows = reversedVisitsFiltered
+      .slice(startIndex, endIndex)
+      .map((visit, idx) => {
+        const Id = `${visit.patient.village_prefix}${visit.patient.id
+          .toString()
+          .padStart(3, "0")}`;
+        const imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
+        const fullName = visit.patient.name;
+        const progress = (
+          <Button
+            text={"View"}
+            onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
+            colour="indigo"
+          />
+        );
 
-      let vitals = (
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            {" "}
-            <button
-              className="button is-dark level-item"
-              onClick={() =>
-                Router.push(`/patient?id=${visit.patient.id}&form=vitals`)
-              }
-            >
-              Create
-            </button>
-          </div>
-        </div>
-      );
+        const vitals = (
+          <Button
+            text={"Create"}
+            onClick={() =>
+              Router.push(`/patientVital?id=${visit.patient.id}&form=vitals`)
+            }
+            colour="green"
+          />
+        );
 
-      let consultation = (
-        <div className="field is-grouped">
-          <div className="control is-expanded">
-            {" "}
-            <button
-              className="button is-dark level-item"
-              onClick={() =>
-                Router.push(`/patient?id=${visit.patient.id}&form=medical`)
-              }
-            >
-              Create
-            </button>
-          </div>
-        </div>
-      );
+        const consultation = (
+          <Button
+            text={"Create"}
+            onClick={() =>
+              Router.push(`/patientMedical?id=${visit.patient.id}&form=medical`)
+            }
+            colour="green"
+          />
+        );
 
-      return (
-        <tr key={idx}>
-          <td>{Id}</td>
-          <td>
-            <figure className="image is-96x96">
+        return (
+          <tr key={Id}>
+            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+              {Id}
+            </td>
+            <td>
               <img
                 src={imageUrl}
                 alt="Placeholder image"
-                style={{ height: 96, width: 96, objectFit: "cover" }}
+                className="object-cover h-28 w-28 my-2"
               />
-            </figure>
-          </td>
-          <td>{fullName}</td>
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {fullName}
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {progress}
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {vitals}
+            </td>
+            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {consultation}
+            </td>
+          </tr>
+        );
+      });
 
-          <td>{progress}</td>
-          <td>{vitals}</td>
-          <td>{consultation}</td>
-        </tr>
-      );
-    });
-
-    return visitsRows;
+    return <>{visitsRows}</>;
   }
 
-  onFilterChange(event) {
-    let { visits } = this.state;
-    let filteredVisits = visits.filter((visit) => {
-      let patientId1 =
+  function onFilterChange(e) {
+    const filteredVisits = visits.filter((visit) => {
+      const patientId1 =
         `${visit.patient.village_prefix}${visit.patient.id}`.toLowerCase();
-      let patientId2 =
+      const patientId2 =
         `${visit.patient.village_prefix}`.toLowerCase() +
         `${visit.patient.id}`.padStart(3, `0`);
-      let name = `${visit.patient.name}`.toLowerCase();
-      let searchValue = event.target.value.toLowerCase();
+      const name = `${visit.patient.name}`.toLowerCase();
+      const searchValue = e.target.value.toLowerCase();
       return (
         patientId1.includes(searchValue) ||
         patientId2.includes(searchValue) ||
         name.includes(searchValue)
       );
     });
-
-    this.setState({ visitsFiltered: filteredVisits });
+    setVisitsFiltered(filteredVisits);
   }
 
-  render() {
-    return (
-      <div
-        style={{
-          marginTop: 15,
-          marginLeft: 25,
-          marginRight: 25,
-        }}
-      >
-        <div className="column is-12">
-          <h1 style={{ color: "black", fontSize: "1.5em" }}>Patient Records</h1>
-          <div className="field">
-            <div className="control">
-              <input
-                className="input is-medium"
-                type="text"
-                placeholder="Search Patient"
-                onChange={this.onFilterChange}
-              />
-            </div>
-          </div>
-          <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Photo</th>
-                <th>Full Name</th>
-                <th>Record</th>
-                <th>New Vitals</th>
-                <th>New Consultation</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderTableContent()}</tbody>
-          </table>
+  return (
+    <div className="mx-4 mt-2">
+      <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+        List of Patients
+      </h1>
+      <div className="field">
+        <div className="control">
+          <InputField
+            type="text"
+            name="Input Patient/ID to Search"
+            label="Search for Patient/ID"
+            onChange={onFilterChange}
+          />
         </div>
       </div>
-    );
-  }
+
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="mt-2 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-base font-semibold text-gray-900 sm:pl-6 lg:pl-8"
+                    >
+                      ID
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Photo
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Full Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Record
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Vitals
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Consultation
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {renderTableContent()}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <span className="isolate inline-flex rounded-md shadow-sm mt-2">
+          <button
+            type="button"
+            className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={
+              currentPage ===
+              Math.ceil(reversedVisitsFiltered.length / itemsPerPage)
+            }
+          >
+            Next
+          </button>
+        </span>
+      </div>
+    </div>
+  );
 }
 
 export default withAuth(Queue);
