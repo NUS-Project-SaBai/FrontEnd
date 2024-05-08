@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Autosuggest from "react-autosuggest";
 import axios from "axios";
-import _ from "lodash";
 import toast from "react-hot-toast";
 import moment from "moment";
 
@@ -10,9 +9,10 @@ import { urltoFile } from "@/utils/helpers";
 import withAuth from "@/utils/auth";
 import AppWebcam from "@/utils/webcam";
 
-import PatientModal from "./PatientModal";
-import ScanModal from "./ScanModal";
-import { DisplayField } from "@/components/textContainers/DispayField";
+import PatientModal from "@/pages/registration/PatientModal";
+import ScanModal from "@/pages/registration/ScanModal";
+
+import { DisplayField } from "@/components/textContainers/DisplayField";
 import { Button } from "@/components/textContainers/Button";
 import Loading from "@/components/Loading";
 
