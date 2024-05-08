@@ -52,11 +52,11 @@ function Queue() {
     const patientRows = reversedPatientsFiltered
       .slice(startIndex, endIndex)
       .map((patient, idx) => {
-        const Id = `${patient.fields.village_prefix}${patient.pk
+        const Id = `${patient.village_prefix}${patient.pk
           .toString()
           .padStart(3, "0")}`;
-        const imageUrl = `${CLOUDINARY_URL}/${patient.fields.picture}`;
-        const fullName = patient.fields.name;
+        const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
+        const fullName = patient.name;
         const progress = (
           <Button
             text={"View"}
@@ -118,12 +118,11 @@ function Queue() {
 
   function onFilterChange(e) {
     const filteredPatients = patients.filter((patient) => {
-      const patientId1 =
-        `${patient.fields.village_prefix}${patient.pk}`.toLowerCase();
+      const patientId1 = `${patient.village_prefix}${patient.pk}`.toLowerCase();
       const patientId2 =
-        `${patient.fields.village_prefix}`.toLowerCase() +
+        `${patient.village_prefix}`.toLowerCase() +
         `${patient.pk}`.padStart(3, `0`);
-      const name = `${patient.fields.name}`.toLowerCase();
+      const name = `${patient.name}`.toLowerCase();
       const searchValue = e.target.value.toLowerCase();
       return (
         patientId1.includes(searchValue) ||
