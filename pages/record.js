@@ -175,7 +175,7 @@ const Record = () => {
             <label className="block text-gray-700">Village ID</label>
             <p className="text-lg font-medium">{`${
               patient.village_prefix
-            }${patient.id.toString().padStart(3, "0")}`}</p>
+            }${patient.pk.toString().padStart(3, "0")}`}</p>
           </div>
           <div className="mt-4">
             <label className="block text-gray-700">Visit on</label>
