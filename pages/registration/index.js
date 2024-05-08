@@ -86,10 +86,10 @@ const Registration = () => {
     const patientsEnriched = patients.map((patient) => {
       return {
         ...patient,
-        filterString: `${patient.village_prefix}${patient.pk
+        filterString: `${patient.fields.village_prefix}${patient.pk
           .toString()
-          .padStart(3, "0")} ${patient.name} ${patient.contact_no} ${
-          patient.local_name
+          .padStart(3, "0")} ${patient.fields.name} ${
+          patient.fields.contact_no
         }`,
       };
     });
@@ -206,14 +206,14 @@ const Registration = () => {
     await axios.post(`${API_URL}/visits`, payload);
     toast.success("New visit created for patient!");
   };
-  // Auto Suggestions functions
 
+  // Auto Suggestions functions
   const renderSuggestion = (suggestion) => {
-    const name = suggestion.name;
-    const id = `${suggestion.village_prefix} ${suggestion.pk
+    const name = suggestion.fields.name;
+    const id = `${suggestion.fields.village_prefix} ${suggestion.pk
       .toString()
       .padStart(3, "0")}`;
-    const imageURL = suggestion.picture;
+    const imageURL = suggestion.fields.picture;
 
     return (
       <div
@@ -269,7 +269,7 @@ const Registration = () => {
   const inputProps = {
     placeholder: "Search Patient",
     type: "search",
-    value: value,
+    value,
     onChange: onChange,
     className:
       "block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
