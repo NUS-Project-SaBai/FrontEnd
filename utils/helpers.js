@@ -1,5 +1,5 @@
 import nextCookie from "next-cookies";
-import getHost from "@/utils/get-host";
+import getHost from "./get-host";
 
 export async function logInCheck(ctx) {
   const { token } = nextCookie(ctx);

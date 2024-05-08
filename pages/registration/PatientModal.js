@@ -1,32 +1,8 @@
 import Modal from "react-modal";
+import VenueOptions from "./VenueOptions";
 import { Button } from "@/components/textContainers/Button";
 import { InputField } from "@/components/textContainers/InputField";
 import { InputBox } from "@/components/textContainers/InputBox";
-import { venueOptions } from "@/utils/constants";
-
-const VenueOptions = ({ handleInputChange }) => (
-  <div>
-    <label
-      htmlFor="Village"
-      className="block text-xs font-medium text-gray-900"
-    >
-      Village
-    </label>
-
-    <select
-      className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-      name="village_prefix"
-      onChange={handleInputChange}
-      default={Object.keys(venueOptions)[0]}
-    >
-      {Object.entries(venueOptions).map(([key, value]) => (
-        <option value={key} key={value}>
-          {value}
-        </option>
-      ))}{" "}
-    </select>
-  </div>
-);
 
 const PatientModal = ({
   modalIsOpen,
@@ -39,7 +15,6 @@ const PatientModal = ({
   submitNewPatient,
   toggleCameraOpen,
   customStyles,
-  loading,
 }) => {
   return (
     <Modal
@@ -57,15 +32,15 @@ const PatientModal = ({
           value={formDetails.name}
         />
         <InputField
-          name="identification_number"
-          label="ID Number"
+          name="local_name"
+          label="IC Number"
           type="text"
           onChange={handleInputChange}
-          value={formDetails.identification_number}
+          value={formDetails.local_name}
         />
         <InputField
-          name="contact_no"
           label="Contact Number"
+          name="contact_no"
           className="input"
           type="tel"
           onChange={handleInputChange}
@@ -83,10 +58,13 @@ const PatientModal = ({
             className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
             name="gender"
             onChange={handleInputChange}
-            defaultValue="Male"
           >
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option selected={formDetails.gender === "Male"} value="Male">
+              Male
+            </option>
+            <option selected={formDetails.gender === "Female"} value="Female">
+              Female
+            </option>
           </select>
         </div>
         <InputField

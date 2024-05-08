@@ -1,5 +1,5 @@
 import React from "react";
-import { DisplayField } from "../textContainers/DisplayField";
+import { DisplayField } from "../textContainers/DispayField";
 
 function PatientView({ content }) {
   const calculate_age = (dob) => {
@@ -10,7 +10,7 @@ function PatientView({ content }) {
     return Math.abs(age.getUTCFullYear() - 1970);
   };
   const fieldsArray = [
-    { label: "ID Number", key: "identification_number" },
+    { label: "IC Number", key: "local_name" },
     { label: "Gender", key: "gender" },
     { label: "Age", key: "date_of_birth", calculate: calculate_age },
     { label: "Date of Birth", key: "date_of_birth" },
@@ -18,7 +18,7 @@ function PatientView({ content }) {
   ];
   console.log(fieldsArray);
   return fieldsArray.map((field, index) => (
-    <div className="grid-cols-1" key={index}>
+    <div className="grid-cols-1" key = {index}>
       <DisplayField
         key={index}
         label={field.label}
