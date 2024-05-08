@@ -21,7 +21,7 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
     <div>
       <div>
         <img
-          src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
+          src={`${CLOUDINARY_URL}/${patient.picture}`}
           alt="Placeholder image"
           className="has-ratio"
           style={{ height: 200, width: 200, objectFit: "cover" }}
@@ -30,24 +30,18 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
         <DisplayField
           label="ID"
-          content={`${patient.fields.village_prefix}${patient.pk
+          content={`${patient.village_prefix}${patient.pk
             .toString()
             .padStart(3, "0")}`}
         />
-        <DisplayField label="Name" content={patient.fields.name} />
+        <DisplayField label="Name" content={patient.name} />
         <DisplayField
           label="ID Number"
-          content={patient.fields.identification_number}
+          content={patient.identification_number}
         />
-        <DisplayField label="Gender" content={patient.fields.gender} />
-        <DisplayField
-          label="Date of Birth"
-          content={patient.fields.date_of_birth}
-        />
-        <DisplayField
-          label="Drug Allergies"
-          content={patient.fields.drug_allergy}
-        />
+        <DisplayField label="Gender" content={patient.gender} />
+        <DisplayField label="Date of Birth" content={patient.date_of_birth} />
+        <DisplayField label="Drug Allergies" content={patient.drug_allergy} />
 
         <Button
           text="Create New Visit"
@@ -202,11 +196,11 @@ const Registration = () => {
 
   // Auto Suggestions functions
   const renderSuggestion = (suggestion) => {
-    const name = suggestion.fields.name;
-    const id = `${suggestion.fields.village_prefix} ${suggestion.pk
+    const name = suggestion.name;
+    const id = `${suggestion.village_prefix} ${suggestion.pk
       .toString()
       .padStart(3, "0")}`;
-    const imageURL = suggestion.fields.picture;
+    const imageURL = suggestion.picture;
 
     return (
       <div
@@ -247,7 +241,7 @@ const Registration = () => {
       inputValue.length === 0
         ? []
         : patientsList.filter((patient) =>
-            patient.fields.filterString.toLowerCase().includes(inputValue),
+            patient.filterString.toLowerCase().includes(inputValue),
           );
 
     setSuggestions(query);

@@ -48,7 +48,6 @@ const Patient = () => {
 
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
-    
 
     // gets all visit data
     let { data: visits } = await axios.get(
@@ -206,7 +205,7 @@ const Patient = () => {
             <label className="block text-gray-700">Village ID</label>
             <p className="text-lg font-medium">{`${
               patient.village_prefix
-            }${patient.toString().padStart(3, "0")}`}</p>
+            }${patient.pk.toString().padStart(3, "0")}`}</p>
           </div>
           <div className="mt-4">
             <label className="block text-gray-700">Visit on</label>
