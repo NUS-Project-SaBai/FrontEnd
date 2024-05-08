@@ -21,7 +21,7 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
     <div>
       <div>
         <img
-          src={`${CLOUDINARY_URL}/${patient.picture}`}
+          src={`${CLOUDINARY_URL}/${patient.fields.picture}`}
           alt="Placeholder image"
           className="has-ratio"
           style={{ height: 200, width: 200, objectFit: "cover" }}
@@ -30,18 +30,24 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
         <DisplayField
           label="ID"
-          content={`${patient.village_prefix}${patient.pk
+          content={`${patient.fields.village_prefix}${patient.pk
             .toString()
             .padStart(3, "0")}`}
         />
-        <DisplayField label="Name" content={patient.name} />
+        <DisplayField label="Name" content={patient.fields.name} />
         <DisplayField
           label="ID Number"
-          content={patient.identification_number}
+          content={patient.fields.identification_number}
         />
-        <DisplayField label="Gender" content={patient.gender} />
-        <DisplayField label="Date of Birth" content={patient.date_of_birth} />
-        <DisplayField label="Drug Allergies" content={patient.drug_allergy} />
+        <DisplayField label="Gender" content={patient.fields.gender} />
+        <DisplayField
+          label="Date of Birth"
+          content={patient.fields.date_of_birth}
+        />
+        <DisplayField
+          label="Drug Allergies"
+          content={patient.fields.drug_allergy}
+        />
 
         <Button
           text="Create New Visit"
@@ -82,18 +88,7 @@ const Registration = () => {
 
   const onRefresh = async () => {
     let { data: patients } = await axios.get(`${API_URL}/patients`);
-    // This should be done for each patient on the backend, to add into the backend
-    const patientsEnriched = patients.map((patient) => {
-      return {
-        ...patient,
-        filterString: `${patient.fields.village_prefix}${patient.pk
-          .toString()
-          .padStart(3, "0")} ${patient.fields.name} ${
-          patient.fields.contact_no
-        }`,
-      };
-    });
-    setPatientsList(patientsEnriched);
+    setPatientsList(patients);
   };
 
   // Webcam functions
@@ -180,8 +175,6 @@ const Registration = () => {
       toast.error(`Please retake photo! ${response.error}`);
       return;
     }
-    response.pk = response.id;
-    delete response.id;
 
     setPatient(response);
     setFormDetails((prevDetails) => ({
@@ -254,7 +247,7 @@ const Registration = () => {
       inputValue.length === 0
         ? []
         : patientsList.filter((patient) =>
-            patient.filterString.toLowerCase().includes(inputValue),
+            patient.fields.filterString.toLowerCase().includes(inputValue),
           );
 
     setSuggestions(query);
