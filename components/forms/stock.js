@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "../textContainers/Button";
 import { InputField } from "../textContainers/InputField";
 import { InputBox } from "../textContainers/InputBox";
-import { DisplayField } from "../textContainers/DisplayField";
+import { DisplayField } from "../textContainers/DispayField";
 
 export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
   return (

@@ -8,59 +8,59 @@ import { InputField } from "@/components/textContainers/InputField";
 
 function Queue() {
   //Queue Page
-  const [patients, setPatients] = useState([]);
-  const [patientsFiltered, setPatientsFiltered] = useState([]);
-  const reversedPatientsFiltered = [...patientsFiltered].reverse(); //response.data, reverse to order them from most recent
+  const [visits, setVisits] = useState([]); //Shouldnt this pull based on Patients not Visits
+  const [visitsFiltered, setVisitsFiltered] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2; //Change to 10 after development
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+  const reversedVisitsFiltered = [...visitsFiltered].reverse(); //response.data, reverse to order them from most recent
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/patients`)
+      .get(`${API_URL}/visits?status=started`)
       .then((response) => {
-        setPatients(response.data);
-        setPatientsFiltered(response.data);
+        setVisits(response.data);
+        setVisitsFiltered(response.data);
       })
       .catch((error) => console.error("Error loading page", error));
   }, []);
 
-  // async function handleDelete(visit_id, patient_id) {
-  //   //Not yet implementd
-  //   const confirmed = window.confirm(
-  //     "Are you sure you want to delete this visit?",
-  //   );
-  //   if (!confirmed) {
-  //     return;
-  //   }
+  async function handleDelete(visit_id, patient_id) {
+    //Not yet implementd
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this visit?",
+    );
+    if (!confirmed) {
+      return;
+    }
 
-  //   try {
-  //     await axios.delete(`${API_URL}/visits/${visit_id}`);
-  //     const updatedVisits = visits.filter((visit) => visit.id !== visit_id);
-  //     const updatedVisitsFiltered = visitsFiltered.filter(
-  //       (visit) => visit.id !== visit_id,
-  //     );
-  //     setVisits(updatedVisits);
-  //     setVisitsFiltered(updatedVisitsFiltered);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+    try {
+      await axios.delete(`${API_URL}/visits/${visit_id}`);
+      const updatedVisits = visits.filter((visit) => visit.id !== visit_id);
+      const updatedVisitsFiltered = visitsFiltered.filter(
+        (visit) => visit.id !== visit_id,
+      );
+      setVisits(updatedVisits);
+      setVisitsFiltered(updatedVisitsFiltered);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   function renderTableContent() {
-    const patientRows = reversedPatientsFiltered
+    const visitsRows = reversedVisitsFiltered
       .slice(startIndex, endIndex)
-      .map((patient, idx) => {
-        const Id = `${patient.fields.village_prefix}${patient.pk
+      .map((visit, idx) => {
+        const Id = `${visit.patient.village_prefix}${visit.patient.id
           .toString()
           .padStart(3, "0")}`;
-        const imageUrl = `${CLOUDINARY_URL}/${patient.fields.picture}`;
-        const fullName = patient.fields.name;
+        const imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
+        const fullName = visit.patient.name;
         const progress = (
           <Button
             text={"View"}
-            onClick={() => Router.push(`/record?id=${patient.pk}`)}
+            onClick={() => Router.push(`/record?id=${visit.patient.id}`)}
             colour="indigo"
           />
         );
@@ -69,7 +69,7 @@ function Queue() {
           <Button
             text={"Create"}
             onClick={() =>
-              Router.push(`/patientVital?id=${patient.pk}&form=vitals`)
+              Router.push(`/patientVital?id=${visit.patient.id}&form=vitals`)
             }
             colour="green"
           />
@@ -79,7 +79,7 @@ function Queue() {
           <Button
             text={"Create"}
             onClick={() =>
-              Router.push(`/patientMedical?id=${patient.pk}&form=medical`)
+              Router.push(`/patientMedical?id=${visit.patient.id}&form=medical`)
             }
             colour="green"
           />
@@ -113,17 +113,17 @@ function Queue() {
         );
       });
 
-    return <>{patientRows}</>;
+    return <>{visitsRows}</>;
   }
 
   function onFilterChange(e) {
-    const filteredPatients = patients.filter((patient) => {
+    const filteredVisits = visits.filter((visit) => {
       const patientId1 =
-        `${patient.fields.village_prefix}${patient.pk}`.toLowerCase();
+        `${visit.patient.village_prefix}${visit.patient.id}`.toLowerCase();
       const patientId2 =
-        `${patient.fields.village_prefix}`.toLowerCase() +
-        `${patient.pk}`.padStart(3, `0`);
-      const name = `${patient.fields.name}`.toLowerCase();
+        `${visit.patient.village_prefix}`.toLowerCase() +
+        `${visit.patient.id}`.padStart(3, `0`);
+      const name = `${visit.patient.name}`.toLowerCase();
       const searchValue = e.target.value.toLowerCase();
       return (
         patientId1.includes(searchValue) ||
@@ -131,7 +131,7 @@ function Queue() {
         name.includes(searchValue)
       );
     });
-    setPatientsFiltered(filteredPatients);
+    setVisitsFiltered(filteredVisits);
   }
 
   return (
@@ -217,7 +217,7 @@ function Queue() {
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={
               currentPage ===
-              Math.ceil(reversedPatientsFiltered.length / itemsPerPage)
+              Math.ceil(reversedVisitsFiltered.length / itemsPerPage)
             }
           >
             Next
