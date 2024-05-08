@@ -1,4 +1,4 @@
-import { DisplayField } from "@/components/textContainers/DispayField";
+import { DisplayField } from "@/components/textContainers/DisplayField";
 import React from "react";
 import { VisitPrescriptionsTable } from "../Prescriptions/VisitPrescriptionsTable";
 
