@@ -1,4 +1,4 @@
-import { DisplayField } from "@/components/textContainers/DispayField";
+import { DisplayField } from "@/components/textContainers/DisplayField";
 
 export function VitalsView({ content }) {
   console.log("Content:", content);
