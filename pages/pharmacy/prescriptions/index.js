@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
-import { Button } from "@/components/textContainers/Button";
-import { InputField } from "@/components/textContainers/InputField";
+import { Button } from "@/components/TextComponents/Button";
+import { InputField } from "@/components/TextComponents/InputField";
 
 const Orders = () => {
   const [visits, setVisits] = useState([]);

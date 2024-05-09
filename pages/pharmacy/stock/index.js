@@ -4,8 +4,8 @@ import toast from "react-hot-toast";
 import { MedicationModal } from "./MedicationModal";
 import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
-import { Button } from "@/components/textContainers/Button";
-import { InputField } from "@/components/textContainers/InputField";
+import { Button } from "@/components/TextComponents/Button";
+import { InputField } from "@/components/TextComponents/InputField";
 
 const Stock = () => {
   const [medications, setMedications] = useState([]);

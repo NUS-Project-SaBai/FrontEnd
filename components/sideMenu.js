@@ -20,7 +20,7 @@ const navigation = [
 
   {
     name: "Patient Records",
-    href: "/queue",
+    href: "/records",
     icon: ClipboardDocumentListIcon,
     count: "12",
     current: false,

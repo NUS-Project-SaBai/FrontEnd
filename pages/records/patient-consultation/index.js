@@ -4,20 +4,18 @@ import _ from "lodash";
 import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
-import { MedicalForm, PrescriptionForm } from "../components/forms/patient";
-import { ConsultationsView } from "@/components/views/Consultations/ConsultationsView";
-import { VitalsView } from "@/components/views/Vitals/VitalsView";
-import { ConsultationsTable } from "@/components/views/Consultations/ConsultationsTable";
-import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitPrescriptionsTable";
-import { API_URL, CLOUDINARY_URL } from "../utils/constants";
-import withAuth from "../utils/auth";
+import { MedicalForm, PrescriptionForm } from "@/pages/records/Forms";
+import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
+import { VitalsTable } from "@/pages/records/VitalsTable";
+import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
+import { VisitPrescriptionsTable } from "@/pages/records/PrescriptionsTable/VisitPrescriptionsTable";
+import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
+import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";
-import { Button } from "@/components/textContainers/Button";
+import { Button } from "@/components/TextComponents/Button";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-Modal.setAppElement("#__next");
-
-const Patient = () => {
+const PatientConsultation = () => {
   const [state, setState] = useState({
     mounted: false,
     patient: {},
@@ -358,7 +356,7 @@ const Patient = () => {
     await Promise.all(orderPromises);
     toast.success("Medical Consult Completed!");
 
-    Router.push("/queue");
+    Router.push("/records");
   }
 
   function updateFormDetails(diagnoses) {
@@ -459,7 +457,7 @@ const Patient = () => {
             <h2>Not Done</h2>
           </>
         ) : (
-          <VitalsView content={vitals} />
+          <VitalsTable content={vitals} />
         )}
 
         <ConsultationsTable
@@ -608,7 +606,7 @@ const Patient = () => {
         {renderFormModal()}
         {renderViewModal()}
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Medical
+          Patient Consultation
         </h1>
         {renderHeader()}
         <b>
@@ -651,4 +649,4 @@ const viewModalStyles = {
   },
 };
 
-export default withAuth(Patient);
+export default withAuth(PatientConsultation);

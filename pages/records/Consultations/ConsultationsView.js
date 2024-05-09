@@ -1,6 +1,6 @@
-import { DisplayField } from "@/components/textContainers/DisplayField";
+import { DisplayField } from "@/components/TextComponents/DisplayField";
 import React, { useEffect, useState } from "react";
-import { VisitPrescriptionsTable } from "../Prescriptions/VisitPrescriptionsTable";
+import { VisitPrescriptionsTable } from "../VisitPrescriptionsTable";
 import axios from "axios";
 import { API_URL } from "@/utils/constants";
 

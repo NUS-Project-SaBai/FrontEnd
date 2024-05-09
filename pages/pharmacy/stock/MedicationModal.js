@@ -1,10 +1,10 @@
 import React from "react";
 import Modal from "react-modal";
 
-import { Button } from "@/components/textContainers/Button";
-import { InputField } from "@/components/textContainers/InputField";
-import { InputBox } from "@/components/textContainers/InputBox";
-import { DisplayField } from "@/components/textContainers/DisplayField";
+import { Button } from "@/components/TextComponents/Button";
+import { InputField } from "@/components/TextComponents/InputField";
+import { InputBox } from "@/components/TextComponents/InputBox";
+import { DisplayField } from "@/components/TextComponents/DisplayField";
 
 export function MedicationModal({
   modalIsOpen,

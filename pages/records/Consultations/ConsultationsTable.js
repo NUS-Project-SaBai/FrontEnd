@@ -1,4 +1,4 @@
-import { Button } from "@/components/textContainers/Button";
+import { Button } from "@/components/TextComponents/Button";
 
 export function ConsultationsTable({ content: consults, buttonFunction }) {
   const consultRows = consults.map((consult) => {
