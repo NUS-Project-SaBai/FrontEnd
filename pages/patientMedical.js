@@ -275,7 +275,6 @@ const Patient = () => {
     //Post 405 error
     const router = Router;
     const { query } = router;
-    const { form } = query;
     let { formDetails, visitID, orders } = state;
 
     orders.forEach((order) => {

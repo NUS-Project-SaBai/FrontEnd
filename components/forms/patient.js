@@ -158,17 +158,6 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
 }
 
 function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
-  const [showWomenClinicDetails, setShowWomenClinicDetails] = useState(false); //Not sure what this does yet
-
-  function handleCheckboxChange(e) {
-    const { checked } = e.target;
-    setShowWomenClinicDetails(checked);
-  }
-
-  function handleCheckboxAndInputChange(e) {
-    handleCheckboxChange(e);
-    handleInputChange(e);
-  }
 
   function handleClick(e) {
     //Update form details resulting in rendering of page
@@ -223,11 +212,11 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
 
         <select
           className={`border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4 ${
-            diagnosis.type === "Please select..." ? "bg-red-100" : ""
+            diagnosis.category === "Please select..." ? "bg-red-100" : ""
           }`}
           name="type"
           onChange={(e) => handleDiagnosisChange(e, index)}
-          value={diagnosis.type}
+          value={diagnosis.category}
         >
           <option>Please select...</option>
           {diagnosisOptions.map((option, optionIndex) => (
@@ -251,22 +240,22 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
     <div>
       <label className="label">Medical Consultation Form</label>
       <InputBox
-        key="problems"
-        name="problems"
+        key="past_medical_history"
+        name="past_medical_history"
         label="Past Medical History"
         type="text"
-        value={formDetails.problems}
+        value={formDetails.past_medical_history}
         onChange={handleInputChange}
         placeholder="Type your problems here..."
       />
       <InputBox
-        key="diagnosis"
-        name="diagnosis"
+        key="consultation"
+        name="consultation"
         label="Consultation"
         type="text"
-        value={formDetails.diagnosis}
+        value={formDetails.consultation}
         onChange={handleInputChange}
-        placeholder="Type your diagnosis here..."
+        placeholder="Type your consultation here..."
       />
 
       <label className="block text-sm font-medium text-gray-900 mt-4">
@@ -282,11 +271,11 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
       />
 
       <InputBox
-        key="addendum"
-        name="addendum"
+        key="plan"
+        name="plan"
         label="Plan"
         type="text"
-        value={formDetails.addendum}
+        value={formDetails.plan}
         onChange={handleInputChange}
         placeholder="Type your plan here..."
       />
@@ -296,9 +285,9 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
       <label className="label">* Referred for (within clinic)</label>
       <select
         className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
-        name="type"
+        name="referred_for"
         onChange={handleInputChange}
-        value={formDetails.type}
+        value={formDetails.referred_for}
       >
         <option>Please select....</option>
         <option value="Diagnostic">Diagnostic</option>
@@ -307,11 +296,11 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
       </select>
 
       <InputBox
-        key="referred_notes"
-        name="referred_notes"
+        key="referral_notes"
+        name="referral_notes"
         label="Referral Notes"
         type="text"
-        value={formDetails.referred_notes}
+        value={formDetails.referral_notes}
         onChange={handleInputChange}
         placeholder="Type your referral notes here..."
       />
