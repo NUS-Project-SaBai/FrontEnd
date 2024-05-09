@@ -7,7 +7,7 @@ import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsVi
 import { VitalsTable } from "@/pages/records/VitalsTable";
 import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
 
-import { VisitPrescriptionsTable } from "@/pages/records/PrescriptionsTable/VisitPrescriptionsTable";
+import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
 import { PatientView } from "./PatientView";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
