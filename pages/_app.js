@@ -1,24 +1,11 @@
-import React, { useEffect } from "react";
-import Layout from "../components/layout";
-import { transitions, positions, Provider as AlertProvider } from "react-alert";
-
-import "../styles/globals.css";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import React from "react";
 import { Toaster } from "react-hot-toast";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 
-const options = {
-  position: positions.BOTTOM_CENTER,
-  timeout: 5000,
-  offset: "30px",
-  transition: transitions.SCALE,
-};
+import Layout from "@/components/layout";
+import "@/styles/globals.css";
 
-function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    // Add any side effects here, similar to componentDidMount
-    // You can manage cookies or perform other actions if needed
-  }, []);
-
+const MyApp = ({ Component, pageProps }) => {
   return (
     <UserProvider>
       <Layout>
@@ -27,6 +14,6 @@ function MyApp({ Component, pageProps }) {
       </Layout>
     </UserProvider>
   );
-}
+};
 
 export default MyApp;

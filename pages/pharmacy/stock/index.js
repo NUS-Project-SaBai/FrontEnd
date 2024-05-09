@@ -1,29 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Modal from "react-modal";
-import moment from "moment";
 import axios from "axios";
-import _ from "lodash";
-import { MedicationForm } from "../../components/forms/stock";
-import { API_URL } from "../../utils/constants";
-import withAuth from "../../utils/auth";
 import toast from "react-hot-toast";
-import { Button } from "@/components/textContainers/Button";
-import { InputField } from "@/components/textContainers/InputField";
-
-Modal.setAppElement("#__next");
-
-const prescriptionModalStyles = {
-  content: {
-    left: "35%",
-    right: "17.5%",
-    top: "25%",
-    bottom: "25%",
-  },
-};
+import { MedicationModal } from "./MedicationModal";
+import { API_URL } from "@/utils/constants";
+import withAuth from "@/utils/auth";
+import { Button } from "@/components/TextComponents/Button";
+import { InputField } from "@/components/TextComponents/InputField";
 
 const Stock = () => {
-  const [medications, setMedications] = useState([]); // List of medications in stock
-  const [medicationsFiltered, setMedicationsFiltered] = useState([]); // Medications displayed based on the search bar
+  const [medications, setMedications] = useState([]);
+  const [medicationsFiltered, setMedicationsFiltered] = useState([]);
   const [medicationDetails, setMedicationDetails] = useState({
     medicine_name: "",
     reserve_quantity: 0,
@@ -31,9 +17,8 @@ const Stock = () => {
     quantityChange: 0,
     notes: "",
     remarks: "",
-  }); // State is used to adjust what is displayed when toggling modal
+  });
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [filterString, setFilterString] = useState("");
 
   useEffect(() => {
     onRefresh();
@@ -45,7 +30,8 @@ const Stock = () => {
       setMedications(data);
       setMedicationsFiltered(data);
     } catch (error) {
-      console.error("Failed to fetch medications:", error);
+      toast.error(`Failed to fetch medications: ${error.message}`);
+      return;
     }
   };
 
@@ -56,6 +42,7 @@ const Stock = () => {
     }
 
     const quantityChange = medicationDetails.quantityChange;
+
     const nameEnriched =
       medicationDetails.medicine_name.charAt(0).toUpperCase() +
       medicationDetails.medicine_name.slice(1);
@@ -66,39 +53,46 @@ const Stock = () => {
     };
 
     if (updatedDetails.pk) {
-      const key = updatedDetails.pk;
       const quantity =
         parseInt(updatedDetails.quantity) + parseInt(quantityChange);
-      if (quantity >= 0) {
-        try {
-          await axios.patch(`${API_URL}/medications/${key}`, {
-            quantityChange: parseInt(quantityChange),
-          });
-          toast.success("Medication Quantity updated!");
-        } catch (error) {
-          toast.error("Encountered an error!");
-        }
-      } else {
-        toast.error("Insufficient medication!");
+
+      if (quantity < 0) {
+        toast.error("Insufficient Medication!");
+        return;
       }
-    } else if (quantityChange >= 0) {
+
+      await axios
+        .patch(`${API_URL}/medications/${updatedDetails.pk}`, {
+          quantityChange: parseInt(quantityChange),
+        })
+        .catch((error) => {
+          toast.error(`Encountered an error when update! ${error.message}`);
+          return;
+        });
+      toast.success("Medication Quantity updated!");
+    }
+
+    if (!updatedDetails.pk) {
+      if (quantityChange < 0) {
+        toast.error("Invalid Number!");
+        return;
+      }
+
       updatedDetails.quantity = quantityChange;
-      try {
-        await axios.post(`${API_URL}/medications`, updatedDetails);
-        toast.success("New Medication created!");
-      } catch (error) {
-        toast.error("Failed to create medication!");
-      }
-    } else {
-      toast.error("Invalid number!");
+      await axios
+        .post(`${API_URL}/medications`, updatedDetails)
+        .catch((error) => {
+          toast.error(`Failed to create medication: ${error.message}`);
+          return;
+        });
+      toast.success("New Medication created!");
     }
 
     toggleModal();
     onRefresh();
   };
 
-  async function handleDelete(pk) {
-    // Delete medication
+  const handleDelete = async (pk) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this medication?",
     );
@@ -106,25 +100,24 @@ const Stock = () => {
       return;
     }
 
-    try {
-      await axios.delete(`${API_URL}/medications/${pk}`);
-      const updatedMedications = medications.filter(
-        (medication) => medication.pk !== pk,
-      );
-      const updatedMedicationsFiltered = medicationsFiltered.filter(
-        (medication) => medication.pk !== pk,
-      );
-      setMedications(updatedMedications);
-      setMedicationsFiltered(updatedMedicationsFiltered);
+    await axios.delete(`${API_URL}/medications/${pk}`).catch((error) => {
+      toast.error(`Failed to delete medication: ${error.message}`);
+      return;
+    });
 
-      toast.success("Medication successfully deleted!");
-    } catch (error) {
-      console.error(error);
-    }
-  }
+    const updatedMedications = medications.filter(
+      (medication) => medication.pk !== pk,
+    );
+    const updatedMedicationsFiltered = medicationsFiltered.filter(
+      (medication) => medication.pk !== pk,
+    );
+    setMedications(updatedMedications);
+    setMedicationsFiltered(updatedMedicationsFiltered);
 
-  function onFilterChange(event) {
-    // When editing search bar
+    toast.success("Medication successfully deleted!");
+  };
+
+  const onFilterChange = (event) => {
     const filteredMedications = medications.filter((medication) => {
       const medicineName = medication.fields.medicine_name.toLowerCase();
 
@@ -132,9 +125,9 @@ const Stock = () => {
     });
 
     setMedicationsFiltered(filteredMedications);
-  }
+  };
 
-  function createNewMedication() {
+  const createNewMedication = () => {
     setMedicationDetails({
       medicine_name: "",
       reserve_quantity: 0,
@@ -144,38 +137,20 @@ const Stock = () => {
       remarks: "",
     });
     toggleModal(medicationDetails);
-  }
+  };
 
-  function toggleModal(medication = {}) {
+  const toggleModal = (medication = {}) => {
     setMedicationDetails(medication);
     setModalIsOpen((prevModalIsOpen) => !prevModalIsOpen);
-  }
+  };
 
-  function handleMedicationChange(event) {
-    // When modifying an entry in MedicationForm
+  const handleMedicationChange = (event) => {
     const newMedicationDetails = {
       ...medicationDetails,
       [event.target.name]: event.target.value,
     };
     setMedicationDetails(newMedicationDetails);
-  }
-
-  function renderModal() {
-    // Loads the form to edit name, quantity and notes
-    return (
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={toggleModal}
-        style={prescriptionModalStyles}
-      >
-        <MedicationForm
-          formDetails={medicationDetails}
-          handleInputChange={handleMedicationChange}
-          onSubmit={onSubmitForm}
-        />
-      </Modal>
-    );
-  }
+  };
 
   function renderRows() {
     // Displays the list of medications in stock
@@ -189,7 +164,7 @@ const Stock = () => {
       const quantity = medicationDetails.quantity;
 
       return (
-        <tr>
+        <tr key={name + quantity}>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {name}
           </td>
@@ -221,10 +196,15 @@ const Stock = () => {
         marginTop: 15,
         marginLeft: 25,
         marginRight: 25,
-        // position: "relative"
       }}
     >
-      {renderModal()}
+      <MedicationModal
+        modalIsOpen={modalIsOpen}
+        toggleModal={toggleModal}
+        onSubmit={onSubmitForm}
+        handleInputChange={handleMedicationChange}
+        formDetails={medicationDetails}
+      />
 
       <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
         Medication Stock

@@ -11,7 +11,7 @@ import {
 } from "../../utils/constants";
 import { urltoFile } from "../../utils/helpers";
 import Link from "next/link";
-import { Button } from "@/components/textContainers/Button";
+import { Button } from "@/components/TextComponents/Button";
 
 const ScanModal = ({
   modalIsOpen,

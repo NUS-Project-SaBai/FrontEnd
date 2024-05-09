@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import withAuth from "../utils/auth";
+import withAuth from "@/utils/auth";
 
 const Index = () => {
   const router = useRouter();

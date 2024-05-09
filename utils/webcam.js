@@ -1,6 +1,6 @@
 import Webcam from "react-webcam";
 
-import { Button } from "@/components/textContainers/Button";
+import { Button } from "@/components/TextComponents/Button";
 
 const videoConstraints = {
   width: 720,
