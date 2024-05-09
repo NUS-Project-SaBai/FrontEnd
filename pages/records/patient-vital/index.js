@@ -239,7 +239,7 @@ const Patient = () => {
 
     return (
       <div className="space-y-4">
-        {typeof vitals === "object" ? (
+        {typeof vitals === "undefined" ? (
           <>
             <label className="label">Vital Signs</label>
             <h2>Not Done</h2>
