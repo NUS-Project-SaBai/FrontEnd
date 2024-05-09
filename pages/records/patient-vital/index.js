@@ -152,7 +152,7 @@ const Patient = () => {
     await axios.post(`${API_URL}/vitals`, formPayload);
     toast.success("Vitals completed!");
 
-    Router.push("/queue");
+    Router.push("/records");
   }
 
   function handleInputChange(e) {
