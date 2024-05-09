@@ -158,7 +158,6 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
 }
 
 function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
-
   function handleClick(e) {
     //Update form details resulting in rendering of page
     updateFormDetails([...formDetails.diagnoses, { details: "", type: "" }]);
@@ -303,6 +302,16 @@ function MedicalForm({ handleInputChange, formDetails, updateFormDetails }) {
         value={formDetails.referral_notes}
         onChange={handleInputChange}
         placeholder="Type your referral notes here..."
+      />
+
+      <InputBox
+        key="remarks"
+        name="remarks"
+        label="Remarks"
+        type="text"
+        value={formDetails.remarks}
+        onChange={handleInputChange}
+        placeholder="Insert remarks here..."
       />
     </div>
   );

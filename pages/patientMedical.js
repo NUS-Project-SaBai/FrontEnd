@@ -283,21 +283,41 @@ const Patient = () => {
       });
     });
 
-    //We still haven't figured out a way to let the backend handle new fields
-    //which we want to create. Hence, we are using existing fields (problems, diagnosis, notes)
-    //to store the data which we want to store :
-    //NEW:                         STORED IN OLD FIELD OF:
-    //Past Med History      ->     Problems
-    //Consultation          ->     Diagnosis
-    //Diagnosis (1 + 2 + 3) ->     Notes
-    //Plan                  ->     Addendum
-
-    //For Diagnosis (1 + 2 + 3), we have insufficient old fields to store the data in.
-    //Hence, we are using a standardised text format to store the three possibilities
-    //of diagnosis. By using this standardised format, we can use data manipulation
-    //later on to retrieve and split the data as neccessary
-
     console.log(formDetails);
+
+    var formPayload = {
+      visit: visitID,
+      ...formDetails,
+    };
+
+    delete formPayload.diagnoses;
+
+    //For Referrals, we are also using a standardised text format to store information
+    //from referred_for and referred_notes
+
+    // if (formDetails.referred_for) {
+    //   const referrals = `
+    //       Referred For: ${formDetails.referred_for}
+    //       Notes:
+    //       ${formDetails.referred_notes || "No Notes Provided"}`;
+    //   formPayload = {
+    //     ...formPayload,
+    //     referrals: referrals,
+    //   };
+    // }
+
+    var consultId;
+    var orderPromises;
+
+    console.log(formPayload);
+
+    let { data: medicalConsult } = await axios.post(`${API_URL}/consults`, {
+      ...formPayload,
+      doctor: window.localStorage.getItem("userID"),
+    });
+
+    consultId = medicalConsult.id;
+    orderPromises = [];
 
     let diagnosisFormat = "";
 
@@ -311,39 +331,19 @@ const Patient = () => {
           }
           
           `;
+      console.log(diagnosisFormat);
     }
 
-    var formPayload = {
-      visit: visitID,
-      ...formDetails,
-      notes: diagnosisFormat,
-    };
-
-    //For Referrals, we are also using a standardised text format to store information
-    //from referred_for and referred_notes
-
-    if (formDetails.referred_for) {
-      const referrals = `
-          Referred For: ${formDetails.referred_for} 
-          Notes: 
-          ${formDetails.referred_notes || "No Notes Provided"}`;
-      formPayload = {
-        ...formPayload,
-        referrals: referrals,
-      };
+    for (let i = 0; i < formDetails.diagnoses.length; i++) {
+      let { data: medicalDiagnosis } = await axios.post(
+        `${API_URL}/diagnosis`,
+        {
+          consult: consultId,
+          details: formDetails.diagnoses[i].details,
+          category: formDetails.diagnoses[i].type,
+        },
+      );
     }
-
-    var consultId;
-    var orderPromises;
-
-    let { data: medicalConsult } = await axios.post(`${API_URL}/consults`, {
-      ...formPayload,
-      doctor: window.localStorage.getItem("userID"),
-      type: "medical",
-    });
-
-    consultId = medicalConsult.id;
-    orderPromises = [];
 
     orders.forEach((order) => {
       let orderPayload = {
