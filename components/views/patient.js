@@ -1,5 +1,5 @@
 import React from "react";
-import { DisplayField } from "../textContainers/DispayField";
+import { DisplayField } from "../textContainers/DisplayField";
 
 function PatientView({ content }) {
   const calculate_age = (dob) => {

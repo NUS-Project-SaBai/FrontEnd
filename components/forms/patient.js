@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { InputField } from "../textContainers/InputField";
 import { InputBox } from "../textContainers/InputBox";
-import { DisplayField } from "../textContainers/DispayField";
+import { DisplayField } from "../textContainers/DisplayField";
 import { Button } from "../textContainers/Button";
 function VitalsForm({ handleInputChange, formDetails, patient }) {
   const vitalFields = [
