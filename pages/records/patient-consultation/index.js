@@ -4,11 +4,11 @@ import _ from "lodash";
 import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
-import { MedicalForm, PrescriptionForm } from "@/pages/records/Forms";
+import { ConsultationForm, PrescriptionForm } from "@/pages/records/Forms";
 import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
 import { VitalsTable } from "@/pages/records/VitalsTable";
 import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
-import { VisitPrescriptionsTable } from "@/pages/records/PrescriptionsTable/VisitPrescriptionsTable";
+import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";
@@ -478,7 +478,7 @@ const PatientConsultation = () => {
     let formContent = () => {
       return (
         <div className="space-y-2">
-          <MedicalForm
+          <ConsultationForm
             updateFormDetails={updateFormDetails}
             formDetails={formDetails}
             handleInputChange={handleInputChange}

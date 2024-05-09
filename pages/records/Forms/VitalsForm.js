@@ -1,6 +1,6 @@
 import { InputField } from "@/components/TextComponents";
 
-function VitalsForm({ handleInputChange, formDetails, patient }) {
+export function VitalsForm({ handleInputChange, formDetails, patient }) {
   const vitalFields = [
     {
       name: "height",
@@ -153,4 +153,3 @@ function VitalsForm({ handleInputChange, formDetails, patient }) {
     </form>
   );
 }
-export default VitalsForm;

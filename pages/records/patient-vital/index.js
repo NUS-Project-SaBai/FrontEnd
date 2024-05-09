@@ -4,11 +4,11 @@ import _ from "lodash";
 import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
-import { VitalsForm } from "@/pages/records/Forms";
+import { VitalsForm } from "@/pages/records/Forms/VitalsForm";
 import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
 import { VitalsTable } from "@/pages/records/VitalsTable";
 import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
-import VisitPrescriptionsTable from "@/pages/records/VisitPrescriptionsTable ";
+import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
 import { API_URL, CLOUDINARY_URL } from "../../../utils/constants";
 import withAuth from "../../../utils/auth";
 import toast from "react-hot-toast";
@@ -79,7 +79,6 @@ const Patient = () => {
   }
 
   function renderViewModal() {
-    return <div></div>;
     let { consult, viewModalOpen } = state;
 
     let modalContent = <ConsultationsView content={consult} />;
@@ -240,7 +239,7 @@ const Patient = () => {
 
     return (
       <div className="space-y-4">
-        {typeof vitals === "undefined" ? (
+        {typeof vitals === "object" ? (
           <>
             <label className="label">Vital Signs</label>
             <h2>Not Done</h2>

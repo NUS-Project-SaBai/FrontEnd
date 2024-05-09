@@ -5,7 +5,7 @@ import {
   Button,
 } from "@/components/TextComponents";
 
-function PrescriptionForm({
+export function PrescriptionForm({
   allergies,
   handleInputChange,
   formDetails,
@@ -93,5 +93,3 @@ function PrescriptionForm({
     </div>
   );
 }
-
-export default PrescriptionForm;

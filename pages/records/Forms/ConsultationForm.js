@@ -1,7 +1,7 @@
 import React from "react";
 import { InputBox, Button } from "@/components/TextComponents";
 
-function ConsultationForm({
+export function ConsultationForm({
   handleInputChange,
   formDetails,
   updateFormDetails,
@@ -164,5 +164,3 @@ function ConsultationForm({
     </div>
   );
 }
-
-export default ConsultationForm;

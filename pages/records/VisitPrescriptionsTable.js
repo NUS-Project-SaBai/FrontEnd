@@ -1,4 +1,4 @@
-export default function VisitPrescriptionsTable({ content: prescriptions }) {
+export function VisitPrescriptionsTable({ content: prescriptions }) {
   const prescriptionRows = prescriptions.map((prescription) => {
     console.log(prescription);
     const name = prescription?.medicine?.medicine_name;
