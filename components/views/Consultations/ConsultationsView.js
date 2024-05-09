@@ -35,36 +35,42 @@ export function ConsultationsView({ content }) {
       </label>
       <DisplayField
         key={"doctor"}
-        label={"Done by"}
+        label={"Consultation done by"}
         content={content.doctor?.username}
       />
 
       {type === "medical" ? renderMedicalConsultation(content) : null}
 
       <DisplayField
-        key={"referrals"}
-        label={"Referrals"}
-        content={content.referrals}
-      />
-
-      <DisplayField
-        key={"problems"}
+        key={"past_medical_history"}
         label={"Past Medical History"}
-        content={content.problems}
+        content={content.past_medical_history}
       />
 
       <DisplayField
-        key={"diagnosis"}
+        key={"consultation"}
         label={"Consultation"}
-        content={content.diagnosis}
+        content={content.consultation}
       />
 
-      <DisplayField key={"notes"} label={"Diagnosis"} content={content.notes} />
+      <DisplayField key={"plan"} label={"Plan"} content={content.plan} />
 
       <DisplayField
-        key={"addendum"}
-        label={"Plan"}
-        content={content.addendum}
+        key={"referred_for"}
+        label={"Referred For"}
+        content={content.referred_for}
+      />
+
+      <DisplayField
+        key={"referred_notes"}
+        label={"Referred Notes"}
+        content={content.referral_notes}
+      />
+
+      <DisplayField
+        key={"remarks"}
+        label={"Remarks"}
+        content={content.remarks}
       />
 
       {prescriptions?.length > 0 ? (
