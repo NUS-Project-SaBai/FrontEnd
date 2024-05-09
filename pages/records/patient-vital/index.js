@@ -1,24 +1,23 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import _ from "lodash";
+import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
-import { ConsultationsView } from "@/components/views/Consultations/ConsultationsView";
-import { VitalsView } from "@/components/views/Vitals/VitalsView";
-import { ConsultationsTable } from "@/components/views/Consultations/ConsultationsTable";
-
-import { VisitPrescriptionsTable } from "@/components/views/Prescriptions/VisitPrescriptionsTable";
-import { PatientView } from "../components/views/patient";
-import { API_URL, CLOUDINARY_URL } from "../utils/constants";
-import withAuth from "../utils/auth";
-import Router from "next/router";
-
-import { Button } from "@/components/textContainers/Button";
+import { VitalsForm } from "@/pages/records/Forms/VitalsForm";
+import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
+import { VitalsTable } from "@/pages/records/VitalsTable";
+import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
+import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
+import { API_URL, CLOUDINARY_URL } from "../../../utils/constants";
+import withAuth from "../../../utils/auth";
+import toast from "react-hot-toast";
+import { Button } from "@/components/TextComponents/Button";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 Modal.setAppElement("#__next");
 
-const Record = () => {
+const Patient = () => {
   const [state, setState] = useState({
     mounted: false,
     patient: {},
@@ -29,7 +28,7 @@ const Record = () => {
     orders: [],
     referredFor: [],
     vitals: {},
-    formDetails: {},
+    formDetails: { diagnoses: [] },
     medicationDetails: {},
     formModalOpen: false,
     isEditing: false,
@@ -37,36 +36,37 @@ const Record = () => {
     modalContent: {},
   });
 
-  const handleVisitChange = useCallback((event) => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
-
   useEffect(() => {
     onRefresh();
   }, []);
 
   async function onRefresh() {
+    // let { id: patientId } = this.props.query;
     const router = Router;
     const { query } = router;
     const { id: patientId } = query;
-    const { data: patient } = await axios.get(
-      `${API_URL}/patients/${patientId}`,
-    );
-    const { data: visits } = await axios.get(
+
+    // gets patient data
+    let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
+
+    // gets all visit data
+    let { data: visits } = await axios.get(
       `${API_URL}/visits?patient=${patientId}`,
     );
-    const visitsSorted = visits.sort((a, b) => b.id - a.id);
+
+    // sorts
+    let visitsSorted = visits.sort((a, b) => {
+      return b.id - a.id;
+    });
+
     setState((prevState) => ({
       ...prevState,
       patient: patient,
       visits: visitsSorted,
     }));
-    if (visitsSorted.length > 0) {
-      const visitID = visitsSorted[0].id;
-      loadVisitDetails(visitID);
-      loadMedicationStock();
-    }
+
+    let visitID = visitsSorted[0].id;
+    loadVisitDetails(visitID);
   }
 
   function toggleViewModal(viewType = null, consult = {}) {
@@ -79,66 +79,45 @@ const Record = () => {
   }
 
   function renderViewModal() {
-    const { vitals, viewModalOpen, consult, viewType } = state;
-    const modalContent =
-      viewType == "vitals" ? (
-        <VitalsView content={vitals} />
-      ) : (
-        <ConsultationsView content={consult} />
-      );
+    let { consult, viewModalOpen } = state;
+
+    let modalContent = <ConsultationsView content={consult} />;
     return (
       <Modal
         isOpen={viewModalOpen}
         onRequestClose={() => toggleViewModal()}
         style={viewModalStyles}
+        contentLabel="Example Modal"
       >
         {modalContent}
       </Modal>
     );
   }
 
-  async function loadMedicationStock() {
-    const { data: medications } = await axios.get(`${API_URL}/medications`);
-    const { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`,
-    );
-    const reservedMedications = {};
-    orders.forEach((order) => {
-      const medicationID = order.medicine;
-      const quantityReserved = order.quantity;
-      if (typeof reservedMedications[medicationID] === "undefined") {
-        reservedMedications[medicationID] = quantityReserved;
-      } else {
-        reservedMedications[medicationID] =
-          reservedMedications[medicationID] + quantityReserved;
-      }
-    });
-    setState((prevState) => ({
-      ...prevState,
-      medications,
-      reservedMedications,
-    }));
-  }
-
   async function loadVisitDetails(visitID) {
-    const { data: consults } = await axios.get(
+    let { data: consults } = await axios.get(
       `${API_URL}/consults?visit=${visitID}`,
     );
-    const { data: prescriptions } = await axios.get(
+
+    let { data: prescriptions } = await axios.get(
       `${API_URL}/orders?visit=${visitID}`,
     );
-    const consultsEnriched = consults.map((consult) => {
-      const consultPrescriptions = prescriptions.filter(
-        (prescription) => prescription.consult.id === consult.id,
-      );
+
+    let consultsEnriched = consults.map((consult) => {
+      let consultPrescriptions = prescriptions.filter((prescription) => {
+        return prescription.consult.id === consult.id;
+      });
+
       return {
         ...consult,
         prescriptions: consultPrescriptions,
       };
     });
-    const { data: vitals } = await axios.get(
+
+    let { data: vitals } = await axios.get(
       `${API_URL}/vitals?visit=${visitID}`,
     );
+
     setState((prevState) => ({
       ...prevState,
       consults: consultsEnriched,
@@ -147,6 +126,57 @@ const Record = () => {
       mounted: true,
       visitID,
     }));
+  }
+
+  async function submitForm() {
+    //Post 405 error
+    let { formDetails, visitID } = state;
+    console.log(formDetails);
+
+    var formPayload = {
+      visit: visitID,
+      ...formDetails,
+    };
+
+    if (formDetails.referred_for) {
+      const referrals = `
+          Referred For: ${formDetails.referred_for}
+          Notes:
+          ${formDetails.referred_notes || "No Notes Provided"}`;
+      formPayload = {
+        ...formPayload,
+        referrals: referrals,
+      };
+    }
+
+    await axios.post(`${API_URL}/vitals`, formPayload);
+    toast.success("Vitals completed!");
+
+    Router.push("/records");
+  }
+
+  function handleInputChange(e) {
+    let { formDetails } = state;
+
+    const target = e.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
+    formDetails[name] = value;
+
+    setState((prevState) => ({
+      ...prevState,
+      formDetails,
+    }));
+  }
+
+  function handleVisitChange(e) {
+    const value = e.target.value;
+
+    // pull the latest visit
+
+    // this.setState({ visitID: value });
+    loadVisitDetails(value);
   }
 
   function renderHeader() {
@@ -205,53 +235,52 @@ const Record = () => {
   }
 
   function renderFirstColumn() {
-    const { vitals, patient } = state;
+    let { vitals, consults, visitPrescriptions } = state;
 
     return (
-      <div className="my-2">
+      <div className="space-y-4">
         {typeof vitals === "undefined" ? (
-          <h2>Not Done</h2>
+          <>
+            <label className="label">Vital Signs</label>
+            <h2>Not Done</h2>
+          </>
         ) : (
-          <Button
-            text={"View Vitals"}
-            onClick={() => toggleViewModal("vitals")}
-            colour="indigo"
-          />
+          <VitalsTable content={vitals} />
         )}
-        <PatientView content={patient} />
-      </div>
-    );
-  }
 
-  function renderSecondColumn() {
-    const { vitals, consults, visitPrescriptions } = state;
-    return (
-      <div className="space-y-8">
         <ConsultationsTable
           content={consults}
           buttonFunction={toggleViewModal}
         />
+
         <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
     );
   }
 
+  function renderSecondColumn() {
+    //let { form } = this.props.query;
+    const router = Router;
+    const { query } = router;
+
+    let { formDetails, patient } = state;
+
+    return (
+      <div className="space-y-2">
+        <VitalsForm
+          formDetails={formDetails}
+          handleInputChange={handleInputChange}
+          patient={patient}
+        />
+
+        <Button colour="green" text={"Submit"} onClick={() => submitForm()} />
+      </div>
+    );
+  }
+
   function render() {
-    if (!state.mounted)
-      return (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <h2 style={{ color: "black", fontSize: "1.5em" }}>
-            This patient has no records currently
-          </h2>
-        </div>
-      );
+    console.log("STATE:", state);
+    if (!state.mounted) return null;
 
     return (
       <div
@@ -259,25 +288,29 @@ const Record = () => {
           marginTop: 27.5,
           marginLeft: 25,
           marginRight: 25,
+          overflowX: "hidden", //remove horizontal scrollbar
+          overflowY: "hidden",
         }}
       >
         {renderViewModal()}
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Records
+          Patient Vitals
         </h1>
         {renderHeader()}
+        <b>
+          Please remember to press the submit button at the end of the form!
+        </b>
 
-        <hr className="mt-2" />
+        <hr />
 
-        <div className="grid grid-cols-2 gap-x-6">
+        <div className="grid grid-cols-2 gap-x-4 mb-4">
           <div>{renderFirstColumn()}</div>
           <div>{renderSecondColumn()}</div>
         </div>
       </div>
     );
   }
-
-  return <>{render()}</>;
+  return render();
 };
 
 const viewModalStyles = {
@@ -292,4 +325,4 @@ const viewModalStyles = {
   },
 };
 
-export default withAuth(Record);
+export default withAuth(Patient);

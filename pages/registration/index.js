@@ -12,8 +12,8 @@ import AppWebcam from "@/utils/webcam";
 import PatientModal from "@/pages/registration/PatientModal";
 import ScanModal from "@/pages/registration/ScanModal";
 
-import { DisplayField } from "@/components/textContainers/DisplayField";
-import { Button } from "@/components/textContainers/Button";
+import { DisplayField } from "@/components/TextComponents/DisplayField";
+import { Button } from "@/components/TextComponents/Button";
 import Loading from "@/components/Loading";
 
 const PatientInfo = ({ patient, submitNewVisit }) => {

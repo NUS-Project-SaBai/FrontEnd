@@ -1,7 +1,7 @@
 import Modal from "react-modal";
-import { Button } from "@/components/textContainers/Button";
-import { InputField } from "@/components/textContainers/InputField";
-import { InputBox } from "@/components/textContainers/InputBox";
+import { Button } from "@/components/TextComponents/Button";
+import { InputField } from "@/components/TextComponents/InputField";
+import { InputBox } from "@/components/TextComponents/InputBox";
 import { venueOptions } from "@/utils/constants";
 
 const VenueOptions = ({ handleInputChange }) => (

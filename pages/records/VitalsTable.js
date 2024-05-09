@@ -1,6 +1,6 @@
-import { DisplayField } from "@/components/textContainers/DisplayField";
+import { DisplayField } from "@/components/TextComponents/DisplayField";
 
-export function VitalsView({ content }) {
+export function VitalsTable({ content }) {
   console.log("Content:", content);
   const vitalFields = [
     { label: "Height", value: content.height },

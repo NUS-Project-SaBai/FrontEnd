@@ -20,20 +20,20 @@ const navigation = [
 
   {
     name: "Patient Records",
-    href: "/queue",
+    href: "/records",
     icon: ClipboardDocumentListIcon,
     count: "12",
     current: false,
   },
   {
-    name: "Medication Orders",
-    href: "/pharmacy/orders",
+    name: "Pharmacy Prescriptions",
+    href: "/pharmacy/prescriptions",
     icon: PencilIcon,
     count: "20+",
     current: false,
   },
   {
-    name: "Medication Stock",
+    name: "Pharmacy Stock",
     href: "/pharmacy/stock",
     icon: BeakerIcon,
     current: false,

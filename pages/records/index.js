@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Router from "next/router";
-import { API_URL, CLOUDINARY_URL } from "../utils/constants";
-import withAuth from "../utils/auth";
-import { Button } from "@/components/textContainers/Button";
-import { InputField } from "@/components/textContainers/InputField";
+import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
+import withAuth from "@/utils/auth";
+import { Button, InputField } from "@/components/TextComponents";
 
-function Queue() {
-  //Queue Page
+function PatientList() {
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
-  const reversedPatientsFiltered = [...patientsFiltered].reverse(); //response.data, reverse to order them from most recent
+  const reversedPatientsFiltered = [...patientsFiltered].reverse(); // response.data, reverse to order them from most recent
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2; //Change to 10 after development
+  const itemsPerPage = 3;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -26,28 +24,6 @@ function Queue() {
       .catch((error) => console.error("Error loading page", error));
   }, []);
 
-  // async function handleDelete(visit_id, patient_id) {
-  //   //Not yet implementd
-  //   const confirmed = window.confirm(
-  //     "Are you sure you want to delete this visit?",
-  //   );
-  //   if (!confirmed) {
-  //     return;
-  //   }
-
-  //   try {
-  //     await axios.delete(`${API_URL}/visits/${visit_id}`);
-  //     const updatedVisits = visits.filter((visit) => visit.id !== visit_id);
-  //     const updatedVisitsFiltered = visitsFiltered.filter(
-  //       (visit) => visit.id !== visit_id,
-  //     );
-  //     setVisits(updatedVisits);
-  //     setVisitsFiltered(updatedVisitsFiltered);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
   function renderTableContent() {
     const patientRows = reversedPatientsFiltered
       .slice(startIndex, endIndex)
@@ -60,7 +36,9 @@ function Queue() {
         const progress = (
           <Button
             text={"View"}
-            onClick={() => Router.push(`/record?id=${patient.pk}`)}
+            onClick={() =>
+              Router.push(`/records/patient-record?id=${patient.pk}`)
+            }
             colour="indigo"
           />
         );
@@ -69,7 +47,7 @@ function Queue() {
           <Button
             text={"Create"}
             onClick={() =>
-              Router.push(`/patientVital?id=${patient.pk}&form=vitals`)
+              Router.push(`/records/patient-vital?id=${patient.pk}`)
             }
             colour="green"
           />
@@ -79,7 +57,7 @@ function Queue() {
           <Button
             text={"Create"}
             onClick={() =>
-              Router.push(`/patientMedical?id=${patient.pk}&form=medical`)
+              Router.push(`/records/patient-consultation?id=${patient.pk}`)
             }
             colour="green"
           />
@@ -136,7 +114,7 @@ function Queue() {
   return (
     <div className="mx-4 mt-2">
       <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-        List of Patients
+        Patients List
       </h1>
       <div className="field">
         <div className="control">
@@ -227,4 +205,4 @@ function Queue() {
   );
 }
 
-export default withAuth(Queue);
+export default withAuth(PatientList);

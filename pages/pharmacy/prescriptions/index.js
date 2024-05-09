@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
-import { Button } from "@/components/textContainers/Button";
-import { InputField } from "@/components/textContainers/InputField";
+import { Button } from "@/components/TextComponents/Button";
+import { InputField } from "@/components/TextComponents/InputField";
 
-const Orders = () => {
+const Prescription = () => {
   const [visits, setVisits] = useState([]);
   const [visitsFiltered, setVisitsFiltered] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -64,11 +64,12 @@ const Orders = () => {
   };
 
   const renderTableContent = () => {
+    console.dir(visitsFiltered);
     return visitsFiltered
       .filter((visit) => filteredVisitIdsUsingOrders.has(visit.id))
       .map((visit) => {
         const Id =
-          `${visit.patient.village_prefix}${visit.patient.id}`.padStart(3, "0");
+          `${visit.patient.village_prefix}${visit.patient.pk}`.padStart(3, "0");
         const imageUrl = `${CLOUDINARY_URL}/${visit.patient.picture}`;
         const fullName = visit.patient.name;
 
@@ -132,7 +133,7 @@ const Orders = () => {
   return (
     <div className="mx-4 my-2">
       <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-        Orders
+        Prescriptions
       </h1>
       <div className="field">
         <div className="control">
@@ -196,4 +197,4 @@ const Orders = () => {
   );
 };
 
-export default withAuth(Orders);
+export default withAuth(Prescription);
