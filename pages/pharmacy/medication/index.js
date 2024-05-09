@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Modal from "react-modal";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { MedicationForm } from "../../components/forms/stock";
+import { MedicationModal } from "./MedicationModal";
 import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import { Button } from "@/components/textContainers/Button";
@@ -153,30 +152,6 @@ const Stock = () => {
     setMedicationDetails(newMedicationDetails);
   };
 
-  function renderModal() {
-    // Loads the form to edit name, quantity and notes
-    return (
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={toggleModal}
-        style={{
-          content: {
-            left: "35%",
-            right: "17.5%",
-            top: "25%",
-            bottom: "25%",
-          },
-        }}
-      >
-        <MedicationForm
-          formDetails={medicationDetails}
-          handleInputChange={handleMedicationChange}
-          onSubmit={onSubmitForm}
-        />
-      </Modal>
-    );
-  }
-
   function renderRows() {
     // Displays the list of medications in stock
     const tableRows = medicationsFiltered.map((medication) => {
@@ -223,7 +198,13 @@ const Stock = () => {
         marginRight: 25,
       }}
     >
-      {renderModal()}
+      <MedicationModal
+        modalIsOpen={modalIsOpen}
+        toggleModal={toggleModal}
+        onSubmit={onSubmitForm}
+        handleInputChange={handleMedicationChange}
+        formDetails={medicationDetails}
+      />
 
       <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
         Medication Stock

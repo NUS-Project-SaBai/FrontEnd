@@ -34,7 +34,7 @@ const navigation = [
   },
   {
     name: "Medication Stock",
-    href: "/pharmacy/stock",
+    href: "/pharmacy/medication",
     icon: BeakerIcon,
     current: false,
   },
