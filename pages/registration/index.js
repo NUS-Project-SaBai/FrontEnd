@@ -274,95 +274,96 @@ const Registration = () => {
 
   return (
     <div className="mx-4">
-      <PatientModal
-        modalIsOpen={modalIsOpen}
-        formDetails={formDetails}
-        imageDetails={imageDetails}
-        cameraIsOpen={cameraIsOpen}
-        renderWebcam={() => (
-          <AppWebcam
-            webcamSetRef={webcamSetRef}
-            webcamCapture={webcamCapture}
+      {loading ? (
+        <Loading />
+      ) : (
+        <div>
+          <PatientModal
+            modalIsOpen={modalIsOpen}
+            formDetails={formDetails}
+            imageDetails={imageDetails}
+            cameraIsOpen={cameraIsOpen}
+            renderWebcam={() => (
+              <AppWebcam
+                webcamSetRef={webcamSetRef}
+                webcamCapture={webcamCapture}
+              />
+            )}
+            closeModal={() => {
+              setModalIsOpen(false);
+            }}
+            handleInputChange={handleInputChange}
+            submitNewPatient={submitNewPatient}
+            toggleCameraOpen={toggleCameraOpen}
+            customStyles={{
+              content: {
+                left: "25%",
+                right: "7.5%",
+              },
+            }}
+            loading={loading}
           />
-        )}
-        closeModal={() => {
-          setModalIsOpen(false);
-        }}
-        handleInputChange={handleInputChange}
-        submitNewPatient={submitNewPatient}
-        toggleCameraOpen={toggleCameraOpen}
-        customStyles={{
-          content: {
-            left: "25%",
-            right: "7.5%",
-          },
-        }}
-        loading={loading}
-      />
-      <ScanModal
-        modalIsOpen={scanModalIsOpen}
-        cameraIsOpen={cameraIsOpen}
-        imageDetails={imageDetails}
-        closeScanModal={() => {
-          setScanModalIsOpen(false);
-        }}
-        renderWebcam={() => (
-          <AppWebcam
-            webcamSetRef={webcamSetRef}
-            webcamCapture={webcamCapture}
+          <ScanModal
+            modalIsOpen={scanModalIsOpen}
+            cameraIsOpen={cameraIsOpen}
+            imageDetails={imageDetails}
+            closeScanModal={() => {
+              setScanModalIsOpen(false);
+            }}
+            renderWebcam={() => (
+              <AppWebcam
+                webcamSetRef={webcamSetRef}
+                webcamCapture={webcamCapture}
+              />
+            )}
+            toggleCameraOpen={toggleCameraOpen}
+            customStyles={{
+              content: {
+                left: "25%",
+                right: "7.5%",
+              },
+            }}
           />
-        )}
-        toggleCameraOpen={toggleCameraOpen}
-        customStyles={{
-          content: {
-            left: "25%",
-            right: "7.5%",
-          },
-        }}
-      />
-
-      <div>
-        {loading ? (
-          <Loading />
-        ) : (
           <div>
-            <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-              Registration
-            </h1>
-            <div className="flex items-center justify-center mb-2 w-full">
-              <Autosuggest
-                suggestions={suggestions}
-                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                onSuggestionsClearRequested={onSuggestionsClearRequested}
-                getSuggestionValue={getSuggestionValue}
-                renderSuggestion={renderSuggestion}
-                inputProps={inputProps}
-                theme={autosuggestTheme}
+            <div>
+              <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+                Registration
+              </h1>
+              <div className="flex items-center justify-center mb-2 w-full">
+                <Autosuggest
+                  suggestions={suggestions}
+                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                  onSuggestionsClearRequested={onSuggestionsClearRequested}
+                  getSuggestionValue={getSuggestionValue}
+                  renderSuggestion={renderSuggestion}
+                  inputProps={inputProps}
+                  theme={autosuggestTheme}
+                />
+              </div>
+              <div className="flex items-center justify-center mb-6 gap-3">
+                <Button
+                  colour="green"
+                  text="Start Facial Recognition"
+                  onClick={() => {
+                    setScanModalIsOpen(true);
+                  }}
+                />
+                <Button
+                  colour="green"
+                  text="New Patient"
+                  onClick={() => {
+                    setModalIsOpen(true);
+                  }}
+                />
+              </div>
+              <PatientInfo
+                patient={patient}
+                submitNewVisit={() => submitNewVisit(patient)}
               />
             </div>
-            <div className="flex items-center justify-center mb-6 gap-3">
-              <Button
-                colour="green"
-                text="Start Facial Recognition"
-                onClick={() => {
-                  setScanModalIsOpen(true);
-                }}
-              />
-              <Button
-                colour="green"
-                text="New Patient"
-                onClick={() => {
-                  setModalIsOpen(true);
-                }}
-              />
-            </div>
-            <PatientInfo
-              patient={patient}
-              submitNewVisit={() => submitNewVisit(patient)}
-            />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
