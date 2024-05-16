@@ -13,11 +13,10 @@ export function ConsultationsView({ content }) {
         const response = await axios.get(
           `${API_URL}/diagnosis?consult=${content.id}`,
         );
-        console.log(response);
-        console.log(content.id);
+
         const { data: diagnosis } = response;
         setDiagnosisArray(diagnosis);
-        console.log(diagnosis);
+
       } catch (error) {
         console.error("Error fetching diagnosis:", error);
       }

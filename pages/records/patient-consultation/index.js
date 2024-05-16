@@ -281,8 +281,6 @@ const PatientConsultation = () => {
       });
     });
 
-    console.log(formDetails);
-
     var formPayload = {
       visit: visitID,
       ...formDetails,
@@ -307,8 +305,6 @@ const PatientConsultation = () => {
     var consultId;
     var orderPromises;
 
-    console.log(formPayload);
-
     let { data: medicalConsult } = await axios.post(`${API_URL}/consults`, {
       ...formPayload,
       doctor: window.localStorage.getItem("userID"),
@@ -329,7 +325,6 @@ const PatientConsultation = () => {
           }
           
           `;
-      console.log(diagnosisFormat);
     }
 
     for (let i = 0; i < formDetails.diagnoses.length; i++) {
@@ -393,7 +388,7 @@ const PatientConsultation = () => {
 
   function renderHeader() {
     const { patient, visits } = state;
-    console.log("Render: ", state);
+
     const visitOptions = visits.map((visit) => {
       const date = moment(visit.date).format("DD MMMM YYYY");
       return (
@@ -591,7 +586,6 @@ const PatientConsultation = () => {
   }
 
   function render() {
-    console.log("STATE:", state);
     if (!state.mounted) return null;
 
     return (

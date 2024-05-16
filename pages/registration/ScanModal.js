@@ -47,7 +47,6 @@ const ScanModal = ({
         toast.success(MATCH_FOUND_MESSAGE);
       })
       .catch((error) => {
-        console.log(error.response.status);
         if (error.response.status === 404) {
           toast.error(NO_MATCHES_FOUND_MESSAGE);
         } else if (error.response.status === 400) {

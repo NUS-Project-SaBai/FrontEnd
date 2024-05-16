@@ -131,7 +131,6 @@ const Patient = () => {
   async function submitForm() {
     //Post 405 error
     let { formDetails, visitID } = state;
-    console.log(formDetails);
 
     var formPayload = {
       visit: visitID,
@@ -181,7 +180,7 @@ const Patient = () => {
 
   function renderHeader() {
     const { patient, visits } = state;
-    console.log("Render: ", state);
+
     const visitOptions = visits.map((visit) => {
       const date = moment(visit.date).format("DD MMMM YYYY");
       return (
@@ -279,7 +278,6 @@ const Patient = () => {
   }
 
   function render() {
-    console.log("STATE:", state);
     if (!state.mounted) return null;
 
     return (

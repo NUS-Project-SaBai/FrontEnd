@@ -16,7 +16,7 @@ function PatientView({ content }) {
     { label: "Date of Birth", key: "date_of_birth" },
     { label: "Allergies", key: "drug_allergy" },
   ];
-  console.log(fieldsArray);
+
   return fieldsArray.map((field, index) => (
     <div className="grid-cols-1" key={index}>
       <DisplayField

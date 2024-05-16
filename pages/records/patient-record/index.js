@@ -151,7 +151,7 @@ const Record = () => {
 
   function renderHeader() {
     const { patient, visits } = state;
-    console.log("Render: ", state);
+
     const visitOptions = visits.map((visit) => {
       const date = moment(visit.date).format("DD MMMM YYYY");
       return (
