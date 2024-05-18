@@ -285,11 +285,11 @@ const Patient = () => {
   }
 
   function renderSecondColumn() {
-    //let { form } = this.props.query;
-    const router = Router;
-    const { query } = router;
+    const { vitals, formDetails, patient } = state;
 
-    let { formDetails, patient } = state;
+    if (Object.keys(vitals).length > 0) {
+      return null;
+    }
 
     return (
       <div className="space-y-2">
