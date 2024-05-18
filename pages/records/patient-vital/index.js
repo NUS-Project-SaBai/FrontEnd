@@ -131,7 +131,7 @@ const Patient = () => {
   async function submitForm() {
     let { formDetails, visitID } = state;
 
-    // Check if all fields are filled in
+    // Form Validation
     const requiredFields = [
       "height",
       "weight",
@@ -146,9 +146,10 @@ const Patient = () => {
       "urine_test",
       "hemocue_count",
       "blood_glucose",
-    ]; // Replace with actual field names
+    ];
     const missingFields = requiredFields.filter((field) => !formDetails[field]);
 
+    // Toast formatting for error messages
     if (missingFields.length > 0) {
       const formattedFields = missingFields.map((field) =>
         field.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),

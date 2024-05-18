@@ -288,20 +288,6 @@ const PatientConsultation = () => {
 
     delete formPayload.diagnoses;
 
-    //For Referrals, we are also using a standardised text format to store information
-    //from referred_for and referred_notes
-
-    // if (formDetails.referred_for) {
-    //   const referrals = `
-    //       Referred For: ${formDetails.referred_for}
-    //       Notes:
-    //       ${formDetails.referred_notes || "No Notes Provided"}`;
-    //   formPayload = {
-    //     ...formPayload,
-    //     referrals: referrals,
-    //   };
-    // }
-
     var consultId;
     var orderPromises;
 
