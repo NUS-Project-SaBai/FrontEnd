@@ -216,8 +216,17 @@ const PatientConsultation = () => {
   }
 
   function submitNewPrescription() {
-    let { orders, medicationDetails, isEditing } = state;
-
+    let { orders, medicationDetails, isEditing, medications } = state;
+    if (
+      medicationDetails.quantity >
+      medications.filter((med) => med.pk == medicationDetails.medicine)[0]
+        .fields.quantity
+    ) {
+      toast.error(
+        `Not enough stock for ${medicationDetails.medicine_name}, please check the quantity and try again.`,
+      );
+      return;
+    }
     if (isEditing) {
       // go find that order
       let index = orders.findIndex((order) => {
@@ -225,7 +234,9 @@ const PatientConsultation = () => {
       });
       orders[index] = medicationDetails;
       // edit that order
-    } else orders.push({ ...medicationDetails, order_status: "PENDING" });
+    } else {
+      orders.push({ ...medicationDetails, order_status: "PENDING" });
+    }
 
     setState((prevState) => ({
       ...prevState,
