@@ -129,8 +129,35 @@ const Patient = () => {
   }
 
   async function submitForm() {
-    //Post 405 error
     let { formDetails, visitID } = state;
+
+    // Check if all fields are filled in
+    const requiredFields = [
+      "height",
+      "weight",
+      "systolic",
+      "diastolic",
+      "temperature",
+      "heart_rate",
+      "left_eye_degree",
+      "right_eye_degree",
+      "left_eye_pinhole",
+      "right_eye_pinhole",
+      "urine_test",
+      "hemocue_count",
+      "blood_glucose",
+    ]; // Replace with actual field names
+    const missingFields = requiredFields.filter((field) => !formDetails[field]);
+
+    if (missingFields.length > 0) {
+      const formattedFields = missingFields.map((field) =>
+        field.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
+      );
+      toast.error(
+        `Please fill in the following fields: ${formattedFields.join(", ")}`,
+      );
+      return;
+    }
 
     var formPayload = {
       visit: visitID,
