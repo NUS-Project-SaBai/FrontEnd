@@ -47,7 +47,6 @@ export function MedicationModal({
           label="Quantity to Add (Negative to subtract)"
           name="quantityChange"
           type="number"
-          onWheel={(e) => e.target.blur()}
           onChange={handleInputChange}
           value={formDetails.quantityChange}
         />
