@@ -6,6 +6,8 @@ import { InputField } from "@/components/TextComponents/InputField";
 import { InputBox } from "@/components/TextComponents/InputBox";
 import { DisplayField } from "@/components/TextComponents/DisplayField";
 
+Modal.setAppElement("#__next");
+
 export function MedicationModal({
   modalIsOpen,
   toggleModal,
@@ -47,7 +49,6 @@ export function MedicationModal({
           label="Quantity to Add (Negative to subtract)"
           name="quantityChange"
           type="number"
-          onWheel={(e) => e.target.blur()}
           onChange={handleInputChange}
           value={formDetails.quantityChange}
         />

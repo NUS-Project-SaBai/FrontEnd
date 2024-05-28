@@ -75,7 +75,7 @@ const Stock = () => {
 
     if (!updatedDetails.pk) {
       //Creating new medicine
-      if (quantityChange < 0) {
+      if (quantityChange < 0 || !Number.isInteger(quantityChange)) {
         toast.error("Invalid Number!");
         return;
       }
