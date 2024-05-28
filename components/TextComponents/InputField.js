@@ -6,9 +6,6 @@ export function InputField({ name, label, type, value, onChange }) {
       </label>
       <div className="mt-2">
         <input
-          onWheel={(e) => {
-            e.target.blur();
-          }}
           placeholder={name}
           name={name}
           type={type}
