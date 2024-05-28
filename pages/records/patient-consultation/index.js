@@ -218,7 +218,14 @@ const PatientConsultation = () => {
   function submitNewPrescription() {
     let { orders, medicationDetails, isEditing, medications } = state;
     if (!Number.isInteger(medicationDetails.quantity - 0)) {
+      // Decimal check
       toast.error("Please enter a valid quantity.");
+      return;
+    } else if (medicationDetails.medicine == null) {
+      // Non existent medication check
+      toast.error(
+        `Please enter the name of the medication you would like to prescribe.`,
+      );
       return;
     } else if (
       medicationDetails.quantity >
