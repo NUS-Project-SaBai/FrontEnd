@@ -78,7 +78,7 @@ const Stock = () => {
       if (quantityChange < 0) {
         toast.error("Invalid Number!");
         return;
-      } else if (!Number.isInteger(quantityChange)) {
+      } else if (!Number.isInteger(quantityChange - 0)) {
         toast.error("No decimals allowed!");
         return;
       }

@@ -217,7 +217,10 @@ const PatientConsultation = () => {
 
   function submitNewPrescription() {
     let { orders, medicationDetails, isEditing, medications } = state;
-    if (
+    if (!Number.isInteger(medicationDetails.quantity - 0)) {
+      toast.error("Please enter a valid quantity.");
+      return;
+    } else if (
       medicationDetails.quantity >
       medications.filter((med) => med.pk == medicationDetails.medicine)[0]
         .fields.quantity

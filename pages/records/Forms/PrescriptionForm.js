@@ -24,15 +24,15 @@ export function PrescriptionForm({
   }
 
   return (
-    <div>
-      <h1 className="text-black text-2xl font-bold mb-4">Prescription</h1>
+    <div className="grid gap-y-2">
+      <h1 className="text-black text-2xl font-bold mb-3">Prescription</h1>
 
       <DisplayField
         label="Allergies"
         content={<h2 className="text-red-600">{allergies}</h2>}
       />
 
-      <div className="field mb-6">
+      <div className="field ">
         <label className="label">Medicine</label>
         <div className="relative">
           <select
@@ -59,7 +59,7 @@ export function PrescriptionForm({
         </div>
       </div>
 
-      <div className="flex mb-6">
+      <div className="flex ">
         <div className="w-1/2 pr-2">
           <DisplayField
             label="In Stock"
