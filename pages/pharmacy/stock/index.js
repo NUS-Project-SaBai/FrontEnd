@@ -75,8 +75,11 @@ const Stock = () => {
 
     if (!updatedDetails.pk) {
       //Creating new medicine
-      if (quantityChange < 0 || !Number.isInteger(quantityChange)) {
+      if (quantityChange < 0) {
         toast.error("Invalid Number!");
+        return;
+      } else if (!Number.isInteger(quantityChange)) {
+        toast.error("No decimals allowed!");
         return;
       }
 
