@@ -6,8 +6,6 @@ import { InputField } from "@/components/TextComponents/InputField";
 import { InputBox } from "@/components/TextComponents/InputBox";
 import { DisplayField } from "@/components/TextComponents/DisplayField";
 
-Modal.setAppElement("#__next");
-
 export function MedicationModal({
   modalIsOpen,
   toggleModal,

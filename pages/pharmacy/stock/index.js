@@ -52,8 +52,8 @@ const Stock = () => {
       medicine_name: nameEnriched,
     };
 
+    // Updating Medicine amount
     if (updatedDetails.pk) {
-      //Updating medicine amount
       const quantity =
         parseInt(updatedDetails.quantity) + parseInt(quantityChange);
 
@@ -73,8 +73,8 @@ const Stock = () => {
       toast.success("Medication Quantity updated!");
     }
 
+    // Creating new medicine
     if (!updatedDetails.pk) {
-      //Creating new medicine
       if (quantityChange < 0) {
         toast.error("Invalid Number!");
         return;
