@@ -129,9 +129,36 @@ const Patient = () => {
   }
 
   async function submitForm() {
-    //Post 405 error
     let { formDetails, visitID } = state;
-    console.log(formDetails);
+
+    // Form Validation
+    const requiredFields = [
+      "height",
+      "weight",
+      "systolic",
+      "diastolic",
+      "temperature",
+      "heart_rate",
+      "left_eye_degree",
+      "right_eye_degree",
+      "left_eye_pinhole",
+      "right_eye_pinhole",
+      "urine_test",
+      "hemocue_count",
+      "blood_glucose",
+    ];
+    const missingFields = requiredFields.filter((field) => !formDetails[field]);
+
+    // Toast formatting for error messages
+    if (missingFields.length > 0) {
+      const formattedFields = missingFields.map((field) =>
+        field.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
+      );
+      toast.error(
+        `Please fill in the following fields: ${formattedFields.join(", ")}`,
+      );
+      return;
+    }
 
     var formPayload = {
       visit: visitID,
@@ -181,7 +208,7 @@ const Patient = () => {
 
   function renderHeader() {
     const { patient, visits } = state;
-    console.log("Render: ", state);
+
     const visitOptions = visits.map((visit) => {
       const date = moment(visit.date).format("DD MMMM YYYY");
       return (
@@ -259,11 +286,11 @@ const Patient = () => {
   }
 
   function renderSecondColumn() {
-    //let { form } = this.props.query;
-    const router = Router;
-    const { query } = router;
+    const { vitals, formDetails, patient } = state;
 
-    let { formDetails, patient } = state;
+    if (Object.keys(vitals).length > 0) {
+      return null;
+    }
 
     return (
       <div className="space-y-2">
@@ -279,7 +306,6 @@ const Patient = () => {
   }
 
   function render() {
-    console.log("STATE:", state);
     if (!state.mounted) return null;
 
     return (

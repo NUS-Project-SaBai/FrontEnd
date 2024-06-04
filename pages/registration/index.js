@@ -161,9 +161,7 @@ const Registration = () => {
           "Content-Type": "multipart/form-data",
         },
       })
-      .catch((error) => {
-        console.log(error.response.data);
-      });
+      .catch((error) => {});
 
     if (typeof response.error !== "undefined") {
       toast.error(`Please retake photo! ${response.error}`);

@@ -216,8 +216,27 @@ const PatientConsultation = () => {
   }
 
   function submitNewPrescription() {
-    let { orders, medicationDetails, isEditing } = state;
-
+    let { orders, medicationDetails, isEditing, medications } = state;
+    if (!Number.isInteger(medicationDetails.quantity - 0)) {
+      // Decimal check
+      toast.error("Please enter a valid quantity.");
+      return;
+    } else if (medicationDetails.medicine == null) {
+      // Non existent medication check
+      toast.error(
+        `Please enter the name of the medication you would like to prescribe.`,
+      );
+      return;
+    } else if (
+      medicationDetails.quantity >
+      medications.filter((med) => med.pk == medicationDetails.medicine)[0]
+        .fields.quantity
+    ) {
+      toast.error(
+        `Not enough stock for ${medicationDetails.medicine_name}, please check the quantity and try again.`,
+      );
+      return;
+    }
     if (isEditing) {
       // go find that order
       let index = orders.findIndex((order) => {
@@ -225,7 +244,9 @@ const PatientConsultation = () => {
       });
       orders[index] = medicationDetails;
       // edit that order
-    } else orders.push({ ...medicationDetails, order_status: "PENDING" });
+    } else {
+      orders.push({ ...medicationDetails, order_status: "PENDING" });
+    }
 
     setState((prevState) => ({
       ...prevState,
@@ -281,8 +302,6 @@ const PatientConsultation = () => {
       });
     });
 
-    console.log(formDetails);
-
     var formPayload = {
       visit: visitID,
       ...formDetails,
@@ -290,24 +309,8 @@ const PatientConsultation = () => {
 
     delete formPayload.diagnoses;
 
-    //For Referrals, we are also using a standardised text format to store information
-    //from referred_for and referred_notes
-
-    // if (formDetails.referred_for) {
-    //   const referrals = `
-    //       Referred For: ${formDetails.referred_for}
-    //       Notes:
-    //       ${formDetails.referred_notes || "No Notes Provided"}`;
-    //   formPayload = {
-    //     ...formPayload,
-    //     referrals: referrals,
-    //   };
-    // }
-
     var consultId;
     var orderPromises;
-
-    console.log(formPayload);
 
     let { data: medicalConsult } = await axios.post(`${API_URL}/consults`, {
       ...formPayload,
@@ -329,7 +332,6 @@ const PatientConsultation = () => {
           }
           
           `;
-      console.log(diagnosisFormat);
     }
 
     for (let i = 0; i < formDetails.diagnoses.length; i++) {
@@ -393,7 +395,7 @@ const PatientConsultation = () => {
 
   function renderHeader() {
     const { patient, visits } = state;
-    console.log("Render: ", state);
+
     const visitOptions = visits.map((visit) => {
       const date = moment(visit.date).format("DD MMMM YYYY");
       return (
@@ -591,7 +593,6 @@ const PatientConsultation = () => {
   }
 
   function render() {
-    console.log("STATE:", state);
     if (!state.mounted) return null;
 
     return (

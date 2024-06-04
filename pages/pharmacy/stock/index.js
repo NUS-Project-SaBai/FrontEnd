@@ -53,6 +53,7 @@ const Stock = () => {
     };
 
     if (updatedDetails.pk) {
+      //Updating medicine amount
       const quantity =
         parseInt(updatedDetails.quantity) + parseInt(quantityChange);
 
@@ -73,8 +74,12 @@ const Stock = () => {
     }
 
     if (!updatedDetails.pk) {
+      //Creating new medicine
       if (quantityChange < 0) {
         toast.error("Invalid Number!");
+        return;
+      } else if (!Number.isInteger(quantityChange - 0)) {
+        toast.error("No decimals allowed!");
         return;
       }
 
