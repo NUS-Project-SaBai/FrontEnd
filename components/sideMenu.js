@@ -44,6 +44,12 @@ const navigation = [
     icon: ArrowLeftStartOnRectangleIcon,
     current: false,
   },
+  {
+    name: "debugging",
+    href: "/debugging/ApiRequest",
+    icon: ArrowLeftStartOnRectangleIcon,
+    current: false,
+  }
 ];
 
 const locations = [
