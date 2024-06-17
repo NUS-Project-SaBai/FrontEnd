@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import ApiComponent from "./apiComponent";
+import React, { useState, useEffect } from "react";
+import smokeTestWorkflow from "./smokeTestWorkflow";
+import APIComponent from "./APIComponent";
 
 const apiInputArray = [
   // We will be using id = 1000 for testing purposes
@@ -367,6 +368,9 @@ const SmokeTestPage = () => {
   const handleInputChange = (key, value) => {
     setInputValues((prev) => ({ ...prev, [key]: value }));
   };
+  useEffect(() => {
+    smokeTestWorkflow(apiInputArray);
+  }, []);
 
   const constructApiUrl = (path, primaryKey, foreignKey) => {
     let url = `http://127.0.0.1:8000${path}`;
@@ -454,7 +458,7 @@ const SmokeTestPage = () => {
                     </div>
                   ))}
                 {/* Pass props to ApiComponent with dynamic apiUrl */}
-                <ApiComponent
+                <APIComponent
                   method={req.method}
                   apiUrl={apiUrl}
                   defaultInput={defaultValue}

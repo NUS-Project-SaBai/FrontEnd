@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const ApiComponent = ({
+const APIComponent = ({
   method,
   apiUrl,
   defaultInput,
@@ -129,4 +129,4 @@ const ApiComponent = ({
   );
 };
 
-export default ApiComponent;
+export default APIComponent;
