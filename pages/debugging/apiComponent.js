@@ -4,14 +4,17 @@ import axios from "axios";
 const ApiComponent = ({
   method,
   apiUrl,
-  defaultValue,
-  inputKey,
-  idKey,
-  onInputChange,
+  defaultInput,
+  primaryKey,
+  foreignKey,
 }) => {
-  const [data, setData] = useState(defaultValue);
+  const [data, setData] = useState(defaultInput || {});
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+
+  const handleChange = (e, key) => {
+    setData({ ...data, [key]: e.target.value });
+  };
 
   const handleRequest = async () => {
     try {
@@ -33,14 +36,20 @@ const ApiComponent = ({
           throw new Error("Invalid HTTP method");
       }
       setResponse(res.data);
+      setError(null); // Clear any existing error message on successful response
     } catch (err) {
-      setError(err.message);
+      if (err.response && err.response.data) {
+        // Get the error message from the backend
+        let errorMessage =
+          err.response.data.message || JSON.stringify(err.response.data);
+        // Add new lines after each comma for better readability
+        errorMessage = errorMessage.split(",").join(",\n");
+        setError(errorMessage);
+      } else {
+        // Fallback to generic error message
+        setError(err.message);
+      }
     }
-  };
-
-  const handleChange = (e, key) => {
-    const newData = { ...data, [key]: e.target.value };
-    setData(newData);
   };
 
   const renderPayloadInputs = () => {
@@ -52,6 +61,23 @@ const ApiComponent = ({
           <input
             type="text"
             value={data[key]}
+            onChange={(e) => handleChange(e, key)}
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+          />
+        </label>
+      </div>
+    ));
+  };
+
+  const renderKeyInputs = () => {
+    const keys = { ...primaryKey, ...foreignKey };
+    return Object.keys(keys).map((key) => (
+      <div key={key} className="mb-4">
+        <label className="block text-gray-700 font-semibold mb-2">
+          {key}:
+          <input
+            type="text"
+            value={data[key] || keys[key]}
             onChange={(e) => handleChange(e, key)}
             className="w-full mt-2 p-2 border border-gray-300 rounded-md"
           />
@@ -74,36 +100,11 @@ const ApiComponent = ({
           />
         </label>
       </div>
-      {inputKey && (
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            {inputKey}:
-            <input
-              type="text"
-              value={data[inputKey] || ""}
-              onChange={(e) => onInputChange(e, inputKey)}
-              className="w-full mt-2 p-2 border border-gray-300 rounded-md"
-            />
-          </label>
-        </div>
-      )}
-      {idKey && (
-        <div className="mb-4">
-          <label className="block text-gray-700 font-semibold mb-2">
-            {idKey}:
-            <input
-              type="text"
-              value={data[idKey] || ""}
-              onChange={(e) => onInputChange(e, idKey)}
-              className="w-full mt-2 p-2 border border-gray-300 rounded-md"
-            />
-          </label>
-        </div>
-      )}
+      {renderKeyInputs()} {/* Render primaryKey and foreignKey inputs */}
       {["post", "patch"].includes(method.toLowerCase()) && (
         <div className="mb-4">
           <h4 className="text-md font-semibold mb-2">Payload</h4>
-          {renderPayloadInputs()}
+          {renderPayloadInputs()} {/* Render payload inputs */}
         </div>
       )}
       <button
