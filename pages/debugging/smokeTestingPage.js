@@ -417,7 +417,7 @@ const SmokeTestPage = () => {
                 {req.foreignKey &&
                   Object.keys(req.foreignKey).map((key) => (
                     <div key={key} className="mb-2">
-                      <label className="block text-gray-700 mb-1">
+                      {/* <label className="block text-gray-700 mb-1">
                         {key}:
                         <input
                           type="text"
@@ -432,7 +432,7 @@ const SmokeTestPage = () => {
                           className="ml-2 p-2 border border-gray-300 rounded"
                           placeholder={`Enter ${key} or leave blank`}
                         />
-                      </label>
+                      </label> */}
                     </div>
                   ))}
                 {/* Render input fields for primary keys */}
