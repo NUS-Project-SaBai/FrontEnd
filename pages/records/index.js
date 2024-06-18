@@ -8,7 +8,6 @@ import { Button, InputField } from "@/components/TextComponents";
 function PatientList() {
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
-  const reversedPatientsFiltered = [...patientsFiltered].reverse(); // response.data, reverse to order them from most recent
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -25,15 +24,13 @@ function PatientList() {
   }, []);
 
   function renderTableContent() {
-    const patientRows = reversedPatientsFiltered
+    const patientRows = patientsFiltered
       .slice(startIndex, endIndex)
       .map((patient, idx) => {
-        const Id = `${patient.village_prefix}${patient.pk
-          .toString()
-          .padStart(3, "0")}`;
+        const patientID = patient.patient_id;
         const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
         const fullName = patient.name;
-        const progress = (
+        const record = (
           <Button
             text={"View"}
             onClick={() =>
@@ -64,9 +61,9 @@ function PatientList() {
         );
 
         return (
-          <tr key={Id}>
+          <tr key={patientID}>
             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
-              {Id}
+              {patientID}
             </td>
             <td>
               <img
@@ -79,7 +76,7 @@ function PatientList() {
               {fullName}
             </td>
             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-              {progress}
+              {record}
             </td>
             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
               {vitals}
@@ -96,17 +93,8 @@ function PatientList() {
 
   function onFilterChange(e) {
     const filteredPatients = patients.filter((patient) => {
-      const patientId1 = `${patient.village_prefix}${patient.pk}`.toLowerCase();
-      const patientId2 =
-        `${patient.village_prefix}`.toLowerCase() +
-        `${patient.pk}`.padStart(3, `0`);
-      const name = `${patient.name}`.toLowerCase();
       const searchValue = e.target.value.toLowerCase();
-      return (
-        patientId1.includes(searchValue) ||
-        patientId2.includes(searchValue) ||
-        name.includes(searchValue)
-      );
+      return patient.filter_string.includes(searchValue);
     });
     setPatientsFiltered(filteredPatients);
   }
@@ -193,8 +181,7 @@ function PatientList() {
             className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={
-              currentPage ===
-              Math.ceil(reversedPatientsFiltered.length / itemsPerPage)
+              currentPage === Math.ceil(patientsFiltered.length / itemsPerPage)
             }
           >
             Next
