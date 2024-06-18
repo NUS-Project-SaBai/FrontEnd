@@ -239,7 +239,7 @@ const Registration = () => {
       inputValue.length === 0
         ? []
         : patientsList.filter((patient) =>
-            patient.filterString.toLowerCase().includes(inputValue),
+            patient.filter_string.toLowerCase().includes(inputValue),
           );
 
     setSuggestions(query);
