@@ -45,23 +45,20 @@ const Record = () => {
   }, []);
 
   async function onRefresh() {
-    const router = Router;
-    const { query } = router;
-    const { id: patientId } = query;
+    const patientID = Router.query.id;
     const { data: patient } = await axios.get(
-      `${API_URL}/patients/${patientId}`,
+      `${API_URL}/patients/${patientID}`,
     );
     const { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientId}`,
+      `${API_URL}/visits?patient=${patientID}`,
     );
-    const visitsSorted = visits.sort((a, b) => b.id - a.id);
     setState((prevState) => ({
       ...prevState,
-      patient: patient,
-      visits: visitsSorted,
+      patient,
+      visits,
     }));
-    if (visitsSorted.length > 0) {
-      const visitID = visitsSorted[0].id;
+    if (visits.length > 0) {
+      const visitID = visits[0].id;
       loadVisitDetails(visitID);
       loadMedicationStock();
     }
