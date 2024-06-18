@@ -52,7 +52,6 @@ const Stock = () => {
       medicine_name: nameEnriched,
     };
 
-    // Updating Medicine amount
     if (updatedDetails.pk) {
       const quantity =
         parseInt(updatedDetails.quantity) + parseInt(quantityChange);
@@ -65,12 +64,14 @@ const Stock = () => {
       await axios
         .patch(`${API_URL}/medications/${updatedDetails.pk}`, {
           quantityChange: parseInt(quantityChange),
+          medicine_name: updatedDetails.medicine_name,
+          notes: updatedDetails.notes,
         })
         .catch((error) => {
           toast.error(`Encountered an error when update! ${error.message}`);
           return;
         });
-      toast.success("Medication Quantity updated!");
+      toast.success("Medication updated!");
     }
 
     // Creating new medicine
@@ -124,7 +125,7 @@ const Stock = () => {
 
   const onFilterChange = (event) => {
     const filteredMedications = medications.filter((medication) => {
-      const medicineName = medication.fields.medicine_name.toLowerCase();
+      const medicineName = medication.medicine_name.toLowerCase();
 
       return medicineName.includes(event.target.value.toLowerCase());
     });
@@ -160,9 +161,10 @@ const Stock = () => {
   function renderRows() {
     // Displays the list of medications in stock
     const tableRows = medicationsFiltered.map((medication) => {
+      console.dir({ medication });
       const medicationDetails = {
-        ...medication.fields,
-        pk: medication.pk,
+        ...medication,
+        pk: medication.id,
         quantityChange: 0,
       };
       const name = medicationDetails.medicine_name;
@@ -179,7 +181,7 @@ const Stock = () => {
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
             <Button
               colour="green"
-              text="Edit Quantity"
+              text="Edit"
               onClick={() => toggleModal(medicationDetails)}
             />
 
