@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import _ from "lodash";
 import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
 import { VitalsForm } from "@/pages/records/Forms/VitalsForm";
-import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
+import {
+  ConsultationsView,
+  ConsultationsTable,
+} from "@/pages/records/_components";
 import { VitalsTable } from "@/pages/records/VitalsTable";
-import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
 import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
 import { API_URL, CLOUDINARY_URL } from "../../../utils/constants";
 import withAuth from "../../../utils/auth";
@@ -39,10 +40,7 @@ const Patient = () => {
   }, []);
 
   async function onRefresh() {
-    // let { id: patientId } = this.props.query;
-    const router = Router;
-    const { query } = router;
-    const { id: patientId } = query;
+    const patientId = Router.query.id;
 
     // gets patient data
     let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
@@ -128,35 +126,6 @@ const Patient = () => {
 
   async function submitForm() {
     let { formDetails, visitID } = state;
-
-    // Form Validation
-    const requiredFields = [
-      "height",
-      "weight",
-      "systolic",
-      "diastolic",
-      "temperature",
-      "heart_rate",
-      "left_eye_degree",
-      "right_eye_degree",
-      "left_eye_pinhole",
-      "right_eye_pinhole",
-      "urine_test",
-      "hemocue_count",
-      "blood_glucose",
-    ];
-    const missingFields = requiredFields.filter((field) => !formDetails[field]);
-
-    // Toast formatting for error messages
-    if (missingFields.length > 0) {
-      const formattedFields = missingFields.map((field) =>
-        field.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
-      );
-      toast.error(
-        `Please fill in the following fields: ${formattedFields.join(", ")}`,
-      );
-      return;
-    }
 
     var formPayload = {
       visit: visitID,
@@ -284,11 +253,7 @@ const Patient = () => {
   }
 
   function renderSecondColumn() {
-    const { vitals, formDetails, patient } = state;
-
-    if (Object.keys(vitals).length > 0) {
-      return null;
-    }
+    const { formDetails, patient } = state;
 
     return (
       <div className="space-y-2">

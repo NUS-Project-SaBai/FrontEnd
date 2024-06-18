@@ -20,7 +20,7 @@ export function ConsultationsTable({ content: consults, buttonFunction }) {
           <Button
             colour="indigo"
             text={"View"}
-            onClick={() => buttonFunction("consult", consult)}
+            onClick={() => buttonFunction(consult)}
           />
         </td>
       </tr>

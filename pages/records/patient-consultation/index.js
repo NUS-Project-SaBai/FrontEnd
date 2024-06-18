@@ -5,9 +5,9 @@ import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
 import { ConsultationForm, PrescriptionForm } from "@/pages/records/Forms";
-import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
+import { ConsultationsView } from "@/pages/records/_components";
 import { VitalsTable } from "@/pages/records/VitalsTable";
-import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
+import { ConsultationsTable } from "@/pages/records/_components";
 import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
@@ -312,10 +312,15 @@ const PatientConsultation = () => {
     var consultId;
     var orderPromises;
 
-    let { data: medicalConsult } = await axios.post(`${API_URL}/consults`, {
-      ...formPayload,
-      doctor: window.localStorage.getItem("userID"),
-    });
+    let { data: medicalConsult } = await axios
+      .post(`${API_URL}/consults`, {
+        ...formPayload,
+        doctor: window.localStorage.getItem("userID"),
+      })
+      .catch((error) => {
+        console.error("Error creating consult:", error.response.data);
+        toast.error("Error creating consult.");
+      });
 
     consultId = medicalConsult.id;
     orderPromises = [];

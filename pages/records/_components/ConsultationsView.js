@@ -1,7 +1,7 @@
-import { DisplayField } from "@/components/TextComponents/DisplayField";
 import React, { useEffect, useState } from "react";
-import { VisitPrescriptionsTable } from "../VisitPrescriptionsTable";
 import axios from "axios";
+import { DisplayField } from "@/components/TextComponents/DisplayField";
+import { VisitPrescriptionsTable } from "../VisitPrescriptionsTable";
 import { API_URL } from "@/utils/constants";
 
 export function ConsultationsView({ content }) {
@@ -16,7 +16,6 @@ export function ConsultationsView({ content }) {
 
         const { data: diagnosis } = response;
         setDiagnosisArray(diagnosis);
-
       } catch (error) {
         console.error("Error fetching diagnosis:", error);
       }
@@ -27,7 +26,6 @@ export function ConsultationsView({ content }) {
   const renderPrescriptions = (prescriptions) => {
     return <VisitPrescriptionsTable content={prescriptions} />;
   };
-
   const diagnosisRows = diagnosisArray.map((diagnosis) => {
     return (
       <tr key={diagnosis.id}>
@@ -42,7 +40,6 @@ export function ConsultationsView({ content }) {
   });
 
   const prescriptions = content.prescriptions;
-
   return (
     <div className="grid gap-y-2">
       <label className="text-3xl font-bold text-center text-sky-800 mb-2">
@@ -121,10 +118,10 @@ export function ConsultationsView({ content }) {
         </div>
       </div>
 
-      {prescriptions?.length > 0 ? (
+      {prescriptions.length > 0 ? (
         renderPrescriptions(prescriptions)
       ) : (
-        <h2>None Prescibed</h2>
+        <h2>None Prescribed</h2>
       )}
 
       <hr />

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import _ from "lodash";
+import _, { set } from "lodash";
 import Modal from "react-modal";
 import moment from "moment";
-import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
+import { ConsultationsView } from "@/pages/records/_components";
 import { VitalsTable } from "@/pages/records/VitalsTable";
-import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
+import { ConsultationsTable } from "@/pages/records/_components";
 
 import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
 import { PatientView } from "./PatientView";
@@ -16,24 +16,20 @@ import Router from "next/router";
 import { Button } from "@/components/TextComponents/Button";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-const Record = () => {
-  const [state, setState] = useState({
-    mounted: false,
-    patient: {},
-    medications: [],
-    visits: [],
-    visitID: null,
-    consults: [],
-    orders: [],
-    referredFor: [],
-    vitals: {},
-    formDetails: {},
-    medicationDetails: {},
-    formModalOpen: false,
-    isEditing: false,
-    viewModalOpen: false,
-    modalContent: {},
-  });
+const PatientRecord = () => {
+  const [noRecords, setNoRecords] = useState(true);
+
+  const [patient, setPatient] = useState({});
+  const [visits, setVisits] = useState([]);
+  const [vitals, setVitals] = useState({});
+
+  const [consults, setConsults] = useState([]);
+  const [selectedConsult, setSelectedConsult] = useState(null);
+
+  const [visitPrescriptions, setVisitPrescriptions] = useState([]);
+
+  const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
+  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
 
   const handleVisitChange = useCallback((event) => {
     const value = event.target.value;
@@ -52,76 +48,21 @@ const Record = () => {
     const { data: visits } = await axios.get(
       `${API_URL}/visits?patient=${patientID}`,
     );
-    setState((prevState) => ({
-      ...prevState,
-      patient,
-      visits,
-    }));
+
+    setPatient(patient);
+    setVisits(visits);
+
     if (visits.length > 0) {
       const visitID = visits[0].id;
       loadVisitDetails(visitID);
-      loadMedicationStock();
     }
-  }
-
-  function toggleViewModal(viewType = null, consult = {}) {
-    setState((prevState) => ({
-      ...prevState,
-      viewModalOpen: !state.viewModalOpen,
-      viewType,
-      consult,
-    }));
-  }
-
-  function renderViewModal() {
-    const { vitals, viewModalOpen, consult, viewType } = state;
-    const modalContent =
-      viewType == "vitals" ? (
-        <VitalsTable content={vitals} />
-      ) : (
-        <ConsultationsView content={consult} />
-      );
-    return (
-      <Modal
-        isOpen={viewModalOpen}
-        onRequestClose={() => toggleViewModal()}
-        style={viewModalStyles}
-      >
-        {modalContent}
-      </Modal>
-    );
-  }
-
-  async function loadMedicationStock() {
-    const { data: medications } = await axios.get(`${API_URL}/medications`);
-    const { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`,
-    );
-    const reservedMedications = {};
-    orders.forEach((order) => {
-      const medicationID = order.medicine;
-      const quantityReserved = order.quantity;
-      if (typeof reservedMedications[medicationID] === "undefined") {
-        reservedMedications[medicationID] = quantityReserved;
-      } else {
-        reservedMedications[medicationID] =
-          reservedMedications[medicationID] + quantityReserved;
-      }
-    });
-    setState((prevState) => ({
-      ...prevState,
-      medications,
-      reservedMedications,
-    }));
   }
 
   async function loadVisitDetails(visitID) {
     const { data: consults } = await axios.get(
       `${API_URL}/consults?visit=${visitID}`,
     );
-    const { data: prescriptions } = await axios.get(
-      `${API_URL}/orders?visit=${visitID}`,
-    );
+    const { data: prescriptions } = await axios.get(`${API_URL}/orders`);
     const consultsEnriched = consults.map((consult) => {
       const consultPrescriptions = prescriptions.filter(
         (prescription) => prescription.consult.id === consult.id,
@@ -134,19 +75,22 @@ const Record = () => {
     const { data: vitals } = await axios.get(
       `${API_URL}/vitals?visit=${visitID}`,
     );
-    setState((prevState) => ({
-      ...prevState,
-      consults: consultsEnriched,
-      vitals: vitals[0] || {},
-      visitPrescriptions: consultsEnriched.flatMap((x) => x.prescriptions),
-      mounted: true,
-      visitID,
-    }));
+
+    setNoRecords(false);
+    setVisitPrescriptions(consultsEnriched.flatMap((x) => x.prescriptions));
+    setConsults(consultsEnriched);
+    setVitals(vitals[0] || {});
+  }
+
+  function toggleVitalsModal() {
+    setVitalsModalOpen(!vitalsModalOpen);
+  }
+
+  function toggleConsultationsModal() {
+    setConsultationModalOpen(!consultationModalOpen);
   }
 
   function renderHeader() {
-    const { patient, visits } = state;
-
     const visitOptions = visits.map((visit) => {
       const date = moment(visit.date).format("DD MMMM YYYY");
       return (
@@ -200,8 +144,6 @@ const Record = () => {
   }
 
   function renderFirstColumn() {
-    const { vitals, patient } = state;
-
     return (
       <div className="my-2">
         {typeof vitals === "undefined" ? (
@@ -209,7 +151,7 @@ const Record = () => {
         ) : (
           <Button
             text={"View Vitals"}
-            onClick={() => toggleViewModal("vitals")}
+            onClick={() => toggleVitalsModal()}
             colour="indigo"
           />
         )}
@@ -218,21 +160,22 @@ const Record = () => {
     );
   }
 
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleConsultationsModal();
+  }
+
   function renderSecondColumn() {
-    const { vitals, consults, visitPrescriptions } = state;
     return (
       <div className="space-y-8">
-        <ConsultationsTable
-          content={consults}
-          buttonFunction={toggleViewModal}
-        />
+        <ConsultationsTable content={consults} buttonFunction={selectConsult} />
         <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
     );
   }
 
   function render() {
-    if (!state.mounted)
+    if (noRecords)
       return (
         <div
           style={{
@@ -256,7 +199,20 @@ const Record = () => {
           marginRight: 25,
         }}
       >
-        {renderViewModal()}
+        <Modal
+          isOpen={vitalsModalOpen}
+          onRequestClose={() => toggleVitalsModal()}
+          style={viewModalStyles}
+        >
+          <VitalsTable content={vitals} />
+        </Modal>
+        <Modal
+          isOpen={consultationModalOpen}
+          onRequestClose={() => toggleConsultationsModal()}
+          style={viewModalStyles}
+        >
+          <ConsultationsView content={selectedConsult} />
+        </Modal>
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Records
         </h1>
@@ -287,4 +243,4 @@ const viewModalStyles = {
   },
 };
 
-export default withAuth(Record);
+export default withAuth(PatientRecord);
