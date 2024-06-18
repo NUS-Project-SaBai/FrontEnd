@@ -4,11 +4,14 @@ import _ from "lodash";
 import Router from "next/router";
 import Modal from "react-modal";
 import moment from "moment";
-import { ConsultationForm, PrescriptionForm } from "@/pages/records/Forms";
-import { ConsultationsView } from "@/pages/records/_components";
-import { VitalsTable } from "@/pages/records/VitalsTable";
-import { ConsultationsTable } from "@/pages/records/_components";
-import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
+import {
+  ConsultationsTable,
+  VisitPrescriptionsTable,
+  VitalsTable,
+  ConsultationsView,
+  ConsultationForm,
+  PrescriptionForm,
+} from "@/pages/records/_components";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";

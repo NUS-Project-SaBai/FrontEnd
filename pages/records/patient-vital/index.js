@@ -2,23 +2,33 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Router from "next/router";
 import Modal from "react-modal";
-import moment from "moment";
-import { VitalsForm } from "@/pages/records/Forms/VitalsForm";
 import {
   ConsultationsView,
   ConsultationsTable,
+  VitalsForm,
+  VitalsTable,
+  VisitPrescriptionsTable,
+  Header,
 } from "@/pages/records/_components";
-import { VitalsTable } from "@/pages/records/VitalsTable";
-import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
-import { API_URL, CLOUDINARY_URL } from "../../../utils/constants";
-import withAuth from "../../../utils/auth";
+import { API_URL } from "@/utils/constants";
+import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";
 import { Button } from "@/components/TextComponents/Button";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const Patient = () => {
+  const [mounted, setMounted] = useState(false);
+
+  const [patient, setPatient] = useState({});
+  const [visits, setVisits] = useState([]);
+
+  const [consults, setConsults] = useState([]);
+  const [visitPrescriptions, setVisitPrescriptions] = useState([]);
+  const [vitals, setVitals] = useState({});
+  const [visitID, setVisitID] = useState(null);
+
+  const [formDetails, setFormDetails] = useState({});
+
   const [state, setState] = useState({
-    mounted: false,
     patient: {},
     medications: [],
     visits: [],
@@ -27,7 +37,7 @@ const Patient = () => {
     orders: [],
     referredFor: [],
     vitals: {},
-    formDetails: { diagnoses: [] },
+    formDetails: {},
     medicationDetails: {},
     formModalOpen: false,
     isEditing: false,
@@ -42,26 +52,18 @@ const Patient = () => {
   async function onRefresh() {
     const patientId = Router.query.id;
 
-    // gets patient data
-    let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
+    const { data: patient } = await axios.get(
+      `${API_URL}/patients/${patientId}`,
+    );
 
-    // gets all visit data
-    let { data: visits } = await axios.get(
+    const { data: visits } = await axios.get(
       `${API_URL}/visits?patient=${patientId}`,
     );
 
-    // sorts
-    let visitsSorted = visits.sort((a, b) => {
-      return b.id - a.id;
-    });
+    setPatient(patient);
+    setVisits(visits);
 
-    setState((prevState) => ({
-      ...prevState,
-      patient: patient,
-      visits: visitsSorted,
-    }));
-
-    let visitID = visitsSorted[0].id;
+    const visitID = visits[0].id;
     loadVisitDetails(visitID);
   }
 
@@ -91,16 +93,14 @@ const Patient = () => {
   }
 
   async function loadVisitDetails(visitID) {
-    let { data: consults } = await axios.get(
+    const { data: consults } = await axios.get(
       `${API_URL}/consults?visit=${visitID}`,
     );
 
-    let { data: prescriptions } = await axios.get(
-      `${API_URL}/orders?visit=${visitID}`,
-    );
+    const { data: prescriptions } = await axios.get(`${API_URL}/orders`);
 
-    let consultsEnriched = consults.map((consult) => {
-      let consultPrescriptions = prescriptions.filter((prescription) => {
+    const consultsEnriched = consults.map((consult) => {
+      const consultPrescriptions = prescriptions.filter((prescription) => {
         return prescription.consult.id === consult.id;
       });
 
@@ -110,127 +110,55 @@ const Patient = () => {
       };
     });
 
-    let { data: vitals } = await axios.get(
+    const { data: vitals } = await axios.get(
       `${API_URL}/vitals?visit=${visitID}`,
     );
 
-    setState((prevState) => ({
-      ...prevState,
-      consults: consultsEnriched,
-      vitals: vitals[0] || {},
-      visitPrescriptions: consultsEnriched.flatMap((x) => x.prescriptions),
-      mounted: true,
-      visitID,
-    }));
+    setMounted(true);
+    setConsults(consultsEnriched);
+    setVitals(vitals[0] || {});
+    setVisitPrescriptions(consultsEnriched.flatMap((x) => x.prescriptions));
+    setVisitID(visitID);
   }
 
   async function submitForm() {
-    let { formDetails, visitID } = state;
-
-    var formPayload = {
+    const formPayload = {
       visit: visitID,
       ...formDetails,
     };
-
-    if (formDetails.referred_for) {
-      const referrals = `
-          Referred For: ${formDetails.referred_for}
-          Notes:
-          ${formDetails.referred_notes || "No Notes Provided"}`;
-      formPayload = {
-        ...formPayload,
-        referrals: referrals,
-      };
-    }
-
-    await axios.post(`${API_URL}/vitals`, formPayload);
+    await axios.patch(`${API_URL}/vitals?visit=${visitID}`, formPayload);
     toast.success("Vitals completed!");
 
     Router.push("/records");
   }
 
   function handleInputChange(e) {
-    let { formDetails } = state;
-
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
 
-    formDetails[name] = value;
-
-    setState((prevState) => ({
+    setFormDetails((prevState) => ({
       ...prevState,
-      formDetails,
+      [name]: value,
     }));
   }
 
   function handleVisitChange(e) {
     const value = e.target.value;
-
-    // pull the latest visit
-
-    // this.setState({ visitID: value });
     loadVisitDetails(value);
   }
 
   function renderHeader() {
-    const { patient, visits } = state;
-
-    const visitOptions = visits.map((visit) => {
-      const date = moment(visit.date).format("DD MMMM YYYY");
-      return (
-        <option key={visit.id} value={visit.id}>
-          {date}
-        </option>
-      );
-    });
-
     return (
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 md:col-span-2">
-          <img
-            src={`${CLOUDINARY_URL}/${patient.picture}`}
-            alt="Placeholder image"
-            className="h-48 w-48 object-cover rounded-md"
-          />
-        </div>
-        <div className="col-span-12 md:col-span-3">
-          <div>
-            <label className="block text-gray-700">Village ID</label>
-            <p className="text-lg font-medium">{`${
-              patient.village_prefix
-            }${patient.pk.toString().padStart(3, "0")}`}</p>
-          </div>
-          <div className="mt-4">
-            <label className="block text-gray-700">Visit on</label>
-            <div className="relative">
-              <select
-                name="medication"
-                onChange={handleVisitChange}
-                className="block w-full bg-white border border-gray-300 rounded-md py-2 px-4 appearance-none focus:outline-none focus:border-blue-500"
-              >
-                {visitOptions}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <ChevronDownIcon className="h-5 w-5" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-span-12 md:col-span-3">
-          <div>
-            <label className="block text-gray-700">Name</label>
-            <p className="text-lg font-medium">{patient.name}</p>
-          </div>
-        </div>
-        <div className="col-span-12 md:col-span-4"></div>
-      </div>
+      <Header
+        patient={patient}
+        visits={visits}
+        handleVisitChange={handleVisitChange}
+      />
     );
   }
 
   function renderFirstColumn() {
-    let { vitals, consults, visitPrescriptions } = state;
-
     return (
       <div className="space-y-4">
         {typeof vitals === "undefined" ? (
@@ -253,8 +181,6 @@ const Patient = () => {
   }
 
   function renderSecondColumn() {
-    const { formDetails, patient } = state;
-
     return (
       <div className="space-y-2">
         <VitalsForm
@@ -269,7 +195,7 @@ const Patient = () => {
   }
 
   function render() {
-    if (!state.mounted) return null;
+    if (!mounted) return null;
 
     return (
       <div

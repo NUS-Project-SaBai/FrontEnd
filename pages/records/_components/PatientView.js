@@ -1,7 +1,7 @@
 import React from "react";
 import { DisplayField } from "@/components/TextComponents";
 
-function PatientView({ content }) {
+export function PatientView({ content }) {
   const calculate_age = (dob) => {
     const birthDate = new Date(dob);
     const difference = Date.now() - birthDate.getTime();
@@ -31,5 +31,3 @@ function PatientView({ content }) {
     </div>
   ));
 }
-
-export { PatientView };

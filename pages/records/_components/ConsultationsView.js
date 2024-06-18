@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { DisplayField } from "@/components/TextComponents/DisplayField";
-import { VisitPrescriptionsTable } from "../VisitPrescriptionsTable";
+import { VisitPrescriptionsTable } from "./VisitPrescriptionsTable";
 import { API_URL } from "@/utils/constants";
 
 export function ConsultationsView({ content }) {
