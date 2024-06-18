@@ -16,8 +16,6 @@ import Router from "next/router";
 import { Button } from "@/components/TextComponents/Button";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-Modal.setAppElement("#__next");
-
 const Record = () => {
   const [state, setState] = useState({
     mounted: false,
