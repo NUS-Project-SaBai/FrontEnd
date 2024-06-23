@@ -26,8 +26,8 @@ const navigation = [
     current: false,
   },
   {
-    name: "Pharmacy Prescriptions",
-    href: "/pharmacy/prescriptions",
+    name: "Pharmacy Orders",
+    href: "/pharmacy/orders",
     icon: PencilIcon,
     count: "20+",
     current: false,
