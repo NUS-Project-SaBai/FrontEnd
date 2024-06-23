@@ -1,41 +1,35 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import _ from "lodash";
 import Modal from "react-modal";
-import moment from "moment";
-import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
-import { VitalsTable } from "@/pages/records/VitalsTable";
-import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
+import {
+  ConsultationView,
+  ConsultationsTable,
+  VitalsTable,
+  Header,
+  PatientView,
+  PrescriptionsTable,
+} from "@/pages/records/_components";
 
-import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
-import { PatientView } from "./PatientView";
-import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
+import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import Router from "next/router";
 
 import { Button } from "@/components/TextComponents/Button";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-Modal.setAppElement("#__next");
+const PatientRecord = () => {
+  const [noRecords, setNoRecords] = useState(true);
 
-const Record = () => {
-  const [state, setState] = useState({
-    mounted: false,
-    patient: {},
-    medications: [],
-    visits: [],
-    visitID: null,
-    consults: [],
-    orders: [],
-    referredFor: [],
-    vitals: {},
-    formDetails: {},
-    medicationDetails: {},
-    formModalOpen: false,
-    isEditing: false,
-    viewModalOpen: false,
-    modalContent: {},
-  });
+  const [patient, setPatient] = useState({});
+  const [visits, setVisits] = useState([]);
+  const [vitals, setVitals] = useState({});
+
+  const [consults, setConsults] = useState([]);
+  const [selectedConsult, setSelectedConsult] = useState(null);
+
+  const [prescriptions, setPrescriptions] = useState([]);
+
+  const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
+  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
 
   const handleVisitChange = useCallback((event) => {
     const value = event.target.value;
@@ -47,197 +41,99 @@ const Record = () => {
   }, []);
 
   async function onRefresh() {
-    const router = Router;
-    const { query } = router;
-    const { id: patientId } = query;
+    const patientID = Router.query.id;
+
     const { data: patient } = await axios.get(
-      `${API_URL}/patients/${patientId}`,
+      `${API_URL}/patients/${patientID}`,
     );
+
     const { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientId}`,
+      `${API_URL}/visits?patient=${patientID}`,
     );
-    const visitsSorted = visits.sort((a, b) => b.id - a.id);
-    setState((prevState) => ({
-      ...prevState,
-      patient: patient,
-      visits: visitsSorted,
-    }));
-    if (visitsSorted.length > 0) {
-      const visitID = visitsSorted[0].id;
+
+    setPatient(patient);
+    setVisits(visits);
+
+    if (visits.length > 0) {
+      const visitID = visits[0].id;
       loadVisitDetails(visitID);
-      loadMedicationStock();
     }
-  }
-
-  function toggleViewModal(viewType = null, consult = {}) {
-    setState((prevState) => ({
-      ...prevState,
-      viewModalOpen: !state.viewModalOpen,
-      viewType,
-      consult,
-    }));
-  }
-
-  function renderViewModal() {
-    const { vitals, viewModalOpen, consult, viewType } = state;
-    const modalContent =
-      viewType == "vitals" ? (
-        <VitalsTable content={vitals} />
-      ) : (
-        <ConsultationsView content={consult} />
-      );
-    return (
-      <Modal
-        isOpen={viewModalOpen}
-        onRequestClose={() => toggleViewModal()}
-        style={viewModalStyles}
-      >
-        {modalContent}
-      </Modal>
-    );
-  }
-
-  async function loadMedicationStock() {
-    const { data: medications } = await axios.get(`${API_URL}/medications`);
-    const { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`,
-    );
-    const reservedMedications = {};
-    orders.forEach((order) => {
-      const medicationID = order.medicine;
-      const quantityReserved = order.quantity;
-      if (typeof reservedMedications[medicationID] === "undefined") {
-        reservedMedications[medicationID] = quantityReserved;
-      } else {
-        reservedMedications[medicationID] =
-          reservedMedications[medicationID] + quantityReserved;
-      }
-    });
-    setState((prevState) => ({
-      ...prevState,
-      medications,
-      reservedMedications,
-    }));
   }
 
   async function loadVisitDetails(visitID) {
     const { data: consults } = await axios.get(
       `${API_URL}/consults?visit=${visitID}`,
     );
-    const { data: prescriptions } = await axios.get(
-      `${API_URL}/orders?visit=${visitID}`,
-    );
-    const consultsEnriched = consults.map((consult) => {
-      const consultPrescriptions = prescriptions.filter(
-        (prescription) => prescription.consult.id === consult.id,
-      );
-      return {
-        ...consult,
-        prescriptions: consultPrescriptions,
-      };
-    });
+
+    const prescriptions = consults
+      .flatMap((consult) => consult.prescriptions)
+      .filter((prescription) => prescription != null);
+
     const { data: vitals } = await axios.get(
       `${API_URL}/vitals?visit=${visitID}`,
     );
-    setState((prevState) => ({
-      ...prevState,
-      consults: consultsEnriched,
-      vitals: vitals[0] || {},
-      visitPrescriptions: consultsEnriched.flatMap((x) => x.prescriptions),
-      mounted: true,
-      visitID,
-    }));
+
+    setNoRecords(false);
+    setConsults(consults);
+    setPrescriptions(prescriptions);
+    setVitals(vitals[0] || {});
+  }
+
+  function toggleVitalsModal() {
+    setVitalsModalOpen(!vitalsModalOpen);
+  }
+
+  function toggleConsultationModal() {
+    setConsultationModalOpen(!consultationModalOpen);
   }
 
   function renderHeader() {
-    const { patient, visits } = state;
-
-    const visitOptions = visits.map((visit) => {
-      const date = moment(visit.date).format("DD MMMM YYYY");
-      return (
-        <option key={visit.id} value={visit.id}>
-          {date}
-        </option>
-      );
-    });
-
     return (
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 md:col-span-2">
-          <img
-            src={`${CLOUDINARY_URL}/${patient.picture}`}
-            alt="Placeholder image"
-            className="h-48 w-48 object-cover rounded-md"
-          />
-        </div>
-        <div className="col-span-12 md:col-span-3">
-          <div>
-            <label className="block text-gray-700">Village ID</label>
-            <p className="text-lg font-medium">{`${
-              patient.village_prefix
-            }${patient.pk.toString().padStart(3, "0")}`}</p>
-          </div>
-          <div className="mt-4">
-            <label className="block text-gray-700">Visit on</label>
-            <div className="relative">
-              <select
-                name="medication"
-                onChange={handleVisitChange}
-                className="block w-full bg-white border border-gray-300 rounded-md py-2 px-4 appearance-none focus:outline-none focus:border-blue-500"
-              >
-                {visitOptions}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <ChevronDownIcon className="h-5 w-5" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-span-12 md:col-span-3">
-          <div>
-            <label className="block text-gray-700">Name</label>
-            <p className="text-lg font-medium">{patient.name}</p>
-          </div>
-        </div>
-        <div className="col-span-12 md:col-span-4"></div>
-      </div>
+      <Header
+        patient={patient}
+        visits={visits}
+        handleVisitChange={handleVisitChange}
+      />
     );
   }
 
   function renderFirstColumn() {
-    const { vitals, patient } = state;
+    if (typeof vitals === "undefined") {
+      return (
+        <div className="my-2">
+          <h2>Not Done</h2>
+        </div>
+      );
+    }
 
     return (
       <div className="my-2">
-        {typeof vitals === "undefined" ? (
-          <h2>Not Done</h2>
-        ) : (
-          <Button
-            text={"View Vitals"}
-            onClick={() => toggleViewModal("vitals")}
-            colour="indigo"
-          />
-        )}
+        <Button
+          text={"View Vitals"}
+          onClick={() => toggleVitalsModal()}
+          colour="indigo"
+        />
         <PatientView content={patient} />
       </div>
     );
   }
 
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleConsultationModal();
+  }
+
   function renderSecondColumn() {
-    const { vitals, consults, visitPrescriptions } = state;
     return (
       <div className="space-y-8">
-        <ConsultationsTable
-          content={consults}
-          buttonFunction={toggleViewModal}
-        />
-        <VisitPrescriptionsTable content={visitPrescriptions} />
+        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
+        <PrescriptionsTable content={prescriptions} />
       </div>
     );
   }
 
   function render() {
-    if (!state.mounted)
+    if (noRecords)
       return (
         <div
           style={{
@@ -261,7 +157,20 @@ const Record = () => {
           marginRight: 25,
         }}
       >
-        {renderViewModal()}
+        <Modal
+          isOpen={vitalsModalOpen}
+          onRequestClose={() => toggleVitalsModal()}
+          style={viewModalStyles}
+        >
+          <VitalsTable content={vitals} />
+        </Modal>
+        <Modal
+          isOpen={consultationModalOpen}
+          onRequestClose={() => toggleConsultationModal()}
+          style={viewModalStyles}
+        >
+          <ConsultationView content={selectedConsult} />
+        </Modal>
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Records
         </h1>
@@ -292,4 +201,4 @@ const viewModalStyles = {
   },
 };
 
-export default withAuth(Record);
+export default withAuth(PatientRecord);

@@ -5,27 +5,29 @@ import {
   Button,
 } from "@/components/TextComponents";
 
-export function PrescriptionForm({
+export function OrderForm({
   allergies,
+  medications,
   handleInputChange,
-  formDetails,
+  orderDetails,
   medicationOptions,
   onSubmit,
-  isEditing,
-  medications,
 }) {
   function calculateMedicineCurrentStock(medicine) {
-    const medication = medications.filter((med) => {
-      return medicine == med.pk;
-    });
+    const medication = medications.find((med) => medicine === med.id);
+    return medication ? medication.quantity : 0;
+  }
 
-    if (medication.length > 0) return medication[0].fields.quantity;
-    return 0;
+  function selectedMedicationValue() {
+    if (orderDetails?.medicine) {
+      return `${orderDetails.medicine} ${orderDetails.medicine_name}`;
+    }
+    return "0 Dummy";
   }
 
   return (
     <div className="grid gap-y-2">
-      <h1 className="text-black text-2xl font-bold mb-3">Prescription</h1>
+      <h1 className="text-black text-2xl font-bold mb-3">Order</h1>
 
       <DisplayField
         label="Allergies"
@@ -37,6 +39,7 @@ export function PrescriptionForm({
         <div className="relative">
           <select
             name={"medication"}
+            value={selectedMedicationValue()}
             onChange={handleInputChange}
             className="block appearance-none w-full bg-white border border-gray-300 text-gray-900 py-2 px-3 rounded-lg leading-tight focus:outline-none focus:border-blue-500"
           >
@@ -63,14 +66,14 @@ export function PrescriptionForm({
         <div className="w-1/2 pr-2">
           <DisplayField
             label="In Stock"
-            content={calculateMedicineCurrentStock(formDetails.medicine)}
+            content={calculateMedicineCurrentStock(orderDetails.medicine)}
           />
         </div>
         <div className="w-1/2 pl-2">
           <InputField
             label="Quantity to be ordered"
             onChange={handleInputChange}
-            value={formDetails.quantity}
+            value={orderDetails.quantity}
             type="number"
             name="quantity"
           />
@@ -82,14 +85,10 @@ export function PrescriptionForm({
         name="notes"
         placeholder="Dosage Instruction"
         onChange={handleInputChange}
-        value={formDetails.notes}
+        value={orderDetails.notes}
       />
 
-      <Button
-        colour="green"
-        text={isEditing ? "Edit" : "Add"}
-        onClick={onSubmit}
-      />
+      <Button colour="green" text="Submit" onClick={onSubmit} />
     </div>
   );
 }

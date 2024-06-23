@@ -1,9 +1,20 @@
-export function VisitPrescriptionsTable({ content: prescriptions }) {
-  const prescriptionRows = prescriptions.map((prescription) => {
-    const name = prescription?.medicine?.medicine_name;
-    const quantity = prescription.quantity;
-    // let doctor = prescription.doctor
+export function PrescriptionsTable({ content: prescriptions }) {
+  if (prescriptions.length == 0) {
+    return (
+      <div>
+        <label className="text-base font-semibold leading-6 text-gray-900">
+          Prescriptions
+        </label>
+        <h2>Not Done</h2>
+      </div>
+    );
+  }
 
+  const prescriptionRows = prescriptions.map((prescription) => {
+    const name =
+      prescription.medicine.medicine_name ||
+      "Prescription.medicine.medicine_name not found";
+    const quantity = prescription.quantity;
     return (
       <tr key={prescription.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
@@ -16,14 +27,7 @@ export function VisitPrescriptionsTable({ content: prescriptions }) {
     );
   });
 
-  return prescriptions.length == 0 ? (
-    <div>
-      <label className="text-base font-semibold leading-6 text-gray-900">
-        Prescriptions
-      </label>
-      <h2>Not Done</h2>
-    </div>
-  ) : (
+  return (
     <div>
       <label className="text-base font-semibold leading-6 text-gray-900">
         Prescriptions

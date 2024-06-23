@@ -1,6 +1,17 @@
 import { Button } from "@/components/TextComponents/Button";
 
-export function ConsultationsTable({ content: consults, buttonFunction }) {
+export function ConsultationsTable({ content: consults, buttonOnClick }) {
+  if (consults.length == 0) {
+    return (
+      <div>
+        <label className="text-base font-semibold leading-6 text-gray-900">
+          Consultations
+        </label>
+        <h2>Not Done</h2>
+      </div>
+    );
+  }
+
   const consultRows = consults.map((consult) => {
     const doctor = consult.doctor.username;
     const referredFor =
@@ -20,21 +31,14 @@ export function ConsultationsTable({ content: consults, buttonFunction }) {
           <Button
             colour="indigo"
             text={"View"}
-            onClick={() => buttonFunction("consult", consult)}
+            onClick={() => buttonOnClick(consult)}
           />
         </td>
       </tr>
     );
   });
 
-  return consults.length == 0 ? (
-    <div>
-      <label className="text-base font-semibold leading-6 text-gray-900">
-        Consultations
-      </label>
-      <h2>Not Done</h2>
-    </div>
-  ) : (
+  return (
     <div>
       <label className="text-base font-semibold leading-6 text-gray-900">
         Consultations

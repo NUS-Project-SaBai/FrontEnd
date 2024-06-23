@@ -4,26 +4,20 @@ import { InputBox, Button } from "@/components/TextComponents";
 export function ConsultationForm({
   handleInputChange,
   formDetails,
-  updateFormDetails,
+  handleDiagnosis,
 }) {
-  function handleClick(e) {
-    //Update form details resulting in rendering of page
-    updateFormDetails([...formDetails.diagnoses, { details: "", type: "" }]);
+  function handleDiagnosisClick() {
+    handleDiagnosis([...formDetails.diagnoses, { details: "", type: "" }]);
   }
 
-  function handleDelete(index) {
-    //Delete diagnosis
-    updateFormDetails([...formDetails.diagnoses].filter((_, i) => i != index));
+  function handleDiagnosisDelete(index) {
+    handleDiagnosis([...formDetails.diagnoses].filter((_, i) => i !== index));
   }
 
   function handleDiagnosisChange(e, index) {
-    //used to update diagnosis inputs
-    const newDiagnoses = formDetails.diagnoses.map((diagnosis, i) => {
-      return index !== i
-        ? diagnosis
-        : { ...diagnosis, [e.target.name]: e.target.value };
-    });
-    updateFormDetails(newDiagnoses);
+    const newDiagnoses = [...formDetails.diagnoses];
+    newDiagnoses[index][e.target.name] = e.target.value;
+    handleDiagnosis(newDiagnoses);
   }
 
   function diagnosisToAdd() {
@@ -44,7 +38,8 @@ export function ConsultationForm({
       "Oral Health",
       "Others",
     ];
-    //Generate textfields for diagnosis
+
+    // Generate textfields for diagnosis
     const renderDiagnosis = (diagnosis, index) => (
       <div key={index} className="space-y-2 mb-2">
         <InputBox
@@ -76,7 +71,7 @@ export function ConsultationForm({
         <Button
           colour="red"
           text="Delete Assessment"
-          onClick={() => handleDelete(index)}
+          onClick={() => handleDiagnosisDelete(index)}
         />
       </div>
     );
@@ -114,7 +109,7 @@ export function ConsultationForm({
       <Button
         colour="green"
         text="Add New Diagnosis"
-        onClick={(e) => handleClick(e)}
+        onClick={(e) => handleDiagnosisClick(e)}
       />
 
       <InputBox
