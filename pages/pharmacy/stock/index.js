@@ -4,8 +4,7 @@ import toast from "react-hot-toast";
 import { MedicationModal } from "./MedicationModal";
 import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
-import { Button } from "@/components/TextComponents/Button";
-import { InputField } from "@/components/TextComponents/InputField";
+import { Button, InputField } from "@/components/TextComponents";
 
 const Stock = () => {
   const [medications, setMedications] = useState([]);
@@ -21,18 +20,53 @@ const Stock = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
-    onRefresh();
+    loadMedicine();
   }, []);
 
-  const onRefresh = async () => {
+  const loadMedicine = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/medications`);
-      setMedications(data);
-      setMedicationsFiltered(data);
+      const { data: medicines } = await axios.get(`${API_URL}/medications`);
+      setMedications(medicines);
+      setMedicationsFiltered(medicines);
     } catch (error) {
       toast.error(`Failed to fetch medications: ${error.message}`);
       return;
     }
+  };
+
+  const onFilterChange = (event) => {
+    const filteredMedications = medications.filter((medication) => {
+      const medicineName = medication.medicine_name.toLowerCase();
+
+      return medicineName.includes(event.target.value.toLowerCase());
+    });
+
+    setMedicationsFiltered(filteredMedications);
+  };
+
+  const toggleModal = (medication = {}) => {
+    setMedicationDetails(medication);
+    setModalIsOpen(!modalIsOpen);
+  };
+
+  const createNewMedication = () => {
+    setMedicationDetails({
+      medicine_name: "",
+      reserve_quantity: 0,
+      quantity: 0,
+      quantityChange: 0,
+      notes: "",
+      remarks: "",
+    });
+    toggleModal(medicationDetails);
+  };
+
+  const handleMedicationChange = (event) => {
+    const newMedicationDetails = {
+      ...medicationDetails,
+      [event.target.name]: event.target.value,
+    };
+    setMedicationDetails(newMedicationDetails);
   };
 
   const onSubmitForm = async () => {
@@ -95,7 +129,7 @@ const Stock = () => {
     }
 
     toggleModal();
-    onRefresh();
+    loadMedicine();
   };
 
   const handleDelete = async (pk) => {
@@ -112,10 +146,10 @@ const Stock = () => {
     });
 
     const updatedMedications = medications.filter(
-      (medication) => medication.pk !== pk,
+      (medication) => medication.id !== pk,
     );
     const updatedMedicationsFiltered = medicationsFiltered.filter(
-      (medication) => medication.pk !== pk,
+      (medication) => medication.id !== pk,
     );
     setMedications(updatedMedications);
     setMedicationsFiltered(updatedMedicationsFiltered);
@@ -123,45 +157,9 @@ const Stock = () => {
     toast.success("Medication successfully deleted!");
   };
 
-  const onFilterChange = (event) => {
-    const filteredMedications = medications.filter((medication) => {
-      const medicineName = medication.medicine_name.toLowerCase();
-
-      return medicineName.includes(event.target.value.toLowerCase());
-    });
-
-    setMedicationsFiltered(filteredMedications);
-  };
-
-  const createNewMedication = () => {
-    setMedicationDetails({
-      medicine_name: "",
-      reserve_quantity: 0,
-      quantity: 0,
-      quantityChange: 0,
-      notes: "",
-      remarks: "",
-    });
-    toggleModal(medicationDetails);
-  };
-
-  const toggleModal = (medication = {}) => {
-    setMedicationDetails(medication);
-    setModalIsOpen((prevModalIsOpen) => !prevModalIsOpen);
-  };
-
-  const handleMedicationChange = (event) => {
-    const newMedicationDetails = {
-      ...medicationDetails,
-      [event.target.name]: event.target.value,
-    };
-    setMedicationDetails(newMedicationDetails);
-  };
-
   function renderRows() {
     // Displays the list of medications in stock
     const tableRows = medicationsFiltered.map((medication) => {
-      console.dir({ medication });
       const medicationDetails = {
         ...medication,
         pk: medication.id,
@@ -206,11 +204,11 @@ const Stock = () => {
       }}
     >
       <MedicationModal
+        formDetails={medicationDetails}
         modalIsOpen={modalIsOpen}
         toggleModal={toggleModal}
-        onSubmit={onSubmitForm}
         handleInputChange={handleMedicationChange}
-        formDetails={medicationDetails}
+        onSubmit={onSubmitForm}
       />
 
       <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
