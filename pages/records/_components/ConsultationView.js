@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { DisplayField } from "@/components/TextComponents/DisplayField";
-import { VisitPrescriptionsTable } from "./VisitPrescriptionsTable";
+import { PrescriptionsTable } from "./PrescriptionsTable";
 import { API_URL } from "@/utils/constants";
 
-export function ConsultationsView({ content }) {
+export function ConsultationView({ content: consult }) {
   const [diagnosisArray, setDiagnosisArray] = useState([]);
 
   useEffect(() => {
-    const fetchDiagnosis = async () => {
-      try {
-        const response = await axios.get(
-          `${API_URL}/diagnosis?consult=${content.id}`,
-        );
-
-        const { data: diagnosis } = response;
-        setDiagnosisArray(diagnosis);
-      } catch (error) {
-        console.error("Error fetching diagnosis:", error);
-      }
-    };
     fetchDiagnosis();
   }, []);
 
+  async function fetchDiagnosis() {
+    try {
+      const response = await axios.get(
+        `${API_URL}/diagnosis?consult=${consult.id}`,
+      );
+
+      const { data: diagnosis } = response;
+      setDiagnosisArray(diagnosis);
+    } catch (error) {
+      console.error("Error fetching diagnosis:", error);
+    }
+  }
+
   const renderPrescriptions = (prescriptions) => {
-    return <VisitPrescriptionsTable content={prescriptions} />;
+    return <PrescriptionsTable content={prescriptions} />;
   };
+
   const diagnosisRows = diagnosisArray.map((diagnosis) => {
     return (
       <tr key={diagnosis.id}>
@@ -39,7 +41,11 @@ export function ConsultationsView({ content }) {
     );
   });
 
-  const prescriptions = content.prescriptions;
+  if (!consult) {
+    return <h2>No Consultation</h2>;
+  }
+
+  const prescriptions = consult.prescriptions;
   return (
     <div className="grid gap-y-2">
       <label className="text-3xl font-bold text-center text-sky-800 mb-2">
@@ -48,44 +54,44 @@ export function ConsultationsView({ content }) {
       <DisplayField
         key={"doctor"}
         label={"Consultation done by"}
-        content={content.doctor?.username}
+        content={consult.doctor?.username}
       />
 
       <DisplayField
         key={"past_medical_history"}
         label={"Past Medical History"}
-        content={content.past_medical_history}
+        content={consult.past_medical_history}
       />
 
       <DisplayField
         key={"consultation"}
         label={"Consultation"}
-        content={content.consultation}
+        content={consult.consultation}
       />
 
-      <DisplayField key={"plan"} label={"Plan"} content={content.plan} />
+      <DisplayField key={"plan"} label={"Plan"} content={consult.plan} />
 
       <DisplayField
         key={"referred_for"}
         label={"Referred For"}
-        content={content.referred_for}
+        content={consult.referred_for}
       />
 
       <DisplayField
         key={"referred_notes"}
         label={"Referred Notes"}
-        content={content.referral_notes}
+        content={consult.referral_notes}
       />
 
       <DisplayField
         key={"remarks"}
         label={"Remarks"}
-        content={content.remarks}
+        content={consult.remarks}
       />
 
       <div>
         <label className="text-base font-semibold leading-6 text-gray-900">
-          Consultations
+          Diagnoses
         </label>
         <div className="mt-4 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -121,7 +127,7 @@ export function ConsultationsView({ content }) {
       {prescriptions.length > 0 ? (
         renderPrescriptions(prescriptions)
       ) : (
-        <h2>None Prescribed</h2>
+        <h2>No Prescriptions</h2>
       )}
 
       <hr />

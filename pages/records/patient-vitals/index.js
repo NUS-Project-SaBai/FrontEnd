@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import Router from "next/router";
 import Modal from "react-modal";
 import {
-  ConsultationsView,
+  ConsultationView,
   ConsultationsTable,
   VitalsForm,
   VitalsTable,
-  VisitPrescriptionsTable,
+  PrescriptionsTable,
   Header,
 } from "@/pages/records/_components";
 import { API_URL } from "@/utils/constants";
@@ -15,81 +15,51 @@ import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";
 import { Button } from "@/components/TextComponents/Button";
 
-const Patient = () => {
+const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);
 
   const [patient, setPatient] = useState({});
   const [visits, setVisits] = useState([]);
 
-  const [consults, setConsults] = useState([]);
-  const [visitPrescriptions, setVisitPrescriptions] = useState([]);
+  const [consults, setConsults] = useState({});
+  const [prescriptions, setPrescriptions] = useState([]);
   const [vitals, setVitals] = useState({});
-  const [visitID, setVisitID] = useState(null);
 
-  const [formDetails, setFormDetails] = useState({});
+  const [selectedVisit, setSelectedVisit] = useState(null);
+  const [selectedConsult, setSelectedConsult] = useState({});
 
-  const [state, setState] = useState({
-    patient: {},
-    medications: [],
-    visits: [],
-    visitID: null,
-    consults: [],
-    orders: [],
-    referredFor: [],
-    vitals: {},
-    formDetails: {},
-    medicationDetails: {},
-    formModalOpen: false,
-    isEditing: false,
-    viewModalOpen: false,
-    modalContent: {},
-  });
+  const [vitalsFormDetails, setVitalsFormDetails] = useState({});
+
+  const [consultationViewModalOpen, setConsultationViewModalOpen] =
+    useState(false);
+
+  const handleVisitChange = useCallback((event) => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
 
   useEffect(() => {
     onRefresh();
   }, []);
 
   async function onRefresh() {
-    const patientId = Router.query.id;
+    const patientID = Router.query.id;
 
     const { data: patient } = await axios.get(
-      `${API_URL}/patients/${patientId}`,
+      `${API_URL}/patients/${patientID}`,
     );
 
     const { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientId}`,
+      `${API_URL}/visits?patient=${patientID}`,
     );
 
     setPatient(patient);
     setVisits(visits);
 
-    const visitID = visits[0].id;
-    loadVisitDetails(visitID);
-  }
-
-  function toggleViewModal(viewType = null, consult = {}) {
-    setState((prevState) => ({
-      ...prevState,
-      viewModalOpen: !state.viewModalOpen,
-      viewType,
-      consult,
-    }));
-  }
-
-  function renderViewModal() {
-    let { consult, viewModalOpen } = state;
-
-    let modalContent = <ConsultationsView content={consult} />;
-    return (
-      <Modal
-        isOpen={viewModalOpen}
-        onRequestClose={() => toggleViewModal()}
-        style={viewModalStyles}
-        contentLabel="Example Modal"
-      >
-        {modalContent}
-      </Modal>
-    );
+    if (visits.length > 0) {
+      const visitID = visits[0].id;
+      loadVisitDetails(visitID);
+    }
   }
 
   async function loadVisitDetails(visitID) {
@@ -97,55 +67,62 @@ const Patient = () => {
       `${API_URL}/consults?visit=${visitID}`,
     );
 
-    const { data: prescriptions } = await axios.get(`${API_URL}/orders`);
-
-    const consultsEnriched = consults.map((consult) => {
-      const consultPrescriptions = prescriptions.filter((prescription) => {
-        return prescription.consult.id === consult.id;
-      });
-
-      return {
-        ...consult,
-        prescriptions: consultPrescriptions,
-      };
-    });
+    const prescriptions = consults
+      .flatMap((consult) => consult.prescriptions)
+      .filter((prescription) => prescription != null);
 
     const { data: vitals } = await axios.get(
       `${API_URL}/vitals?visit=${visitID}`,
     );
 
     setMounted(true);
-    setConsults(consultsEnriched);
+    setSelectedVisit(visitID);
+    setConsults(consults);
+    setPrescriptions(prescriptions);
     setVitals(vitals[0] || {});
-    setVisitPrescriptions(consultsEnriched.flatMap((x) => x.prescriptions));
-    setVisitID(visitID);
   }
 
-  async function submitForm() {
+  function toggleConsultationViewModal() {
+    setConsultationViewModalOpen(!consultationViewModalOpen);
+  }
+
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleConsultationViewModal();
+  }
+
+  function renderConsultationViewModal() {
+    return (
+      <Modal
+        isOpen={consultationViewModalOpen}
+        onRequestClose={() => toggleConsultationViewModal()}
+        style={viewModalStyles}
+      >
+        <ConsultationView content={selectedConsult} />;
+      </Modal>
+    );
+  }
+
+  async function submitVitalsForm() {
     const formPayload = {
-      visit: visitID,
-      ...formDetails,
+      visit: selectedVisit,
+      ...vitalsFormDetails,
     };
-    await axios.patch(`${API_URL}/vitals?visit=${visitID}`, formPayload);
+    await axios.patch(`${API_URL}/vitals?visit=${selectedVisit}`, formPayload);
     toast.success("Vitals completed!");
 
     Router.push("/records");
   }
 
-  function handleInputChange(e) {
+  function handleVitalsFormOnChange(e) {
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
 
-    setFormDetails((prevState) => ({
+    setVitalsFormDetails((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-  }
-
-  function handleVisitChange(e) {
-    const value = e.target.value;
-    loadVisitDetails(value);
   }
 
   function renderHeader() {
@@ -170,12 +147,9 @@ const Patient = () => {
           <VitalsTable content={vitals} />
         )}
 
-        <ConsultationsTable
-          content={consults}
-          buttonFunction={toggleViewModal}
-        />
+        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
 
-        <VisitPrescriptionsTable content={visitPrescriptions} />
+        <PrescriptionsTable content={prescriptions} />
       </div>
     );
   }
@@ -184,12 +158,16 @@ const Patient = () => {
     return (
       <div className="space-y-2">
         <VitalsForm
-          formDetails={formDetails}
-          handleInputChange={handleInputChange}
+          formDetails={vitalsFormDetails}
+          handleOnChange={handleVitalsFormOnChange}
           patient={patient}
         />
 
-        <Button colour="green" text={"Submit"} onClick={() => submitForm()} />
+        <Button
+          colour="green"
+          text={"Submit"}
+          onClick={() => submitVitalsForm()}
+        />
       </div>
     );
   }
@@ -207,7 +185,7 @@ const Patient = () => {
           overflowY: "hidden",
         }}
       >
-        {renderViewModal()}
+        {renderConsultationViewModal()}
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Vitals
         </h1>
@@ -240,4 +218,4 @@ const viewModalStyles = {
   },
 };
 
-export default withAuth(Patient);
+export default withAuth(PatientVitals);

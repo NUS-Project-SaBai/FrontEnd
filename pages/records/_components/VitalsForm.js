@@ -1,6 +1,6 @@
 import { InputField } from "@/components/TextComponents";
 
-export function VitalsForm({ handleInputChange, formDetails, patient }) {
+export function VitalsForm({ handleOnChange, formDetails, patient }) {
   const vitalFields = [
     {
       name: "height",
@@ -39,27 +39,27 @@ export function VitalsForm({ handleInputChange, formDetails, patient }) {
       type: "number",
     },
     {
-      name: "left_eye_degree",
-      label: "Left Eye (Fraction eg. 6/6)",
-      value: formDetails.left_eye_degree,
-      type: "text",
-    },
-    {
       name: "right_eye_degree",
-      label: "Right Eye (Fraction eg. 6/12)",
+      label: "Right Eye (Fraction eg. 6/6)",
       value: formDetails.right_eye_degree,
       type: "text",
     },
     {
-      name: "left_eye_pinhole",
-      label: "Left Eye Pinhole (Fraction eg. 6/6)",
-      value: formDetails.left_eye_pinhole,
+      name: "left_eye_degree",
+      label: "Left Eye (Fraction eg. 6/12)",
+      value: formDetails.left_eye_degree,
       type: "text",
     },
     {
       name: "right_eye_pinhole",
-      label: "Right Eye Pinhole (Fraction eg. 6/12)",
+      label: "Right Eye Pinhole (Fraction eg. 6/6)",
       value: formDetails.right_eye_pinhole,
+      type: "text",
+    },
+    {
+      name: "left_eye_pinhole",
+      label: "Left Eye Pinhole (Fraction eg. 6/12)",
+      value: formDetails.left_eye_pinhole,
       type: "text",
     },
     // Add more fields as needed
@@ -106,7 +106,7 @@ export function VitalsForm({ handleInputChange, formDetails, patient }) {
               label={field.label}
               type={field.type}
               value={field.value}
-              onChange={handleInputChange}
+              onChange={handleOnChange}
             />
           ))}
         </div>
@@ -122,9 +122,10 @@ export function VitalsForm({ handleInputChange, formDetails, patient }) {
                 label={field.label}
                 type={field.type}
                 value={field.value}
-                onChange={handleInputChange}
+                onChange={handleOnChange}
               />
             ))}
+
             {patient.date_of_birth &&
               Math.abs(
                 new Date(
@@ -138,7 +139,7 @@ export function VitalsForm({ handleInputChange, formDetails, patient }) {
                     <select
                       className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mt-4"
                       name="diabetes_mellitus"
-                      onChange={handleInputChange}
+                      onChange={handleOnChange}
                     >
                       <option>Please Select...</option>
                       <option value="No">No</option>

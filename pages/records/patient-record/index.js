@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import _ from "lodash";
 import Modal from "react-modal";
 import {
-  ConsultationsView,
+  ConsultationView,
   ConsultationsTable,
   VitalsTable,
   Header,
   PatientView,
-  VisitPrescriptionsTable,
+  PrescriptionsTable,
 } from "@/pages/records/_components";
 
 import { API_URL } from "@/utils/constants";
@@ -27,7 +26,7 @@ const PatientRecord = () => {
   const [consults, setConsults] = useState([]);
   const [selectedConsult, setSelectedConsult] = useState(null);
 
-  const [visitPrescriptions, setVisitPrescriptions] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
 
   const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
@@ -43,9 +42,11 @@ const PatientRecord = () => {
 
   async function onRefresh() {
     const patientID = Router.query.id;
+
     const { data: patient } = await axios.get(
       `${API_URL}/patients/${patientID}`,
     );
+
     const { data: visits } = await axios.get(
       `${API_URL}/visits?patient=${patientID}`,
     );
@@ -63,23 +64,18 @@ const PatientRecord = () => {
     const { data: consults } = await axios.get(
       `${API_URL}/consults?visit=${visitID}`,
     );
-    const { data: prescriptions } = await axios.get(`${API_URL}/orders`);
-    const consultsEnriched = consults.map((consult) => {
-      const consultPrescriptions = prescriptions.filter(
-        (prescription) => prescription.consult.id === consult.id,
-      );
-      return {
-        ...consult,
-        prescriptions: consultPrescriptions,
-      };
-    });
+
+    const prescriptions = consults
+      .flatMap((consult) => consult.prescriptions)
+      .filter((prescription) => prescription != null);
+
     const { data: vitals } = await axios.get(
       `${API_URL}/vitals?visit=${visitID}`,
     );
 
     setNoRecords(false);
-    setVisitPrescriptions(consultsEnriched.flatMap((x) => x.prescriptions));
-    setConsults(consultsEnriched);
+    setConsults(consults);
+    setPrescriptions(prescriptions);
     setVitals(vitals[0] || {});
   }
 
@@ -87,7 +83,7 @@ const PatientRecord = () => {
     setVitalsModalOpen(!vitalsModalOpen);
   }
 
-  function toggleConsultationsModal() {
+  function toggleConsultationModal() {
     setConsultationModalOpen(!consultationModalOpen);
   }
 
@@ -124,14 +120,14 @@ const PatientRecord = () => {
 
   function selectConsult(consult) {
     setSelectedConsult(consult);
-    toggleConsultationsModal();
+    toggleConsultationModal();
   }
 
   function renderSecondColumn() {
     return (
       <div className="space-y-8">
-        <ConsultationsTable content={consults} buttonFunction={selectConsult} />
-        <VisitPrescriptionsTable content={visitPrescriptions} />
+        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
+        <PrescriptionsTable content={prescriptions} />
       </div>
     );
   }
@@ -170,10 +166,10 @@ const PatientRecord = () => {
         </Modal>
         <Modal
           isOpen={consultationModalOpen}
-          onRequestClose={() => toggleConsultationsModal()}
+          onRequestClose={() => toggleConsultationModal()}
           style={viewModalStyles}
         >
-          <ConsultationsView content={selectedConsult} />
+          <ConsultationView content={selectedConsult} />
         </Modal>
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Records
