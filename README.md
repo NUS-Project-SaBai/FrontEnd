@@ -1,5 +1,14 @@
 # Project SaBai Front-End
 
+## Readings 
+
+NodeJS (https://nodejs.org/en)
+Node Version Manager (https://github.com/nvm-sh/nvm)
+Node Package Manager (https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+YARN (https://yarnpkg.com/)
+React JS (https://react.dev/)
+Next JS (https://nextjs.org/)
+
 ## Installation
 
 1. Installation of Node Version Manager
@@ -10,8 +19,8 @@
    - Verify that you have `npm` by typing in `npm -v`
 
 2. Installation of yarn
-   [https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable]
-
+   Next, install Yarn package manager by following the instructions provided on their website: [https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable]
+   After installing Yarn, verify the installation with the following command: 
    ```bash
    # Installing yarn
    npm install --global yarn
@@ -30,7 +39,29 @@
    # Run the development server
    yarn dev
    ```
+4. Configure Local Backend
 
+   In the FrontEnd/utils/constants.js file, ensure that you are using the local backend instead of the actual backend. Comment out the first line and uncomment the last line, as shown below: 
+   ```bash 
+   // export const API_URL = "https://projectsabai-vza8.onrender.com";
+   export const CLOUDINARY_URL = "https://res.cloudinary.com/dxy0byphl";
+   export const API_URL = "http://localhost:8000";
+   ```
+5. Environmental Setup
+   Create a ".env.local" by making a copy of ".env.local.example" and filling it with relevant details from the "Key Credentials" document. 
+   
+   ```bash
+   NODE_ENV=development
+   AUTH0_SECRET=
+   AUTH0_BASE_URL=
+   AUTH0_ISSUER_BASE_URL=
+   AUTH0_CLIENT_ID=
+   AUTH0_CLIENT_SECRET=
+   # Run the following command to start the server: 
+   yarn dev 
+   ```
+   Login with the credentials in the key credential file. 
+   
 ## Technology used
 
 1. Node Version Manager [https://github.com/nvm-sh/nvm]
