@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { MedicationModal } from "./MedicationModal";
+import { MedicationModal } from "./_components/";
 import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import { Button, InputField } from "@/components/TextComponents";
