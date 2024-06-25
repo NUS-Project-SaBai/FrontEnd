@@ -14,7 +14,7 @@ import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import Router from "next/router";
 
-import { Button } from "@/components/TextComponents/Button";
+import { Button } from "@/components/TextComponents/";
 
 const PatientRecord = () => {
   const [noRecords, setNoRecords] = useState(true);

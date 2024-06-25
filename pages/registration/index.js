@@ -4,16 +4,19 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import moment from "moment";
 
-import { API_URL, CLOUDINARY_URL, NO_PHOTO_MESSAGE } from "@/utils/constants";
+import {
+  API_URL,
+  CLOUDINARY_URL,
+  NO_PHOTO_MESSAGE,
+  venueOptions,
+} from "@/utils/constants";
 import { urltoFile } from "@/utils/helpers";
 import withAuth from "@/utils/auth";
 import AppWebcam from "@/utils/webcam";
 
-import PatientModal from "@/pages/registration/PatientModal";
-import ScanModal from "@/pages/registration/ScanModal";
+import { PatientModal, ScanModal } from "@/pages/registration/_components";
 
-import { DisplayField } from "@/components/TextComponents/DisplayField";
-import { Button } from "@/components/TextComponents/Button";
+import { DisplayField, Button } from "@/components/TextComponents/";
 import Loading from "@/components/Loading";
 
 const PatientInfo = ({ patient, submitNewVisit }) => {
@@ -73,7 +76,7 @@ const Registration = () => {
     date_of_birth: "",
     drug_allergy: "",
     gender: "Male",
-    village_prefix: "SV",
+    village_prefix: Object.keys(venueOptions)[0],
   });
 
   useEffect(() => {
@@ -186,7 +189,7 @@ const Registration = () => {
     let payload = {
       patient: patient.pk,
       status: "started",
-      visit_date: moment().format("YYYY-MM-DD"),
+      visit_date: moment().format("DD MMMM YYYY HH:mm"),
     };
     await axios.post(`${API_URL}/visits`, payload);
     toast.success("New visit created for patient!");

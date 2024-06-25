@@ -8,12 +8,12 @@ import {
   MATCH_FOUND_MESSAGE,
   NO_MATCHES_FOUND_MESSAGE,
   NO_PHOTO_MESSAGE,
-} from "../../utils/constants";
-import { urltoFile } from "../../utils/helpers";
+} from "@/utils/constants";
+import { urltoFile } from "@/utils/helpers";
 import Link from "next/link";
-import { Button } from "@/components/TextComponents/Button";
+import { Button } from "@/components/TextComponents";
 
-const ScanModal = ({
+export function ScanModal({
   modalIsOpen,
   cameraIsOpen,
   imageDetails,
@@ -21,7 +21,7 @@ const ScanModal = ({
   renderWebcam,
   toggleCameraOpen,
   customStyles,
-}) => {
+}) {
   const [matchedPatientData, setMatchedPatientData] = useState(null);
 
   const scanPatient = async () => {
@@ -138,6 +138,4 @@ const ScanModal = ({
       </div>
     </Modal>
   );
-};
-
-export default ScanModal;
+}

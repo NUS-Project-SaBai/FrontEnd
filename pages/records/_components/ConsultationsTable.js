@@ -14,10 +14,7 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
 
   const consultRows = consults.map((consult) => {
     const doctor = consult.doctor.username;
-    const referredFor =
-      consult.referrals == null || consult.referrals == ""
-        ? "None"
-        : consult.referrals.split("\n")[0].split(" ")[2];
+    const referredFor = consult.referred_for || "Not referred";
 
     return (
       <tr key={consult.id}>
