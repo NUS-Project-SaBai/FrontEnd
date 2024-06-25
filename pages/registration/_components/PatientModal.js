@@ -1,7 +1,5 @@
 import Modal from "react-modal";
-import { Button } from "@/components/TextComponents/Button";
-import { InputField } from "@/components/TextComponents/InputField";
-import { InputBox } from "@/components/TextComponents/InputBox";
+import { Button, InputField, InputBox } from "@/components/TextComponents";
 import { venueOptions } from "@/utils/constants";
 
 const VenueOptions = ({ handleInputChange }) => (
@@ -28,7 +26,7 @@ const VenueOptions = ({ handleInputChange }) => (
   </div>
 );
 
-const PatientModal = ({
+export function PatientModal({
   modalIsOpen,
   formDetails,
   imageDetails,
@@ -40,7 +38,7 @@ const PatientModal = ({
   toggleCameraOpen,
   customStyles,
   loading,
-}) => {
+}) {
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -148,6 +146,4 @@ const PatientModal = ({
       </div>
     </Modal>
   );
-};
-
-export default PatientModal;
+}

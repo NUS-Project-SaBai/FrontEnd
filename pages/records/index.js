@@ -44,7 +44,7 @@ function PatientList() {
           <Button
             text={"Create"}
             onClick={() =>
-              Router.push(`/records/patient-vital?id=${patient.pk}`)
+              Router.push(`/records/patient-vitals?id=${patient.pk}`)
             }
             colour="green"
           />

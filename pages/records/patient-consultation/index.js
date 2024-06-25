@@ -14,7 +14,7 @@ import {
 import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";
-import { Button } from "@/components/TextComponents/Button";
+import { Button } from "@/components/TextComponents/";
 
 const PatientConsultation = () => {
   const [mounted, setMounted] = useState(false);
@@ -235,15 +235,15 @@ const PatientConsultation = () => {
   }
 
   async function submitConsultationForm() {
-    orders.forEach((order) => {
-      axios
-        .patch(`${API_URL}/medications/${order.medicine}`, {
-          quantityChange: -parseInt(order.quantity),
-        })
-        .catch((error) => {
-          console.error("Error creating order:", error.response.data);
-        });
-    });
+    // orders.forEach((order) => {
+    //   axios
+    //     .patch(`${API_URL}/medications/${order.medicine}`, {
+    //       quantityChange: -parseInt(order.quantity),
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error creating order:", error.response.data);
+    //     });
+    // });
 
     const formPayload = {
       visit: selectedVisitID,

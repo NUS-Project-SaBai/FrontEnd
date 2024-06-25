@@ -22,9 +22,9 @@ export function MedicationModal({
       style={{
         content: {
           left: "35%",
-          right: "17.5%",
-          top: "25%",
-          bottom: "25%",
+          right: "12.5%",
+          top: "12.5%",
+          bottom: "12.5%",
         },
       }}
     >

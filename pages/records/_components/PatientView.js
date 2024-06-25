@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { DisplayField } from "@/components/TextComponents";
 
 export function PatientView({ content }) {
@@ -13,7 +14,11 @@ export function PatientView({ content }) {
     { label: "ID Number", key: "identification_number" },
     { label: "Gender", key: "gender" },
     { label: "Age", key: "date_of_birth", calculate: calculate_age },
-    { label: "Date of Birth", key: "date_of_birth" },
+    {
+      label: "Date of Birth",
+      key: "date_of_birth",
+      calculate: (dob) => moment(dob).format("DD-MMMM-YYYY"),
+    },
     { label: "Allergies", key: "drug_allergy" },
   ];
 

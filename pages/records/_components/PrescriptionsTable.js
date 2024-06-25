@@ -15,13 +15,18 @@ export function PrescriptionsTable({ content: prescriptions }) {
       prescription.medicine.medicine_name ||
       "Prescription.medicine.medicine_name not found";
     const quantity = prescription.quantity;
+    const status = prescription.order_status.toUpperCase();
+    const rowColor = status === "APPROVED" ? "bg-green-100" : "bg-red-100";
     return (
-      <tr key={prescription.id}>
+      <tr className={rowColor} key={prescription.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
           {name}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
           {quantity}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          {status}
         </td>
       </tr>
     );
@@ -51,6 +56,12 @@ export function PrescriptionsTable({ content: prescriptions }) {
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
                       Quantity
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Status
                     </th>
                   </tr>
                 </thead>

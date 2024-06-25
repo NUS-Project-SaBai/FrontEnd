@@ -37,13 +37,31 @@ const Orders = () => {
     setOrdersFiltered(filteredOrders);
   };
 
-  const handleOrderAction = async (order, actionType) => {
-    if (window.confirm(`Are you sure you want to ${actionType} this order?`)) {
+  const handleOrderApprove = async (order) => {
+    if (window.confirm("Are you sure you want to approve this order?")) {
       try {
-        axios.patch(`${API_URL}/orders/${order.id}`, {
-          order_status: actionType === "approve" ? "approved" : "cancelled",
+        await axios.patch(`${API_URL}/orders/${order.id}`, {
+          order_status: "APPROVED",
         });
-        loadOrders();
+
+        await axios.patch(`${API_URL}/medications/${order.medicine.id}`, {
+          quantityChange: -order.quantity,
+        });
+
+        router.reload();
+      } catch (error) {
+        console.error("Error updating orders:", error.response.data);
+      }
+    }
+  };
+
+  const handleOrderCancel = async (order) => {
+    if (window.confirm("Are you sure you want to cancel this order?")) {
+      try {
+        await axios.patch(`${API_URL}/orders/${order.id}`, {
+          order_status: "CANCELLED",
+        });
+
         router.reload();
       } catch (error) {
         console.error("Error updating orders:", error);
@@ -56,7 +74,7 @@ const Orders = () => {
       const visit = order.visit;
       const prescriptions = (
         <li key={order.medicine.id}>
-          {order.medicine?.medicine_name || ""}: {order.medicine.quantity}
+          {order.medicine?.medicine_name || ""}: {order.quantity}
           <br />
           {order.medicine.notes && (
             <div className="truncate">Notes: {order.medicine.notes}</div>
@@ -90,14 +108,14 @@ const Orders = () => {
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
             <Button
               colour="green"
-              text="Prescribe"
-              onClick={() => handleOrderAction(order, "approve")}
+              text="Approve"
+              onClick={() => handleOrderApprove(order)}
             />
 
             <Button
               colour="red"
-              text="Reject"
-              onClick={() => handleOrderAction(order, "cancel")}
+              text="Cancel"
+              onClick={() => handleOrderCancel(order)}
             />
           </td>
         </tr>
