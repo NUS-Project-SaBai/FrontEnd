@@ -37,7 +37,6 @@
    cd FrontEnd
    # Install the necessary libraries for the project
    yarn install
-
    # Run the development server
    yarn dev
    ```
@@ -59,6 +58,7 @@
    AUTH0_ISSUER_BASE_URL=
    AUTH0_CLIENT_ID=
    AUTH0_CLIENT_SECRET=
+   
    # Run the following command to start the server: 
    yarn dev 
    ```
