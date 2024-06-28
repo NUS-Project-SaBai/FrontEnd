@@ -15,18 +15,6 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
       type: "number",
     },
     {
-      name: "systolic",
-      label: "Systolic (Number eg. 10)",
-      value: formDetails.systolic,
-      type: "number",
-    },
-    {
-      name: "diastolic",
-      label: "Diastolic (Number eg. 10)",
-      value: formDetails.diastolic,
-      type: "number",
-    },
-    {
       name: "temperature",
       label: "Temperature (Decimal eg. 36.5)",
       value: formDetails.temperature,
@@ -109,6 +97,31 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
               onChange={handleOnChange}
             />
           ))}
+          <div>
+            <label className="label">
+              Blood Pressure (Systolic / Diastolic)
+            </label>
+            <div className="flex">
+              <InputField
+                key="systolic"
+                name="systolic"
+                // label="Systolic"
+                type="number"
+                value={formDetails.systolic}
+                onChange={handleOnChange}
+              />
+
+              <span className="mx-2 my-2 text-lg">/</span>
+              <InputField
+                key="diastolic"
+                name="diastolic"
+                // label="Diastolic"
+                type="number"
+                value={formDetails.diastolic}
+                onChange={handleOnChange}
+              />
+            </div>
+          </div>
         </div>
         <div>
           <label className="label">STAT Investigations</label>
@@ -125,29 +138,21 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
                 onChange={handleOnChange}
               />
             ))}
+            <div>
+              <div>
+                <label className="label"> Diabetes?</label>
 
-            {patient.date_of_birth &&
-              Math.abs(
-                new Date(
-                  Date.now() - new Date(patient.date_of_birth),
-                ).getUTCFullYear() - 1970,
-              ) >= 40 && (
-                <div>
-                  <div>
-                    <label className="label"> Diabetes?</label>
-
-                    <select
-                      className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mt-4"
-                      name="diabetes_mellitus"
-                      onChange={handleOnChange}
-                    >
-                      <option>Please Select...</option>
-                      <option value="No">No</option>
-                      <option value="Yes">Yes</option>
-                    </select>
-                  </div>
-                </div>
-              )}
+                <select
+                  className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mt-4"
+                  name="diabetes_mellitus"
+                  onChange={handleOnChange}
+                >
+                  <option>Please Select...</option>
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       </div>
