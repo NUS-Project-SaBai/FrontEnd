@@ -1,4 +1,4 @@
-export function DisplayField({ label, content }) {
+export function DisplayField({ label, content, highlight }) {
   return (
     <div>
       <label
@@ -7,7 +7,13 @@ export function DisplayField({ label, content }) {
       >
         {label}
       </label>
-      <div className="block w-full bg-gray-200 rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  sm:text-sm sm:leading-6 mt-1">
+      <div
+        className={`block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset sm:text-sm sm:leading-6 mt-1 ${
+          highlight
+            ? "bg-red-200 text-red-900 ring-red-300"
+            : "bg-gray-200 text-gray-900 ring-gray-300"
+        }`}
+      >
         {content}
       </div>
     </div>
