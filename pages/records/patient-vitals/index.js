@@ -161,12 +161,7 @@ const PatientVitals = () => {
           formDetails={vitalsFormDetails}
           handleOnChange={handleVitalsFormOnChange}
           patient={patient}
-        />
-
-        <Button
-          colour="green"
-          text={"Submit"}
-          onClick={() => submitVitalsForm()}
+          onSubmit={submitVitalsForm}
         />
       </div>
     );
@@ -196,7 +191,7 @@ const PatientVitals = () => {
 
         <hr />
 
-        <div className="grid grid-cols-2 gap-x-4 mb-4">
+        <div className="grid grid-cols-2 gap-x-4 mb-4 mt-2">
           <div>{renderFirstColumn()}</div>
           <div>{renderSecondColumn()}</div>
         </div>

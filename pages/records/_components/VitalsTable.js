@@ -5,9 +5,8 @@ export function VitalsTable({ content }) {
   const isBloodPressureLow = content.systolic < 90 || content.diastolic < 60;
   const shouldHighlightBloodPressure =
     isBloodPressureHigh || isBloodPressureLow;
+
   const vitalFields = [
-    { label: "Height", value: content.height },
-    { label: "Weight", value: content.weight },
     {
       label: "Systolic",
       value: content.systolic,
@@ -31,18 +30,46 @@ export function VitalsTable({ content }) {
       value: content.blood_glucose,
       highlight: content.blood_glucose > 6.1,
     },
-    { label: "Others", value: content.others },
     { label: "Diabetes Mellitus?", value: content.diabetes_mellitus },
-    { label: "BMI", value: content.weight / content.height ** 2 }, // Change with respect to units
+    { label: "Others", value: content.others },
   ];
+
   return (
-    <form>
+    <form className="">
       <div>
-        <label className="label">Vital Signs</label>
+        <label className="label">Past Vital Signs</label>
       </div>
       <div>
+        <div className="grid gap-6 md:grid-cols-3">
+          <DisplayField label="Height" content={content.height} />
+          <DisplayField label="Weight" content={content.weight} />
+          <DisplayField
+            label="BMI"
+            content={(content.weight / content.height ** 2).toFixed(2)}
+          />
+        </div>
+        <div className="my-4">
+          <label className="label">
+            Blood Pressure (Systolic / Diastolic) / mmHg
+          </label>
+          <div className="flex items-center gap-2">
+            <DisplayField
+              key="systolic"
+              // label="Systolic"
+              content={content.systolic}
+              highlight={shouldHighlightBloodPressure}
+            />
+            <span className="mx-2 my-2 text-lg">/</span>
+            <DisplayField
+              key="diastolic"
+              // label="Diastolic"
+              content={content.diastolic}
+              highlight={shouldHighlightBloodPressure}
+            />
+          </div>
+        </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {vitalFields.map((field) => (
+          {vitalFields.slice(2).map((field) => (
             <DisplayField
               key={field.label}
               label={field.label}

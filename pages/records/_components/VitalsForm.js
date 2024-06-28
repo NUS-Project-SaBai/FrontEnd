@@ -1,6 +1,6 @@
-import { InputField } from "@/components/TextComponents";
+import { Button, InputField } from "@/components/TextComponents";
 
-export function VitalsForm({ handleOnChange, formDetails, patient }) {
+export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
   const vitalFields = [
     {
       name: "height",
@@ -82,9 +82,11 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
   ];
 
   return (
-    <form>
+    <form className="bg-blue-100 p-4 rounded-lg relative">
       <div>
-        <label className="label">Vitals</label>
+        <label className="label text-lg font-semibold">
+          Current Vital Signs
+        </label>
       </div>
       <div>
         <div className="grid gap-6 md:grid-cols-2">
@@ -108,17 +110,14 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
             <InputField
               key="systolic"
               name="systolic"
-              // label="Systolic"
               type="number"
               value={formDetails.systolic}
               onChange={handleOnChange}
             />
-
             <span className="mx-2 my-2 text-lg">/</span>
             <InputField
               key="diastolic"
               name="diastolic"
-              // label="Diastolic"
               type="number"
               value={formDetails.diastolic}
               onChange={handleOnChange}
@@ -126,7 +125,9 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
           </div>
         </div>
         <div>
-          <label className="label">STAT Investigations</label>
+          <label className="label text-lg font-semibold">
+            STAT Investigations
+          </label>
         </div>
         <div>
           <div className="grid gap-6 md:grid-cols-2">
@@ -140,12 +141,11 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
                 onChange={handleOnChange}
               />
             ))}
-            <div>
+            <div className="flex items-center space-x-4">
               <div>
-                <label className="label"> Diabetes?</label>
-
+                <label className="label">Diabetes?</label>
                 <select
-                  className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 mt-4"
+                  className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-48 p-2.5 mt-1"
                   name="diabetes_mellitus"
                   onChange={handleOnChange}
                 >
@@ -157,6 +157,9 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
             </div>
           </div>
         </div>
+      </div>
+      <div className="absolute bottom-4 right-4">
+        <Button colour="green" text={"Submit"} onClick={onSubmit} />
       </div>
     </form>
   );
