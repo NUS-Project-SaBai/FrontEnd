@@ -24,7 +24,6 @@ export function VitalsTable({ content }) {
     { label: "Right Eye", value: content.right_eye_degree },
     { label: "Left Eye Pinhole", value: content.left_eye_pinhole },
     { label: "Right Eye Pinhole", value: content.right_eye_pinhole },
-
     { label: "Urine Dip Test", value: content.urine_test },
     { label: "Hemocue Hb Count", value: content.hemocue_count },
     {
@@ -34,6 +33,7 @@ export function VitalsTable({ content }) {
     },
     { label: "Others", value: content.others },
     { label: "Diabetes Mellitus?", value: content.diabetes_mellitus },
+    { label: "BMI", value: content.weight / (content.height / 100) ** 2 }, // Change with respect to units
   ];
   return (
     <form>
