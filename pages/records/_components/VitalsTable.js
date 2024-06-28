@@ -33,7 +33,7 @@ export function VitalsTable({ content }) {
     },
     { label: "Others", value: content.others },
     { label: "Diabetes Mellitus?", value: content.diabetes_mellitus },
-    { label: "BMI", value: content.weight / (content.height / 100) ** 2 }, // Change with respect to units
+    { label: "BMI", value: content.weight / content.height ** 2 }, // Change with respect to units
   ];
   return (
     <form>

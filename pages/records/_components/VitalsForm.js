@@ -4,27 +4,33 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
   const vitalFields = [
     {
       name: "height",
-      label: "Height (Decimal eg. 160.5)",
+      label: "Height / CM",
       value: formDetails.height,
       type: "number",
     },
     {
       name: "weight",
-      label: "Weight (Decimal eg. 60.2)",
+      label: "Weight / KG",
       value: formDetails.weight,
       type: "number",
     },
     {
       name: "temperature",
-      label: "Temperature (Decimal eg. 36.5)",
+      label: "Temperature / °C",
       value: formDetails.temperature,
       type: "number",
     },
     {
       name: "heart_rate",
-      label: "Heart Rate (Number eg. 120)",
+      label: "Heart Rate / BPM",
       value: formDetails.heart_rate,
       type: "number",
+    },
+    {
+      name: "left_eye_degree",
+      label: "Left Eye (Fraction eg. 6/6)",
+      value: formDetails.left_eye_degree,
+      type: "text",
     },
     {
       name: "right_eye_degree",
@@ -33,23 +39,18 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
       type: "text",
     },
     {
-      name: "left_eye_degree",
-      label: "Left Eye (Fraction eg. 6/12)",
-      value: formDetails.left_eye_degree,
-      type: "text",
-    },
-    {
-      name: "right_eye_pinhole",
-      label: "Right Eye Pinhole (Fraction eg. 6/6)",
-      value: formDetails.right_eye_pinhole,
-      type: "text",
-    },
-    {
       name: "left_eye_pinhole",
       label: "Left Eye Pinhole (Fraction eg. 6/12)",
       value: formDetails.left_eye_pinhole,
       type: "text",
     },
+    {
+      name: "right_eye_pinhole",
+      label: "Right Eye Pinhole (Fraction eg. 6/12)",
+      value: formDetails.right_eye_pinhole,
+      type: "text",
+    },
+
     // Add more fields as needed
   ];
 
@@ -97,30 +98,31 @@ export function VitalsForm({ handleOnChange, formDetails, patient }) {
               onChange={handleOnChange}
             />
           ))}
-          <div>
-            <label className="label">
-              Blood Pressure (Systolic / Diastolic)
-            </label>
-            <div className="flex">
-              <InputField
-                key="systolic"
-                name="systolic"
-                // label="Systolic"
-                type="number"
-                value={formDetails.systolic}
-                onChange={handleOnChange}
-              />
+        </div>
 
-              <span className="mx-2 my-2 text-lg">/</span>
-              <InputField
-                key="diastolic"
-                name="diastolic"
-                // label="Diastolic"
-                type="number"
-                value={formDetails.diastolic}
-                onChange={handleOnChange}
-              />
-            </div>
+        <div className="my-4">
+          <label className="label">
+            Blood Pressure (Systolic / Diastolic) / mmHg
+          </label>
+          <div className="flex">
+            <InputField
+              key="systolic"
+              name="systolic"
+              // label="Systolic"
+              type="number"
+              value={formDetails.systolic}
+              onChange={handleOnChange}
+            />
+
+            <span className="mx-2 my-2 text-lg">/</span>
+            <InputField
+              key="diastolic"
+              name="diastolic"
+              // label="Diastolic"
+              type="number"
+              value={formDetails.diastolic}
+              onChange={handleOnChange}
+            />
           </div>
         </div>
         <div>
