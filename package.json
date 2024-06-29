@@ -1,14 +1,18 @@
 {
   "name": "with-cookie-auth",
+  "type": "module",
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prepare": "husky"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.2.0",
+    "@eslint/js": "^9.6.0",
     "@heroicons/react": "^2.1.3",
     "axios": "^0.19.0",
+    "globals": "^15.6.0",
     "isomorphic-unfetch": "^3.0.0",
     "moment": "^2.24.0",
     "next": "^13.1.6",
@@ -24,9 +28,20 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.1.0",
     "autoprefixer": "^10.4.17",
+    "eslint": "9.x",
+    "eslint-plugin-react": "^7.34.3",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
     "postcss": "^8.4.33",
-    "prettier": "3.1.1",
+    "prettier": "^3.3.2",
     "tailwindcss": "^3.4.1"
+  },
+  "lint-staged": {
+    "*.{js,ts,json,css,scss,md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
