@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { DisplayField } from "@/components/TextComponents/DisplayField";
 import { PrescriptionsTable } from "./PrescriptionsTable";
 import { API_URL } from "@/utils/constants";
+import makeRequest from "@/utils/make-request";
 
 export function ConsultationView({ content: consult }) {
   const [diagnosisArray, setDiagnosisArray] = useState([]);
@@ -13,7 +13,8 @@ export function ConsultationView({ content: consult }) {
 
   async function fetchDiagnosis() {
     try {
-      const response = await axios.get(
+      const response = await makeRequest(
+        "get",
         `${API_URL}/diagnosis?consult=${consult.id}`,
       );
 

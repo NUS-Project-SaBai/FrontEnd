@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Autosuggest from "react-autosuggest";
-import axios from "axios";
 import toast from "react-hot-toast";
 import moment from "moment";
 
@@ -18,6 +17,7 @@ import { PatientModal, ScanModal } from "@/pages/registration/_components";
 
 import { DisplayField, Button } from "@/components/TextComponents/";
 import Loading from "@/components/Loading";
+import makeRequest from "@/utils/make-request";
 
 const PatientInfo = ({ patient, submitNewVisit }) => {
   return patient.pk ? (
@@ -78,13 +78,14 @@ const Registration = () => {
     gender: "Male",
     village_prefix: Object.keys(venueOptions)[0],
   });
+  // const [accessToken, setAccessToken] = useState("");
 
   useEffect(() => {
     onRefresh();
   }, []);
 
   const onRefresh = async () => {
-    let { data: patients } = await axios.get(`${API_URL}/patients`);
+    let { data: patients } = await makeRequest("get", `${API_URL}/patients`);
     setPatientsList(patients);
   };
 
@@ -158,13 +159,16 @@ const Registration = () => {
       patientFormData.append(key, payload[key]),
     );
 
-    const { data: response } = await axios
-      .post(`${API_URL}/patients`, patientFormData, {
+    const { data: response } = await makeRequest(
+      "post",
+      `${API_URL}/patients`,
+      patientFormData,
+      {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      })
-      .catch((error) => {});
+      },
+    );
 
     if (typeof response.error !== "undefined") {
       toast.error(`Please retake photo! ${response.error}`);
@@ -191,7 +195,7 @@ const Registration = () => {
       status: "started",
       visit_date: moment().format("DD MMMM YYYY HH:mm"),
     };
-    await axios.post(`${API_URL}/visits`, payload);
+    await makeRequest("post", `${API_URL}/visits`, payload);
     toast.success("New visit created for patient!");
   };
 

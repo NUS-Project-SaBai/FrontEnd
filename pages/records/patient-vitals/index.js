@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 import Router from "next/router";
 import Modal from "react-modal";
 import {
@@ -14,6 +13,7 @@ import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";
 import { Button } from "@/components/TextComponents/";
+import makeRequest from "@/utils/make-request";
 
 const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);
@@ -45,11 +45,13 @@ const PatientVitals = () => {
   async function onRefresh() {
     const patientID = Router.query.id;
 
-    const { data: patient } = await axios.get(
+    const { data: patient } = await makeRequest(
+      "get",
       `${API_URL}/patients/${patientID}`,
     );
 
-    const { data: visits } = await axios.get(
+    const { data: visits } = await makeRequest(
+      "get",
       `${API_URL}/visits?patient=${patientID}`,
     );
 
@@ -63,7 +65,8 @@ const PatientVitals = () => {
   }
 
   async function loadVisitDetails(visitID) {
-    const { data: consults } = await axios.get(
+    const { data: consults } = await makeRequest(
+      "get",
       `${API_URL}/consults?visit=${visitID}`,
     );
 
@@ -71,7 +74,8 @@ const PatientVitals = () => {
       .flatMap((consult) => consult.prescriptions)
       .filter((prescription) => prescription != null);
 
-    const { data: vitals } = await axios.get(
+    const { data: vitals } = await makeRequest(
+      "get",
       `${API_URL}/vitals?visit=${visitID}`,
     );
 
@@ -108,7 +112,11 @@ const PatientVitals = () => {
       visit: selectedVisit,
       ...vitalsFormDetails,
     };
-    await axios.patch(`${API_URL}/vitals?visit=${selectedVisit}`, formPayload);
+    await makeRequest(
+      "patch",
+      `${API_URL}/vitals?visit=${selectedVisit}`,
+      formPayload,
+    );
     toast.success("Vitals completed!");
 
     Router.push("/records");
