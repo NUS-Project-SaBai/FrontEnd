@@ -18,9 +18,9 @@
    - Verify that you have installed node correctly `node -v`
    - Verify that you have `npm` by typing in `npm -v`
 
-2. Installation of yarn
+2. Installation of yarn [https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable]
 
-   Next, install Yarn package manager by following the instructions provided on their website: [https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable]
+   Next, install Yarn package manager by following the instructions provided on their website. 
    After installing Yarn, verify the installation with the following command: 
    ```bash
    # Installing yarn
@@ -29,7 +29,7 @@
    yarn -- version
    ```
 
-4. Installation of project libraries
+3. Installation of project libraries
 
    ```bash
    git clone https://github.com/NUS-Project-SaBai/FrontEnd
@@ -40,7 +40,7 @@
    # Run the development server
    yarn dev
    ```
-5. Configure Local Backend
+4. Configure Local Backend
 
    In the FrontEnd/utils/constants.js file, ensure that you are using the local backend instead of the actual backend. Comment out the first line and uncomment the last line, as shown below: 
    ```bash 
@@ -48,7 +48,7 @@
    export const CLOUDINARY_URL = "https://res.cloudinary.com/dxy0byphl";
    export const API_URL = "http://localhost:8000";
    ```
-6. Environmental Setup
+5. Environmental Setup
    Create a ".env.local" by making a copy of ".env.local.example" and filling it with relevant details from the "Key Credentials" document. 
    
    ```bash
