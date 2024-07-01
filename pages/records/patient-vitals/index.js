@@ -125,7 +125,15 @@ const PatientVitals = () => {
       visit: selectedVisit,
       ...vitalsFormDetails,
     };
-    await axios.patch(`${API_URL}/vitals?visit=${selectedVisit}`, formPayload);
+    const filteredFormPayload = Object.fromEntries(
+      Object.entries(formPayload).filter(([_, value]) => value),
+    );
+
+    await axios
+      .patch(`${API_URL}/vitals?visit=${selectedVisit}`, filteredFormPayload)
+      .catch((error) => {
+        console.dir(error.response);
+      });
     toast.success("Vitals completed!");
 
     Router.push("/records");
@@ -140,7 +148,6 @@ const PatientVitals = () => {
       ...prevState,
       [name]: value,
     }));
-    console.log(vitalsFormDetails);
   }
 
   function renderHeader() {
