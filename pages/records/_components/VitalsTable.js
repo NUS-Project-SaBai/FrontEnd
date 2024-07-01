@@ -1,4 +1,4 @@
-import { DisplayField } from "@/components/TextComponents/DisplayField";
+import { DisplayField } from '@/components/TextComponents/DisplayField';
 
 export function VitalsTable({ content }) {
   const isBloodPressureHigh = content.systolic > 140 || content.diastolic > 90;
@@ -8,36 +8,36 @@ export function VitalsTable({ content }) {
 
   const vitalFields = [
     {
-      label: "Blood Pressure (Systolic / Diastolic) / mmHg",
+      label: 'Blood Pressure (Systolic / Diastolic) / mmHg',
       value: `${content.systolic} / ${content.diastolic}`,
       highlight: shouldHighlightBloodPressure,
     },
-    { label: "Heart Rate", value: content.heart_rate },
+    { label: 'Heart Rate', value: content.heart_rate },
 
-    { label: "Temperature", value: content.temperature },
-    { label: "", value: "" },
+    { label: 'Temperature', value: content.temperature },
+    { label: '', value: '' },
 
-    { label: "Left Eye", value: content.left_eye_degree },
-    { label: "Right Eye", value: content.right_eye_degree },
+    { label: 'Left Eye', value: content.left_eye_degree },
+    { label: 'Right Eye', value: content.right_eye_degree },
 
-    { label: "Left Eye Pinhole", value: content.left_eye_pinhole },
-    { label: "Right Eye Pinhole", value: content.right_eye_pinhole },
+    { label: 'Left Eye Pinhole', value: content.left_eye_pinhole },
+    { label: 'Right Eye Pinhole', value: content.right_eye_pinhole },
 
-    { label: "Urine Dip Test", value: content.urine_test },
-    { label: "Hemocue Hb Count", value: content.hemocue_count },
+    { label: 'Urine Dip Test', value: content.urine_test },
+    { label: 'Hemocue Hb Count', value: content.hemocue_count },
 
     {
-      label: "Blood Glucose",
+      label: 'Blood Glucose',
       value: content.blood_glucose,
       highlight: content.blood_glucose > 6.1,
     },
-    { label: "Diabetes Mellitus?", value: content.diabetes_mellitus },
+    { label: 'Diabetes Mellitus?', value: content.diabetes_mellitus },
 
-    { label: "Others", value: content.others },
+    { label: 'Others', value: content.others },
   ];
 
   function renderTableField(field) {
-    if (field.label === "") {
+    if (field.label === '') {
       return <div></div>;
     }
 
