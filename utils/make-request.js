@@ -1,4 +1,5 @@
 import axios from "axios";
+import Router from "next/router";
 
 /**
  * A higher-order function for making HTTP requests.
@@ -18,6 +19,7 @@ export default async function makeRequest(
   const config = await fetch("/api/token")
     .then((res) => {
       if (!res.ok) {
+        Router.push("/api/auth/login"); // gets new token
         throw new Error(`Failed to fetch token: ${res.statusText}`);
       }
       return res.json();

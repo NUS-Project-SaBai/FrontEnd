@@ -258,7 +258,6 @@ const PatientConsultation = () => {
 
     const { data: consult } = await makeRequest("post", `${API_URL}/consults`, {
       ...formPayload,
-      doctor: window.localStorage.getItem("userID"),
     }).catch((error) => {
       toast.error("Error creating consult.");
     });
@@ -279,14 +278,12 @@ const PatientConsultation = () => {
       const orderRequest = makeRequest("post", `${API_URL}/orders`, {
         ...order,
         visit: selectedVisitID,
-        doctor: window.localStorage.getItem("userID"),
         consult: consult.id,
       }).catch((error) => {
         console.error("Error creating order:", error.response.data);
         console.error("Payload:", {
           ...order,
           visit: selectedVisitID,
-          doctor: window.localStorage.getItem("userID"),
           consult: consult.id,
         });
       });
