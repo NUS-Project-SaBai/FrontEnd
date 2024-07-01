@@ -20,7 +20,7 @@
 
 2. Installation of yarn
 
-   Next, install Yarn package manager by following the instructions provided on their website: [https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable]
+   Next, install Yarn package manager by following the instructions provided on their website: <https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable>
    After installing Yarn, verify the installation with the following command:
 
    ```bash
