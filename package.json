@@ -5,7 +5,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "prepare": "husky"
+    "prepare": "husky && husky install"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.2.0",
@@ -30,8 +30,9 @@
   "devDependencies": {
     "@eslint/compat": "^1.1.0",
     "autoprefixer": "^10.4.17",
-    "eslint": "9.x",
+    "eslint": "^9.6.0",
     "eslint-plugin-react": "^7.34.3",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "postcss": "^8.4.33",
@@ -42,6 +43,8 @@
     "*.{js,ts,json,css,scss,md}": [
       "prettier --write",
       "git add"
-    ]
+    ],
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   }
 }
