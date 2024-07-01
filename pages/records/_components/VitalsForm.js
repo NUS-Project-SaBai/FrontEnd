@@ -12,24 +12,28 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
       label: "Height / CM",
       value: formDetails.height,
       type: "number",
+      unit: "cm",
     },
     {
       name: "weight",
       label: "Weight / KG",
       value: formDetails.weight,
       type: "number",
+      unit: "kg",
     },
     {
       name: "temperature",
       label: "Temperature / °C",
       value: formDetails.temperature,
       type: "number",
+      unit: "°C",
     },
     {
       name: "heart_rate",
       label: "Heart Rate / BPM",
       value: formDetails.heart_rate,
       type: "number",
+      unit: "BPM",
     },
     {
       name: "left_eye_degree",
@@ -55,7 +59,6 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
       value: formDetails.right_eye_pinhole,
       type: "text",
     },
-
     // Add more fields as needed
   ];
 
@@ -77,6 +80,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
       label: "Capillary Blood Glucose (Decimal eg. 13.2)",
       value: formDetails.blood_glucose,
       type: "number",
+      unit: "mmol/L",
     },
     {
       name: "others",
@@ -103,6 +107,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
               type={field.type}
               value={field.value}
               onChange={handleOnChange}
+              unit={field.unit}
             />
           ))}
           <DisplayField
@@ -128,6 +133,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
               type="number"
               value={formDetails.systolic}
               onChange={handleOnChange}
+              unit="mmHg"
             />
             <span className="mx-2 my-2 text-lg">/</span>
             <InputField
@@ -136,6 +142,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
               type="number"
               value={formDetails.diastolic}
               onChange={handleOnChange}
+              unit="mmHg"
             />
           </div>
         </div>
@@ -148,6 +155,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
               type={field.type}
               value={field.value}
               onChange={handleOnChange}
+              unit={field.unit}
             />
           ))}
         </div>
@@ -167,6 +175,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
                 type={field.type}
                 value={field.value}
                 onChange={handleOnChange}
+                unit={field.unit}
               />
             ))}
             <div className="flex items-center space-x-4">
