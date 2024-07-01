@@ -28,7 +28,24 @@ const PatientVitals = () => {
   const [selectedVisit, setSelectedVisit] = useState(null);
   const [selectedConsult, setSelectedConsult] = useState({});
 
-  const [vitalsFormDetails, setVitalsFormDetails] = useState({});
+  const [vitalsFormDetails, setVitalsFormDetails] = useState({
+    // Initial form details
+    height: '',
+    weight: '',
+    temperature: '',
+    heart_rate: '',
+    left_eye_degree: '',
+    right_eye_degree: '',
+    left_eye_pinhole: '',
+    right_eye_pinhole: '',
+    urine_test: '',
+    hemocue_count: '',
+    blood_glucose: '',
+    others: '',
+    systolic: '',
+    diastolic: '',
+    diabetes_mellitus: '',
+  });
 
   const [consultationViewModalOpen, setConsultationViewModalOpen] =
     useState(false);
@@ -108,7 +125,15 @@ const PatientVitals = () => {
       visit: selectedVisit,
       ...vitalsFormDetails,
     };
-    await axios.patch(`${API_URL}/vitals?visit=${selectedVisit}`, formPayload);
+    const filteredFormPayload = Object.fromEntries(
+      Object.entries(formPayload).filter(([_, value]) => value)
+    );
+
+    await axios
+      .patch(`${API_URL}/vitals?visit=${selectedVisit}`, filteredFormPayload)
+      .catch((error) => {
+        console.dir(error.response);
+      });
     toast.success('Vitals completed!');
 
     Router.push('/records');
@@ -161,12 +186,7 @@ const PatientVitals = () => {
           formDetails={vitalsFormDetails}
           handleOnChange={handleVitalsFormOnChange}
           patient={patient}
-        />
-
-        <Button
-          colour="green"
-          text={'Submit'}
-          onClick={() => submitVitalsForm()}
+          onSubmit={submitVitalsForm}
         />
       </div>
     );
@@ -196,7 +216,7 @@ const PatientVitals = () => {
 
         <hr />
 
-        <div className="grid grid-cols-2 gap-x-4 mb-4">
+        <div className="grid grid-cols-2 gap-x-4 mb-4 mt-2">
           <div>{renderFirstColumn()}</div>
           <div>{renderSecondColumn()}</div>
         </div>
