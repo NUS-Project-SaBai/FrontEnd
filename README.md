@@ -18,9 +18,9 @@
    - Verify that you have installed node correctly `node -v`
    - Verify that you have `npm` by typing in `npm -v`
 
-2. Installation of yarn
+2. Installation of yarn <https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable>
 
-   Next, install Yarn package manager by following the instructions provided on their website: <https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable>
+   Next, install Yarn package manager by following the instructions provided on their website. 
    After installing Yarn, verify the installation with the following command:
 
    ```bash
