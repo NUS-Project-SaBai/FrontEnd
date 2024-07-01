@@ -1,4 +1,4 @@
-export default function DropDown({ name, options, label, onChange, value }) {
+export function DropDown({ name, options, label, onChange, value }) {
   return (
     <div>
       <label

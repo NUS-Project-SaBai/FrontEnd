@@ -1,4 +1,9 @@
-import { Button, InputField } from "@/components/TextComponents";
+import {
+  Button,
+  InputField,
+  DisplayField,
+  DropDown,
+} from "@/components/TextComponents";
 
 export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
   const vitalFields = [
@@ -89,8 +94,8 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
         </label>
       </div>
       <div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {vitalFields.map((field) => (
+        <div className="grid gap-6 md:grid-cols-3">
+          {vitalFields.slice(0, 2).map((field) => (
             <InputField
               key={field.name}
               name={field.name}
@@ -100,8 +105,18 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
               onChange={handleOnChange}
             />
           ))}
+          <DisplayField
+            label="BMI"
+            content={
+              isNaN(formDetails.weight / formDetails.height ** 2)
+                ? "Please enter valid height and weight"
+                : (
+                    formDetails.weight /
+                    (formDetails.height / 100) ** 2
+                  ).toFixed(2)
+            }
+          />
         </div>
-
         <div className="my-4">
           <label className="label">
             Blood Pressure (Systolic / Diastolic) / mmHg
@@ -124,6 +139,19 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
             />
           </div>
         </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {vitalFields.slice(2).map((field) => (
+            <InputField
+              key={field.name}
+              name={field.name}
+              label={field.label}
+              type={field.type}
+              value={field.value}
+              onChange={handleOnChange}
+            />
+          ))}
+        </div>
+
         <div>
           <label className="label text-lg font-semibold">
             STAT Investigations
@@ -142,18 +170,14 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
               />
             ))}
             <div className="flex items-center space-x-4">
-              <div>
-                <label className="label">Diabetes?</label>
-                <select
-                  className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-48 p-2.5 mt-1"
-                  name="diabetes_mellitus"
-                  onChange={handleOnChange}
-                >
-                  <option>Please Select...</option>
-                  <option value="No">No</option>
-                  <option value="Yes">Yes</option>
-                </select>
-              </div>
+              <DropDown
+                name="diabetes_mellitus"
+                label="Diabetes?"
+                defaultValue="Please select..."
+                options={["Please select...", "No", "Yes"]}
+                onChange={handleOnChange}
+                value={formDetails.diabetes_mellitus}
+              />
             </div>
           </div>
         </div>

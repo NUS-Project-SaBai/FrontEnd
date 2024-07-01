@@ -28,7 +28,24 @@ const PatientVitals = () => {
   const [selectedVisit, setSelectedVisit] = useState(null);
   const [selectedConsult, setSelectedConsult] = useState({});
 
-  const [vitalsFormDetails, setVitalsFormDetails] = useState({});
+  const [vitalsFormDetails, setVitalsFormDetails] = useState({
+    // Initial form details
+    height: "",
+    weight: "",
+    temperature: "",
+    heart_rate: "",
+    left_eye_degree: "",
+    right_eye_degree: "",
+    left_eye_pinhole: "",
+    right_eye_pinhole: "",
+    urine_test: "",
+    hemocue_count: "",
+    blood_glucose: "",
+    others: "",
+    systolic: "",
+    diastolic: "",
+    diabetes_mellitus: "",
+  });
 
   const [consultationViewModalOpen, setConsultationViewModalOpen] =
     useState(false);
@@ -123,6 +140,7 @@ const PatientVitals = () => {
       ...prevState,
       [name]: value,
     }));
+    console.log(vitalsFormDetails);
   }
 
   function renderHeader() {
