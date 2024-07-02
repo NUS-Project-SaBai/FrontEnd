@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
-import Router from "next/router";
-import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import { Button, InputField } from "@/components/TextComponents";
-import makeRequest from "@/pages/api/_make-request";
+import React, { useState, useEffect } from 'react';
+import Router from 'next/router';
+import { API_URL, CLOUDINARY_URL } from '@/utils/constants';
+import withAuth from '@/utils/auth';
+import { Button, InputField } from '@/components/TextComponents';
+import makeRequest from '@/pages/api/_make-request';
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 10;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    makeRequest("get", `${API_URL}/patients`)
+    makeRequest('get', `${API_URL}/patients`)
       .then((response) => {
         setPatients(response.data);
         setPatientsFiltered(response.data);
       })
-      .catch((error) => console.error("Error loading page", error));
+      .catch((error) => console.error('Error loading page', error));
   }, []);
 
   function renderTableContent() {
@@ -31,7 +31,7 @@ function PatientList() {
         const fullName = patient.name;
         const record = (
           <Button
-            text={"View"}
+            text={'View'}
             onClick={() =>
               Router.push(`/records/patient-record?id=${patient.pk}`)
             }
@@ -41,7 +41,7 @@ function PatientList() {
 
         const vitals = (
           <Button
-            text={"Create"}
+            text={'Create'}
             onClick={() =>
               Router.push(`/records/patient-vitals?id=${patient.pk}`)
             }
@@ -51,7 +51,7 @@ function PatientList() {
 
         const consultation = (
           <Button
-            text={"Create"}
+            text={'Create'}
             onClick={() =>
               Router.push(`/records/patient-consultation?id=${patient.pk}`)
             }

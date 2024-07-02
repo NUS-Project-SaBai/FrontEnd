@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import Router from "next/router";
-import Modal from "react-modal";
+import React, { useState, useEffect, useCallback } from 'react';
+import Router from 'next/router';
+import Modal from 'react-modal';
 import {
   ConsultationView,
   ConsultationsTable,
@@ -8,12 +8,12 @@ import {
   VitalsTable,
   PrescriptionsTable,
   Header,
-} from "@/pages/records/_components";
-import { API_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import toast from "react-hot-toast";
-import { Button } from "@/components/TextComponents/";
-import makeRequest from "@/pages/api/_make-request";
+} from '@/pages/records/_components';
+import { API_URL } from '@/utils/constants';
+import withAuth from '@/utils/auth';
+import toast from 'react-hot-toast';
+import { Button } from '@/components/TextComponents/';
+import makeRequest from '@/pages/api/_make-request';
 
 const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);
@@ -28,7 +28,24 @@ const PatientVitals = () => {
   const [selectedVisit, setSelectedVisit] = useState(null);
   const [selectedConsult, setSelectedConsult] = useState({});
 
-  const [vitalsFormDetails, setVitalsFormDetails] = useState({});
+  const [vitalsFormDetails, setVitalsFormDetails] = useState({
+    // Initial form details
+    height: '',
+    weight: '',
+    temperature: '',
+    heart_rate: '',
+    left_eye_degree: '',
+    right_eye_degree: '',
+    left_eye_pinhole: '',
+    right_eye_pinhole: '',
+    urine_test: '',
+    hemocue_count: '',
+    blood_glucose: '',
+    others: '',
+    systolic: '',
+    diastolic: '',
+    diabetes_mellitus: '',
+  });
 
   const [consultationViewModalOpen, setConsultationViewModalOpen] =
     useState(false);
@@ -46,13 +63,13 @@ const PatientVitals = () => {
     const patientID = Router.query.id;
 
     const { data: patient } = await makeRequest(
-      "get",
-      `${API_URL}/patients/${patientID}`,
+      'get',
+      `${API_URL}/patients/${patientID}`
     );
 
     const { data: visits } = await makeRequest(
-      "get",
-      `${API_URL}/visits?patient=${patientID}`,
+      'get',
+      `${API_URL}/visits?patient=${patientID}`
     );
 
     setPatient(patient);
@@ -66,8 +83,8 @@ const PatientVitals = () => {
 
   async function loadVisitDetails(visitID) {
     const { data: consults } = await makeRequest(
-      "get",
-      `${API_URL}/consults?visit=${visitID}`,
+      'get',
+      `${API_URL}/consults?visit=${visitID}`
     );
 
     const prescriptions = consults
@@ -75,8 +92,8 @@ const PatientVitals = () => {
       .filter((prescription) => prescription != null);
 
     const { data: vitals } = await makeRequest(
-      "get",
-      `${API_URL}/vitals?visit=${visitID}`,
+      'get',
+      `${API_URL}/vitals?visit=${visitID}`
     );
 
     setMounted(true);
@@ -112,19 +129,24 @@ const PatientVitals = () => {
       visit: selectedVisit,
       ...vitalsFormDetails,
     };
-    await makeRequest(
-      "patch",
-      `${API_URL}/vitals?visit=${selectedVisit}`,
-      formPayload,
+    const filteredFormPayload = Object.fromEntries(
+      Object.entries(formPayload).filter(([_, value]) => value)
     );
-    toast.success("Vitals completed!");
+    await makeRequest(
+      'patch',
+      `${API_URL}/vitals?visit=${selectedVisit}`,
+      filteredFormPayload
+    ).catch((error) => {
+      console.dir(error.response);
+    });
+    toast.success('Vitals completed!');
 
-    Router.push("/records");
+    Router.push('/records');
   }
 
   function handleVitalsFormOnChange(e) {
     const target = e.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
     setVitalsFormDetails((prevState) => ({
@@ -146,7 +168,7 @@ const PatientVitals = () => {
   function renderFirstColumn() {
     return (
       <div className="space-y-4">
-        {typeof vitals === "undefined" ? (
+        {typeof vitals === 'undefined' ? (
           <>
             <label className="label">Vital Signs</label>
             <h2>Not Done</h2>
@@ -169,12 +191,7 @@ const PatientVitals = () => {
           formDetails={vitalsFormDetails}
           handleOnChange={handleVitalsFormOnChange}
           patient={patient}
-        />
-
-        <Button
-          colour="green"
-          text={"Submit"}
-          onClick={() => submitVitalsForm()}
+          onSubmit={submitVitalsForm}
         />
       </div>
     );
@@ -189,8 +206,8 @@ const PatientVitals = () => {
           marginTop: 27.5,
           marginLeft: 25,
           marginRight: 25,
-          overflowX: "hidden", //remove horizontal scrollbar
-          overflowY: "hidden",
+          overflowX: 'hidden', //remove horizontal scrollbar
+          overflowY: 'hidden',
         }}
       >
         {renderConsultationViewModal()}
@@ -204,7 +221,7 @@ const PatientVitals = () => {
 
         <hr />
 
-        <div className="grid grid-cols-2 gap-x-4 mb-4">
+        <div className="grid grid-cols-2 gap-x-4 mb-4 mt-2">
           <div>{renderFirstColumn()}</div>
           <div>{renderSecondColumn()}</div>
         </div>
@@ -216,10 +233,10 @@ const PatientVitals = () => {
 
 const viewModalStyles = {
   content: {
-    left: "30%",
-    right: "12.5%",
-    top: "12.5%",
-    bottom: "12.5%",
+    left: '30%',
+    right: '12.5%',
+    top: '12.5%',
+    bottom: '12.5%',
   },
   overlay: {
     zIndex: 4,
