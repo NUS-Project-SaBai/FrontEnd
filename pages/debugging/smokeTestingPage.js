@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import smokeTestWorkflow from "./smokeTestWorkflow";
-import APIComponent from "./APIComponent";
+import APIComponent from "./apiComponent";
 
 const apiInputArray = [
   // We will be using id = 1000 for testing purposes
@@ -368,6 +368,7 @@ const SmokeTestPage = () => {
   const handleInputChange = (key, value) => {
     setInputValues((prev) => ({ ...prev, [key]: value }));
   };
+  
   useEffect(() => {
     smokeTestWorkflow(apiInputArray);
   }, []);

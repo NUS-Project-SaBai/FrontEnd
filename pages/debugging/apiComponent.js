@@ -89,8 +89,9 @@ const APIComponent = ({
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h3 className="text-lg font-bold mb-4">API Request Component</h3>
-      <div className="mb-4">
-        <label className="block text-gray-700 font-semibold mb-2">
+      {/* Start of changes */}
+      <div className="mb-4 flex items-end">
+        <label className="block text-gray-700 font-semibold mb-2 flex-grow">
           URL:
           <input
             type="text"
@@ -99,7 +100,14 @@ const APIComponent = ({
             className="w-full mt-2 p-2 border border-gray-300 rounded-md"
           />
         </label>
+        <button
+          onClick={handleRequest}
+          className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10 self-end"
+        >
+          Send {method.toUpperCase()} Request
+        </button>
       </div>
+      {/* End of changes */}
       {renderKeyInputs()} {/* Render primaryKey and foreignKey inputs */}
       {["post", "patch"].includes(method.toLowerCase()) && (
         <div className="mb-4">
@@ -107,12 +115,6 @@ const APIComponent = ({
           {renderPayloadInputs()} {/* Render payload inputs */}
         </div>
       )}
-      <button
-        onClick={handleRequest}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Send {method.toUpperCase()} Request
-      </button>
       <div className="mt-6">
         <h4 className="text-md font-semibold mb-2">Response</h4>
         <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
@@ -130,3 +132,4 @@ const APIComponent = ({
 };
 
 export default APIComponent;
+

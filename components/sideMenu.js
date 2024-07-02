@@ -46,7 +46,7 @@ const navigation = [
   },
   {
     name: "debugging",
-    href: "/debugging/ApiRequest",
+    href: "/debugging/smokeTestingPage",
     icon: ArrowLeftStartOnRectangleIcon,
     current: false,
   }
