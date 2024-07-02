@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import { Button, InputField } from "@/components/TextComponents";
+import makeRequest from "@/pages/api/_make-request";
 
 const Orders = () => {
   const router = useRouter();
@@ -18,7 +18,8 @@ const Orders = () => {
 
   const loadOrders = async () => {
     try {
-      const { data: orders } = await axios.get(
+      const { data: orders } = await makeRequest(
+        "get",
         `${API_URL}/orders?order_status=PENDING`,
       );
       setOrders(orders);
@@ -40,13 +41,16 @@ const Orders = () => {
   const handleOrderApprove = async (order) => {
     if (window.confirm("Are you sure you want to approve this order?")) {
       try {
-        await axios.patch(`${API_URL}/orders/${order.id}`, {
+        await makeRequest("patch", `${API_URL}/orders/${order.id}`, {
           order_status: "APPROVED",
         });
-
-        await axios.patch(`${API_URL}/medications/${order.medicine.id}`, {
-          quantityChange: -order.quantity,
-        });
+        await makeRequest(
+          "patch",
+          `${API_URL}/medications/${order.medicine.id}`,
+          {
+            quantityChange: -order.quantity,
+          },
+        );
 
         router.reload();
       } catch (error) {
@@ -58,10 +62,9 @@ const Orders = () => {
   const handleOrderCancel = async (order) => {
     if (window.confirm("Are you sure you want to cancel this order?")) {
       try {
-        await axios.patch(`${API_URL}/orders/${order.id}`, {
+        await makeRequest(`patch`, `${API_URL}/orders/${order.id}`, {
           order_status: "CANCELLED",
         });
-
         router.reload();
       } catch (error) {
         console.error("Error updating orders:", error);

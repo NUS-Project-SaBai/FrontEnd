@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 import Modal from "react-modal";
 import {
   ConsultationView,
@@ -15,6 +14,7 @@ import withAuth from "@/utils/auth";
 import Router from "next/router";
 
 import { Button } from "@/components/TextComponents/";
+import makeRequest from "@/pages/api/_make-request";
 
 const PatientRecord = () => {
   const [noRecords, setNoRecords] = useState(true);
@@ -43,11 +43,13 @@ const PatientRecord = () => {
   async function onRefresh() {
     const patientID = Router.query.id;
 
-    const { data: patient } = await axios.get(
+    const { data: patient } = await makeRequest(
+      "get",
       `${API_URL}/patients/${patientID}`,
     );
 
-    const { data: visits } = await axios.get(
+    const { data: visits } = await makeRequest(
+      "get",
       `${API_URL}/visits?patient=${patientID}`,
     );
 
@@ -61,7 +63,8 @@ const PatientRecord = () => {
   }
 
   async function loadVisitDetails(visitID) {
-    const { data: consults } = await axios.get(
+    const { data: consults } = await makeRequest(
+      "get",
       `${API_URL}/consults?visit=${visitID}`,
     );
 
@@ -69,7 +72,8 @@ const PatientRecord = () => {
       .flatMap((consult) => consult.prescriptions)
       .filter((prescription) => prescription != null);
 
-    const { data: vitals } = await axios.get(
+    const { data: vitals } = await makeRequest(
+      "get",
       `${API_URL}/vitals?visit=${visitID}`,
     );
 

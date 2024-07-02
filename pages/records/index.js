@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Router from 'next/router';
 import { API_URL, CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
+import makeRequest from '@/pages/api/_make-request';
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
@@ -14,8 +14,7 @@ function PatientList() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/patients`)
+    makeRequest('get', `${API_URL}/patients`)
       .then((response) => {
         setPatients(response.data);
         setPatientsFiltered(response.data);

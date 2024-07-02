@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { MedicationModal } from "./_components/";
 import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import { Button, InputField } from "@/components/TextComponents";
+import makeRequest from "@/pages/api/_make-request";
 
 const Stock = () => {
   const [medications, setMedications] = useState([]);
@@ -25,7 +25,10 @@ const Stock = () => {
 
   const loadMedicine = async () => {
     try {
-      const { data: medicines } = await axios.get(`${API_URL}/medications`);
+      const { data: medicines } = await makeRequest(
+        "get",
+        `${API_URL}/medications`,
+      );
       setMedications(medicines);
       setMedicationsFiltered(medicines);
     } catch (error) {
@@ -95,16 +98,18 @@ const Stock = () => {
         return;
       }
 
-      await axios
-        .patch(`${API_URL}/medications/${updatedDetails.pk}`, {
+      await makeRequest(
+        "patch",
+        `${API_URL}/medications/${updatedDetails.pk}`,
+        {
           quantityChange: parseInt(quantityChange),
           medicine_name: updatedDetails.medicine_name,
           notes: updatedDetails.notes,
-        })
-        .catch((error) => {
-          toast.error(`Encountered an error when update! ${error.message}`);
-          return;
-        });
+        },
+      ).catch((error) => {
+        toast.error(`Encountered an error when update! ${error.message}`);
+        return;
+      });
       toast.success("Medication updated!");
     }
 
@@ -119,12 +124,12 @@ const Stock = () => {
       }
 
       updatedDetails.quantity = quantityChange;
-      await axios
-        .post(`${API_URL}/medications`, updatedDetails)
-        .catch((error) => {
+      await makeRequest("post", `${API_URL}/medications`, updatedDetails).catch(
+        (error) => {
           toast.error(`Failed to create medication: ${error.message}`);
           return;
-        });
+        },
+      );
       toast.success("New Medication created!");
     }
 
@@ -140,10 +145,12 @@ const Stock = () => {
       return;
     }
 
-    await axios.delete(`${API_URL}/medications/${pk}`).catch((error) => {
-      toast.error(`Failed to delete medication: ${error.message}`);
-      return;
-    });
+    await makeRequest("delete", `${API_URL}/medications/${pk}`).catch(
+      (error) => {
+        toast.error(`Failed to delete medication: ${error.message}`);
+        return;
+      },
+    );
 
     const updatedMedications = medications.filter(
       (medication) => medication.id !== pk,

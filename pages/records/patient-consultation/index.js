@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 import Router from "next/router";
 import Modal from "react-modal";
 import {
@@ -15,6 +14,7 @@ import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";
 import { Button } from "@/components/TextComponents/";
+import makeRequest from "@/pages/api/_make-request";
 
 const PatientConsultation = () => {
   const [mounted, setMounted] = useState(false);
@@ -56,11 +56,12 @@ const PatientConsultation = () => {
   async function onRefresh() {
     const patientID = Router.query.id;
 
-    const { data: patient } = await axios.get(
+    const { data: patient } = await makeRequest(
+      "get",
       `${API_URL}/patients/${patientID}`,
     );
-
-    const { data: visits } = await axios.get(
+    const { data: visits } = await makeRequest(
+      "get",
       `${API_URL}/visits?patient=${patientID}`,
     );
 
@@ -75,7 +76,8 @@ const PatientConsultation = () => {
   }
 
   async function loadVisitDetails(visitID) {
-    const { data: consults } = await axios.get(
+    const { data: consults } = await makeRequest(
+      "get",
       `${API_URL}/consults?visit=${visitID}`,
     );
 
@@ -83,7 +85,8 @@ const PatientConsultation = () => {
       .flatMap((consult) => consult.prescriptions)
       .filter((prescription) => prescription != null);
 
-    const { data: vitals } = await axios.get(
+    const { data: vitals } = await makeRequest(
+      "get",
       `${API_URL}/vitals?visit=${visitID}`,
     );
 
@@ -95,7 +98,10 @@ const PatientConsultation = () => {
   }
 
   async function loadMedicationStock() {
-    const { data: medications } = await axios.get(`${API_URL}/medications`);
+    const { data: medications } = await makeRequest(
+      "get",
+      `${API_URL}/medications`,
+    );
     setMedications(medications);
   }
 
@@ -250,18 +256,15 @@ const PatientConsultation = () => {
       ...consultationFormDetails,
     };
 
-    const { data: consult } = await axios
-      .post(`${API_URL}/consults`, {
-        ...formPayload,
-        doctor: window.localStorage.getItem("userID"),
-      })
-      .catch((error) => {
-        toast.error("Error creating consult.");
-      });
+    const { data: consult } = await makeRequest("post", `${API_URL}/consults`, {
+      ...formPayload,
+    }).catch((error) => {
+      toast.error("Error creating consult.");
+    });
 
     const diagnosesPromises = [];
     consultationFormDetails.diagnoses.forEach((diagnosis) => {
-      const diagnosisRequest = axios.post(`${API_URL}/diagnosis`, {
+      const diagnosisRequest = makeRequest("post", `${API_URL}/diagnosis`, {
         consult: consult.id,
         details: diagnosis.details,
         category: diagnosis.type,
@@ -272,22 +275,18 @@ const PatientConsultation = () => {
 
     const orderPromises = [];
     orders.forEach((order) => {
-      const orderRequest = axios
-        .post(`${API_URL}/orders`, {
+      const orderRequest = makeRequest("post", `${API_URL}/orders`, {
+        ...order,
+        visit: selectedVisitID,
+        consult: consult.id,
+      }).catch((error) => {
+        console.error("Error creating order:", error.response.data);
+        console.error("Payload:", {
           ...order,
           visit: selectedVisitID,
-          doctor: window.localStorage.getItem("userID"),
           consult: consult.id,
-        })
-        .catch((error) => {
-          console.error("Error creating order:", error.response.data);
-          console.error("Payload:", {
-            ...order,
-            visit: selectedVisitID,
-            doctor: window.localStorage.getItem("userID"),
-            consult: consult.id,
-          });
         });
+      });
 
       orderPromises.push(orderRequest);
     });
