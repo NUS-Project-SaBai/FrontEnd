@@ -3,7 +3,7 @@ import Router from "next/router";
 import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import { Button, InputField } from "@/components/TextComponents";
-import makeRequest from "@/utils/make-request";
+import makeRequest from "@/pages/api/_make-request";
 
 function PatientList() {
   const [patients, setPatients] = useState([]);

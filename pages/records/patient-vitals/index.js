@@ -13,7 +13,7 @@ import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import toast from "react-hot-toast";
 import { Button } from "@/components/TextComponents/";
-import makeRequest from "@/utils/make-request";
+import makeRequest from "@/pages/api/_make-request";
 
 const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);

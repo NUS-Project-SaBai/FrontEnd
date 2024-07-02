@@ -17,7 +17,7 @@ import { PatientModal, ScanModal } from "@/pages/registration/_components";
 
 import { DisplayField, Button } from "@/components/TextComponents/";
 import Loading from "@/components/Loading";
-import makeRequest from "@/utils/make-request";
+import makeRequest from "@/pages/api/_make-request";
 
 const PatientInfo = ({ patient, submitNewVisit }) => {
   return patient.pk ? (

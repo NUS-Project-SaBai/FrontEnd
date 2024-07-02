@@ -14,7 +14,7 @@ import withAuth from "@/utils/auth";
 import Router from "next/router";
 
 import { Button } from "@/components/TextComponents/";
-import makeRequest from "@/utils/make-request";
+import makeRequest from "@/pages/api/_make-request";
 
 const PatientRecord = () => {
   const [noRecords, setNoRecords] = useState(true);

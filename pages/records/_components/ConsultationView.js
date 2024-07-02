@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DisplayField } from "@/components/TextComponents/DisplayField";
 import { PrescriptionsTable } from "./PrescriptionsTable";
 import { API_URL } from "@/utils/constants";
-import makeRequest from "@/utils/make-request";
+import makeRequest from "@/pages/api/_make-request";
 
 export function ConsultationView({ content: consult }) {
   const [diagnosisArray, setDiagnosisArray] = useState([]);

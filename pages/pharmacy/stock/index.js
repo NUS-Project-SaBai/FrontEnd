@@ -4,7 +4,7 @@ import { MedicationModal } from "./_components/";
 import { API_URL } from "@/utils/constants";
 import withAuth from "@/utils/auth";
 import { Button, InputField } from "@/components/TextComponents";
-import makeRequest from "@/utils/make-request";
+import makeRequest from "@/pages/api/_make-request";
 
 const Stock = () => {
   const [medications, setMedications] = useState([]);
