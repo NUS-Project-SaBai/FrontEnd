@@ -89,7 +89,6 @@ const APIComponent = ({
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h3 className="text-lg font-bold mb-4">API Request Component</h3>
-      {/* Start of changes */}
       <div className="mb-4 flex items-end">
         <label className="block text-gray-700 font-semibold mb-2 flex-grow">
           URL:
@@ -107,7 +106,6 @@ const APIComponent = ({
           Send {method.toUpperCase()} Request
         </button>
       </div>
-      {/* End of changes */}
       {renderKeyInputs()} {/* Render primaryKey and foreignKey inputs */}
       {["post", "patch"].includes(method.toLowerCase()) && (
         <div className="mb-4">
