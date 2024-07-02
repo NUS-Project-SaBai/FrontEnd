@@ -5,7 +5,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "prepare": "husky && husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.2.0",
