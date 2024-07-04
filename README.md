@@ -9,17 +9,22 @@
    - Verify that you have installed node correctly `node -v`
    - Verify that you have `npm` by typing in `npm -v`
 
-2. Installation of yarn <https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable>
-
-   Next, install Yarn package manager by following the instructions provided on their website.
-   After installing Yarn, verify the installation with the following command:
+2. Installation of pnpm <https://pnpm.io/installation>
+   Next, install PNPM by following the following instructions:
 
    ```bash
-   # Installing yarn
-   npm install --global yarn
+   # Installing pnpm
+   npm install -g pnpm
    # Verify installation
-   yarn -- version
+   pnpm --version
    ```
+
+   Note: If you are converting from yarn to pnpm, then you will need to do the following
+
+   1. Delete the current `node_modules`
+   2. Run `pnpm import`
+   3. Delete the `yarn.lock`
+   4. Run `pnpm i`
 
 3. Installation of project libraries
 
@@ -28,9 +33,9 @@
    # Change Directory into the FrontEnd folder
    cd FrontEnd
    # Install the necessary libraries for the project
-   yarn install
+   pnpm i
    # Run the development server
-   yarn dev
+   pnpm dev
    ```
 
 4. Configure Local Backend

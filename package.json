@@ -2,6 +2,7 @@
   "name": "with-cookie-auth",
   "type": "module",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev": "next",
     "build": "next build",
     "start": "next start",
