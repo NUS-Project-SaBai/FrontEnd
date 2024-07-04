@@ -64,7 +64,9 @@ const PatientRecord = () => {
       .flatMap((consult) => consult.prescriptions)
       .filter((prescription) => prescription != null);
 
-    const { data: vitals } = axiosInstance.get(`/vitals?visit=${visitID}`);
+    const { data: vitals } = await axiosInstance.get(
+      `/vitals?visit=${visitID}`
+    );
 
     setNoRecords(false);
     setConsults(consults);
