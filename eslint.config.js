@@ -11,6 +11,7 @@ export default [
     rules: {
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
+      'react/display-name': 'off',
     },
   },
 ];

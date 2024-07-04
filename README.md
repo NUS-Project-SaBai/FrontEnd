@@ -53,7 +53,7 @@
 
    ```bash
    # Run the following command to start the server:
-   yarn dev
+   pnpm dev
    ```
 
    Login with the credentials in the key credential file.
@@ -63,9 +63,8 @@
 1. Node Version Manager [https://github.com/nvm-sh/nvm]
 2. Node.js [https://nodejs.org/en]
 3. Node Package Manager [https://www.npmjs.com/]
-4. Yarn [https://yarnpkg.com/]
+4. pnpm [https://pnpm.io/]
 5. React.js [https://react.dev/]
 6. Next.js [https://nextjs.org/]
-7. SASS [https://sass-lang.com/]
-8. Axios [https://axios-http.com/docs/intro]
-9. Auth0 [https://auth0.com/]
+7. Axios [https://axios-http.com/docs/intro]
+8. Auth0 [https://auth0.com/]
