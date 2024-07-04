@@ -22,9 +22,7 @@
    Note: If you are converting from yarn to pnpm, then you will need to do the following
 
    1. Delete the current `node_modules`
-   2. Run `pnpm import`
-   3. Delete the `yarn.lock`
-   4. Run `pnpm i`
+   2. Run `pnpm i`
 
 3. Installation of project libraries
 
