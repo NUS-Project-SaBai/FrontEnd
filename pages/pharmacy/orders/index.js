@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import moment from "moment";
-import { useRouter } from "next/router";
-import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import { Button, InputField } from "@/components/TextComponents";
-import makeRequest from "@/pages/api/_make-request";
+import React, { useState, useEffect } from 'react';
+import moment from 'moment';
+import { useRouter } from 'next/router';
+import { CLOUDINARY_URL } from '@/utils/constants';
+import withAuth from '@/utils/auth';
+import { Button, InputField } from '@/components/TextComponents';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 const Orders = () => {
   const router = useRouter();
@@ -18,9 +18,8 @@ const Orders = () => {
 
   const loadOrders = async () => {
     try {
-      const { data: orders } = await makeRequest(
-        "get",
-        `${API_URL}/orders?order_status=PENDING`,
+      const { data: orders } = await axiosInstance.get(
+        '/orders?order_status=PENDING'
       );
       setOrders(orders);
       setOrdersFiltered(orders);
@@ -32,42 +31,38 @@ const Orders = () => {
   const onFilterChange = (event) => {
     const filteredOrders = orders.filter((order) => {
       return order.visit.patient.filter_string.includes(
-        event.target.value.toUpperCase(),
+        event.target.value.toUpperCase()
       );
     });
     setOrdersFiltered(filteredOrders);
   };
 
   const handleOrderApprove = async (order) => {
-    if (window.confirm("Are you sure you want to approve this order?")) {
+    if (window.confirm('Are you sure you want to approve this order?')) {
       try {
-        await makeRequest("patch", `${API_URL}/orders/${order.id}`, {
-          order_status: "APPROVED",
+        await axiosInstance.patch(`/orders/${order.id}`, {
+          order_status: 'APPROVED',
         });
-        await makeRequest(
-          "patch",
-          `${API_URL}/medications/${order.medicine.id}`,
-          {
-            quantityChange: -order.quantity,
-          },
-        );
+        await axiosInstance.patch(`/medications/${order.medicine.id}`, {
+          quantityChange: -order.quantity,
+        });
 
         router.reload();
       } catch (error) {
-        console.error("Error updating orders:", error.response.data);
+        console.error('Error updating orders:', error.response.data);
       }
     }
   };
 
   const handleOrderCancel = async (order) => {
-    if (window.confirm("Are you sure you want to cancel this order?")) {
+    if (window.confirm('Are you sure you want to cancel this order?')) {
       try {
-        await makeRequest(`patch`, `${API_URL}/orders/${order.id}`, {
-          order_status: "CANCELLED",
+        await axiosInstance.patch(`/orders/${order.id}`, {
+          order_status: 'CANCELLED',
         });
         router.reload();
       } catch (error) {
-        console.error("Error updating orders:", error);
+        console.error('Error updating orders:', error);
       }
     }
   };
@@ -77,7 +72,7 @@ const Orders = () => {
       const visit = order.visit;
       const prescriptions = (
         <li key={order.medicine.id}>
-          {order.medicine?.medicine_name || ""}: {order.quantity}
+          {order.medicine?.medicine_name || ''}: {order.quantity}
           <br />
           {order.medicine.notes && (
             <div className="truncate">Notes: {order.medicine.notes}</div>
@@ -91,7 +86,7 @@ const Orders = () => {
             {visit.patient.patient_id}
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            {moment(visit.date).format("DD MMMM YYYY HH:mm")}
+            {moment(visit.date).format('DD MMMM YYYY HH:mm')}
           </td>
           <td>
             <img

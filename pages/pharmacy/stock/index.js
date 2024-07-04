@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { MedicationModal } from "./_components/";
-import { API_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import { Button, InputField } from "@/components/TextComponents";
-import makeRequest from "@/pages/api/_make-request";
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { MedicationModal } from './_components/';
+import withAuth from '@/utils/auth';
+import { Button, InputField } from '@/components/TextComponents';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 const Stock = () => {
   const [medications, setMedications] = useState([]);
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
   const [medicationDetails, setMedicationDetails] = useState({
-    medicine_name: "",
+    medicine_name: '',
     reserve_quantity: 0,
     quantity: 0,
     quantityChange: 0,
-    notes: "",
-    remarks: "",
+    notes: '',
+    remarks: '',
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -25,10 +24,7 @@ const Stock = () => {
 
   const loadMedicine = async () => {
     try {
-      const { data: medicines } = await makeRequest(
-        "get",
-        `${API_URL}/medications`,
-      );
+      const { data: medicines } = await axiosInstance.get('/medications');
       setMedications(medicines);
       setMedicationsFiltered(medicines);
     } catch (error) {
@@ -54,12 +50,12 @@ const Stock = () => {
 
   const createNewMedication = () => {
     setMedicationDetails({
-      medicine_name: "",
+      medicine_name: '',
       reserve_quantity: 0,
       quantity: 0,
       quantityChange: 0,
-      notes: "",
-      remarks: "",
+      notes: '',
+      remarks: '',
     });
     toggleModal(medicationDetails);
   };
@@ -74,7 +70,7 @@ const Stock = () => {
 
   const onSubmitForm = async () => {
     if (!medicationDetails.medicine_name) {
-      toast.error("Medicine name cannot be empty.");
+      toast.error('Medicine name cannot be empty.');
       return;
     }
 
@@ -94,43 +90,40 @@ const Stock = () => {
         parseInt(updatedDetails.quantity) + parseInt(quantityChange);
 
       if (quantity < 0) {
-        toast.error("Insufficient Medication!");
+        toast.error('Insufficient Medication!');
         return;
       }
-
-      await makeRequest(
-        "patch",
-        `${API_URL}/medications/${updatedDetails.pk}`,
-        {
+      await axiosInstance
+        .patch(`/medications/${updatedDetails.pk}`, {
           quantityChange: parseInt(quantityChange),
           medicine_name: updatedDetails.medicine_name,
           notes: updatedDetails.notes,
-        },
-      ).catch((error) => {
-        toast.error(`Encountered an error when update! ${error.message}`);
-        return;
-      });
-      toast.success("Medication updated!");
+        })
+        .catch((error) => {
+          toast.error(`Encountered an error when update! ${error.message}`);
+          return;
+        });
+      toast.success('Medication updated!');
     }
 
     // Creating new medicine
     if (!updatedDetails.pk) {
       if (quantityChange < 0) {
-        toast.error("Invalid Number!");
+        toast.error('Invalid Number!');
         return;
       } else if (!Number.isInteger(quantityChange - 0)) {
-        toast.error("No decimals allowed!");
+        toast.error('No decimals allowed!');
         return;
       }
 
       updatedDetails.quantity = quantityChange;
-      await makeRequest("post", `${API_URL}/medications`, updatedDetails).catch(
-        (error) => {
+      await axiosInstance
+        .post('/medications', updatedDetails)
+        .catch((error) => {
           toast.error(`Failed to create medication: ${error.message}`);
           return;
-        },
-      );
-      toast.success("New Medication created!");
+        });
+      toast.success('New Medication created!');
     }
 
     toggleModal();
@@ -139,29 +132,27 @@ const Stock = () => {
 
   const handleDelete = async (pk) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this medication?",
+      'Are you sure you want to delete this medication?'
     );
     if (!confirmed) {
       return;
     }
 
-    await makeRequest("delete", `${API_URL}/medications/${pk}`).catch(
-      (error) => {
-        toast.error(`Failed to delete medication: ${error.message}`);
-        return;
-      },
-    );
+    await axiosInstance.delete(`/medications/${pk}`).catch((error) => {
+      toast.error(`Failed to delete medication: ${error.message}`);
+      return;
+    });
 
     const updatedMedications = medications.filter(
-      (medication) => medication.id !== pk,
+      (medication) => medication.id !== pk
     );
     const updatedMedicationsFiltered = medicationsFiltered.filter(
-      (medication) => medication.id !== pk,
+      (medication) => medication.id !== pk
     );
     setMedications(updatedMedications);
     setMedicationsFiltered(updatedMedicationsFiltered);
 
-    toast.success("Medication successfully deleted!");
+    toast.success('Medication successfully deleted!');
   };
 
   function renderRows() {

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import Modal from "react-modal";
+import React, { useState, useEffect, useCallback } from 'react';
+import Modal from 'react-modal';
 import {
   ConsultationView,
   ConsultationsTable,
@@ -7,14 +7,11 @@ import {
   Header,
   PatientView,
   PrescriptionsTable,
-} from "@/pages/records/_components";
-
-import { API_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import Router from "next/router";
-
-import { Button } from "@/components/TextComponents/";
-import makeRequest from "@/pages/api/_make-request";
+} from '@/pages/records/_components';
+import withAuth from '@/utils/auth';
+import Router from 'next/router';
+import { Button } from '@/components/TextComponents/';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 const PatientRecord = () => {
   const [noRecords, setNoRecords] = useState(true);
@@ -43,14 +40,10 @@ const PatientRecord = () => {
   async function onRefresh() {
     const patientID = Router.query.id;
 
-    const { data: patient } = await makeRequest(
-      "get",
-      `${API_URL}/patients/${patientID}`,
-    );
+    const { data: patient } = await axiosInstance.get(`/patients/${patientID}`);
 
-    const { data: visits } = await makeRequest(
-      "get",
-      `${API_URL}/visits?patient=${patientID}`,
+    const { data: visits } = await axiosInstance.get(
+      `/visits?patient=${patientID}`
     );
 
     setPatient(patient);
@@ -63,19 +56,15 @@ const PatientRecord = () => {
   }
 
   async function loadVisitDetails(visitID) {
-    const { data: consults } = await makeRequest(
-      "get",
-      `${API_URL}/consults?visit=${visitID}`,
+    const { data: consults } = await axiosInstance.get(
+      `/consults?visit=${visitID}`
     );
 
     const prescriptions = consults
       .flatMap((consult) => consult.prescriptions)
       .filter((prescription) => prescription != null);
 
-    const { data: vitals } = await makeRequest(
-      "get",
-      `${API_URL}/vitals?visit=${visitID}`,
-    );
+    const { data: vitals } = axiosInstance.get(`/vitals?visit=${visitID}`);
 
     setNoRecords(false);
     setConsults(consults);
@@ -102,7 +91,7 @@ const PatientRecord = () => {
   }
 
   function renderFirstColumn() {
-    if (typeof vitals === "undefined") {
+    if (typeof vitals === 'undefined') {
       return (
         <div className="my-2">
           <h2>Not Done</h2>
@@ -113,7 +102,7 @@ const PatientRecord = () => {
     return (
       <div className="my-2">
         <Button
-          text={"View Vitals"}
+          text={'View Vitals'}
           onClick={() => toggleVitalsModal()}
           colour="indigo"
         />
@@ -141,13 +130,13 @@ const PatientRecord = () => {
       return (
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
           }}
         >
-          <h2 style={{ color: "black", fontSize: "1.5em" }}>
+          <h2 style={{ color: 'black', fontSize: '1.5em' }}>
             This patient has no records currently
           </h2>
         </div>
@@ -195,10 +184,10 @@ const PatientRecord = () => {
 
 const viewModalStyles = {
   content: {
-    left: "30%",
-    right: "12.5%",
-    top: "12.5%",
-    bottom: "12.5%",
+    left: '30%',
+    right: '12.5%',
+    top: '12.5%',
+    bottom: '12.5%',
   },
   overlay: {
     zIndex: 4,
