@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import Router from 'next/router';
 import Modal from 'react-modal';
 import {
@@ -10,10 +9,9 @@ import {
   PrescriptionsTable,
   Header,
 } from '@/pages/records/_components';
-import { API_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
-import { Button } from '@/components/TextComponents/';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);
@@ -62,12 +60,10 @@ const PatientVitals = () => {
   async function onRefresh() {
     const patientID = Router.query.id;
 
-    const { data: patient } = await axios.get(
-      `${API_URL}/patients/${patientID}`
-    );
+    const { data: patient } = await axiosInstance.get(`/patients/${patientID}`);
 
-    const { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientID}`
+    const { data: visits } = await axiosInstance.get(
+      `/visits?patient=${patientID}`
     );
 
     setPatient(patient);
@@ -80,16 +76,16 @@ const PatientVitals = () => {
   }
 
   async function loadVisitDetails(visitID) {
-    const { data: consults } = await axios.get(
-      `${API_URL}/consults?visit=${visitID}`
+    const { data: consults } = await axiosInstance.get(
+      `/consults?visit=${visitID}`
     );
 
     const prescriptions = consults
       .flatMap((consult) => consult.prescriptions)
       .filter((prescription) => prescription != null);
 
-    const { data: vitals } = await axios.get(
-      `${API_URL}/vitals?visit=${visitID}`
+    const { data: vitals } = await axiosInstance.get(
+      `/vitals?visit=${visitID}`
     );
 
     setMounted(true);
@@ -128,9 +124,8 @@ const PatientVitals = () => {
     const filteredFormPayload = Object.fromEntries(
       Object.entries(formPayload).filter(([_, value]) => value)
     );
-
-    await axios
-      .patch(`${API_URL}/vitals?visit=${selectedVisit}`, filteredFormPayload)
+    await axiosInstance
+      .patch(`/vitals?visit=${selectedVisit}`, filteredFormPayload)
       .catch((error) => {
         console.dir(error.response);
       });

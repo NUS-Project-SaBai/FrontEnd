@@ -68,3 +68,4 @@
 6. Next.js [https://nextjs.org/]
 7. SASS [https://sass-lang.com/]
 8. Axios [https://axios-http.com/docs/intro]
+9. Auth0 [https://auth0.com/]

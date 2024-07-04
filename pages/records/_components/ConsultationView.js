@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { DisplayField } from "@/components/TextComponents/DisplayField";
-import { PrescriptionsTable } from "./PrescriptionsTable";
-import { API_URL } from "@/utils/constants";
+import React, { useEffect, useState } from 'react';
+import { DisplayField } from '@/components/TextComponents/DisplayField';
+import { PrescriptionsTable } from './PrescriptionsTable';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 export function ConsultationView({ content: consult }) {
   const [diagnosisArray, setDiagnosisArray] = useState([]);
@@ -13,14 +12,14 @@ export function ConsultationView({ content: consult }) {
 
   async function fetchDiagnosis() {
     try {
-      const response = await axios.get(
-        `${API_URL}/diagnosis?consult=${consult.id}`,
+      const response = await axiosInstance.get(
+        `/diagnosis?consult=${consult.id}`
       );
 
       const { data: diagnosis } = response;
       setDiagnosisArray(diagnosis);
     } catch (error) {
-      console.error("Error fetching diagnosis:", error);
+      console.error('Error fetching diagnosis:', error);
     }
   }
 
@@ -52,40 +51,40 @@ export function ConsultationView({ content: consult }) {
         Consultation Details
       </label>
       <DisplayField
-        key={"doctor"}
-        label={"Consultation done by"}
+        key={'doctor'}
+        label={'Consultation done by'}
         content={consult.doctor?.username}
       />
 
       <DisplayField
-        key={"past_medical_history"}
-        label={"Past Medical History"}
+        key={'past_medical_history'}
+        label={'Past Medical History'}
         content={consult.past_medical_history}
       />
 
       <DisplayField
-        key={"consultation"}
-        label={"Consultation"}
+        key={'consultation'}
+        label={'Consultation'}
         content={consult.consultation}
       />
 
-      <DisplayField key={"plan"} label={"Plan"} content={consult.plan} />
+      <DisplayField key={'plan'} label={'Plan'} content={consult.plan} />
 
       <DisplayField
-        key={"referred_for"}
-        label={"Referred For"}
+        key={'referred_for'}
+        label={'Referred For'}
         content={consult.referred_for}
       />
 
       <DisplayField
-        key={"referred_notes"}
-        label={"Referred Notes"}
+        key={'referred_notes'}
+        label={'Referred Notes'}
         content={consult.referral_notes}
       />
 
       <DisplayField
-        key={"remarks"}
-        label={"Remarks"}
+        key={'remarks'}
+        label={'Remarks'}
         content={consult.remarks}
       />
 

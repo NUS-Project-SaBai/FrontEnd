@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
-import Router from "next/router";
-import Modal from "react-modal";
+import React, { useState, useEffect, useCallback } from 'react';
+import Router from 'next/router';
+import Modal from 'react-modal';
 import {
   ConsultationsTable,
   PrescriptionsTable,
@@ -10,11 +9,11 @@ import {
   ConsultationForm,
   OrderForm,
   Header,
-} from "@/pages/records/_components";
-import { API_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import toast from "react-hot-toast";
-import { Button } from "@/components/TextComponents/";
+} from '@/pages/records/_components';
+import withAuth from '@/utils/auth';
+import toast from 'react-hot-toast';
+import { Button } from '@/components/TextComponents/';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 const PatientConsultation = () => {
   const [mounted, setMounted] = useState(false);
@@ -56,12 +55,10 @@ const PatientConsultation = () => {
   async function onRefresh() {
     const patientID = Router.query.id;
 
-    const { data: patient } = await axios.get(
-      `${API_URL}/patients/${patientID}`,
-    );
+    const { data: patient } = await axiosInstance.get(`/patients/${patientID}`);
 
-    const { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientID}`,
+    const { data: visits } = await axiosInstance.get(
+      `/visits?patient=${patientID}`
     );
 
     setPatient(patient);
@@ -75,16 +72,16 @@ const PatientConsultation = () => {
   }
 
   async function loadVisitDetails(visitID) {
-    const { data: consults } = await axios.get(
-      `${API_URL}/consults?visit=${visitID}`,
+    const { data: consults } = await axiosInstance.get(
+      `/consults?visit=${visitID}`
     );
 
     const prescriptions = consults
       .flatMap((consult) => consult.prescriptions)
       .filter((prescription) => prescription != null);
 
-    const { data: vitals } = await axios.get(
-      `${API_URL}/vitals?visit=${visitID}`,
+    const { data: vitals } = await axiosInstance.get(
+      `/vitals?visit=${visitID}`
     );
 
     setMounted(true);
@@ -95,7 +92,7 @@ const PatientConsultation = () => {
   }
 
   async function loadMedicationStock() {
-    const { data: medications } = await axios.get(`${API_URL}/medications`);
+    const { data: medications } = await axiosInstance.get('/medications');
     setMedications(medications);
   }
 
@@ -140,9 +137,9 @@ const PatientConsultation = () => {
     const value = target.value;
     const name = target.name;
 
-    if (name === "medication") {
-      const pKey = parseInt(value.split(" ")[0]);
-      const medicineName = value.split(" ").slice(1).join(" ");
+    if (name === 'medication') {
+      const pKey = parseInt(value.split(' ')[0]);
+      const medicineName = value.split(' ').slice(1).join(' ');
 
       setOrderFormDetails((prevState) => ({
         ...prevState,
@@ -161,13 +158,13 @@ const PatientConsultation = () => {
     // Non existent medication check
     if (orderFormDetails.medicine == null || orderFormDetails.medicine === 0) {
       toast.error(
-        `Please select the name of the medication you would like to prescribe.`,
+        `Please select the name of the medication you would like to prescribe.`
       );
     }
 
     // Decimal check
     if (!Number.isInteger(orderFormDetails.quantity - 0)) {
-      toast.error("Please enter a valid quantity.");
+      toast.error('Please enter a valid quantity.');
       return;
     }
 
@@ -177,7 +174,7 @@ const PatientConsultation = () => {
     if (index !== -1) {
       orders[index] = orderFormDetails;
     } else {
-      orders.push({ ...orderFormDetails, order_status: "PENDING" });
+      orders.push({ ...orderFormDetails, order_status: 'PENDING' });
     }
 
     setOrders(orders);
@@ -221,7 +218,7 @@ const PatientConsultation = () => {
   // Consultation Form
   function handleConsultationFormInputChange(e) {
     const target = e.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
     setConsultationFormDetails((prevState) => ({
@@ -250,18 +247,17 @@ const PatientConsultation = () => {
       ...consultationFormDetails,
     };
 
-    const { data: consult } = await axios
-      .post(`${API_URL}/consults`, {
+    const { data: consult } = await axiosInstance
+      .post('/consults', {
         ...formPayload,
-        doctor: window.localStorage.getItem("userID"),
       })
       .catch((error) => {
-        toast.error("Error creating consult.");
+        toast.error('Error creating consult.');
       });
 
     const diagnosesPromises = [];
     consultationFormDetails.diagnoses.forEach((diagnosis) => {
-      const diagnosisRequest = axios.post(`${API_URL}/diagnosis`, {
+      const diagnosisRequest = axiosInstance.post('/diagnosis', {
         consult: consult.id,
         details: diagnosis.details,
         category: diagnosis.type,
@@ -272,19 +268,17 @@ const PatientConsultation = () => {
 
     const orderPromises = [];
     orders.forEach((order) => {
-      const orderRequest = axios
-        .post(`${API_URL}/orders`, {
+      const orderRequest = axiosInstance
+        .post('/orders', {
           ...order,
           visit: selectedVisitID,
-          doctor: window.localStorage.getItem("userID"),
           consult: consult.id,
         })
         .catch((error) => {
-          console.error("Error creating order:", error.response.data);
-          console.error("Payload:", {
+          console.error('Error creating order:', error.response.data);
+          console.error('Payload:', {
             ...order,
             visit: selectedVisitID,
-            doctor: window.localStorage.getItem("userID"),
             consult: consult.id,
           });
         });
@@ -293,9 +287,9 @@ const PatientConsultation = () => {
     });
     await Promise.all(orderPromises);
 
-    toast.success("Medical Consult Completed!");
+    toast.success('Medical Consult Completed!');
 
-    Router.push("/records");
+    Router.push('/records');
   }
 
   function renderHeader() {
@@ -311,7 +305,7 @@ const PatientConsultation = () => {
   function renderFirstColumn() {
     return (
       <div className="space-y-8">
-        {typeof vitals === "undefined" ? (
+        {typeof vitals === 'undefined' ? (
           <>
             <label className="label">Vital Signs</label>
             <h2>Not Done</h2>
@@ -340,18 +334,18 @@ const PatientConsultation = () => {
           <label className="block text-sm font-medium text-gray-900 mt-4">
             Orders
           </label>
-          {orders.length > 0 ? renderOrdersTable() : "No Orders"}
+          {orders.length > 0 ? renderOrdersTable() : 'No Orders'}
           <hr />
           <Button
             colour="green"
-            text={"Add Orders"}
+            text={'Add Orders'}
             onClick={() => toggleOrderFormModal()}
           />
         </div>
 
         <Button
           colour="green"
-          text={"Submit"}
+          text={'Submit'}
           onClick={() => submitConsultationForm()}
         />
       </div>
@@ -450,7 +444,7 @@ const PatientConsultation = () => {
           marginTop: 27.5,
           marginLeft: 25,
           marginRight: 25,
-          overflowX: "hidden", //remove horizontal scrollbar
+          overflowX: 'hidden', //remove horizontal scrollbar
         }}
       >
         {renderOrderFormModal()}
@@ -477,10 +471,10 @@ const PatientConsultation = () => {
 
 const formModalStyles = {
   content: {
-    left: "35%",
-    right: "17.5%",
-    top: "12.5%",
-    bottom: "12.5%",
+    left: '35%',
+    right: '17.5%',
+    top: '12.5%',
+    bottom: '12.5%',
   },
   overlay: {
     zIndex: 4,
@@ -489,10 +483,10 @@ const formModalStyles = {
 
 const viewModalStyles = {
   content: {
-    left: "30%",
-    right: "12.5%",
-    top: "12.5%",
-    bottom: "12.5%",
+    left: '30%',
+    right: '12.5%',
+    top: '12.5%',
+    bottom: '12.5%',
   },
   overlay: {
     zIndex: 4,
