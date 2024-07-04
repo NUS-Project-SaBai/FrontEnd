@@ -65,7 +65,7 @@ export function VitalsTable({ content }) {
             label="BMI"
             content={(
               parseFloat(content.weight) /
-              parseFloat(content.height) ** 2
+              parseFloat(content.height / 100) ** 2
             ).toFixed(2)}
           />
         </div>
