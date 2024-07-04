@@ -1,5 +1,5 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
-import Redirect from "../pages/api/redirect";
+import { useUser } from '@auth0/nextjs-auth0/client';
+import Redirect from '../pages/api/redirect';
 
 const withAuth = (Component) => {
   return (props) => {
