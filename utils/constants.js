@@ -3,6 +3,7 @@ export const CLOUDINARY_URL = "https://res.cloudinary.com/dlusodadw";
 export const API_URL = "http://localhost:8000";
 
 export const venueOptions = {
+  ALL: "ALL",
   PP: "Phnom Penh",
   PTC: "PTC",
   TT: "TT",
