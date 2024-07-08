@@ -89,7 +89,7 @@ const Registration = () => {
 
   // Webcam functions
 
-  const webcamSetRef = (webcam) => {
+  const webcamSetRef = webcam => {
     setWebcam(webcam);
   };
 
@@ -105,12 +105,12 @@ const Registration = () => {
 
   // General functions
 
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const inputName = target.name;
 
-    setFormDetails((prevDetails) => ({
+    setFormDetails(prevDetails => ({
       ...prevDetails,
       [inputName]: value,
     }));
@@ -127,7 +127,7 @@ const Registration = () => {
       'village_prefix',
     ];
 
-    if (checklist.some((item) => formDetails[item].length === 0)) {
+    if (checklist.some(item => formDetails[item].length === 0)) {
       toast.error('Please complete the form before submitting!');
       return;
     }
@@ -153,7 +153,7 @@ const Registration = () => {
       ),
     };
     const patientFormData = new FormData();
-    Object.keys(payload).forEach((key) =>
+    Object.keys(payload).forEach(key =>
       patientFormData.append(key, payload[key])
     );
 
@@ -168,7 +168,7 @@ const Registration = () => {
     }
 
     setPatient(response);
-    setFormDetails((prevDetails) => ({
+    setFormDetails(prevDetails => ({
       ...prevDetails,
       gender: 'Male',
       village_prefix: 'SV',
@@ -181,7 +181,7 @@ const Registration = () => {
     setLoading(false);
   };
 
-  const submitNewVisit = async (patient) => {
+  const submitNewVisit = async patient => {
     let payload = {
       patient: patient.pk,
       status: 'started',
@@ -192,7 +192,7 @@ const Registration = () => {
   };
 
   // Auto Suggestions functions
-  const renderSuggestion = (suggestion) => {
+  const renderSuggestion = suggestion => {
     const name = suggestion.name;
     const id = `${suggestion.village_prefix} ${suggestion.pk
       .toString()
@@ -223,7 +223,7 @@ const Registration = () => {
   // When suggestion is clicked, Autosuggest needs to populate the input
   // based on the clicked suggestion. Teach Autosuggest how to calculate the
   // input value for every given suggestion.
-  const getSuggestionValue = (suggestion) => {
+  const getSuggestionValue = suggestion => {
     return suggestion.name;
   };
 
@@ -237,7 +237,7 @@ const Registration = () => {
     const query =
       inputValue.length === 0
         ? []
-        : patientsList.filter((patient) =>
+        : patientsList.filter(patient =>
             patient.filter_string.toLowerCase().includes(inputValue)
           );
 

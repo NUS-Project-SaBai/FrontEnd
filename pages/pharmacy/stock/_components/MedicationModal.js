@@ -1,12 +1,12 @@
-import React from "react";
-import Modal from "react-modal";
+import React from 'react';
+import Modal from 'react-modal';
 
 import {
   Button,
   InputField,
   InputBox,
   DisplayField,
-} from "@/components/TextComponents/";
+} from '@/components/TextComponents/';
 
 export function MedicationModal({
   modalIsOpen,
@@ -21,10 +21,10 @@ export function MedicationModal({
       onRequestClose={toggleModal}
       style={{
         content: {
-          left: "35%",
-          right: "12.5%",
-          top: "12.5%",
-          bottom: "12.5%",
+          left: '35%',
+          right: '12.5%',
+          top: '12.5%',
+          bottom: '12.5%',
         },
       }}
     >

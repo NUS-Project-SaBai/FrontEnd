@@ -14,7 +14,7 @@ export function DropDown({ name, options, label, onChange, value }) {
         onChange={onChange}
         value={value}
       >
-        {options.map((option) => (
+        {options.map(option => (
           <option key={option} value={option}>
             {option}
           </option>

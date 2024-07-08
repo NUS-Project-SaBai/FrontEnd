@@ -1,11 +1,11 @@
-import Webcam from "react-webcam";
+import Webcam from 'react-webcam';
 
-import { Button } from "@/components/TextComponents/Button";
+import { Button } from '@/components/TextComponents/Button';
 
 const videoConstraints = {
   width: 720,
   height: 720,
-  facingMode: "user",
+  facingMode: 'user',
 };
 
 const AppWebcam = ({ webcamSetRef, webcamCapture }) => (

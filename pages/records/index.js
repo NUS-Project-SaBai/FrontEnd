@@ -16,11 +16,11 @@ function PatientList() {
   useEffect(() => {
     axiosInstance
       .get('/patients')
-      .then((response) => {
+      .then(response => {
         setPatients(response.data);
         setPatientsFiltered(response.data);
       })
-      .catch((error) => console.error('Error loading page', error));
+      .catch(error => console.error('Error loading page', error));
   }, []);
 
   function renderTableContent() {
@@ -92,7 +92,7 @@ function PatientList() {
   }
 
   function onFilterChange(e) {
-    const filteredPatients = patients.filter((patient) => {
+    const filteredPatients = patients.filter(patient => {
       const searchValue = e.target.value.toLowerCase();
       return patient.filter_string.includes(searchValue);
     });

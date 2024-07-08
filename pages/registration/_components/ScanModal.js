@@ -1,17 +1,17 @@
-import axios from "axios";
-import Modal from "react-modal";
-import toast from "react-hot-toast";
-import { useState } from "react";
+import axios from 'axios';
+import Modal from 'react-modal';
+import toast from 'react-hot-toast';
+import { useState } from 'react';
 import {
   API_URL,
   CLOUDINARY_URL,
   MATCH_FOUND_MESSAGE,
   NO_MATCHES_FOUND_MESSAGE,
   NO_PHOTO_MESSAGE,
-} from "@/utils/constants";
-import { urltoFile } from "@/utils/helpers";
-import Link from "next/link";
-import { Button } from "@/components/TextComponents";
+} from '@/utils/constants';
+import { urltoFile } from '@/utils/helpers';
+import Link from 'next/link';
+import { Button } from '@/components/TextComponents';
 
 export function ScanModal({
   modalIsOpen,
@@ -32,21 +32,21 @@ export function ScanModal({
 
     const scanPatientFormData = new FormData();
     scanPatientFormData.append(
-      "picture",
-      await urltoFile(imageDetails, "patient_screenshot.jpg", "image/jpg"),
+      'picture',
+      await urltoFile(imageDetails, 'patient_screenshot.jpg', 'image/jpg')
     );
 
     const response = await axios
       .post(`${API_URL}/patients/search`, scanPatientFormData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       })
-      .then((response) => {
+      .then(response => {
         setMatchedPatientData(response.data);
         toast.success(MATCH_FOUND_MESSAGE);
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.response.status === 404) {
           toast.error(NO_MATCHES_FOUND_MESSAGE);
         } else if (error.response.status === 400) {
@@ -73,10 +73,10 @@ export function ScanModal({
           {!cameraIsOpen && (
             <div
               style={{
-                margin: "0 auto",
+                margin: '0 auto',
                 height: 250,
                 width: 250,
-                backgroundColor: "grey",
+                backgroundColor: 'grey',
               }}
             >
               {imageDetails != null && <img src={imageDetails} />}

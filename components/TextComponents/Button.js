@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 export function Button({ text, onClick, colour }) {
   const [isLoading, setIsLoading] = useState(false);
