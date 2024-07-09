@@ -40,7 +40,6 @@ function PatientList() {
   function handleCodeChange(e) { 
     const searchValue = e.target.value.toLowerCase(); 
     setPatientCode(searchValue); 
-    filter();
   }
 
   function filter() {
@@ -146,6 +145,7 @@ function PatientList() {
               {value}
             </option>
           ))}
+          <option value="all">all</option>
         </select>
       </div>
     </div>
