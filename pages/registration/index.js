@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import Autosuggest from 'react-autosuggest';
-import toast from 'react-hot-toast';
-import moment from 'moment';
-import axiosInstance from '@/pages/api/_axiosInstance';
+import React, { useEffect, useState } from "react";
+import Autosuggest from "react-autosuggest";
+import axios from "axios";
+import toast from "react-hot-toast";
+import moment from "moment";
 
-import {
-  CLOUDINARY_URL,
-  NO_PHOTO_MESSAGE,
-  venueOptions,
-} from '@/utils/constants';
-import { urltoFile } from '@/utils/helpers';
-import withAuth from '@/utils/auth';
-import AppWebcam from '@/utils/webcam';
+import { API_URL, CLOUDINARY_URL, NO_PHOTO_MESSAGE } from "@/utils/constants";
+import { urltoFile } from "@/utils/helpers";
+import withAuth from "@/utils/auth";
+import AppWebcam from "@/utils/webcam";
 
-import { PatientModal, ScanModal } from '@/pages/registration/_components';
+import PatientModal from "@/pages/registration/PatientModal";
+import ScanModal from "@/pages/registration/ScanModal";
 
-import { DisplayField, Button } from '@/components/TextComponents/';
-import Loading from '@/components/Loading';
+import { DisplayField } from "@/components/TextComponents/DisplayField";
+import { Button } from "@/components/TextComponents/Button";
+import Loading from "@/components/Loading";
 
 const PatientInfo = ({ patient, submitNewVisit }) => {
   return patient.pk ? (
@@ -26,7 +24,7 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
           src={`${CLOUDINARY_URL}/${patient.picture}`}
           alt="Placeholder image"
           className="has-ratio"
-          style={{ height: 200, width: 200, objectFit: 'cover' }}
+          style={{ height: 200, width: 200, objectFit: "cover" }}
         />
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
@@ -34,7 +32,7 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
           label="ID"
           content={`${patient.village_prefix}${patient.pk
             .toString()
-            .padStart(3, '0')}`}
+            .padStart(3, "0")}`}
         />
         <DisplayField label="Name" content={patient.name} />
         <DisplayField
@@ -59,7 +57,7 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
 
 const Registration = () => {
   const [loading, setLoading] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [patientsList, setPatientsList] = useState([]);
   const [patient, setPatient] = useState({});
@@ -69,13 +67,13 @@ const Registration = () => {
   const [webcam, setWebcam] = useState(null);
   const [imageDetails, setImageDetails] = useState(null);
   const [formDetails, setFormDetails] = useState({
-    name: '',
-    identification_number: '',
-    contact_no: '',
-    date_of_birth: '',
-    drug_allergy: '',
-    gender: 'Male',
-    village_prefix: Object.keys(venueOptions)[0],
+    name: "",
+    identification_number: "",
+    contact_no: "",
+    date_of_birth: "",
+    drug_allergy: "",
+    gender: "Male",
+    village_prefix: "SV",
   });
 
   useEffect(() => {
@@ -83,7 +81,7 @@ const Registration = () => {
   }, []);
 
   const onRefresh = async () => {
-    let { data: patients } = await axiosInstance.get('/patients');
+    let { data: patients } = await axios.get(`${API_URL}/patients`);
     setPatientsList(patients);
   };
 
@@ -107,7 +105,7 @@ const Registration = () => {
 
   const handleInputChange = (event) => {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = target.type === "checkbox" ? target.checked : target.value;
     const inputName = target.name;
 
     setFormDetails((prevDetails) => ({
@@ -118,22 +116,22 @@ const Registration = () => {
 
   const submitNewPatient = async () => {
     let checklist = [
-      'name',
-      'identification_number',
-      'gender',
-      'contact_no',
-      'date_of_birth',
-      'drug_allergy',
-      'village_prefix',
+      "name",
+      "identification_number",
+      "gender",
+      "contact_no",
+      "date_of_birth",
+      "drug_allergy",
+      "village_prefix",
     ];
 
     if (checklist.some((item) => formDetails[item].length === 0)) {
-      toast.error('Please complete the form before submitting!');
+      toast.error("Please complete the form before submitting!");
       return;
     }
 
-    if (formDetails['date_of_birth'].length !== 10) {
-      toast.error('Please enter a valid date of birth!');
+    if (formDetails["date_of_birth"].length !== 10) {
+      toast.error("Please enter a valid date of birth!");
       return;
     }
 
@@ -148,21 +146,26 @@ const Registration = () => {
       ...formDetails,
       picture: await urltoFile(
         imageDetails,
-        'patient_screenshot.jpg',
-        'image/jpg'
+        "patient_screenshot.jpg",
+        "image/jpg",
       ),
     };
     const patientFormData = new FormData();
     Object.keys(payload).forEach((key) =>
-      patientFormData.append(key, payload[key])
+      patientFormData.append(key, payload[key]),
     );
 
-    const { data: response } = await axiosInstance.post(
-      '/patients',
-      patientFormData
-    );
+    const { data: response } = await axios
+      .post(`${API_URL}/patients`, patientFormData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
 
-    if (typeof response.error !== 'undefined') {
+    if (typeof response.error !== "undefined") {
       toast.error(`Please retake photo! ${response.error}`);
       return;
     }
@@ -170,11 +173,11 @@ const Registration = () => {
     setPatient(response);
     setFormDetails((prevDetails) => ({
       ...prevDetails,
-      gender: 'Male',
-      village_prefix: 'SV',
+      gender: "Male",
+      village_prefix: "SV",
     }));
     setImageDetails(null);
-    toast.success('New patient created!');
+    toast.success("New patient created!");
 
     setModalIsOpen(false);
     submitNewVisit(response);
@@ -184,11 +187,11 @@ const Registration = () => {
   const submitNewVisit = async (patient) => {
     let payload = {
       patient: patient.pk,
-      status: 'started',
-      visit_date: moment().format('DD MMMM YYYY HH:mm'),
+      status: "started",
+      visit_date: moment().format("YYYY-MM-DD"),
     };
-    await axiosInstance.post('/visits', payload);
-    toast.success('New visit created for patient!');
+    await axios.post(`${API_URL}/visits`, payload);
+    toast.success("New visit created for patient!");
   };
 
   // Auto Suggestions functions
@@ -196,7 +199,7 @@ const Registration = () => {
     const name = suggestion.name;
     const id = `${suggestion.village_prefix} ${suggestion.pk
       .toString()
-      .padStart(3, '0')}`;
+      .padStart(3, "0")}`;
     const imageURL = suggestion.picture;
 
     return (
@@ -238,7 +241,7 @@ const Registration = () => {
       inputValue.length === 0
         ? []
         : patientsList.filter((patient) =>
-            patient.filter_string.toLowerCase().includes(inputValue)
+            patient.filterString.toLowerCase().includes(inputValue),
           );
 
     setSuggestions(query);
@@ -251,116 +254,115 @@ const Registration = () => {
 
   // Autosuggest will pass through all these props to the input.
   const inputProps = {
-    placeholder: 'Search Patient',
-    type: 'search',
+    placeholder: "Search Patient",
+    type: "search",
     value,
     onChange: onChange,
     className:
-      'block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6',
+      "block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
   };
 
   const autosuggestTheme = {
-    container: 'react-autosuggest__container w-full',
-    input: 'react-autosuggest__input form-input w-full',
+    container: "react-autosuggest__container w-full",
+    input: "react-autosuggest__input form-input w-full",
     suggestionsContainer:
-      'react-autosuggest__suggestions-container w-full mt-2 border border-gray-300 rounded-md',
-    suggestionsList: 'react-autosuggest__suggestions-list w-full space-y-2 p-2',
+      "react-autosuggest__suggestions-container w-full mt-2 border border-gray-300 rounded-md",
+    suggestionsList: "react-autosuggest__suggestions-list w-full space-y-2 p-2",
     suggestion:
-      'react-autosuggest__suggestion block w-full hover:bg-blue-100 transition-colors duration-300 ease-in-out p-2 border border-gray-300 rounded-md',
+      "react-autosuggest__suggestion block w-full hover:bg-blue-100 transition-colors duration-300 ease-in-out p-2 border border-gray-300 rounded-md",
   };
 
   return (
     <div className="mx-4">
-      {loading ? (
-        <Loading />
-      ) : (
-        <div>
-          <PatientModal
-            modalIsOpen={modalIsOpen}
-            formDetails={formDetails}
-            imageDetails={imageDetails}
-            cameraIsOpen={cameraIsOpen}
-            renderWebcam={() => (
-              <AppWebcam
-                webcamSetRef={webcamSetRef}
-                webcamCapture={webcamCapture}
-              />
-            )}
-            closeModal={() => {
-              setModalIsOpen(false);
-            }}
-            handleInputChange={handleInputChange}
-            submitNewPatient={submitNewPatient}
-            toggleCameraOpen={toggleCameraOpen}
-            customStyles={{
-              content: {
-                left: '25%',
-                right: '7.5%',
-              },
-            }}
-            loading={loading}
+      <PatientModal
+        modalIsOpen={modalIsOpen}
+        formDetails={formDetails}
+        imageDetails={imageDetails}
+        cameraIsOpen={cameraIsOpen}
+        renderWebcam={() => (
+          <AppWebcam
+            webcamSetRef={webcamSetRef}
+            webcamCapture={webcamCapture}
           />
-          <ScanModal
-            modalIsOpen={scanModalIsOpen}
-            cameraIsOpen={cameraIsOpen}
-            imageDetails={imageDetails}
-            closeScanModal={() => {
-              setScanModalIsOpen(false);
-            }}
-            renderWebcam={() => (
-              <AppWebcam
-                webcamSetRef={webcamSetRef}
-                webcamCapture={webcamCapture}
-              />
-            )}
-            toggleCameraOpen={toggleCameraOpen}
-            customStyles={{
-              content: {
-                left: '25%',
-                right: '7.5%',
-              },
-            }}
+        )}
+        closeModal={() => {
+          setModalIsOpen(false);
+        }}
+        handleInputChange={handleInputChange}
+        submitNewPatient={submitNewPatient}
+        toggleCameraOpen={toggleCameraOpen}
+        customStyles={{
+          content: {
+            left: "25%",
+            right: "7.5%",
+          },
+        }}
+        loading={loading}
+      />
+      <ScanModal
+        modalIsOpen={scanModalIsOpen}
+        cameraIsOpen={cameraIsOpen}
+        imageDetails={imageDetails}
+        closeScanModal={() => {
+          setScanModalIsOpen(false);
+        }}
+        renderWebcam={() => (
+          <AppWebcam
+            webcamSetRef={webcamSetRef}
+            webcamCapture={webcamCapture}
           />
+        )}
+        toggleCameraOpen={toggleCameraOpen}
+        customStyles={{
+          content: {
+            left: "25%",
+            right: "7.5%",
+          },
+        }}
+      />
+
+      <div>
+        {loading ? (
+          <Loading />
+        ) : (
           <div>
-            <div>
-              <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-                Registration
-              </h1>
-              <div className="flex items-center justify-center mb-2 w-full">
-                <Autosuggest
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={onSuggestionsClearRequested}
-                  getSuggestionValue={getSuggestionValue}
-                  renderSuggestion={renderSuggestion}
-                  inputProps={inputProps}
-                  theme={autosuggestTheme}
-                />
-              </div>
-              <div className="flex items-center justify-center mb-6 gap-3">
-                <Button
-                  colour="green"
-                  text="Start Facial Recognition"
-                  onClick={() => {
-                    setScanModalIsOpen(true);
-                  }}
-                />
-                <Button
-                  colour="green"
-                  text="New Patient"
-                  onClick={() => {
-                    setModalIsOpen(true);
-                  }}
-                />
-              </div>
-              <PatientInfo
-                patient={patient}
-                submitNewVisit={() => submitNewVisit(patient)}
+            <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+              Registration
+            </h1>
+            <div className="flex items-center justify-center mb-2 w-full">
+              <Autosuggest
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                inputProps={inputProps}
+                theme={autosuggestTheme}
               />
             </div>
+            <div className="flex items-center justify-center mb-6 gap-3">
+              <Button
+                colour="green"
+                text="Start Facial Recognition"
+                onClick={() => {
+                  setScanModalIsOpen(true);
+                }}
+              />
+              <Button
+                colour="green"
+                text="New Patient"
+                onClick={() => {
+                  setModalIsOpen(true);
+                }}
+              />
+            </div>
+            <PatientInfo
+              patient={patient}
+              submitNewVisit={() => submitNewVisit(patient)}
+            />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

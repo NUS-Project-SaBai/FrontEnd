@@ -9,7 +9,8 @@ import { venueOptions } from "@/utils/constants";
 function PatientList() {
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
-  const [patientsFilteredByCode, setPatientsFilteredByCode] = useState([]);
+  const [patientCode, setPatientCode] = useState("all");
+  const [patientName, setPatientName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -19,14 +20,39 @@ function PatientList() {
     axiosInstance
       .get('/patients')
       .then((response) => {
-        console.log(response.data);
         setPatients(response.data);
         setPatientsFiltered(response.data);
-        setPatientsFilteredByName(response.data);
       })
       .catch((error) => console.error('Error loading page', error));
   }, []);
 
+  useEffect(() => {
+    filter()
+  }, [patientName, patientCode])
+
+  
+
+  function handleNameChange(e) { 
+    const searchValue = e.target.value.toLowerCase(); 
+    setPatientName(searchValue); 
+  }
+
+  function handleCodeChange(e) { 
+    const searchValue = e.target.value.toLowerCase(); 
+    setPatientCode(searchValue); 
+    filter();
+  }
+
+  function filter() {
+    const filteredPatients = patients.filter((patient) => {
+      return ((patient.name.toLowerCase().includes(patientName))
+      && (patient.village_prefix.toLowerCase()===(patientCode) || patientCode === "all"));
+    });
+    setPatientsFiltered(filteredPatients);
+  }
+
+
+  
   function renderTableContent() {
     const patientRows = patientsFiltered
       .slice(startIndex, endIndex)
@@ -95,24 +121,7 @@ function PatientList() {
     return <>{patientRows}</>;
   }
 
-  function onFilterChange(e) {
-    const filteredPatients = patientsFilteredByCode.filter((patient) => {
-      const searchValue = e.target.value.toLowerCase();
-      return patient.filter_string.toLowerCase().includes(searchValue);
-    });
-    
-
-    setPatientsFiltered(filteredPatients);
-  }
-
-  function filterByCode(e) {
-    const filteredPatients = patients.filter((patient) => {
-      const searchValue = e.target.value.toLowerCase();
-        return patient.village_prefix.toLowerCase()===(searchValue) || searchValue === "all";
-    });
-    setPatientsFilteredByCode(filteredPatients);
-    setPatientsFiltered(filteredPatients)
-  }
+  
 
   return (
     <div className="mx-4 mt-2">
@@ -130,7 +139,7 @@ function PatientList() {
           className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
           name="patientDropdown"
           id="patientDropdown"
-          onChange={filterByCode}
+          onChange={handleCodeChange}
         >
           {Object.entries(venueOptions).map(([key, value]) => (
             <option value={key} key={value}>
@@ -145,9 +154,10 @@ function PatientList() {
       <div className="control">
         <InputField
           type="text"
-          name="Input Patient/ID to Searc"
+          name="Input Patient/ID to Search"
           label="Search by name"
-          onChange={onFilterChange}
+          onChange={handleNameChange}
+          //value={patientName}
           
         />
       </div>
