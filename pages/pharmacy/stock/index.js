@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { MedicationModal } from './_components/';
+import { MedicationModal, MedicationHistoryModal } from './_components/';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
@@ -17,6 +17,9 @@ const Stock = () => {
     remarks: '',
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [MedicationHistoryModalIsOpen, setMedicationHistoryModalIsOpen] =
+    useState(false);
+  const [medication, setMedication] = useState(null);
 
   useEffect(() => {
     loadMedicine();
@@ -46,6 +49,11 @@ const Stock = () => {
   const toggleModal = (medication = {}) => {
     setMedicationDetails(medication);
     setModalIsOpen(!modalIsOpen);
+  };
+
+  const toggleMedicationHistoryModal = (medication) => {
+    setMedication(medication);
+    setMedicationHistoryModalIsOpen(!MedicationHistoryModalIsOpen);
   };
 
   const createNewMedication = () => {
@@ -186,6 +194,12 @@ const Stock = () => {
               text="Delete"
               onClick={() => handleDelete(medicationDetails.pk)}
             />
+
+            <Button
+              colour="blue"
+              text="History"
+              onClick={() => toggleMedicationHistoryModal(medicationDetails)}
+            />
           </td>
         </tr>
       );
@@ -207,6 +221,12 @@ const Stock = () => {
         toggleModal={toggleModal}
         handleInputChange={handleMedicationChange}
         onSubmit={onSubmitForm}
+      />
+
+      <MedicationHistoryModal
+        modalIsOpen={MedicationHistoryModalIsOpen}
+        toggleModal={() => setMedicationHistoryModalIsOpen(false)}
+        medication={medication}
       />
 
       <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">

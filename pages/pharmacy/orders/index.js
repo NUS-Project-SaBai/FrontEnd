@@ -43,9 +43,6 @@ const Orders = () => {
         await axiosInstance.patch(`/orders/${order.id}`, {
           order_status: 'APPROVED',
         });
-        await axiosInstance.patch(`/medications/${order.medicine.id}`, {
-          quantityChange: -order.quantity,
-        });
 
         router.reload();
       } catch (error) {
