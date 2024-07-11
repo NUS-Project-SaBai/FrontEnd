@@ -4,14 +4,17 @@ import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '../api/_axiosInstance';
-import { venueOptions } from "@/utils/constants";
+import { venueOptions } from '@/utils/constants';
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
-  const [patientCode, setPatientCode] = useState("all");
-  const [patientName, setPatientName] = useState("");
+
+  const PATIENT_CODE_ALL = 'ALL';
+  const [patientCode, setPatientCode] = useState(PATIENT_CODE_ALL);
+  const [patientSearch, setPatientSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
   const itemsPerPage = 10;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -27,31 +30,30 @@ function PatientList() {
   }, []);
 
   useEffect(() => {
-    filter()
-  }, [patientName, patientCode])
+    filterPatients();
+  }, [patientSearch, patientCode]);
 
-  
-
-  function handleNameChange(e) { 
-    const searchValue = e.target.value.toLowerCase(); 
-    setPatientName(searchValue); 
+  function handleSearchChange(e) {
+    const searchValue = e.target.value.toLowerCase();
+    setPatientSearch(searchValue);
   }
 
-  function handleCodeChange(e) { 
-    const searchValue = e.target.value.toLowerCase(); 
-    setPatientCode(searchValue); 
+  function handleCodeChange(e) {
+    const searchValue = e.target.value;
+    setPatientCode(searchValue);
   }
 
-  function filter() {
+  function filterPatients() {
     const filteredPatients = patients.filter((patient) => {
-      return ((patient.name.toLowerCase().includes(patientName))
-      && (patient.village_prefix.toLowerCase()===(patientCode) || patientCode === "all"));
+      return (
+        patient.filter_string.includes(patientSearch) &&
+        (patientCode === PATIENT_CODE_ALL ||
+          patient.village_prefix === patientCode)
+      );
     });
     setPatientsFiltered(filteredPatients);
   }
 
-
-  
   function renderTableContent() {
     const patientRows = patientsFiltered
       .slice(startIndex, endIndex)
@@ -120,51 +122,51 @@ function PatientList() {
     return <>{patientRows}</>;
   }
 
-  
-
   return (
     <div className="mx-4 mt-2">
       <div className="mx-4 mt-2">
-  <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-    Patients List
-  </h1>
-  <div className="flex items-center space-x-4">
-    <div className="field">
-      <div className="control">
-        <label htmlFor="patientDropdown" className="block text-gray-700 text-sm font-bold mb-2">
-          Search by village code
-        </label>
-        <select
-          className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          name="patientDropdown"
-          id="patientDropdown"
-          onChange={handleCodeChange}
-        >
-          {Object.entries(venueOptions).map(([key, value]) => (
-            <option value={key} key={value}>
-              {value}
-            </option>
-          ))}
-          <option value="all">all</option>
-        </select>
-      </div>
-    </div>
+        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+          Patients List
+        </h1>
+        <div className="flex items-center space-x-4">
+          <div className="field">
+            <div className="control">
+              <label
+                htmlFor="patientDropdown"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Search by village code
+              </label>
+              <select
+                className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                name="patientDropdown"
+                id="patientDropdown"
+                onChange={handleCodeChange}
+              >
+                <option value={PATIENT_CODE_ALL}>
+                  {`${PATIENT_CODE_ALL}`}
+                </option>
+                {Object.entries(venueOptions).map(([key, value]) => (
+                  <option value={key} key={key}>
+                    {key}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-    <div className="field flex-[3]">
-      <div className="control">
-        <InputField
-          type="text"
-          name="Input Patient/ID to Search"
-          label="Search by name"
-          onChange={handleNameChange}
-          //value={patientName}
-          
-        />
+          <div className="field flex-[3]">
+            <div className="control">
+              <InputField
+                type="text"
+                name="Input Patient/ID to Search"
+                label="Search"
+                onChange={handleSearchChange}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-
 
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="mt-2 flow-root">
