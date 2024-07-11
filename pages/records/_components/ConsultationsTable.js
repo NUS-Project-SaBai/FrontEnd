@@ -1,4 +1,4 @@
-import { Button } from "@/components/TextComponents/Button";
+import { Button } from '@/components/TextComponents/Button';
 
 export function ConsultationsTable({ content: consults, buttonOnClick }) {
   if (consults.length == 0) {
@@ -13,8 +13,8 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
   }
 
   const consultRows = consults.map((consult) => {
-    const doctor = consult.doctor.username;
-    const referredFor = consult.referred_for || "Not referred";
+    const doctor = consult.doctor.nickname;
+    const referredFor = consult.referred_for || 'Not referred';
 
     return (
       <tr key={consult.id}>
@@ -27,7 +27,7 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
           <Button
             colour="indigo"
-            text={"View"}
+            text={'View'}
             onClick={() => buttonOnClick(consult)}
           />
         </td>
