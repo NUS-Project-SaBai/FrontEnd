@@ -32,7 +32,7 @@ export function MedicationHistoryModal({
     const tableRows = medicationHistory
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .map((history) => {
-        const doctor_name = history.doctor.username;
+        const doctor_name = history.doctor.nickname;
         const patient_name = history.patient?.name || 'NA';
         const qty_changed = history.quantity_changed;
         const qty_remaining = history.quantity_remaining;
