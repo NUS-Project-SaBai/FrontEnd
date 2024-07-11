@@ -182,7 +182,7 @@ const Stock = () => {
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {quantity}
           </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-5">
             <Button
               colour="green"
               text="Edit"
