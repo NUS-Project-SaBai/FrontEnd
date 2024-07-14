@@ -32,6 +32,18 @@ export default function APIComponent({ baseURL, path }) {
 
       const res = await axios(options);
       setResponse(res.data);
+
+      if (method === 'GET' && res.data) {
+        let templateData = res.data;
+
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          templateData = res.data[0];
+        }
+
+        if (typeof templateData === 'object') {
+          setPayload(JSON.stringify(templateData, null, 2));
+        }
+      }
     } catch (err) {
       setError(err.message);
     }

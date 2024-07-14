@@ -1,6 +1,14 @@
 import APIComponent from './_components/APIComponent';
 import { useState } from 'react';
 
+const paths = [
+  '/patients',
+  '/visits',
+  '/consults',
+  '/diagnosis',
+  '/medications',
+  '/orders',
+];
 export default function DebuggingPage() {
   const [baseURL, setBaseURL] = useState('http://127.0.0.1:8000');
 
@@ -21,8 +29,9 @@ export default function DebuggingPage() {
           className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
-      <APIComponent baseURL={baseURL} path="/patients" />
-      <APIComponent baseURL={baseURL} path="/visits" />
+      {paths.map((path) => (
+        <APIComponent key={path} baseURL={baseURL} path={path} />
+      ))}
     </div>
   );
 }
