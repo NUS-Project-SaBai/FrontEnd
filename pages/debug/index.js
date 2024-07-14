@@ -9,11 +9,20 @@ const paths = [
   '/medications',
   '/orders',
 ];
+
 export default function DebuggingPage() {
   const [baseURL, setBaseURL] = useState('http://127.0.0.1:8000');
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
+      <header className="w-full max-w-3xl mb-6">
+        <h1 className="text-3xl font-bold text-center text-gray-800">
+          API Debugging Tool
+        </h1>
+        <p className="text-center text-gray-600 mt-2">
+          Use this tool to test and debug your API endpoints.
+        </p>
+      </header>
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
         <label
           htmlFor="baseURL"
@@ -29,9 +38,11 @@ export default function DebuggingPage() {
           className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
-      {paths.map((path) => (
-        <APIComponent key={path} baseURL={baseURL} path={path} />
-      ))}
+      <div className="grid grid-cols-1 gap-6 w-full max-w-3xl">
+        {paths.map((path) => (
+          <APIComponent key={path} baseURL={baseURL} path={path} />
+        ))}
+      </div>
     </div>
   );
 }

@@ -64,7 +64,7 @@ export default function APIComponent({ baseURL, path }) {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md w-full mb-6">
+    <div className="bg-white p-8 rounded-lg shadow-md w-full">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
