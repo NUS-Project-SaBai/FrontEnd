@@ -43,7 +43,7 @@ const PatientConsultation = () => {
     diagnoses: [],
   });
 
-  const handleVisitChange = useCallback((event) => {
+  const handleVisitChange = useCallback(event => {
     const value = event.target.value;
     loadVisitDetails(value);
   }, []);
@@ -77,8 +77,8 @@ const PatientConsultation = () => {
     );
 
     const prescriptions = consults
-      .flatMap((consult) => consult.prescriptions)
-      .filter((prescription) => prescription != null);
+      .flatMap(consult => consult.prescriptions)
+      .filter(prescription => prescription != null);
 
     const { data: vitals } = await axiosInstance.get(
       `/vitals?visit=${visitID}`
@@ -141,13 +141,13 @@ const PatientConsultation = () => {
       const pKey = parseInt(value.split(' ')[0]);
       const medicineName = value.split(' ').slice(1).join(' ');
 
-      setOrderFormDetails((prevState) => ({
+      setOrderFormDetails(prevState => ({
         ...prevState,
         medicine: pKey,
         medicine_name: medicineName,
       }));
     } else {
-      setOrderFormDetails((prevState) => ({
+      setOrderFormDetails(prevState => ({
         ...prevState,
         [name]: value,
       }));
@@ -158,7 +158,7 @@ const PatientConsultation = () => {
     // Non existent medication check
     if (orderFormDetails.medicine == null || orderFormDetails.medicine === 0) {
       toast.error(
-        `Please select the name of the medication you would like to prescribe.`
+        'Please select the name of the medication you would like to prescribe.'
       );
     }
 
@@ -168,7 +168,7 @@ const PatientConsultation = () => {
       return;
     }
 
-    const index = orders.findIndex((order) => {
+    const index = orders.findIndex(order => {
       order.medicine === orderFormDetails.medicine;
     });
     if (index !== -1) {
@@ -184,10 +184,10 @@ const PatientConsultation = () => {
 
   function renderOrderFormModal() {
     const options = medications
-      .filter((medication) => {
-        return !orders.some((order) => order.medicine === medication.id);
+      .filter(medication => {
+        return !orders.some(order => order.medicine === medication.id);
       })
-      .map((medication) => {
+      .map(medication => {
         const name = medication.medicine_name;
         const pKey = medication.id;
         return (
@@ -221,14 +221,14 @@ const PatientConsultation = () => {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    setConsultationFormDetails((prevState) => ({
+    setConsultationFormDetails(prevState => ({
       ...prevState,
       [name]: value,
     }));
   }
 
   function handleConsultationFormDiagnosis(diagnoses) {
-    setConsultationFormDetails((prevState) => ({ ...prevState, diagnoses }));
+    setConsultationFormDetails(prevState => ({ ...prevState, diagnoses }));
   }
 
   async function submitConsultationForm() {
@@ -251,12 +251,12 @@ const PatientConsultation = () => {
       .post('/consults', {
         ...formPayload,
       })
-      .catch((error) => {
+      .catch(error => {
         toast.error('Error creating consult.');
       });
 
     const diagnosesPromises = [];
-    consultationFormDetails.diagnoses.forEach((diagnosis) => {
+    consultationFormDetails.diagnoses.forEach(diagnosis => {
       const diagnosisRequest = axiosInstance.post('/diagnosis', {
         consult: consult.id,
         details: diagnosis.details,
@@ -267,14 +267,14 @@ const PatientConsultation = () => {
     await Promise.all(diagnosesPromises);
 
     const orderPromises = [];
-    orders.forEach((order) => {
+    orders.forEach(order => {
       const orderRequest = axiosInstance
         .post('/orders', {
           ...order,
           visit: selectedVisitID,
           consult: consult.id,
         })
-        .catch((error) => {
+        .catch(error => {
           console.error('Error creating order:', error.response.data);
           console.error('Payload:', {
             ...order,
@@ -375,7 +375,7 @@ const PatientConsultation = () => {
               colour="red"
               text="Delete"
               onClick={() => {
-                setOrders((prevOrders) => {
+                setOrders(prevOrders => {
                   const updatedOrders = [...prevOrders];
                   updatedOrders.splice(index, 1);
                   return updatedOrders;

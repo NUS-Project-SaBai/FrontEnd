@@ -12,7 +12,7 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
     );
   }
 
-  const consultRows = consults.map((consult) => {
+  const consultRows = consults.map(consult => {
     const doctor = consult.doctor.nickname;
     const referredFor = consult.referred_for || 'Not referred';
 

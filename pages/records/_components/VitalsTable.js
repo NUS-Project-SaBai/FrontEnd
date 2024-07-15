@@ -70,7 +70,7 @@ export function VitalsTable({ content }) {
           />
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {vitalFields.map((field) => renderTableField(field))}
+          {vitalFields.map(field => renderTableField(field))}
         </div>
       </div>
     </form>

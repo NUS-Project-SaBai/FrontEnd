@@ -23,11 +23,11 @@ export function ConsultationView({ content: consult }) {
     }
   }
 
-  const renderPrescriptions = (prescriptions) => {
+  const renderPrescriptions = prescriptions => {
     return <PrescriptionsTable content={prescriptions} />;
   };
 
-  const diagnosisRows = diagnosisArray.map((diagnosis) => {
+  const diagnosisRows = diagnosisArray.map(diagnosis => {
     return (
       <tr key={diagnosis.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">

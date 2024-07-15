@@ -36,8 +36,8 @@ const Stock = () => {
     }
   };
 
-  const onFilterChange = (event) => {
-    const filteredMedications = medications.filter((medication) => {
+  const onFilterChange = event => {
+    const filteredMedications = medications.filter(medication => {
       const medicineName = medication.medicine_name.toLowerCase();
 
       return medicineName.includes(event.target.value.toLowerCase());
@@ -68,7 +68,7 @@ const Stock = () => {
     toggleModal(medicationDetails);
   };
 
-  const handleMedicationChange = (event) => {
+  const handleMedicationChange = event => {
     const newMedicationDetails = {
       ...medicationDetails,
       [event.target.name]: event.target.value,
@@ -107,7 +107,7 @@ const Stock = () => {
           medicine_name: updatedDetails.medicine_name,
           notes: updatedDetails.notes,
         })
-        .catch((error) => {
+        .catch(error => {
           toast.error(`Encountered an error when update! ${error.message}`);
           return;
         });
@@ -125,12 +125,10 @@ const Stock = () => {
       }
 
       updatedDetails.quantity = quantityChange;
-      await axiosInstance
-        .post('/medications', updatedDetails)
-        .catch((error) => {
-          toast.error(`Failed to create medication: ${error.message}`);
-          return;
-        });
+      await axiosInstance.post('/medications', updatedDetails).catch(error => {
+        toast.error(`Failed to create medication: ${error.message}`);
+        return;
+      });
       toast.success('New Medication created!');
     }
 
@@ -138,7 +136,7 @@ const Stock = () => {
     loadMedicine();
   };
 
-  const handleDelete = async (pk) => {
+  const handleDelete = async pk => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this medication?'
     );
@@ -146,16 +144,16 @@ const Stock = () => {
       return;
     }
 
-    await axiosInstance.delete(`/medications/${pk}`).catch((error) => {
+    await axiosInstance.delete(`/medications/${pk}`).catch(error => {
       toast.error(`Failed to delete medication: ${error.message}`);
       return;
     });
 
     const updatedMedications = medications.filter(
-      (medication) => medication.id !== pk
+      medication => medication.id !== pk
     );
     const updatedMedicationsFiltered = medicationsFiltered.filter(
-      (medication) => medication.id !== pk
+      medication => medication.id !== pk
     );
     setMedications(updatedMedications);
     setMedicationsFiltered(updatedMedicationsFiltered);
@@ -165,7 +163,7 @@ const Stock = () => {
 
   function renderRows() {
     // Displays the list of medications in stock
-    const tableRows = medicationsFiltered.map((medication) => {
+    const tableRows = medicationsFiltered.map(medication => {
       const medicationDetails = {
         ...medication,
         pk: medication.id,

@@ -28,8 +28,8 @@ const Orders = () => {
     }
   };
 
-  const onFilterChange = (event) => {
-    const filteredOrders = orders.filter((order) => {
+  const onFilterChange = event => {
+    const filteredOrders = orders.filter(order => {
       return order.visit.patient.filter_string.includes(
         event.target.value.toUpperCase()
       );
@@ -37,7 +37,7 @@ const Orders = () => {
     setOrdersFiltered(filteredOrders);
   };
 
-  const handleOrderApprove = async (order) => {
+  const handleOrderApprove = async order => {
     if (window.confirm('Are you sure you want to approve this order?')) {
       try {
         await axiosInstance.patch(`/orders/${order.id}`, {
@@ -51,7 +51,7 @@ const Orders = () => {
     }
   };
 
-  const handleOrderCancel = async (order) => {
+  const handleOrderCancel = async order => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
       try {
         await axiosInstance.patch(`/orders/${order.id}`, {
@@ -65,7 +65,7 @@ const Orders = () => {
   };
 
   const renderTableContent = () => {
-    return ordersFiltered.map((order) => {
+    return ordersFiltered.map(order => {
       const visit = order.visit;
       const prescriptions = (
         <li key={order.medicine.id}>
