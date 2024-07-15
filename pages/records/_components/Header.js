@@ -1,11 +1,11 @@
-import React from "react";
-import moment from "moment";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { CLOUDINARY_URL } from "@/utils/constants";
+import React from 'react';
+import moment from 'moment';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { CLOUDINARY_URL } from '@/utils/constants';
 
 export function Header({ patient, visits, handleVisitChange }) {
-  const visitOptions = visits.map((visit) => {
-    const date = moment(visit.date).format("DD MMMM YYYY HH:mm");
+  const visitOptions = visits.map(visit => {
+    const date = moment(visit.date).format('DD MMMM YYYY HH:mm');
     return (
       <option key={visit.id} value={visit.id}>
         {date}
@@ -27,7 +27,7 @@ export function Header({ patient, visits, handleVisitChange }) {
           <label className="block text-gray-700">Village ID</label>
           <p className="text-lg font-medium">{`${
             patient.village_prefix
-          }${patient.pk.toString().padStart(3, "0")}`}</p>
+          }${patient.pk.toString().padStart(3, '0')}`}</p>
         </div>
         <div className="mt-4">
           <label className="block text-gray-700">Visit on</label>

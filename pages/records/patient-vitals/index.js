@@ -48,7 +48,7 @@ const PatientVitals = () => {
   const [consultationViewModalOpen, setConsultationViewModalOpen] =
     useState(false);
 
-  const handleVisitChange = useCallback((event) => {
+  const handleVisitChange = useCallback(event => {
     const value = event.target.value;
     loadVisitDetails(value);
   }, []);
@@ -81,8 +81,8 @@ const PatientVitals = () => {
     );
 
     const prescriptions = consults
-      .flatMap((consult) => consult.prescriptions)
-      .filter((prescription) => prescription != null);
+      .flatMap(consult => consult.prescriptions)
+      .filter(prescription => prescription != null);
 
     const { data: vitals } = await axiosInstance.get(
       `/vitals?visit=${visitID}`
@@ -126,7 +126,7 @@ const PatientVitals = () => {
     );
     await axiosInstance
       .patch(`/vitals?visit=${selectedVisit}`, filteredFormPayload)
-      .catch((error) => {
+      .catch(error => {
         console.dir(error.response);
       });
     toast.success('Vitals completed!');
@@ -139,7 +139,7 @@ const PatientVitals = () => {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    setVitalsFormDetails((prevState) => ({
+    setVitalsFormDetails(prevState => ({
       ...prevState,
       [name]: value,
     }));

@@ -1,3 +1,3 @@
-import { MedicationModal } from "./MedicationModal";
+import { MedicationModal } from './MedicationModal';
 
 export { MedicationModal };

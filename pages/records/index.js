@@ -22,11 +22,11 @@ function PatientList() {
   useEffect(() => {
     axiosInstance
       .get('/patients')
-      .then((response) => {
+      .then(response => {
         setPatients(response.data);
         setPatientsFiltered(response.data);
       })
-      .catch((error) => console.error('Error loading page', error));
+      .catch(error => console.error('Error loading page', error));
   }, []);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function PatientList() {
   }
 
   function filterPatients() {
-    const filteredPatients = patients.filter((patient) => {
+    const filteredPatients = patients.filter(patient => {
       return (
         patient.filter_string.includes(patientSearch) &&
         (patientCode === PATIENT_CODE_ALL ||

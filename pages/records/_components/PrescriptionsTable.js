@@ -10,13 +10,13 @@ export function PrescriptionsTable({ content: prescriptions }) {
     );
   }
 
-  const prescriptionRows = prescriptions.map((prescription) => {
+  const prescriptionRows = prescriptions.map(prescription => {
     const name =
       prescription.medicine.medicine_name ||
-      "Prescription.medicine.medicine_name not found";
+      'Prescription.medicine.medicine_name not found';
     const quantity = prescription.quantity;
     const status = prescription.order_status.toUpperCase();
-    const rowColor = status === "APPROVED" ? "bg-green-100" : "bg-red-100";
+    const rowColor = status === 'APPROVED' ? 'bg-green-100' : 'bg-red-100';
     return (
       <tr className={rowColor} key={prescription.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
