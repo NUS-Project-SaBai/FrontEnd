@@ -75,7 +75,7 @@ export default function SideMenu() {
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 h-full">
       <div className="flex h-16 shrink-0 items-center">
         <img className="h-8 w-auto" src="/sabaiLogo.png" alt="Sa'Bai Logo" />
-        <h1 className="text-white text-2xl ml-2">Sa'Bai '24</h1>
+        <h1 className="text-white text-2xl ml-2">Sa&apos;Bai &apos;24</h1>
       </div>
       <nav className="flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
