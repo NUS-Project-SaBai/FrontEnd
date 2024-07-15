@@ -3,12 +3,11 @@ export const CLOUDINARY_URL = 'https://res.cloudinary.com/dlusodadw';
 export const API_URL = 'http://localhost:8000';
 
 export const venueOptions = {
-  PP: 'Phnom Penh',
-  PTC: 'PTC',
-  TT: 'TT',
-  CATT: 'CATT',
   PC: 'PC',
-  SV: 'Smong Village',
+  CA: 'CA',
+  TT: 'TT',
+  TK: 'TK',
+  SV: 'Smong',
 };
 
 export const NO_PHOTO_MESSAGE = 'Please take a photo before submitting!';
