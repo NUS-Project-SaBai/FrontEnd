@@ -17,12 +17,10 @@ export default [
       },
       globals: globals.browser,
     },
-    plugins: {
-      prettier,
-    },
+
     settings: {
       react: {
-        version: 'detect',  // Automatically detect the React version
+        version: 'detect', // Automatically detect the React version
       },
     },
     rules: {
@@ -41,6 +39,8 @@ export default [
       'no-tabs': 'off',
       'space-before-function-paren': 'off',
     },
+    plugins: {
+      prettier,
+    },
   },
 ];
-
