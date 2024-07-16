@@ -13,8 +13,7 @@ import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import AppWebcam from '@/utils/webcam';
 
-import { PatientModal, ScanModal } from '@/pages/registration/_components';
-
+import { PatientModal, ScanModal } from '@/components/registration';
 import { DisplayField, Button } from '@/components/TextComponents/';
 import Loading from '@/components/Loading';
 

@@ -1,4 +1,4 @@
-import APIComponent from './_components/APIComponent';
+import { APIComponent } from '@/components/debug';
 import { useState } from 'react';
 
 const paths = [
@@ -34,12 +34,12 @@ export default function DebuggingPage() {
           type="text"
           id="baseURL"
           value={baseURL}
-          onChange={(e) => setBaseURL(e.target.value)}
+          onChange={e => setBaseURL(e.target.value)}
           className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
       <div className="grid grid-cols-1 gap-6 w-full max-w-3xl">
-        {paths.map((path) => (
+        {paths.map(path => (
           <APIComponent key={path} baseURL={baseURL} path={path} />
         ))}
       </div>
