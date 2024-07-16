@@ -1,4 +1,4 @@
-import { DisplayField } from '@/components/TextComponents/DisplayField';
+import { DisplayField } from '@/components/TextComponents';
 
 export function VitalsTable({ content }) {
   const isBloodPressureHigh = content.systolic > 140 || content.diastolic > 90;

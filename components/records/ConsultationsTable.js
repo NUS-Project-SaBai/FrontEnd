@@ -1,4 +1,4 @@
-import { Button } from '@/components/TextComponents/Button';
+import { Button } from '@/components/TextComponents';
 
 export function ConsultationsTable({ content: consults, buttonOnClick }) {
   if (consults.length == 0) {
