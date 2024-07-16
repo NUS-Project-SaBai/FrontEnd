@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/pages/api/_axiosInstance';
 
-export default function APIComponent({ baseURL, path }) {
+export function APIComponent({ baseURL, path }) {
   const [url, setUrl] = useState(baseURL + path);
   const [method, setMethod] = useState('GET');
   const [payload, setPayload] = useState('');
@@ -38,7 +38,7 @@ export default function APIComponent({ baseURL, path }) {
     fetchData();
   }, [baseURL, path]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setResponse(null);
     setError(null);
@@ -104,7 +104,7 @@ export default function APIComponent({ baseURL, path }) {
             id="url"
             name="url"
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={e => setUrl(e.target.value)}
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
             required
           />
@@ -121,7 +121,7 @@ export default function APIComponent({ baseURL, path }) {
               id="method"
               name="method"
               value={method}
-              onChange={(e) => setMethod(e.target.value)}
+              onChange={e => setMethod(e.target.value)}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
               required
             >
@@ -152,7 +152,7 @@ export default function APIComponent({ baseURL, path }) {
               name="payload"
               rows="10"
               value={payload}
-              onChange={(e) => setPayload(e.target.value)}
+              onChange={e => setPayload(e.target.value)}
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
               required
             />
