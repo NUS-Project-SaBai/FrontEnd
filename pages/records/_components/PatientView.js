@@ -1,9 +1,9 @@
-import React from "react";
-import moment from "moment";
-import { DisplayField } from "@/components/TextComponents";
+import React from 'react';
+import moment from 'moment';
+import { DisplayField } from '@/components/TextComponents';
 
 export function PatientView({ content }) {
-  const calculate_age = (dob) => {
+  const calculate_age = dob => {
     const birthDate = new Date(dob);
     const difference = Date.now() - birthDate.getTime();
     const age = new Date(difference);
@@ -11,15 +11,15 @@ export function PatientView({ content }) {
     return Math.abs(age.getUTCFullYear() - 1970);
   };
   const fieldsArray = [
-    { label: "ID Number", key: "identification_number" },
-    { label: "Gender", key: "gender" },
-    { label: "Age", key: "date_of_birth", calculate: calculate_age },
+    { label: 'ID Number', key: 'identification_number' },
+    { label: 'Gender', key: 'gender' },
+    { label: 'Age', key: 'date_of_birth', calculate: calculate_age },
     {
-      label: "Date of Birth",
-      key: "date_of_birth",
-      calculate: (dob) => moment(dob).format("DD-MMMM-YYYY"),
+      label: 'Date of Birth',
+      key: 'date_of_birth',
+      calculate: dob => moment(dob).format('DD-MMMM-YYYY'),
     },
-    { label: "Allergies", key: "drug_allergy" },
+    { label: 'Allergies', key: 'drug_allergy' },
   ];
 
   return fieldsArray.map((field, index) => (

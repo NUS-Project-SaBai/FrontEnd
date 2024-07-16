@@ -28,7 +28,7 @@ const PatientRecord = () => {
   const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
 
-  const handleVisitChange = useCallback((event) => {
+  const handleVisitChange = useCallback(event => {
     const value = event.target.value;
     loadVisitDetails(value);
   }, []);
@@ -61,8 +61,8 @@ const PatientRecord = () => {
     );
 
     const prescriptions = consults
-      .flatMap((consult) => consult.prescriptions)
-      .filter((prescription) => prescription != null);
+      .flatMap(consult => consult.prescriptions)
+      .filter(prescription => prescription != null);
 
     const { data: vitals } = await axiosInstance.get(
       `/vitals?visit=${visitID}`

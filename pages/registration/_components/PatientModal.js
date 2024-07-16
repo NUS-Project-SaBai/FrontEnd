@@ -1,6 +1,6 @@
-import Modal from "react-modal";
-import { Button, InputField, InputBox } from "@/components/TextComponents";
-import { venueOptions } from "@/utils/constants";
+import Modal from 'react-modal';
+import { Button, InputField, InputBox } from '@/components/TextComponents';
+import { venueOptions } from '@/utils/constants';
 
 const VenueOptions = ({ handleInputChange }) => (
   <div>
@@ -21,7 +21,7 @@ const VenueOptions = ({ handleInputChange }) => (
         <option value={key} key={value}>
           {value}
         </option>
-      ))}{" "}
+      ))}{' '}
     </select>
   </div>
 );
@@ -109,10 +109,10 @@ export function PatientModal({
           {!cameraIsOpen && (
             <div
               style={{
-                margin: "0 auto",
+                margin: '0 auto',
                 height: 250,
                 width: 250,
-                backgroundColor: "grey",
+                backgroundColor: 'grey',
               }}
             >
               {imageDetails != null && <img src={imageDetails} />}

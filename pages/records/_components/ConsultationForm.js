@@ -1,5 +1,5 @@
-import React from "react";
-import { InputBox, Button } from "@/components/TextComponents";
+import React from 'react';
+import { InputBox, Button } from '@/components/TextComponents';
 
 export function ConsultationForm({
   handleInputChange,
@@ -7,7 +7,7 @@ export function ConsultationForm({
   handleDiagnosis,
 }) {
   function handleDiagnosisClick() {
-    handleDiagnosis([...formDetails.diagnoses, { details: "", type: "" }]);
+    handleDiagnosis([...formDetails.diagnoses, { details: '', type: '' }]);
   }
 
   function handleDiagnosisDelete(index) {
@@ -22,21 +22,21 @@ export function ConsultationForm({
 
   function diagnosisToAdd() {
     const diagnosisOptions = [
-      "Cardiovascular",
-      "Dermatology",
-      "Ear Nose Throat",
-      "Endocrine",
-      "Eye",
-      "Gastrointestinal",
-      "Haematology",
-      "Infectious Diseases",
-      "Renal & Genitourinary",
-      "Respiratory",
-      "Musculoskeletal",
-      "Neurology",
-      "Obstetrics & Gynaecology",
-      "Oral Health",
-      "Others",
+      'Cardiovascular',
+      'Dermatology',
+      'Ear Nose Throat',
+      'Endocrine',
+      'Eye',
+      'Gastrointestinal',
+      'Haematology',
+      'Infectious Diseases',
+      'Renal & Genitourinary',
+      'Respiratory',
+      'Musculoskeletal',
+      'Neurology',
+      'Obstetrics & Gynaecology',
+      'Oral Health',
+      'Others',
     ];
 
     // Generate textfields for diagnosis
@@ -48,16 +48,16 @@ export function ConsultationForm({
           label={`Diagnosis ${index + 1}`}
           type="text"
           value={formDetails.details}
-          onChange={(e) => handleDiagnosisChange(e, index)}
+          onChange={e => handleDiagnosisChange(e, index)}
           placeholder="Type your notes here..."
         />
 
         <select
           className={`border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4 ${
-            diagnosis.category === "Please select..." ? "bg-red-100" : ""
+            diagnosis.category === 'Please select...' ? 'bg-red-100' : ''
           }`}
           name="type"
-          onChange={(e) => handleDiagnosisChange(e, index)}
+          onChange={e => handleDiagnosisChange(e, index)}
           value={diagnosis.category}
         >
           <option>Please select...</option>
@@ -109,7 +109,7 @@ export function ConsultationForm({
       <Button
         colour="green"
         text="Add New Diagnosis"
-        onClick={(e) => handleDiagnosisClick(e)}
+        onClick={e => handleDiagnosisClick(e)}
       />
 
       <InputBox

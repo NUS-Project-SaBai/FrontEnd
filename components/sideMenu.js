@@ -69,7 +69,7 @@ export default function SideMenu() {
   const { user, isLoading } = useUser();
 
   useEffect(() => {
-    const updatedNavItems = navItems.map((item) => ({
+    const updatedNavItems = navItems.map(item => ({
       ...item,
       current: router.pathname === item.href,
     }));
@@ -88,7 +88,7 @@ export default function SideMenu() {
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
-              {navItems.map((item) => (
+              {navItems.map(item => (
                 <li key={item.name}>
                   <a
                     href={item.href}
@@ -114,7 +114,7 @@ export default function SideMenu() {
               Locations (Not Functional Yet)
             </div>
             <ul role="list" className="-mx-2 mt-2 space-y-1">
-              {locations.map((location) => (
+              {locations.map(location => (
                 <li key={location.id}>
                   <a
                     href={location.href}
