@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 export default function APIComponent({ baseURL, path }) {
   const [url, setUrl] = useState(baseURL + path);
@@ -13,7 +13,7 @@ export default function APIComponent({ baseURL, path }) {
     // Run initial GET request to check API and set payload
     const fetchData = async () => {
       try {
-        const res = await axios.get(baseURL + path, {
+        const res = await axiosInstance.get(baseURL + path, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -56,7 +56,33 @@ export default function APIComponent({ baseURL, path }) {
         options.data = JSON.parse(payload);
       }
 
-      const res = await axios(options);
+      let res;
+      switch (method) {
+        case 'GET':
+          res = await axiosInstance.get(url, { headers: options.headers });
+          break;
+        case 'POST':
+          res = await axiosInstance.post(url, options.data, {
+            headers: options.headers,
+          });
+          break;
+        case 'PUT':
+          res = await axiosInstance.put(url, options.data, {
+            headers: options.headers,
+          });
+          break;
+        case 'DELETE':
+          res = await axiosInstance.delete(url, { headers: options.headers });
+          break;
+        case 'PATCH':
+          res = await axiosInstance.patch(url, options.data, {
+            headers: options.headers,
+          });
+          break;
+        default:
+          throw new Error('Invalid HTTP method');
+      }
+
       setResponse(res.data);
     } catch (err) {
       setError(err.message);
