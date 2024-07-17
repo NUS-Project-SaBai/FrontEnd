@@ -8,6 +8,8 @@ import {
   CLOUDINARY_URL,
   NO_PHOTO_MESSAGE,
   venueOptions,
+  VENUE_COLORS,
+  STYLES,
 } from '@/utils/constants';
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';

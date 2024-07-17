@@ -4,7 +4,8 @@ import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '../api/_axiosInstance';
-import { venueOptions } from '@/utils/constants';
+import { venueOptions, venueColours, styles } from '@/utils/constants';
+
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
@@ -59,8 +60,10 @@ function PatientList() {
       .slice(startIndex, endIndex)
       .map((patient, idx) => {
         const patientID = patient.patient_id;
+        const patientVillagePrefix = patient.village_prefix;
         const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
         const fullName = patient.name;
+  
         const record = (
           <Button
             text={'View'}
@@ -70,7 +73,7 @@ function PatientList() {
             colour="indigo"
           />
         );
-
+  
         const vitals = (
           <Button
             text={'Create'}
@@ -80,7 +83,7 @@ function PatientList() {
             colour="green"
           />
         );
-
+  
         const consultation = (
           <Button
             text={'Create'}
@@ -90,10 +93,14 @@ function PatientList() {
             colour="green"
           />
         );
-
+  
+  
         return (
           <tr key={patientID}>
-            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+            <td
+              className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6 lg:pl-8 text-xl font-bold"
+              style={styles.venue[patientVillagePrefix]}
+            >
               {patientID}
             </td>
             <td>
@@ -118,7 +125,7 @@ function PatientList() {
           </tr>
         );
       });
-
+  
     return <>{patientRows}</>;
   }
 
