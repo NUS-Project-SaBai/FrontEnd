@@ -43,7 +43,8 @@
     "lint-staged": "^15.2.7",
     "postcss": "^8.4.33",
     "prettier": "^3.3.2",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "vercel": "^35.0.3"
   },
   "lint-staged": {
     "*.{js,ts,json,css,scss,md}": [

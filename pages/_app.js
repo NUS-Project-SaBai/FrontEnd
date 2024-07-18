@@ -9,6 +9,10 @@ import '@/styles/globals.css';
 
 Modal.setAppElement('#__next');
 
+// Set to VERCEL_URL or override with AUTH0_BASE_URL
+process.env.AUTH0_BASE_URL =
+  process.env.AUTH0_BASE_URL || process.env.VERCEL_URL;
+
 const MyApp = ({ Component, pageProps }) => {
   return (
     <UserProvider>
