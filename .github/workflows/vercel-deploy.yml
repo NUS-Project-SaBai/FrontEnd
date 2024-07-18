@@ -1,6 +1,8 @@
 name: deploy
 on:
   pull_request:
+    branches:
+      - deployment
   workflow_dispatch:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
