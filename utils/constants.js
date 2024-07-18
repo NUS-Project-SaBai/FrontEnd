@@ -13,5 +13,3 @@ export const venueOptions = {
 export const NO_PHOTO_MESSAGE = 'Please take a photo before submitting!';
 export const NO_MATCHES_FOUND_MESSAGE = 'No matches found!';
 export const MATCH_FOUND_MESSAGE = 'Match found!';
-
-const test = 'test';
