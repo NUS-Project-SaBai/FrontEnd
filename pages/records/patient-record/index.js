@@ -7,6 +7,7 @@ import {
   Header,
   PatientView,
   PrescriptionsTable,
+  PatientRecordsEdit,
 } from '@/components/records';
 import withAuth from '@/utils/auth';
 import Router from 'next/router';
@@ -25,6 +26,7 @@ const PatientRecord = () => {
 
   const [prescriptions, setPrescriptions] = useState([]);
 
+  const [patientModalOpen, setPatientModalOpen] = useState(false);
   const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
 
@@ -82,6 +84,10 @@ const PatientRecord = () => {
     setConsultationModalOpen(!consultationModalOpen);
   }
 
+  function togglePatientModal() {
+    setPatientModalOpen(!patientModalOpen);
+  }
+
   function renderHeader() {
     return (
       <Header
@@ -103,11 +109,18 @@ const PatientRecord = () => {
 
     return (
       <div className="my-2">
-        <Button
-          text={'View Vitals'}
-          onClick={() => toggleVitalsModal()}
-          colour="indigo"
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <Button
+            text={'Edit Patient Details'}
+            onClick={() => togglePatientModal()} //TODO
+            colour="indigo"
+          />
+          <Button
+            text={'View Vitals'}
+            onClick={() => toggleVitalsModal()}
+            colour="indigo"
+          />
+        </div>
         <PatientView content={patient} />
       </div>
     );
@@ -152,6 +165,13 @@ const PatientRecord = () => {
           marginRight: 25,
         }}
       >
+        <Modal
+          isOpen={patientModalOpen}
+          onRequestClose={() => togglePatientModal()}
+          style={viewModalStyles}
+        >
+          <PatientRecordsEdit content={patient} />
+        </Modal>
         <Modal
           isOpen={vitalsModalOpen}
           onRequestClose={() => toggleVitalsModal()}

@@ -134,16 +134,6 @@ const Registration = () => {
       'bs2',
     ];
 
-    // if (checklist.some(item => formDetails[item].length === 0)) {
-    //   toast.error('Please complete the form before submitting!');
-    //   return;
-    // }
-
-    // if (formDetails['date_of_birth'].length !== 10) {
-    //   toast.error('Please enter a valid date of birth!');
-    //   return;
-    // }
-
     if (imageDetails == null) {
       toast.error(NO_PHOTO_MESSAGE);
       return;
@@ -192,7 +182,7 @@ const Registration = () => {
     let payload = {
       patient: patient.pk,
       status: 'started',
-      visit_date: moment().format('DD MMMM YYYY HH:mm'), //problem here?
+      visit_date: moment().format('DD MMMM YYYY HH:mm'),
     };
     await axiosInstance.post('/visits', payload);
     toast.success('New visit created for patient!');
