@@ -40,8 +40,12 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
           label="ID Number"
           content={patient.identification_number}
         />
+        <DisplayField label="Contact" content={patient.contact_no} />
         <DisplayField label="Gender" content={patient.gender} />
         <DisplayField label="Date of Birth" content={patient.date_of_birth} />
+        <DisplayField label="Village" content={patient.village_prefix} />
+        <DisplayField label="POOR" content={patient.poor} />
+        <DisplayField label="BS2" content={patient.bs2} />
         <DisplayField label="Drug Allergies" content={patient.drug_allergy} />
 
         <Button
@@ -74,6 +78,8 @@ const Registration = () => {
     date_of_birth: '',
     drug_allergy: '',
     gender: 'Male',
+    poor: 'No',
+    bs2: 'No',
     village_prefix: Object.keys(venueOptions)[0],
   });
 
@@ -124,17 +130,19 @@ const Registration = () => {
       'date_of_birth',
       'drug_allergy',
       'village_prefix',
+      'poor',
+      'bs2',
     ];
 
-    if (checklist.some(item => formDetails[item].length === 0)) {
-      toast.error('Please complete the form before submitting!');
-      return;
-    }
+    // if (checklist.some(item => formDetails[item].length === 0)) {
+    //   toast.error('Please complete the form before submitting!');
+    //   return;
+    // }
 
-    if (formDetails['date_of_birth'].length !== 10) {
-      toast.error('Please enter a valid date of birth!');
-      return;
-    }
+    // if (formDetails['date_of_birth'].length !== 10) {
+    //   toast.error('Please enter a valid date of birth!');
+    //   return;
+    // }
 
     if (imageDetails == null) {
       toast.error(NO_PHOTO_MESSAGE);
@@ -184,7 +192,7 @@ const Registration = () => {
     let payload = {
       patient: patient.pk,
       status: 'started',
-      visit_date: moment().format('DD MMMM YYYY HH:mm'),
+      visit_date: moment().format('DD MMMM YYYY HH:mm'), //problem here?
     };
     await axiosInstance.post('/visits', payload);
     toast.success('New visit created for patient!');
