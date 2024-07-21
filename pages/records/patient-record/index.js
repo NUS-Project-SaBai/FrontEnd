@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Modal from 'react-modal';
+import toast from 'react-hot-toast';
 import {
   ConsultationView,
   ConsultationsTable,
@@ -7,17 +8,21 @@ import {
   Header,
   PatientView,
   PrescriptionsTable,
-  PatientRecordsEdit,
 } from '@/components/records';
+import { PatientModal } from '@/components/registration';
 import withAuth from '@/utils/auth';
+import AppWebcam from '@/utils/webcam';
+import { urltoFile } from '@/utils/helpers';
 import Router from 'next/router';
 import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
+import { isCancel } from 'axios';
 
 const PatientRecord = () => {
   const [noRecords, setNoRecords] = useState(true);
 
   const [patient, setPatient] = useState({});
+  const [patientedit, setPatientedit] = useState({});
   const [visits, setVisits] = useState([]);
   const [vitals, setVitals] = useState({});
 
@@ -25,6 +30,10 @@ const PatientRecord = () => {
   const [selectedConsult, setSelectedConsult] = useState(null);
 
   const [prescriptions, setPrescriptions] = useState([]);
+
+  const [cameraIsOpen, setCameraIsOpen] = useState(false);
+  const [webcam, setWebcam] = useState(null);
+  const [imageDetails, setImageDetails] = useState(null);
 
   const [patientModalOpen, setPatientModalOpen] = useState(false);
   const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
@@ -34,6 +43,70 @@ const PatientRecord = () => {
     const value = event.target.value;
     loadVisitDetails(value);
   }, []);
+
+  // Webcam functions
+
+  const webcamSetRef = webcam => {
+    setWebcam(webcam);
+  };
+
+  const webcamCapture = () => {
+    const imageSrc = webcam.getScreenshot();
+    setImageDetails(imageSrc);
+    setCameraIsOpen(false);
+  };
+
+  const toggleCameraOpen = () => {
+    setCameraIsOpen(!cameraIsOpen);
+  };
+
+  const handlePatientChange = event => {
+    const newPatientDetails = {
+      ...patient,
+      [event.target.name]: event.target.value,
+    };
+    setPatientedit(newPatientDetails);
+  };
+
+  const OnPatientEdit = async () => {
+    if (!patientedit.name) {
+      toast.error('Name cannot be empty.');
+      return;
+    }
+
+    const updatedPatient = {
+      ...patientedit,
+    };
+
+    let formData = new FormData();
+    Object.keys(updatedPatient).forEach(key =>
+      formData.append(key, updatedPatient[key])
+    );
+
+    if (imageDetails) {
+      const pictureFile = await urltoFile(
+        imageDetails,
+        'patient_screenshot.jpg',
+        'image/jpg'
+      );
+      formData.append('picture', pictureFile);
+    }
+
+    if (updatedPatient.pk) {
+      try {
+        await axiosInstance.patch(`/patients/${Router.query.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        toast.success('Patient Details updated!');
+      } catch (error) {
+        toast.error(`Encountered an error when update! ${error.message}`);
+      }
+    }
+    togglePatientModal();
+    onRefresh();
+  };
 
   useEffect(() => {
     onRefresh();
@@ -85,6 +158,7 @@ const PatientRecord = () => {
   }
 
   function togglePatientModal() {
+    setPatientedit(patient);
     setPatientModalOpen(!patientModalOpen);
   }
 
@@ -112,7 +186,7 @@ const PatientRecord = () => {
         <div className="grid grid-cols-2 gap-4">
           <Button
             text={'Edit Patient Details'}
-            onClick={() => togglePatientModal()} //TODO
+            onClick={() => togglePatientModal()}
             colour="indigo"
           />
           <Button
@@ -165,13 +239,26 @@ const PatientRecord = () => {
           marginRight: 25,
         }}
       >
-        <Modal
-          isOpen={patientModalOpen}
-          onRequestClose={() => togglePatientModal()}
-          style={viewModalStyles}
-        >
-          <PatientRecordsEdit content={patient} />
-        </Modal>
+        {
+          <PatientModal
+            modalIsOpen={patientModalOpen}
+            closeModal={() => togglePatientModal()}
+            customStyles={viewModalStyles}
+            handleInputChange={handlePatientChange}
+            submitNewPatient={OnPatientEdit}
+            formDetails={patientedit}
+            imageDetails={imageDetails}
+            cameraIsOpen={cameraIsOpen}
+            renderWebcam={() => (
+              <AppWebcam
+                webcamSetRef={webcamSetRef}
+                webcamCapture={webcamCapture}
+              />
+            )}
+            toggleCameraOpen={toggleCameraOpen}
+          />
+        }
+
         <Modal
           isOpen={vitalsModalOpen}
           onRequestClose={() => toggleVitalsModal()}
@@ -206,10 +293,8 @@ const PatientRecord = () => {
 
 const viewModalStyles = {
   content: {
-    left: '30%',
-    right: '12.5%',
-    top: '12.5%',
-    bottom: '12.5%',
+    left: '25%',
+    right: '7.5%',
   },
   overlay: {
     zIndex: 4,

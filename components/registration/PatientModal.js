@@ -138,7 +138,7 @@ export function PatientModal({
           label="Drug Allergies"
           name="drug_allergy"
           className="textarea"
-          placeholder="Textarea"
+          placeholder="Text area"
           onChange={handleInputChange}
           value={formDetails.drug_allergy}
         />
@@ -177,7 +177,7 @@ export function PatientModal({
         </div>
       </div>
       <hr className="my-2" />
-      <div className="space-x-4">
+      <div className="flex justify-center items-center space-x-4">
         <Button colour="green" text="Submit" onClick={submitNewPatient} />
 
         <Button colour="red" text="Close" onClick={closeModal} />

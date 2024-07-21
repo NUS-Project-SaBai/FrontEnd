@@ -7,7 +7,6 @@ import { OrderForm } from './OrderForm';
 import { PrescriptionsTable } from './PrescriptionsTable';
 import { VitalsForm } from './VitalsForm';
 import { VitalsTable } from './VitalsTable';
-import { PatientRecordsEdit } from './PatientRecordsEdit';
 
 export {
   ConsultationForm,
@@ -19,5 +18,4 @@ export {
   PrescriptionsTable,
   VitalsForm,
   VitalsTable,
-  PatientRecordsEdit,
 };

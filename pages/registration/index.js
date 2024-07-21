@@ -134,6 +134,11 @@ const Registration = () => {
       'bs2',
     ];
 
+    if (formDetails.name == '') {
+      toast.error('Name cannot be empty.');
+      return;
+    }
+
     if (imageDetails == null) {
       toast.error(NO_PHOTO_MESSAGE);
       return;
@@ -293,6 +298,9 @@ const Registration = () => {
               content: {
                 left: '25%',
                 right: '7.5%',
+              },
+              overlay: {
+                zIndex: 4,
               },
             }}
             loading={loading}
