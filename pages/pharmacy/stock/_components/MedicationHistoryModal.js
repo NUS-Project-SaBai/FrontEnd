@@ -11,15 +11,14 @@ export function MedicationHistoryModal({
   const [medicationHistory, setMedicationHistory] = useState([]);
 
   useEffect(() => {
-    console.log(medication);
     if (medication !== null) {
       axiosInstance
-        .get(`/medication_history?medication_pk=${medication.pk}`)
-        .then((response) => {
+        .get(`/medication_updates?medication_pk=${medication.pk}`)
+        .then(response => {
           //   console.log(response.data);
           setMedicationHistory(response.data);
         })
-        .catch((error) => console.error('Error loading page', error));
+        .catch(error => console.error('Error loading page', error));
     }
   }, [modalIsOpen]);
 
@@ -29,21 +28,26 @@ export function MedicationHistoryModal({
 
   function renderRows() {
     // Displays the list of medications in stock
+    console.dir(medicationHistory);
     const tableRows = medicationHistory
       .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .map((history) => {
-        const doctor_name = history.doctor.nickname;
+      .map(history => {
+        const approval = history.approval.nickname;
         const patient_name = history.patient?.name || 'NA';
+        const doctor = history.consult?.doctor.nickname || 'NA';
         const qty_changed = history.quantity_changed;
         const qty_remaining = history.quantity_remaining;
         const time = moment(history.date).format('DD MMMM YYYY HH:mm');
 
         return (
           <tr key={history.id}>
-            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-              {doctor_name}
+            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+              {approval}
             </td>
-            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+              {doctor}
+            </td>
+            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
               {patient_name}
             </td>
             <td
@@ -90,13 +94,19 @@ export function MedicationHistoryModal({
                     <tr>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                        className="px-6 py-3.5 text-left text-base font-semibold text-gray-900"
                       >
-                        Doctor/Pharmacist
+                        Approval
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                        className="px-6 py-3.5 text-left text-base font-semibold text-gray-900"
+                      >
+                        Doctor
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3.5 text-left text-base font-semibold text-gray-900"
                       >
                         Patient Name
                       </th>

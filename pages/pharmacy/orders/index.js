@@ -68,10 +68,11 @@ const Orders = () => {
     return ordersFiltered.map(order => {
       const visit = order.visit;
       const prescriptions = (
-        <li key={order.medicine.id}>
-          {order.medicine?.medicine_name || ''}: {order.quantity}
+        <li key={order.medication_updates.id}>
+          {order.medication_updates.medicine.medicine_name || ''}:{' '}
+          {Math.abs(order.medication_updates.quantity_changed)}
           <br />
-          {order.medicine.notes && (
+          {order.medication_updates.medicine.notes && (
             <div className="truncate">Notes: {order.medicine.notes}</div>
           )}
         </li>
