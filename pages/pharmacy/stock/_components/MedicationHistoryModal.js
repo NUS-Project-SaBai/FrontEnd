@@ -28,12 +28,11 @@ export function MedicationHistoryModal({
 
   function renderRows() {
     // Displays the list of medications in stock
-    console.dir(medicationHistory);
     const tableRows = medicationHistory
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .map(history => {
         const approval = history.approval.nickname;
-        const patient_name = history.patient?.name || 'NA';
+        const patient_name = history.consult?.visit.patient.name || 'NA';
         const doctor = history.consult?.doctor.nickname || 'NA';
         const qty_changed = history.quantity_changed;
         const qty_remaining = history.quantity_remaining;
