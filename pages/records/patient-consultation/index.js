@@ -232,60 +232,30 @@ const PatientConsultation = () => {
   }
 
   async function submitConsultationForm() {
-    // orders.forEach((order) => {
-    //   axios
-    //     .patch(`${API_URL}/medications/${order.medicine}`, {
-    //       quantityChange: -parseInt(order.quantity),
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error creating order:", error.response.data);
-    //     });
-    // });
-
     const formPayload = {
       visit: selectedVisitID,
       ...consultationFormDetails,
     };
 
-    const { data: consult } = await axiosInstance
-      .post('/consults', {
-        ...formPayload,
-      })
-      .catch(error => {
-        toast.error('Error creating consult.');
-      });
-
-    const diagnosesPromises = [];
-    consultationFormDetails.diagnoses.forEach(diagnosis => {
-      const diagnosisRequest = axiosInstance.post('/diagnosis', {
-        consult: consult.id,
+    const diagnosesPayload = consultationFormDetails.diagnoses.map(
+      diagnosis => ({
         details: diagnosis.details,
         category: diagnosis.type,
-      });
-      diagnosesPromises.push(diagnosisRequest);
-    });
-    await Promise.all(diagnosesPromises);
+      })
+    );
 
-    const orderPromises = [];
-    orders.forEach(order => {
-      const orderRequest = axiosInstance
-        .post('/orders', {
-          ...order,
-          visit: selectedVisitID,
-          consult: consult.id,
-        })
-        .catch(error => {
-          console.error('Error creating order:', error.response.data);
-          console.error('Payload:', {
-            ...order,
-            visit: selectedVisitID,
-            consult: consult.id,
-          });
-        });
+    const ordersPayload = orders.map(order => ({
+      ...order,
+      visit: selectedVisitID,
+    }));
 
-      orderPromises.push(orderRequest);
-    });
-    await Promise.all(orderPromises);
+    const combinedPayload = {
+      consult: formPayload,
+      diagnoses: diagnosesPayload,
+      orders: ordersPayload,
+    };
+
+    await axiosInstance.post('/consults', combinedPayload);
 
     toast.success('Medical Consult Completed!');
 
