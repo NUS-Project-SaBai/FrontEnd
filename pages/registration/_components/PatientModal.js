@@ -1,44 +1,81 @@
 import Modal from "react-modal";
 import { Button, InputField, InputBox } from "@/components/TextComponents";
-import { venueOptions, venueColours } from "@/utils/constants";
-import React, { useState } from 'react';
+import { villageOptions } from "@/components/TextComponents/VillageOptions";
+
+import React, { useState, useRef, useEffect } from 'react';
 
 
-const VenueOptions = ({ handleInputChange }) => {
-  const [selectedColor, setSelectedColor] = useState(venueColours[Object.keys(venueOptions)[0]]);
+const CustomDropdown = ({ name, label, options, onChange, value }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-  const handleSelectChange = (event) => {
-    const selectedKey = event.target.value;
-    setSelectedColor(venueColours[selectedKey]);
-    handleInputChange(event);
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
   };
 
+  const handleOptionClick = (optionValue) => {
+    onChange({ target: { name, value: optionValue } });
+    setIsOpen(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const selectedOption = options.find((option) => option.value === value);
+
   return (
-    <div>
-      <label
-        htmlFor="Village"
-        className="block text-xs font-medium text-gray-900"
-      >
-        Village
+    <div className="relative inline-block w-full" ref={dropdownRef}>
+      <label htmlFor={name} className="block text-sm font-medium leading-6 text-gray-900">
+        {label}
       </label>
-      <select
-        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        name="village_prefix"
-        onChange={handleSelectChange}
-        style={{ backgroundColor: selectedColor }}
-        defaultValue={Object.keys(venueOptions)[0]}
+      <button
+        type="button"
+        className="mt-2 block w-full rounded-md border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm"
+        onClick={handleToggle}
       >
-        {Object.entries(venueOptions).map(([key, value]) => (
-          <option value={key} key={value} style={{ backgroundColor: venueColours[key] }}>
-            {value}
-          </option>
-        ))}
-      </select>
+        {selectedOption ? selectedOption.label : 'Select an option'}
+      </button>
+      {isOpen && (
+        <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          {options.map((option) => (
+            <li
+              key={option.value}
+              className="cursor-pointer select-none relative py-2 pl-3 pr-9"
+              style={option.style}
+              onClick={() => handleOptionClick(option.value)}
+            >
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
 
-export default VenueOptions;
+export default CustomDropdown;
+
+const venueOptions = [
+  { value: 'PC', label: 'PC', style: { color: '#6D8A91' } },
+  { value: 'CA', label: 'CA', style: { color: '#CC7685' } },
+  { value: 'TT', label: 'TT', style: { color: '#7A7A70' } },
+  { value: 'TK', label: 'TK', style: { color: '#CCCC45' } },
+  { value: 'SV', label: 'Smong', style: { color: '#6A516D' } },
+];
+
+
+
+
 
 export function PatientModal({
   modalIsOpen,
@@ -109,7 +146,13 @@ export function PatientModal({
           onChange={handleInputChange}
           value={formDetails.date_of_birth}
         />
-        <VenueOptions handleInputChange={handleInputChange} />
+        <CustomDropdown 
+          label="village code"
+          name="village_prefix"
+          options={villageOptions}
+          onChange={handleInputChange}
+          value={formDetails.village_prefix}
+        />
         <InputBox
           label="Drug Allergies"
           name="drug_allergy"

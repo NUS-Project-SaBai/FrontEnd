@@ -7,9 +7,7 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import {
   CLOUDINARY_URL,
   NO_PHOTO_MESSAGE,
-  venueOptions,
-  VENUE_COLORS,
-  STYLES,
+  villageCodes,
 } from '@/utils/constants';
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
@@ -77,7 +75,7 @@ const Registration = () => {
     date_of_birth: '',
     drug_allergy: '',
     gender: 'Male',
-    village_prefix: Object.keys(venueOptions)[0],
+    village_prefix: Object.keys(villageCodes)[0],
   });
 
   useEffect(() => {
