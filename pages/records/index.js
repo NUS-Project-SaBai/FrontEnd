@@ -6,7 +6,6 @@ import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '../api/_axiosInstance';
 import { venueOptions, venueColours, styles } from '@/utils/constants';
 
-
 function PatientList() {
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
@@ -63,7 +62,7 @@ function PatientList() {
         const patientVillagePrefix = patient.village_prefix;
         const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
         const fullName = patient.name;
-  
+
         const record = (
           <Button
             text={'View'}
@@ -73,7 +72,7 @@ function PatientList() {
             colour="indigo"
           />
         );
-  
+
         const vitals = (
           <Button
             text={'Create'}
@@ -83,7 +82,7 @@ function PatientList() {
             colour="green"
           />
         );
-  
+
         const consultation = (
           <Button
             text={'Create'}
@@ -93,16 +92,12 @@ function PatientList() {
             colour="green"
           />
         );
-  
-  
+
+        const className = `colours-village-${Object.keys(venueOptions).indexOf(patientVillagePrefix) + 1}`;
+
         return (
           <tr key={patientID}>
-            <td
-              className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6 lg:pl-8 text-xl font-bold"
-              style={styles.venue[patientVillagePrefix]}
-            >
-              {patientID}
-            </td>
+            <td className={className}>{patientID}</td>
             <td>
               <img
                 src={imageUrl}
@@ -125,7 +120,7 @@ function PatientList() {
           </tr>
         );
       });
-  
+
     return <>{patientRows}</>;
   }
 

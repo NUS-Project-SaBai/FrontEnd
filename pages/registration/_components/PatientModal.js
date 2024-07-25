@@ -1,42 +1,34 @@
-import Modal from "react-modal";
-import { Button, InputField, InputBox } from "@/components/TextComponents";
-import { venueOptions, venueColours } from "@/utils/constants";
+import Modal from 'react-modal';
+import { Button, InputField, InputBox } from '@/components/TextComponents';
+import { venueOptions, venueColours } from '@/utils/constants';
 import React, { useState } from 'react';
 
+const VenueOptions = ({ handleInputChange }) => (
+  <div>
+    <label
+      htmlFor="Village"
+      className="block text-xs font-medium text-gray-900"
+    >
+      Village
+    </label>
 
-const VenueOptions = ({ handleInputChange }) => {
-  const [selectedColor, setSelectedColor] = useState(venueColours[Object.keys(venueOptions)[0]]);
-
-  const handleSelectChange = (event) => {
-    const selectedKey = event.target.value;
-    setSelectedColor(venueColours[selectedKey]);
-    handleInputChange(event);
-  };
-
-  return (
-    <div>
-      <label
-        htmlFor="Village"
-        className="block text-xs font-medium text-gray-900"
-      >
-        Village
-      </label>
-      <select
-        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        name="village_prefix"
-        onChange={handleSelectChange}
-        style={{ backgroundColor: selectedColor }}
-        defaultValue={Object.keys(venueOptions)[0]}
-      >
-        {Object.entries(venueOptions).map(([key, value]) => (
-          <option value={key} key={value} style={{ backgroundColor: venueColours[key] }}>
+    <select
+      className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 ring-1 ring-inset ring-grey-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      name="village_prefix"
+      onChange={handleInputChange}
+      defaultValue={Object.keys(venueOptions)[0]}
+    >
+      {Object.entries(venueOptions).map(([key, value]) => {
+        const colour = `colours-village-${Object.keys(venueOptions).indexOf(key) + 1}`;
+        return (
+          <option className={colour} value={key} key={value}>
             {value}
           </option>
-        ))}
-      </select>
-    </div>
-  );
-};
+        );
+      })}
+    </select>
+  </div>
+);
 
 export default VenueOptions;
 
@@ -123,10 +115,10 @@ export function PatientModal({
           {!cameraIsOpen && (
             <div
               style={{
-                margin: "0 auto",
+                margin: '0 auto',
                 height: 250,
                 width: 250,
-                backgroundColor: "grey",
+                backgroundColor: 'grey',
               }}
             >
               {imageDetails != null && <img src={imageDetails} />}
