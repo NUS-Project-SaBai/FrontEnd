@@ -8,43 +8,7 @@ import {
   ClipboardDocumentListIcon,
   ArrowLeftStartOnRectangleIcon,
 } from '@heroicons/react/24/outline';
-
-const navigation = [
-  {
-    name: 'Registration',
-    href: '/registration',
-    icon: IdentificationIcon,
-    count: '5',
-    current: true,
-  },
-
-  {
-    name: 'Patient Records',
-    href: '/records',
-    icon: ClipboardDocumentListIcon,
-    count: '12',
-    current: false,
-  },
-  {
-    name: 'Pharmacy Orders',
-    href: '/pharmacy/orders',
-    icon: PencilIcon,
-    count: '20+',
-    current: false,
-  },
-  {
-    name: 'Pharmacy Stock',
-    href: '/pharmacy/stock',
-    icon: BeakerIcon,
-    current: false,
-  },
-  {
-    name: 'Logout',
-    href: '/api/auth/logout',
-    icon: ArrowLeftStartOnRectangleIcon,
-    current: false,
-  },
-];
+import { OFFLINE } from '@/utils/constants';
 
 const locations = [
   { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
@@ -57,9 +21,66 @@ function classNames(...classes) {
 }
 
 export default function SideMenu() {
+  const navigation = [
+    {
+      name: 'Registration',
+      href: '/registration',
+      icon: IdentificationIcon,
+      count: '5',
+      current: true,
+    },
+
+    {
+      name: 'Patient Records',
+      href: '/records',
+      icon: ClipboardDocumentListIcon,
+      count: '12',
+      current: false,
+    },
+    {
+      name: 'Pharmacy Orders',
+      href: '/pharmacy/orders',
+      icon: PencilIcon,
+      count: '20+',
+      current: false,
+    },
+    {
+      name: 'Pharmacy Stock',
+      href: '/pharmacy/stock',
+      icon: BeakerIcon,
+      current: false,
+    },
+    {
+      name: 'Logout',
+      href: '/api/auth/logout',
+      icon: ArrowLeftStartOnRectangleIcon,
+      current: false,
+    },
+  ];
+
   const router = useRouter();
   const [navItems, setNavItems] = useState(navigation);
   const { user, isLoading } = useUser();
+
+  const handleLogout = async () => {
+    if (OFFLINE) {
+      window.localStorage.removeItem('offline_user');
+      router.push('/');
+      return;
+    }
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      router.push('/'); // Redirect to the homepage or login page after logout
+    } else {
+      // Handle error
+      console.error('Logout failed');
+    }
+  };
 
   useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
@@ -83,21 +104,37 @@ export default function SideMenu() {
             <ul role="list" className="-mx-2 space-y-1">
               {navItems.map(item => (
                 <li key={item.name}>
-                  <a
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? 'bg-gray-800 text-white'
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                    )}
-                  >
-                    <item.icon
-                      className="h-6 w-6 shrink-0"
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </a>
+                  {item.name === 'Logout' && OFFLINE ? (
+                    <button
+                      onClick={handleLogout} // You need to define this function to handle the logout action
+                      className={classNames(
+                        'bg-gray-800 text-white',
+                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                      )}
+                    >
+                      <item.icon
+                        className="h-6 w-6 shrink-0"
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </button>
+                  ) : (
+                    <a
+                      href={item.href}
+                      className={classNames(
+                        item.current
+                          ? 'bg-gray-800 text-white'
+                          : 'text-gray-400 hover:text-white hover:bg-gray-800',
+                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                      )}
+                    >
+                      <item.icon
+                        className="h-6 w-6 shrink-0"
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
