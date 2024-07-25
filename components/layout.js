@@ -13,11 +13,11 @@ function Layout(props) {
       setSidebarDocked(mql.matches);
       setSidebarOpen(false);
     };
-    mql.addListener(mediaQueryChanged);
+    mql.addEventListener('change', mediaQueryChanged);
     setSidebarDocked(mql.matches);
 
     return () => {
-      mql.removeListener(mediaQueryChanged);
+      mql.removeEventListener('change', mediaQueryChanged);
     };
   }, []);
 
@@ -34,7 +34,17 @@ function Layout(props) {
       transitions={false}
       suppressHydrationWarning={true}
     >
-      <div>{props.children}</div>
+      <div className="relative h-full">
+        {!sidebarOpen && (
+          <>
+            <div
+              className="absolute top-1/2 left-0 transform -translate-y-1/2 w-2 h-16 bg-gray-700 rounded-r-md cursor-pointer z-10 lg:hidden"
+              onClick={() => onSetSidebarOpen(true)}
+            ></div>
+          </>
+        )}
+        {props.children}
+      </div>
     </Sidebar>
   );
 }
