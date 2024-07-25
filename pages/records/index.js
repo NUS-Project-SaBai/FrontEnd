@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
-import { CLOUDINARY_URL, villageOptions } from '@/utils/constants';
+import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '../api/_axiosInstance';
-import { villageCodes } from '@/utils/constants';
-import { getColour } from '@/components/TextComponents/VillageOptions';
-import { styles } from '@/components/TextComponents/VillageOptions';
+import { venueOptions, venueColours, styles } from '@/utils/constants';
 
 
 function PatientList() {
@@ -95,15 +93,13 @@ function PatientList() {
             colour="green"
           />
         );
-        
   
   
         return (
           <tr key={patientID}>
             <td
               className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6 lg:pl-8 text-xl font-bold"
-              style={getColour(patientVillagePrefix)}
-
+              style={styles.venue[patientVillagePrefix]}
             >
               {patientID}
             </td>
@@ -157,7 +153,7 @@ function PatientList() {
                 <option value={PATIENT_CODE_ALL}>
                   {`${PATIENT_CODE_ALL}`}
                 </option>
-                {Object.entries(villageCodes).map(([key, value]) => (
+                {Object.entries(venueOptions).map(([key, value]) => (
                   <option value={key} key={key}>
                     {key}
                   </option>
