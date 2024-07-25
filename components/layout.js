@@ -9,7 +9,6 @@ function Layout(props) {
 
   useEffect(() => {
     const mql = window.matchMedia('(min-width: 800px)');
-    console.log(mql.matches);
     const mediaQueryChanged = () => {
       setSidebarDocked(mql.matches);
       setSidebarOpen(false);
@@ -35,7 +34,7 @@ function Layout(props) {
       transitions={false}
       suppressHydrationWarning={true}
     >
-      <div className="relative">
+      <div className="relative h-full">
         {!sidebarOpen && (
           <>
             <div
