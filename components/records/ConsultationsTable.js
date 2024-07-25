@@ -1,6 +1,10 @@
 import { Button } from '@/components/TextComponents';
 
-export function ConsultationsTable({ content: consults, buttonOnClick }) {
+export function ConsultationsTable({
+  content: consults,
+  buttonOnClick,
+  editOnClick,
+}) {
   if (consults.length == 0) {
     return (
       <div>
@@ -25,11 +29,18 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
           {referredFor}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          <Button
-            colour="indigo"
-            text={'View'}
-            onClick={() => buttonOnClick(consult)}
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              colour="indigo"
+              text={'View'}
+              onClick={() => buttonOnClick(consult)}
+            />
+            <Button
+              colour="green"
+              text={'Edit'}
+              onClick={() => editOnClick(consult)}
+            />
+          </div>
         </td>
       </tr>
     );

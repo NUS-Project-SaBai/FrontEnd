@@ -8,7 +8,6 @@ export const venueOptions = {
   TT: 'TT',
   TK: 'TK',
   SV: 'Smong',
-  UN: 'Unspecified',
 };
 
 export const NO_PHOTO_MESSAGE = 'Please take a photo before submitting!';

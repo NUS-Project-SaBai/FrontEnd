@@ -15,8 +15,11 @@ const VenueOptions = ({ handleInputChange }) => (
       className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
       name="village_prefix"
       onChange={handleInputChange}
-      default={Object.keys(venueOptions)[0]}
+      defaultValue=""
     >
+      <option hidden value="" key="">
+        Please select an option
+      </option>
       {Object.entries(venueOptions).map(([key, value]) => (
         <option value={key} key={value}>
           {value}
@@ -81,7 +84,7 @@ export function PatientModal({
             className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
             name="gender"
             onChange={handleInputChange}
-            defaultValue="Male"
+            defaultValue="Unspecified"
           >
             <option value="Male">Male</option>
             <option value="Female">Female</option>

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import {
   ConsultationView,
   ConsultationsTable,
+  ConsultationEditModal,
   VitalsTable,
   Header,
   PatientView,
@@ -38,6 +39,8 @@ const PatientRecord = () => {
   const [patientModalOpen, setPatientModalOpen] = useState(false);
   const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [editconsultationModalOpen, setEditConsultationModalOpen] =
+    useState(false);
 
   const handleVisitChange = useCallback(event => {
     const value = event.target.value;
@@ -157,6 +160,12 @@ const PatientRecord = () => {
     setConsultationModalOpen(!consultationModalOpen);
   }
 
+  function toggleEditConsultationModal(consult) {
+    setSelectedConsult(consult);
+    setEditConsultationModalOpen(!editconsultationModalOpen);
+    onRefresh();
+  }
+
   function togglePatientModal() {
     setPatientedit(patient);
     setPatientModalOpen(!patientModalOpen);
@@ -185,14 +194,14 @@ const PatientRecord = () => {
       <div className="my-2">
         <div className="grid grid-cols-2 gap-4">
           <Button
-            text={'Edit Patient Details'}
-            onClick={() => togglePatientModal()}
-            colour="indigo"
-          />
-          <Button
             text={'View Vitals'}
             onClick={() => toggleVitalsModal()}
             colour="indigo"
+          />
+          <Button
+            text={'Edit Patient Details'}
+            onClick={() => togglePatientModal()}
+            colour="green"
           />
         </div>
         <PatientView content={patient} />
@@ -208,7 +217,11 @@ const PatientRecord = () => {
   function renderSecondColumn() {
     return (
       <div className="space-y-8">
-        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
+        <ConsultationsTable
+          content={consults}
+          buttonOnClick={selectConsult}
+          editOnClick={toggleEditConsultationModal}
+        />
         <PrescriptionsTable content={prescriptions} />
       </div>
     );
@@ -273,6 +286,18 @@ const PatientRecord = () => {
         >
           <ConsultationView content={selectedConsult} />
         </Modal>
+
+        <Modal
+          isOpen={editconsultationModalOpen}
+          onRequestClose={() => toggleEditConsultationModal()}
+          style={viewModalStyles}
+        >
+          <ConsultationEditModal
+            content={selectedConsult}
+            onRequestClose={() => toggleEditConsultationModal()}
+          />
+        </Modal>
+
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Records
         </h1>

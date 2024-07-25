@@ -77,10 +77,10 @@ const Registration = () => {
     contact_no: '',
     date_of_birth: '',
     drug_allergy: '',
-    gender: 'Male',
+    gender: 'Unspecified',
     poor: 'No',
     bs2: 'No',
-    village_prefix: Object.keys(venueOptions)[0],
+    village_prefix: '',
   });
 
   useEffect(() => {
@@ -136,6 +136,11 @@ const Registration = () => {
 
     if (formDetails.name == '') {
       toast.error('Name cannot be empty.');
+      return;
+    }
+
+    if (formDetails.village_prefix == '') {
+      toast.error('Please select a village');
       return;
     }
 
