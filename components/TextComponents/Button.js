@@ -18,7 +18,7 @@ export function Button({ text, onClick, colour }) {
       onClick={handleClick}
       disabled={isLoading}
     >
-      {text}
+      {isLoading?"Loading...":text}
     </button>
   );
 }
