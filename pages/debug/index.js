@@ -1,6 +1,7 @@
 import { APIComponent } from '@/components/debug';
 import { useState } from 'react';
 import { API_URL } from '@/utils/constants';
+import Loading from '@/components/Loading';
 
 const paths = [
   '/patients',
@@ -14,9 +15,43 @@ const paths = [
 export default function DebuggingPage() {
   const [baseURL, setBaseURL] = useState(API_URL);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleRefresh = () => {
     setRefreshTrigger(prev => prev + 1);
+  };
+
+  const ErrorThrowingComponent = () => {
+    const throwError = () => {
+      throw new Error('Test Error');
+    };
+
+    return (
+      <button
+        onClick={throwError}
+        className="mt-4 ml-2 p-2 bg-red-500 text-white rounded-md"
+      >
+        Throw Error
+      </button>
+    );
+  };
+
+  const SimulateLoadingComponent = () => {
+    const simulateLoading = () => {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000); // Simulate a 3-second loading time
+    };
+
+    return (
+      <button
+        onClick={simulateLoading}
+        className="mt-4 ml-2 p-2 bg-yellow-500 text-white rounded-md"
+      >
+        Simulate Loading
+      </button>
+    );
   };
 
   return (
@@ -49,7 +84,10 @@ export default function DebuggingPage() {
         >
           Refresh Endpoints
         </button>
+        <ErrorThrowingComponent />
+        <SimulateLoadingComponent />
       </div>
+      {loading && <Loading />}
       <div className="grid grid-cols-1 gap-6 w-full max-w-3xl">
         {paths.map(path => (
           <APIComponent
