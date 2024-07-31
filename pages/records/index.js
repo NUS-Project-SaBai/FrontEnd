@@ -68,7 +68,7 @@ function PatientList() {
   function renderTableContent() {
     const patientRows = patientsFiltered
       .slice(startIndex, endIndex)
-      .map((patient, idx) => {
+      .map(patient => {
         const patientID = patient.patient_id;
         const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
         const fullName = patient.name;
@@ -157,7 +157,7 @@ function PatientList() {
                 <option value={PATIENT_CODE_ALL}>
                   {`${PATIENT_CODE_ALL}`}
                 </option>
-                {Object.entries(venueOptions).map(([key, value]) => (
+                {Object.entries(venueOptions).map(([key]) => (
                   <option value={key} key={key}>
                     {key}
                   </option>

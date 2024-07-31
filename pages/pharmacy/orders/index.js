@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import { useRouter } from 'next/router';
+
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
@@ -9,7 +9,6 @@ import toast from 'react-hot-toast';
 import { useLoading } from '@/context/LoadingContext';
 
 const Orders = () => {
-  const router = useRouter();
   const { setLoading } = useLoading();
 
   const [orders, setOrders] = useState([]);

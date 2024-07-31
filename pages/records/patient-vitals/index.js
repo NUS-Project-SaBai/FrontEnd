@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
-import Modal from 'react-modal';
 import {
   ConsultationView,
   ConsultationsTable,
@@ -127,7 +126,7 @@ const PatientVitals = () => {
       ...vitalsFormDetails,
     };
     const filteredFormPayload = Object.fromEntries(
-      Object.entries(formPayload).filter(([_, value]) => value)
+      Object.entries(formPayload).filter(([value]) => value)
     );
     setLoading(true);
     try {
