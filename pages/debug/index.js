@@ -13,6 +13,11 @@ const paths = [
 
 export default function DebuggingPage() {
   const [baseURL, setBaseURL] = useState(API_URL);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleRefresh = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
@@ -38,10 +43,20 @@ export default function DebuggingPage() {
           onChange={e => setBaseURL(e.target.value)}
           className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
+        <button
+          onClick={handleRefresh}
+          className="mt-4 p-2 bg-blue-500 text-white rounded-md"
+        >
+          Refresh Endpoints
+        </button>
       </div>
       <div className="grid grid-cols-1 gap-6 w-full max-w-3xl">
         {paths.map(path => (
-          <APIComponent key={path} baseURL={baseURL} path={path} />
+          <APIComponent
+            key={`${path}-${refreshTrigger}`}
+            baseURL={baseURL}
+            path={path}
+          />
         ))}
       </div>
     </div>
