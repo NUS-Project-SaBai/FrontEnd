@@ -82,8 +82,13 @@ const Registration = () => {
   }, []);
 
   const onRefresh = async () => {
-    let { data: patients } = await axiosInstance.get('/patients');
-    setPatientsList(patients);
+    try {
+      const { data: patients } = await axiosInstance.get('/patients');
+      setPatientsList(patients);
+    } catch (error) {
+      toast.error('Failed to fetch patients');
+      console.error('Error fetching patients:', error);
+    }
   };
 
   // Webcam functions
@@ -143,51 +148,62 @@ const Registration = () => {
 
     setLoading(true);
 
-    const payload = {
-      ...formDetails,
-      picture: await urltoFile(
-        imageDetails,
-        'patient_screenshot.jpg',
-        'image/jpg'
-      ),
-    };
-    const patientFormData = new FormData();
-    Object.keys(payload).forEach(key =>
-      patientFormData.append(key, payload[key])
-    );
+    try {
+      const payload = {
+        ...formDetails,
+        picture: await urltoFile(
+          imageDetails,
+          'patient_screenshot.jpg',
+          'image/jpg'
+        ),
+      };
+      const patientFormData = new FormData();
+      Object.keys(payload).forEach(key =>
+        patientFormData.append(key, payload[key])
+      );
 
-    const { data: response } = await axiosInstance.post(
-      '/patients',
-      patientFormData
-    );
+      const { data: response } = await axiosInstance.post(
+        '/patients',
+        patientFormData
+      );
 
-    if (typeof response.error !== 'undefined') {
-      toast.error(`Please retake photo! ${response.error}`);
-      return;
+      if (typeof response.error !== 'undefined') {
+        toast.error(`Please retake photo! ${response.error}`);
+        return;
+      }
+
+      setPatient(response);
+      setFormDetails(prevDetails => ({
+        ...prevDetails,
+        gender: 'Male',
+        village_prefix: 'SV',
+      }));
+      setImageDetails(null);
+      toast.success('New patient created!');
+
+      setModalIsOpen(false);
+      submitNewVisit(response);
+    } catch (error) {
+      toast.error('Failed to create new patient');
+      console.error('Error creating new patient:', error);
+    } finally {
+      setLoading(false);
     }
-
-    setPatient(response);
-    setFormDetails(prevDetails => ({
-      ...prevDetails,
-      gender: 'Male',
-      village_prefix: 'SV',
-    }));
-    setImageDetails(null);
-    toast.success('New patient created!');
-
-    setModalIsOpen(false);
-    submitNewVisit(response);
-    setLoading(false);
   };
 
   const submitNewVisit = async patient => {
-    let payload = {
-      patient: patient.pk,
-      status: 'started',
-      visit_date: moment().format('DD MMMM YYYY HH:mm'),
-    };
-    await axiosInstance.post('/visits', payload);
-    toast.success('New visit created for patient!');
+    try {
+      let payload = {
+        patient: patient.pk,
+        status: 'started',
+        visit_date: moment().format('DD MMMM YYYY HH:mm'),
+      };
+      await axiosInstance.post('/visits', payload);
+      toast.success('New visit created for patient!');
+    } catch (error) {
+      toast.error('Failed to create new visit');
+      console.error('Error creating new visit:', error);
+    }
   };
 
   // Auto Suggestions functions
