@@ -316,7 +316,7 @@ const PatientConsultation = () => {
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {quantity}
           </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
             <Button
               colour="green"
               text="Edit"
@@ -344,24 +344,24 @@ const PatientConsultation = () => {
           <div className="mt-2 flow-root">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle">
-                <table className="min-w-full divide-y divide-gray-300">
+                <table className="min-w-full border border-gray-700 divide-y divide-gray-300 rounded-lg overflow-hidden">
                   <thead>
-                    <tr>
+                    <tr className="bg-gray-200">
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
                       >
                         Medicine
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
                       >
                         Quantity
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
                       >
                         Actions
                       </th>
