@@ -91,7 +91,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
   ];
 
   return (
-    <form className="bg-blue-100 p-4 rounded-lg relative">
+    <form className="bg-blue-50 p-4 rounded-lg relative">
       <div>
         <label className="label text-lg font-semibold">
           Current Vital Signs
