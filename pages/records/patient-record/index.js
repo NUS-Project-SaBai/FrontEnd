@@ -14,8 +14,10 @@ import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import ConsultationViewModal from '@/components/records/ConsultationViewModal';
 import toast from 'react-hot-toast';
+import { useLoading } from '@/context/LoadingContext';
 
 const PatientRecord = () => {
+  const { setLoading } = useLoading();
   const [noRecords, setNoRecords] = useState(true);
 
   const [patient, setPatient] = useState({});
@@ -41,7 +43,7 @@ const PatientRecord = () => {
 
   async function onRefresh() {
     const patientID = Router.query.id;
-
+    setLoading(true);
     try {
       const { data: patient } = await axiosInstance.get(
         `/patients/${patientID}`
@@ -60,10 +62,13 @@ const PatientRecord = () => {
     } catch (error) {
       toast.error('Error loading patient data. Please try again later.');
       console.error('Error loading patient data:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function loadVisitDetails(visitID) {
+    setLoading(true);
     try {
       const { data: consults } = await axiosInstance.get(
         `/consults?visit=${visitID}`
@@ -82,6 +87,8 @@ const PatientRecord = () => {
     } catch (error) {
       toast.error('Error loading visit details. Please try again later.');
       console.error('Error loading visit details:', error);
+    } finally {
+      setLoading(false);
     }
   }
 

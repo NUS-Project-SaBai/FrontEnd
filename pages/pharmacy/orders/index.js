@@ -6,9 +6,11 @@ import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import toast from 'react-hot-toast';
+import { useLoading } from '@/context/LoadingContext';
 
 const Orders = () => {
   const router = useRouter();
+  const { setLoading } = useLoading();
 
   const [orders, setOrders] = useState([]);
   const [ordersFiltered, setOrdersFiltered] = useState([]);
@@ -18,6 +20,7 @@ const Orders = () => {
   }, []);
 
   const loadOrders = async () => {
+    setLoading(true);
     try {
       const { data: orders } = await axiosInstance.get(
         '/orders?order_status=PENDING'
@@ -27,6 +30,8 @@ const Orders = () => {
     } catch (error) {
       toast.error(`Failed to fetch orders: ${error.message}`);
       console.error('Error loading orders:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,6 +46,7 @@ const Orders = () => {
 
   const handleOrderApprove = async order => {
     if (window.confirm('Are you sure you want to approve this order?')) {
+      setLoading(true);
       try {
         await axiosInstance.patch(`/orders/${order.id}`, {
           order_status: 'APPROVED',
@@ -53,12 +59,15 @@ const Orders = () => {
       } catch (error) {
         toast.error(`Failed to approve order: ${error.message}`);
         console.error('Error updating orders:', error);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const handleOrderCancel = async order => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
+      setLoading(true);
       try {
         await axiosInstance.patch(`/orders/${order.id}`, {
           order_status: 'CANCELLED',
@@ -68,6 +77,8 @@ const Orders = () => {
       } catch (error) {
         toast.error(`Failed to cancel order: ${error.message}`);
         console.error('Error updating orders:', error);
+      } finally {
+        setLoading(false);
       }
     }
   };

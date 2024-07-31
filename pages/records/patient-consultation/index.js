@@ -15,8 +15,10 @@ import toast from 'react-hot-toast';
 import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import ConsultationViewModal from '@/components/records/ConsultationViewModal';
+import { useLoading } from '@/context/LoadingContext';
 
 const PatientConsultation = () => {
+  const { setLoading } = useLoading();
   const [mounted, setMounted] = useState(false);
 
   const [patient, setPatient] = useState({});
@@ -55,7 +57,7 @@ const PatientConsultation = () => {
 
   async function onRefresh() {
     const patientID = Router.query.id;
-
+    setLoading(true);
     try {
       const { data: patient } = await axiosInstance.get(
         `/patients/${patientID}`
@@ -75,10 +77,13 @@ const PatientConsultation = () => {
     } catch (error) {
       toast.error('Error loading patient data. Please try again later.');
       console.error('Error loading patient data:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function loadVisitDetails(visitID) {
+    setLoading(true);
     try {
       const { data: consults } = await axiosInstance.get(
         `/consults?visit=${visitID}`
@@ -98,16 +103,21 @@ const PatientConsultation = () => {
     } catch (error) {
       toast.error('Error loading visit details. Please try again later.');
       console.error('Error loading visit details:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function loadMedicationStock() {
+    setLoading(true);
     try {
       const { data: medications } = await axiosInstance.get('/medications');
       setMedications(medications);
     } catch (error) {
       toast.error('Error loading medication stock.');
       console.error('Error loading medication stock:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -200,6 +210,7 @@ const PatientConsultation = () => {
   }
 
   async function submitConsultationForm() {
+    setLoading(true);
     try {
       const formPayload = {
         visit: selectedVisitID,
@@ -235,6 +246,8 @@ const PatientConsultation = () => {
     } catch (error) {
       toast.error('Error submitting consultation form.');
       console.error('Error submitting consultation form:', error);
+    } finally {
+      setLoading(false);
     }
   }
 

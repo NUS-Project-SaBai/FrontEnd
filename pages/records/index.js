@@ -6,8 +6,10 @@ import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { venueOptions } from '@/utils/constants';
+import { useLoading } from '@/context/LoadingContext';
 
 function PatientList() {
+  const { setLoading } = useLoading();
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
 
@@ -21,17 +23,22 @@ function PatientList() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    axiosInstance
-      .get('/patients')
-      .then(response => {
+    const fetchPatients = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosInstance.get('/patients');
         setPatients(response.data);
         setPatientsFiltered(response.data);
-      })
-      .catch(error => {
+      } catch (error) {
         toast.error('Error loading patients.');
         console.error('Error loading patients:', error);
-      });
-  }, []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatients();
+  }, [setLoading]);
 
   useEffect(() => {
     filterPatients();

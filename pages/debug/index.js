@@ -1,7 +1,8 @@
+// pages/debugging.js
 import { APIComponent } from '@/components/debug';
 import { useState } from 'react';
 import { API_URL } from '@/utils/constants';
-import Loading from '@/components/Loading';
+import { useLoading } from '@/context/LoadingContext';
 
 const paths = [
   '/patients',
@@ -13,9 +14,9 @@ const paths = [
 ];
 
 export default function DebuggingPage() {
+  const { setLoading } = useLoading();
   const [baseURL, setBaseURL] = useState(API_URL);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [loading, setLoading] = useState(false);
 
   const handleRefresh = () => {
     setRefreshTrigger(prev => prev + 1);
@@ -87,7 +88,7 @@ export default function DebuggingPage() {
         <ErrorThrowingComponent />
         <SimulateLoadingComponent />
       </div>
-      {loading && <Loading />}
+
       <div className="grid grid-cols-1 gap-6 w-full max-w-3xl">
         {paths.map(path => (
           <APIComponent

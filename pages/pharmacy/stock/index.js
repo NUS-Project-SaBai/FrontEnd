@@ -4,8 +4,10 @@ import { MedicationModal } from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
+import { useLoading } from '@/context/LoadingContext';
 
 const Stock = () => {
+  const { setLoading } = useLoading();
   const [medications, setMedications] = useState([]);
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
   const [medicationDetails, setMedicationDetails] = useState({
@@ -23,12 +25,15 @@ const Stock = () => {
   }, []);
 
   const loadMedicine = async () => {
+    setLoading(true);
     try {
       const { data: medicines } = await axiosInstance.get('/medications');
       setMedications(medicines);
       setMedicationsFiltered(medicines);
     } catch (error) {
       toast.error(`Failed to fetch medications: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,6 +88,8 @@ const Stock = () => {
       medicine_name: nameEnriched,
     };
 
+    setLoading(true);
+
     try {
       if (updatedDetails.pk) {
         const quantity =
@@ -117,6 +124,8 @@ const Stock = () => {
       loadMedicine();
     } catch (error) {
       toast.error(`Error submitting medication: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,6 +134,8 @@ const Stock = () => {
       'Are you sure you want to delete this medication?'
     );
     if (!confirmed) return;
+
+    setLoading(true);
 
     try {
       await axiosInstance.delete(`/medications/${pk}`);
@@ -135,6 +146,8 @@ const Stock = () => {
       toast.success('Medication successfully deleted!');
     } catch (error) {
       toast.error(`Failed to delete medication: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
