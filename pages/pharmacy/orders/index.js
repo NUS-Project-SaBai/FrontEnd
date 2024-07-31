@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
+import toast from 'react-hot-toast';
 
 const Orders = () => {
   const router = useRouter();
@@ -24,7 +25,8 @@ const Orders = () => {
       setOrders(orders);
       setOrdersFiltered(orders);
     } catch (error) {
-      console.error(error);
+      toast.error(`Failed to fetch orders: ${error.message}`);
+      console.error('Error loading orders:', error);
     }
   };
 
@@ -46,10 +48,11 @@ const Orders = () => {
         await axiosInstance.patch(`/medications/${order.medicine.id}`, {
           quantityChange: -order.quantity,
         });
-
-        router.reload();
+        toast.success('Order approved successfully!');
+        loadOrders();
       } catch (error) {
-        console.error('Error updating orders:', error.response.data);
+        toast.error(`Failed to approve order: ${error.message}`);
+        console.error('Error updating orders:', error);
       }
     }
   };
@@ -60,8 +63,10 @@ const Orders = () => {
         await axiosInstance.patch(`/orders/${order.id}`, {
           order_status: 'CANCELLED',
         });
-        router.reload();
+        toast.success('Order cancelled successfully!');
+        loadOrders();
       } catch (error) {
+        toast.error(`Failed to cancel order: ${error.message}`);
         console.error('Error updating orders:', error);
       }
     }
@@ -88,20 +93,18 @@ const Orders = () => {
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {moment(visit.date).format('DD MMMM YYYY HH:mm')}
           </td>
-          <td>
+          <td className="whitespace-nowrap px-3 py-4">
             <img
               src={`${CLOUDINARY_URL}/${visit.patient.picture}`}
               alt="Patient"
-              className="object-cover h-28 w-28 my-2"
+              className="object-cover h-28 w-28 rounded-lg"
             />
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {visit.patient.name}
           </td>
-          <td>
-            <ul className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-              {prescriptions}
-            </ul>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            <ul>{prescriptions}</ul>
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
             <Button
@@ -109,7 +112,6 @@ const Orders = () => {
               text="Approve"
               onClick={() => handleOrderApprove(order)}
             />
-
             <Button
               colour="red"
               text="Cancel"
@@ -123,14 +125,14 @@ const Orders = () => {
 
   return (
     <div className="mx-4 my-2">
-      <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+      <h1 className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-6">
         Orders
       </h1>
-      <div className="field">
+      <div className="field mb-4">
         <div className="control">
           <InputField
             type="text"
-            name="Input Patient/ID to Search"
+            name="search"
             label="Search for Patient/ID"
             onChange={onFilterChange}
           />
