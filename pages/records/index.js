@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
+import toast from 'react-hot-toast';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
@@ -26,7 +27,10 @@ function PatientList() {
         setPatients(response.data);
         setPatientsFiltered(response.data);
       })
-      .catch(error => console.error('Error loading page', error));
+      .catch(error => {
+        toast.error('Error loading patients.');
+        console.error('Error loading patients:', error);
+      });
   }, []);
 
   useEffect(() => {
@@ -160,7 +164,7 @@ function PatientList() {
               <InputField
                 type="text"
                 name="Input Patient/ID to Search"
-                label="Search"
+                label="Input Patient/ID to Search"
                 onChange={handleSearchChange}
               />
             </div>
