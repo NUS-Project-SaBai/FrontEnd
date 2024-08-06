@@ -1,6 +1,10 @@
 // export const API_URL = "https://projectsabai-vza8.onrender.com";
+
 export const CLOUDINARY_URL = 'https://res.cloudinary.com/dlusodadw';
-export const API_URL = process.env.API_URL || 'http://localhost:8000';
+
+export let API_URL = process.env.API_URL || 'http://localhost:8000';
+
+export const changeAPI_URL = (newURL) => {API_URL = newURL;}
 
 export const venueOptions = {
   PC: 'PC',

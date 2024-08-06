@@ -8,6 +8,7 @@ import {
   ClipboardDocumentListIcon,
   ArrowLeftStartOnRectangleIcon,
   DeviceTabletIcon,
+  Cog8ToothIcon
 } from '@heroicons/react/24/outline';
 
 const navigation = [
@@ -18,7 +19,6 @@ const navigation = [
     count: '5',
     current: true,
   },
-
   {
     name: 'Patient Records',
     href: '/records',
@@ -43,6 +43,12 @@ const navigation = [
     name: 'Debugging',
     href: '/debug',
     icon: DeviceTabletIcon,
+    current: false,
+  },
+  {
+    name: 'Settings',
+    href: '/settings',
+    icon: Cog8ToothIcon,
     current: false,
   },
   {
