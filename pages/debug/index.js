@@ -1,6 +1,6 @@
 import { APIComponent } from '@/components/debug';
 import { useState } from 'react';
-import { API_URL } from '@/utils/constants';
+import { getAPI_URL } from '@/utils/constants';
 
 const paths = [
   '/patients',
@@ -12,7 +12,7 @@ const paths = [
 ];
 
 export default function DebuggingPage() {
-  const [baseURL, setBaseURL] = useState(API_URL);
+  const [baseURL, setBaseURL] = useState(getAPI_URL());
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
