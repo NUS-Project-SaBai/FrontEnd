@@ -1,17 +1,14 @@
 import  {useState} from 'react';
-import { API_URL, changeAPI_URL } from '@/utils/constants';
+import { getAPI_URL, changeAPI_URL } from '@/utils/constants';
 
 function SettingsPage() {
-    const [backendURL, setBackendURL] = useState(API_URL);
-    const [newURL, setNewURL] = useState(backendURL);
+    const [backendURL, setBackendURL] = useState(getAPI_URL());
+    const [newURL, setNewURL] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        /*changeAPI_URL(newURL);
-        setBackendURL(newURL);
-        console.log(API_URL);
-        */
+        changeAPI_URL(newURL);
+        setBackendURL(getAPI_URL());
     }
 
     return (
@@ -30,7 +27,7 @@ function SettingsPage() {
                     Current Backend URL
                 </h2>
                 <p className="bg-gray-100 p-4 border border-gray-300 rounded-md mt-2 w-full overflow-auto">
-                    {API_URL}
+                    {backendURL}
                 </p>  
             </div>
 
