@@ -24,18 +24,22 @@ function SettingsPage() {
 
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
                 <h2 className="text-xl font-semibold">
-                    Current Backend URL
+                    Configuring Backend URL
                 </h2>
+                
+                <label
+                className="block text-sm font-medium text-gray-700 mt-6"
+                >
+                    Current Backend URL:
+                </label>
                 <p className="bg-gray-100 p-4 border border-gray-300 rounded-md mt-2 w-full overflow-auto">
                     {backendURL}
                 </p>  
-            </div>
 
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
                 <form onSubmit={handleSubmit}>
                     <label
                     htmlFor="baseURL"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mt-6"
                     >
                         Change Backend URL:
                     </label>
@@ -56,6 +60,19 @@ function SettingsPage() {
                     </div>
                 </form>
             </div>
+
+            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
+                <h2 className="text-xl font-semibold">
+                    Download Data from Database
+                </h2>
+                <button
+                type="submit"
+                className="bg-blue-500 text-white py-2 px-4 rounded-md mt-4 hover:bg-blue-600"
+                >
+                    Download .csv File
+                </button>
+            </div>
+
         </div>
     );
 }
