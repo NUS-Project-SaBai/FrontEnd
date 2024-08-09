@@ -9,6 +9,7 @@ import {
   ConsultationForm,
   OrderForm,
   Header,
+  ConsultationEditModal,
 } from '@/components/records';
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
@@ -43,6 +44,10 @@ const PatientConsultation = () => {
     diagnoses: [],
   });
 
+  //Edit Consultation Modal
+  const [editconsultationModalOpen, setEditConsultationModalOpen] =
+    useState(false);
+
   const handleVisitChange = useCallback(event => {
     const value = event.target.value;
     loadVisitDetails(value);
@@ -51,6 +56,13 @@ const PatientConsultation = () => {
   useEffect(() => {
     onRefresh();
   }, []);
+
+  function toggleEditConsultationModal(consult) {
+    console.log(consult);
+    setSelectedConsult(consult);
+    setEditConsultationModalOpen(!editconsultationModalOpen);
+    onRefresh();
+  }
 
   async function onRefresh() {
     const patientID = Router.query.id;
@@ -284,7 +296,11 @@ const PatientConsultation = () => {
           <VitalsTable content={vitals} />
         )}
 
-        <ConsultationsTable content={consult} buttonOnClick={selectConsult} />
+        <ConsultationsTable
+          content={consult}
+          buttonOnClick={selectConsult}
+          editOnClick={toggleEditConsultationModal}
+        />
 
         <PrescriptionsTable content={prescriptions} />
       </div>
@@ -433,6 +449,16 @@ const PatientConsultation = () => {
           <div>{renderFirstColumn()}</div>
           <div>{renderSecondColumn()}</div>
         </div>
+        <Modal
+          isOpen={editconsultationModalOpen}
+          onRequestClose={() => toggleEditConsultationModal()}
+          style={viewModalStyles}
+        >
+          <ConsultationEditModal
+            content={selectedConsult}
+            onRequestClose={() => toggleEditConsultationModal()}
+          />
+        </Modal>
       </div>
     );
   }
