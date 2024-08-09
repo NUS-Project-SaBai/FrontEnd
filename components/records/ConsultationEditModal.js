@@ -108,20 +108,14 @@ export function ConsultationEditModal({ content: consult, onRequestClose }) {
     console.dir(diagnosisArray);
 
     try {
-      // Update the consultation details
+      const combinedPayload = {
+        consult: consultDetails,
+        diagnoses: diagnosisArray,
+      };
+
       await axiosInstance.patch(
         `/consults/${consultDetails.id}`,
-        consultDetails
-      );
-
-      // Update the diagnoses details
-      await Promise.all(
-        diagnosisArray.map(diagnosis =>
-          axiosInstance.patch(`/diagnosis/${diagnosis.id}`, {
-            category: diagnosis.category,
-            details: diagnosis.details,
-          })
-        )
+        combinedPayload
       );
 
       toast.success('Consultation details updated successfully');
@@ -139,12 +133,13 @@ export function ConsultationEditModal({ content: consult, onRequestClose }) {
       <label className="text-3xl font-bold text-center text-sky-800 mb-2">
         Consultation Details
       </label>
-      <InputBox
+      {/* Abit hesistant to allow change of doctor, since that might mess up backend users */}
+      {/* <InputBox
         name={'doctor'}
         label={'Consultation done by'}
         onChange={handleConsult}
-        value={consultDetails.doctor?.username}
-      />
+        value={consultDetails.doctor?.nickname}
+      /> */}
 
       <InputBox
         name={'past_medical_history'}
