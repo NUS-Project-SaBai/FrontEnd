@@ -3,7 +3,7 @@ import Router from 'next/router';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
-import axiosInstance from '../api/_axiosInstance';
+import axiosInstance from '@/pages/api/_axiosInstance';
 import { venueOptions } from '@/utils/constants';
 
 function PatientList() {

@@ -9,7 +9,7 @@ import {
   ConsultationForm,
   OrderForm,
   Header,
-} from '@/pages/records/_components';
+} from '@/components/records';
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/TextComponents/';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DisplayField } from '@/components/TextComponents/DisplayField';
+import { DisplayField } from '@/components/TextComponents/';
 import { PrescriptionsTable } from './PrescriptionsTable';
 import axiosInstance from '@/pages/api/_axiosInstance';
 

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { MedicationModal, MedicationHistoryModal } from './_components/';
+import {
+  MedicationModal,
+  MedicationHistoryModal,
+} from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
@@ -51,7 +54,7 @@ const Stock = () => {
     setModalIsOpen(!modalIsOpen);
   };
 
-  const toggleMedicationHistoryModal = (medication) => {
+  const toggleMedicationHistoryModal = medication => {
     setMedication(medication);
     setMedicationHistoryModalIsOpen(!MedicationHistoryModalIsOpen);
   };

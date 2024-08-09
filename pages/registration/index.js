@@ -13,8 +13,7 @@ import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import AppWebcam from '@/utils/webcam';
 
-import { PatientModal, ScanModal } from '@/pages/registration/_components';
-
+import { PatientModal, ScanModal } from '@/components/registration';
 import { DisplayField, Button } from '@/components/TextComponents/';
 import Loading from '@/components/Loading';
 
@@ -41,8 +40,12 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
           label="ID Number"
           content={patient.identification_number}
         />
+        <DisplayField label="Contact" content={patient.contact_no} />
         <DisplayField label="Gender" content={patient.gender} />
         <DisplayField label="Date of Birth" content={patient.date_of_birth} />
+        <DisplayField label="Village" content={patient.village_prefix} />
+        <DisplayField label="POOR" content={patient.poor} />
+        <DisplayField label="BS2" content={patient.bs2} />
         <DisplayField label="Drug Allergies" content={patient.drug_allergy} />
 
         <Button
@@ -74,8 +77,10 @@ const Registration = () => {
     contact_no: '',
     date_of_birth: '',
     drug_allergy: '',
-    gender: 'Male',
-    village_prefix: Object.keys(venueOptions)[0],
+    gender: 'Unspecified',
+    poor: 'No',
+    bs2: 'No',
+    village_prefix: '',
   });
 
   useEffect(() => {
@@ -125,15 +130,17 @@ const Registration = () => {
       'date_of_birth',
       'drug_allergy',
       'village_prefix',
+      'poor',
+      'bs2',
     ];
 
-    if (checklist.some(item => formDetails[item].length === 0)) {
-      toast.error('Please complete the form before submitting!');
+    if (formDetails.name == '') {
+      toast.error('Name cannot be empty.');
       return;
     }
 
-    if (formDetails['date_of_birth'].length !== 10) {
-      toast.error('Please enter a valid date of birth!');
+    if (formDetails.village_prefix == '') {
+      toast.error('Please select a village');
       return;
     }
 
@@ -296,6 +303,9 @@ const Registration = () => {
               content: {
                 left: '25%',
                 right: '7.5%',
+              },
+              overlay: {
+                zIndex: 4,
               },
             }}
             loading={loading}

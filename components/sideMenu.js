@@ -7,6 +7,7 @@ import {
   BeakerIcon,
   ClipboardDocumentListIcon,
   ArrowLeftStartOnRectangleIcon,
+  DeviceTabletIcon,
 } from '@heroicons/react/24/outline';
 import { OFFLINE } from '@/utils/constants';
 
@@ -48,6 +49,12 @@ export default function SideMenu() {
       name: 'Pharmacy Stock',
       href: '/pharmacy/stock',
       icon: BeakerIcon,
+      current: false,
+    },
+    {
+      name: 'Debugging',
+      href: '/debug',
+      icon: DeviceTabletIcon,
       current: false,
     },
     {
