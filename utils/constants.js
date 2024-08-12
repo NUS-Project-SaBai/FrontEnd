@@ -2,7 +2,8 @@
 
 export const CLOUDINARY_URL = 'https://res.cloudinary.com/dlusodadw';
 
-export const defaultAPI_URL = process.env.API_URL || 'http://localhost:8000';
+export const defaultAPI_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const isWindowUndefined = typeof window === 'undefined';
 
