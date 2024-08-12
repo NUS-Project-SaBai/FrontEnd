@@ -32,6 +32,7 @@ const Stock = () => {
       setMedicationsFiltered(medicines);
     } catch (error) {
       toast.error(`Failed to fetch medications: ${error.message}`);
+      console.error('Error fetching medication:', error);
     } finally {
       setLoading(false);
     }
@@ -124,6 +125,7 @@ const Stock = () => {
       loadMedicine();
     } catch (error) {
       toast.error(`Error submitting medication: ${error.message}`);
+      console.error('Error submitting medication:', error);
     } finally {
       setLoading(false);
     }
@@ -146,6 +148,7 @@ const Stock = () => {
       toast.success('Medication successfully deleted!');
     } catch (error) {
       toast.error(`Failed to delete medication: ${error.message}`);
+      console.error('Error deleting medication:', error);
     } finally {
       setLoading(false);
     }
