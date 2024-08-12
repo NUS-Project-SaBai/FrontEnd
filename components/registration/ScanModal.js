@@ -3,7 +3,7 @@ import CustomModal from '@/components/CustomModal';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import {
-  API_URL,
+  getAPI_URL,
   CLOUDINARY_URL,
   MATCH_FOUND_MESSAGE,
   NO_MATCHES_FOUND_MESSAGE,
@@ -12,6 +12,7 @@ import {
 import { urltoFile } from '@/utils/helpers';
 import Link from 'next/link';
 import { Button } from '@/components/TextComponents';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 export function ScanModal({
   modalIsOpen,
@@ -37,7 +38,7 @@ export function ScanModal({
 
     try {
       const response = await axios.post(
-        `${API_URL}/patients/search`,
+        `${getAPI_URL()}/patients/search`,
         scanPatientFormData,
         {
           headers: {

@@ -1,6 +1,6 @@
 import { APIComponent } from '@/components/debug';
 import { useState } from 'react';
-import { API_URL } from '@/utils/constants';
+import { getAPI_URL } from '@/utils/constants';
 import { useLoading } from '@/context/LoadingContext';
 
 const paths = [
@@ -14,7 +14,7 @@ const paths = [
 
 export default function DebuggingPage() {
   const { setLoading } = useLoading();
-  const [baseURL, setBaseURL] = useState(API_URL);
+  const [baseURL, setBaseURL] = useState(getAPI_URL());
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleRefresh = () => {
