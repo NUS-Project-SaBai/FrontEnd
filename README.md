@@ -36,17 +36,7 @@
    pnpm dev
    ```
 
-4. Configure Local Backend
-
-   In the FrontEnd/utils/constants.js file, ensure that you are using the local backend instead of the actual backend. Comment out the first line and uncomment the last line, as shown below:
-
-   ```bash
-   // export const API_URL = "https://projectsabai-vza8.onrender.com";
-   export const CLOUDINARY_URL = "https://res.cloudinary.com/dxy0byphl";
-   export const API_URL = "http://localhost:8000";
-   ```
-
-5. Environmental Setup
+4. Environmental Setup
    Create a `.env.local` by making a copy of `.env.local.example` and filling it with relevant details from the "Key Credentials" document.
 
    ```bash
