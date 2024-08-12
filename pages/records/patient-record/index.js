@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import {
   ConsultationView,
   ConsultationsTable,
-  ConsultationEditModal,
+  ConsultationEdit,
   VitalsTable,
   Header,
   PatientView,
@@ -292,7 +292,7 @@ const PatientRecord = () => {
           onRequestClose={() => toggleEditConsultationModal()}
           style={viewModalStyles}
         >
-          <ConsultationEditModal
+          <ConsultationEdit
             content={selectedConsult}
             onRequestClose={() => toggleEditConsultationModal()}
           />

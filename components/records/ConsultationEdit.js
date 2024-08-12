@@ -4,7 +4,7 @@ import { PrescriptionsTable } from './PrescriptionsTable';
 import toast from 'react-hot-toast';
 import axiosInstance from '@/pages/api/_axiosInstance';
 
-export function ConsultationEditModal({ content: consult, onRequestClose }) {
+export function ConsultationEdit({ content: consult, onRequestClose }) {
   const [diagnosisArray, setDiagnosisArray] = useState([]);
   const [consultDetails, setConsultDetails] = useState({ ...consult });
 

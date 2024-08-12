@@ -7,13 +7,13 @@ import { OrderForm } from './OrderForm';
 import { PrescriptionsTable } from './PrescriptionsTable';
 import { VitalsForm } from './VitalsForm';
 import { VitalsTable } from './VitalsTable';
-import { ConsultationEditModal } from './ConsultationEditModal';
+import { ConsultationEdit } from './ConsultationEdit';
 
 export {
   ConsultationForm,
   ConsultationsTable,
   ConsultationView,
-  ConsultationEditModal,
+  ConsultationEdit,
   Header,
   PatientView,
   OrderForm,
