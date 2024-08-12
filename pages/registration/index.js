@@ -24,8 +24,7 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
         <img
           src={`${CLOUDINARY_URL}/${patient.picture}`}
           alt="Placeholder image"
-          className="has-ratio"
-          style={{ height: 200, width: 200, objectFit: 'cover' }}
+          className="has-ratio h-48 w-48 object-cover"
         />
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
@@ -306,12 +305,6 @@ const Registration = () => {
         handleInputChange={handleInputChange}
         submitNewPatient={submitNewPatient}
         toggleCameraOpen={toggleCameraOpen}
-        customStyles={{
-          content: {
-            left: '25%',
-            right: '7.5%',
-          },
-        }}
       />
       <ScanModal
         modalIsOpen={scanModalIsOpen}
@@ -327,12 +320,6 @@ const Registration = () => {
           />
         )}
         toggleCameraOpen={toggleCameraOpen}
-        customStyles={{
-          content: {
-            left: '25%',
-            right: '7.5%',
-          },
-        }}
       />
       <div>
         <div>

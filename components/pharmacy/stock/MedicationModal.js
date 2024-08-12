@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from 'react-modal';
+import CustomModal from '@/components/CustomModal';
 
 import {
   Button,
@@ -16,54 +16,47 @@ export function MedicationModal({
   formDetails,
 }) {
   return (
-    <Modal
+    <CustomModal
       isOpen={modalIsOpen}
       onRequestClose={toggleModal}
-      style={{
-        content: {
-          left: '35%',
-          right: '12.5%',
-          top: '12.5%',
-          bottom: '12.5%',
-        },
-      }}
-    >
-      <div className="space-y-2">
-        <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-2">
-          Edit Medication
-        </label>
+      content={
+        <div className="space-y-4">
+          <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-4">
+            Edit Medication
+          </label>
 
-        <InputField
-          name="medicine_name"
-          type="text"
-          label="Medicine Name"
-          onChange={handleInputChange}
-          value={formDetails.medicine_name}
-        />
-        <DisplayField
-          content={formDetails.quantity == null ? 0 : formDetails.quantity}
-          label="Current Quantity"
-        />
+          <InputField
+            name="medicine_name"
+            type="text"
+            label="Medicine Name"
+            onChange={handleInputChange}
+            value={formDetails.medicine_name}
+          />
+          <DisplayField
+            content={formDetails.quantity == null ? 0 : formDetails.quantity}
+            label="Current Quantity"
+          />
 
-        <InputField
-          label="Quantity to Add (Negative to subtract)"
-          name="quantityChange"
-          type="number"
-          onChange={handleInputChange}
-          value={formDetails.quantityChange}
-        />
+          <InputField
+            label="Quantity to Add (Negative to subtract)"
+            name="quantityChange"
+            type="number"
+            onChange={handleInputChange}
+            value={formDetails.quantityChange}
+          />
 
-        <InputBox
-          label="Notes"
-          name="notes"
-          className="textarea"
-          placeholder="Textarea"
-          onChange={handleInputChange}
-          value={formDetails.notes}
-        />
+          <InputBox
+            label="Notes"
+            name="notes"
+            className="textarea"
+            placeholder="Textarea"
+            onChange={handleInputChange}
+            value={formDetails.notes}
+          />
 
-        <Button onClick={onSubmit} text="Submit" colour="green" />
-      </div>
-    </Modal>
+          <Button onClick={onSubmit} text="Submit" colour="green" />
+        </div>
+      }
+    />
   );
 }
