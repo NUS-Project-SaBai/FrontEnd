@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-const RecordsModal = ({ isOpen, onRequestClose, content }) => {
+const CustomModal = ({ isOpen, onRequestClose, content }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -22,4 +22,4 @@ const RecordsModal = ({ isOpen, onRequestClose, content }) => {
   );
 };
 
-export default RecordsModal;
+export default CustomModal;
