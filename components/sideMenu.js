@@ -11,6 +11,49 @@ import {
 } from '@heroicons/react/24/outline';
 import { OFFLINE } from '@/utils/constants';
 
+const navigation = [
+  {
+    name: 'Registration',
+    href: '/registration',
+    icon: IdentificationIcon,
+    count: '5',
+    current: true,
+  },
+
+  {
+    name: 'Patient Records',
+    href: '/records',
+    icon: ClipboardDocumentListIcon,
+    count: '12',
+    current: false,
+  },
+  {
+    name: 'Pharmacy Orders',
+    href: '/pharmacy/orders',
+    icon: PencilIcon,
+    count: '20+',
+    current: false,
+  },
+  {
+    name: 'Pharmacy Stock',
+    href: '/pharmacy/stock',
+    icon: BeakerIcon,
+    current: false,
+  },
+  {
+    name: 'Debugging',
+    href: '/debug',
+    icon: DeviceTabletIcon,
+    current: false,
+  },
+  {
+    name: 'Logout',
+    href: '/api/auth/logout',
+    icon: ArrowLeftStartOnRectangleIcon,
+    current: false,
+  },
+];
+
 const locations = [
   { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
   { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
@@ -22,49 +65,6 @@ function classNames(...classes) {
 }
 
 export default function SideMenu() {
-  const navigation = [
-    {
-      name: 'Registration',
-      href: '/registration',
-      icon: IdentificationIcon,
-      count: '5',
-      current: true,
-    },
-
-    {
-      name: 'Patient Records',
-      href: '/records',
-      icon: ClipboardDocumentListIcon,
-      count: '12',
-      current: false,
-    },
-    {
-      name: 'Pharmacy Orders',
-      href: '/pharmacy/orders',
-      icon: PencilIcon,
-      count: '20+',
-      current: false,
-    },
-    {
-      name: 'Pharmacy Stock',
-      href: '/pharmacy/stock',
-      icon: BeakerIcon,
-      current: false,
-    },
-    {
-      name: 'Debugging',
-      href: '/debug',
-      icon: DeviceTabletIcon,
-      current: false,
-    },
-    {
-      name: 'Logout',
-      href: '/api/auth/logout',
-      icon: ArrowLeftStartOnRectangleIcon,
-      current: false,
-    },
-  ];
-
   const router = useRouter();
   const [navItems, setNavItems] = useState(navigation);
   const { user, isLoading } = useUser();
