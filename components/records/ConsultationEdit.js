@@ -133,13 +133,6 @@ export function ConsultationEdit({ content: consult, onRequestClose }) {
       <label className="text-3xl font-bold text-center text-sky-800 mb-2">
         Consultation Details
       </label>
-      {/* Abit hesistant to allow change of doctor, since that might mess up backend users */}
-      {/* <InputBox
-        name={'doctor'}
-        label={'Consultation done by'}
-        onChange={handleConsult}
-        value={consultDetails.doctor?.nickname}
-      /> */}
 
       <InputBox
         name={'past_medical_history'}
