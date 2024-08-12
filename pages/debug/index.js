@@ -1,4 +1,3 @@
-// pages/debugging.js
 import { APIComponent } from '@/components/debug';
 import { useState } from 'react';
 import { API_URL } from '@/utils/constants';
