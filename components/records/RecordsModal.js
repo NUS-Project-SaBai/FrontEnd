@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-const ConsultationViewModal = ({ isOpen, onRequestClose, content }) => {
+const RecordsModal = ({ isOpen, onRequestClose, content }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -22,4 +22,4 @@ const ConsultationViewModal = ({ isOpen, onRequestClose, content }) => {
   );
 };
 
-export default ConsultationViewModal;
+export default RecordsModal;

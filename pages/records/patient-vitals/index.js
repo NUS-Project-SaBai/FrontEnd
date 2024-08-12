@@ -11,7 +11,7 @@ import {
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
 import axiosInstance from '@/pages/api/_axiosInstance';
-import ConsultationViewModal from '@/components/records/ConsultationViewModal';
+import RecordsModal from '@/components/records/RecordsModal';
 import { useLoading } from '@/context/LoadingContext';
 
 const PatientVitals = () => {
@@ -47,8 +47,7 @@ const PatientVitals = () => {
     diabetes_mellitus: '',
   });
 
-  const [consultationViewModalOpen, setConsultationViewModalOpen] =
-    useState(false);
+  const [recordsModalOpen, setRecordsModalOpen] = useState(false);
 
   const handleVisitChange = useCallback(event => {
     const value = event.target.value;
@@ -111,13 +110,13 @@ const PatientVitals = () => {
     }
   }
 
-  function toggleConsultationViewModal() {
-    setConsultationViewModalOpen(!consultationViewModalOpen);
+  function toggleRecordsModal() {
+    setRecordsModalOpen(!recordsModalOpen);
   }
 
   function selectConsult(consult) {
     setSelectedConsult(consult);
-    toggleConsultationViewModal();
+    toggleRecordsModal();
   }
 
   async function submitVitalsForm() {
@@ -202,9 +201,9 @@ const PatientVitals = () => {
 
     return (
       <div className="mt-7.5 mx-6 overflow-hidden">
-        <ConsultationViewModal
-          isOpen={consultationViewModalOpen}
-          onRequestClose={toggleConsultationViewModal}
+        <RecordsModal
+          isOpen={recordsModalOpen}
+          onRequestClose={toggleRecordsModal}
           content={<ConsultationView content={selectedConsult} />}
         />
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">

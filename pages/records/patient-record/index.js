@@ -12,7 +12,7 @@ import withAuth from '@/utils/auth';
 import Router from 'next/router';
 import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
-import ConsultationViewModal from '@/components/records/ConsultationViewModal';
+import RecordsModal from '@/components/records/RecordsModal';
 import toast from 'react-hot-toast';
 import { useLoading } from '@/context/LoadingContext';
 
@@ -173,7 +173,7 @@ const PatientRecord = () => {
             </button>
           </div>
         </Modal>
-        <ConsultationViewModal
+        <RecordsModal
           isOpen={consultationModalOpen}
           onRequestClose={toggleConsultationModal}
           content={<ConsultationView content={selectedConsult} />}

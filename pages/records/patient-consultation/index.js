@@ -14,7 +14,7 @@ import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
-import ConsultationViewModal from '@/components/records/ConsultationViewModal';
+import RecordsModal from '@/components/records/RecordsModal';
 import { useLoading } from '@/context/LoadingContext';
 
 const PatientConsultation = () => {
@@ -122,13 +122,13 @@ const PatientConsultation = () => {
   }
 
   // Consultations View Modal
-  function toggleConsultationViewModal() {
+  function toggleRecordsModal() {
     setConsultationModalOpen(!consultationModalOpen);
   }
 
   function selectConsult(consult) {
     setSelectedConsult(consult);
-    toggleConsultationViewModal();
+    toggleRecordsModal();
   }
 
   // Order Form Modal
@@ -427,9 +427,9 @@ const PatientConsultation = () => {
             </button>
           </div>
         </Modal>
-        <ConsultationViewModal
+        <RecordsModal
           isOpen={consultationModalOpen}
-          onRequestClose={toggleConsultationViewModal}
+          onRequestClose={toggleRecordsModal}
           content={<ConsultationView content={selectedConsult} />}
         />
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
