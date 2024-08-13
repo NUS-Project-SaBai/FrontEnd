@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
-import Modal from 'react-modal';
 import {
   ConsultationView,
   ConsultationsTable,
@@ -12,8 +11,11 @@ import {
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
 import axiosInstance from '@/pages/api/_axiosInstance';
+import CustomModal from '@/components/CustomModal';
+import { useLoading } from '@/context/LoadingContext';
 
 const PatientVitals = () => {
+  const { setLoading } = useLoading();
   const [mounted, setMounted] = useState(false);
 
   const [patient, setPatient] = useState({});
@@ -45,8 +47,7 @@ const PatientVitals = () => {
     diabetes_mellitus: '',
   });
 
-  const [consultationViewModalOpen, setConsultationViewModalOpen] =
-    useState(false);
+  const [CustomModalOpen, setCustomModalOpen] = useState(false);
 
   const handleVisitChange = useCallback(event => {
     const value = event.target.value;
@@ -59,61 +60,63 @@ const PatientVitals = () => {
 
   async function onRefresh() {
     const patientID = Router.query.id;
+    setLoading(true);
+    try {
+      const { data: patient } = await axiosInstance.get(
+        `/patients/${patientID}`
+      );
+      const { data: visits } = await axiosInstance.get(
+        `/visits?patient=${patientID}`
+      );
 
-    const { data: patient } = await axiosInstance.get(`/patients/${patientID}`);
+      setPatient(patient);
+      setVisits(visits);
 
-    const { data: visits } = await axiosInstance.get(
-      `/visits?patient=${patientID}`
-    );
-
-    setPatient(patient);
-    setVisits(visits);
-
-    if (visits.length > 0) {
-      const visitID = visits[0].id;
-      loadVisitDetails(visitID);
+      if (visits.length > 0) {
+        const visitID = visits[0].id;
+        loadVisitDetails(visitID);
+      }
+    } catch (error) {
+      toast.error('Error loading patient data. Please try again later.');
+      console.error('Error loading patient data:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function loadVisitDetails(visitID) {
-    const { data: consults } = await axiosInstance.get(
-      `/consults?visit=${visitID}`
-    );
+    setLoading(true);
+    try {
+      const { data: consults } = await axiosInstance.get(
+        `/consults?visit=${visitID}`
+      );
+      const prescriptions = consults
+        .flatMap(consult => consult.prescriptions)
+        .filter(prescription => prescription != null);
+      const { data: vitals } = await axiosInstance.get(
+        `/vitals?visit=${visitID}`
+      );
 
-    const prescriptions = consults
-      .flatMap(consult => consult.prescriptions)
-      .filter(prescription => prescription != null);
-
-    const { data: vitals } = await axiosInstance.get(
-      `/vitals?visit=${visitID}`
-    );
-
-    setMounted(true);
-    setSelectedVisit(visitID);
-    setConsults(consults);
-    setPrescriptions(prescriptions);
-    setVitals(vitals[0] || {});
+      setMounted(true);
+      setSelectedVisit(visitID);
+      setConsults(consults);
+      setPrescriptions(prescriptions);
+      setVitals(vitals[0] || {});
+    } catch (error) {
+      toast.error('Error loading visit details. Please try again later.');
+      console.error('Error loading visit details:', error);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function toggleConsultationViewModal() {
-    setConsultationViewModalOpen(!consultationViewModalOpen);
+  function toggleCustomModal() {
+    setCustomModalOpen(!CustomModalOpen);
   }
 
   function selectConsult(consult) {
     setSelectedConsult(consult);
-    toggleConsultationViewModal();
-  }
-
-  function renderConsultationViewModal() {
-    return (
-      <Modal
-        isOpen={consultationViewModalOpen}
-        onRequestClose={() => toggleConsultationViewModal()}
-        style={viewModalStyles}
-      >
-        <ConsultationView content={selectedConsult} />;
-      </Modal>
-    );
+    toggleCustomModal();
   }
 
   async function submitVitalsForm() {
@@ -122,16 +125,22 @@ const PatientVitals = () => {
       ...vitalsFormDetails,
     };
     const filteredFormPayload = Object.fromEntries(
-      Object.entries(formPayload).filter(([_, value]) => value)
+      Object.entries(formPayload).filter(([value]) => value)
     );
-    await axiosInstance
-      .patch(`/vitals?visit=${selectedVisit}`, filteredFormPayload)
-      .catch(error => {
-        console.dir(error.response);
-      });
-    toast.success('Vitals completed!');
-
-    Router.push('/records');
+    setLoading(true);
+    try {
+      await axiosInstance.patch(
+        `/vitals?visit=${selectedVisit}`,
+        filteredFormPayload
+      );
+      toast.success('Vitals completed!');
+      Router.push('/records');
+    } catch (error) {
+      toast.error('Error submitting vitals. Please try again later.');
+      console.error('Error submitting vitals:', error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleVitalsFormOnChange(e) {
@@ -191,16 +200,13 @@ const PatientVitals = () => {
     if (!mounted) return null;
 
     return (
-      <div
-        style={{
-          marginTop: 27.5,
-          marginLeft: 25,
-          marginRight: 25,
-          overflowX: 'hidden', //remove horizontal scrollbar
-          overflowY: 'hidden',
-        }}
-      >
-        {renderConsultationViewModal()}
+      <div className="mt-7.5 mx-6 overflow-hidden">
+        <CustomModal
+          isOpen={CustomModalOpen}
+          onRequestClose={toggleCustomModal}
+        >
+          <ConsultationView content={selectedConsult} />
+        </CustomModal>
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Vitals
         </h1>
@@ -211,7 +217,7 @@ const PatientVitals = () => {
 
         <hr />
 
-        <div className="grid grid-cols-2 gap-x-4 mb-4 mt-2">
+        <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
           <div>{renderFirstColumn()}</div>
           <div>{renderSecondColumn()}</div>
         </div>
@@ -219,18 +225,6 @@ const PatientVitals = () => {
     );
   }
   return render();
-};
-
-const viewModalStyles = {
-  content: {
-    left: '30%',
-    right: '12.5%',
-    top: '12.5%',
-    bottom: '12.5%',
-  },
-  overlay: {
-    zIndex: 4,
-  },
 };
 
 export default withAuth(PatientVitals);

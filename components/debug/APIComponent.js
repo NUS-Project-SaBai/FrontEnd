@@ -90,7 +90,9 @@ export function APIComponent({ baseURL, path }) {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md w-full">
+    <div
+      className={`p-8 rounded-lg shadow-md w-full ${error ? 'bg-red-200' : 'bg-white'}`}
+    >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
@@ -160,7 +162,9 @@ export function APIComponent({ baseURL, path }) {
         )}
       </form>
       <h2 className="text-xl font-semibold mt-6">Response:</h2>
-      <pre className="bg-gray-100 p-4 border border-gray-300 rounded-md mt-2 w-full overflow-auto">
+      <pre
+        className={`p-4 border border-gray-300 rounded-md mt-2 w-full overflow-auto ${error ? 'bg-red-100' : 'bg-gray-100'}`}
+      >
         {response
           ? JSON.stringify(response, null, 2)
           : error

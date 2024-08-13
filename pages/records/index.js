@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
+import toast from 'react-hot-toast';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { venueOptions } from '@/utils/constants';
+import { useLoading } from '@/context/LoadingContext';
 
 function PatientList() {
+  const { setLoading } = useLoading();
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
 
@@ -20,14 +23,22 @@ function PatientList() {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    axiosInstance
-      .get('/patients')
-      .then(response => {
+    const fetchPatients = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosInstance.get('/patients');
         setPatients(response.data);
         setPatientsFiltered(response.data);
-      })
-      .catch(error => console.error('Error loading page', error));
-  }, []);
+      } catch (error) {
+        toast.error('Error loading patients.');
+        console.error('Error loading patients:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatients();
+  }, [setLoading]);
 
   useEffect(() => {
     filterPatients();
@@ -57,7 +68,7 @@ function PatientList() {
   function renderTableContent() {
     const patientRows = patientsFiltered
       .slice(startIndex, endIndex)
-      .map((patient, idx) => {
+      .map(patient => {
         const patientID = patient.patient_id;
         const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
         const fullName = patient.name;
@@ -146,7 +157,7 @@ function PatientList() {
                 <option value={PATIENT_CODE_ALL}>
                   {`${PATIENT_CODE_ALL}`}
                 </option>
-                {Object.entries(venueOptions).map(([key, value]) => (
+                {Object.entries(venueOptions).map(([key]) => (
                   <option value={key} key={key}>
                     {key}
                   </option>
@@ -160,7 +171,7 @@ function PatientList() {
               <InputField
                 type="text"
                 name="Input Patient/ID to Search"
-                label="Search"
+                label="Input Patient/ID to Search"
                 onChange={handleSearchChange}
               />
             </div>
@@ -170,7 +181,7 @@ function PatientList() {
 
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="mt-2 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
             <div className="inline-block min-w-full py-2 align-middle">
               <table className="min-w-full divide-y divide-gray-300">
                 <thead>

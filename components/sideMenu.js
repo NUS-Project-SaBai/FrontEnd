@@ -8,7 +8,7 @@ import {
   ClipboardDocumentListIcon,
   ArrowLeftStartOnRectangleIcon,
   DeviceTabletIcon,
-  Cog8ToothIcon
+  Cog8ToothIcon,
 } from '@heroicons/react/24/outline';
 
 const navigation = [

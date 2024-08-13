@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from 'react-modal';
+import CustomModal from '@/components/CustomModal';
 
 import {
   Button,
@@ -16,20 +16,9 @@ export function MedicationModal({
   formDetails,
 }) {
   return (
-    <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={toggleModal}
-      style={{
-        content: {
-          left: '35%',
-          right: '12.5%',
-          top: '12.5%',
-          bottom: '12.5%',
-        },
-      }}
-    >
-      <div className="space-y-2">
-        <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-2">
+    <CustomModal isOpen={modalIsOpen} onRequestClose={toggleModal}>
+      <div className="space-y-4">
+        <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-4">
           Edit Medication
         </label>
 
@@ -64,6 +53,6 @@ export function MedicationModal({
 
         <Button onClick={onSubmit} text="Submit" colour="green" />
       </div>
-    </Modal>
+    </CustomModal>
   );
 }

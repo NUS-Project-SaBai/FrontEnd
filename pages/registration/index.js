@@ -15,7 +15,7 @@ import AppWebcam from '@/utils/webcam';
 
 import { PatientModal, ScanModal } from '@/components/registration';
 import { DisplayField, Button } from '@/components/TextComponents/';
-import Loading from '@/components/Loading';
+import { useLoading } from '@/context/LoadingContext';
 
 const PatientInfo = ({ patient, submitNewVisit }) => {
   return patient.pk ? (
@@ -24,8 +24,7 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
         <img
           src={`${CLOUDINARY_URL}/${patient.picture}`}
           alt="Placeholder image"
-          className="has-ratio"
-          style={{ height: 200, width: 200, objectFit: 'cover' }}
+          className="has-ratio h-48 w-48 object-cover"
         />
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
@@ -57,7 +56,7 @@ const PatientInfo = ({ patient, submitNewVisit }) => {
 };
 
 const Registration = () => {
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [patientsList, setPatientsList] = useState([]);
@@ -82,8 +81,16 @@ const Registration = () => {
   }, []);
 
   const onRefresh = async () => {
-    let { data: patients } = await axiosInstance.get('/patients');
-    setPatientsList(patients);
+    setLoading(true);
+    try {
+      const { data: patients } = await axiosInstance.get('/patients');
+      setPatientsList(patients);
+    } catch (error) {
+      toast.error('Failed to fetch patients');
+      console.error('Error fetching patients:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Webcam functions
@@ -143,51 +150,62 @@ const Registration = () => {
 
     setLoading(true);
 
-    const payload = {
-      ...formDetails,
-      picture: await urltoFile(
-        imageDetails,
-        'patient_screenshot.jpg',
-        'image/jpg'
-      ),
-    };
-    const patientFormData = new FormData();
-    Object.keys(payload).forEach(key =>
-      patientFormData.append(key, payload[key])
-    );
+    try {
+      const payload = {
+        ...formDetails,
+        picture: await urltoFile(
+          imageDetails,
+          'patient_screenshot.jpg',
+          'image/jpg'
+        ),
+      };
+      const patientFormData = new FormData();
+      Object.keys(payload).forEach(key =>
+        patientFormData.append(key, payload[key])
+      );
 
-    const { data: response } = await axiosInstance.post(
-      '/patients',
-      patientFormData
-    );
+      const { data: response } = await axiosInstance.post(
+        '/patients',
+        patientFormData
+      );
 
-    if (typeof response.error !== 'undefined') {
-      toast.error(`Please retake photo! ${response.error}`);
-      return;
+      if (typeof response.error !== 'undefined') {
+        toast.error(`Please retake photo! ${response.error}`);
+        return;
+      }
+
+      setPatient(response);
+      setFormDetails(prevDetails => ({
+        ...prevDetails,
+        gender: 'Male',
+        village_prefix: 'SV',
+      }));
+      setImageDetails(null);
+      toast.success('New patient created!');
+
+      setModalIsOpen(false);
+      submitNewVisit(response);
+    } catch (error) {
+      toast.error('Failed to create new patient');
+      console.error('Error creating new patient:', error);
+    } finally {
+      setLoading(false);
     }
-
-    setPatient(response);
-    setFormDetails(prevDetails => ({
-      ...prevDetails,
-      gender: 'Male',
-      village_prefix: 'SV',
-    }));
-    setImageDetails(null);
-    toast.success('New patient created!');
-
-    setModalIsOpen(false);
-    submitNewVisit(response);
-    setLoading(false);
   };
 
   const submitNewVisit = async patient => {
-    let payload = {
-      patient: patient.pk,
-      status: 'started',
-      visit_date: moment().format('DD MMMM YYYY HH:mm'),
-    };
-    await axiosInstance.post('/visits', payload);
-    toast.success('New visit created for patient!');
+    try {
+      let payload = {
+        patient: patient.pk,
+        status: 'started',
+        visit_date: moment().format('DD MMMM YYYY HH:mm'),
+      };
+      await axiosInstance.post('/visits', payload);
+      toast.success('New visit created for patient!');
+    } catch (error) {
+      toast.error('Failed to create new visit');
+      console.error('Error creating new visit:', error);
+    }
   };
 
   // Auto Suggestions functions
@@ -270,96 +288,77 @@ const Registration = () => {
 
   return (
     <div className="mx-4">
-      {loading ? (
-        <Loading />
-      ) : (
+      <PatientModal
+        modalIsOpen={modalIsOpen}
+        formDetails={formDetails}
+        imageDetails={imageDetails}
+        cameraIsOpen={cameraIsOpen}
+        renderWebcam={() => (
+          <AppWebcam
+            webcamSetRef={webcamSetRef}
+            webcamCapture={webcamCapture}
+          />
+        )}
+        closeModal={() => {
+          setModalIsOpen(false);
+        }}
+        handleInputChange={handleInputChange}
+        submitNewPatient={submitNewPatient}
+        toggleCameraOpen={toggleCameraOpen}
+      />
+      <ScanModal
+        modalIsOpen={scanModalIsOpen}
+        cameraIsOpen={cameraIsOpen}
+        imageDetails={imageDetails}
+        closeScanModal={() => {
+          setScanModalIsOpen(false);
+        }}
+        renderWebcam={() => (
+          <AppWebcam
+            webcamSetRef={webcamSetRef}
+            webcamCapture={webcamCapture}
+          />
+        )}
+        toggleCameraOpen={toggleCameraOpen}
+      />
+      <div>
         <div>
-          <PatientModal
-            modalIsOpen={modalIsOpen}
-            formDetails={formDetails}
-            imageDetails={imageDetails}
-            cameraIsOpen={cameraIsOpen}
-            renderWebcam={() => (
-              <AppWebcam
-                webcamSetRef={webcamSetRef}
-                webcamCapture={webcamCapture}
-              />
-            )}
-            closeModal={() => {
-              setModalIsOpen(false);
-            }}
-            handleInputChange={handleInputChange}
-            submitNewPatient={submitNewPatient}
-            toggleCameraOpen={toggleCameraOpen}
-            customStyles={{
-              content: {
-                left: '25%',
-                right: '7.5%',
-              },
-            }}
-            loading={loading}
-          />
-          <ScanModal
-            modalIsOpen={scanModalIsOpen}
-            cameraIsOpen={cameraIsOpen}
-            imageDetails={imageDetails}
-            closeScanModal={() => {
-              setScanModalIsOpen(false);
-            }}
-            renderWebcam={() => (
-              <AppWebcam
-                webcamSetRef={webcamSetRef}
-                webcamCapture={webcamCapture}
-              />
-            )}
-            toggleCameraOpen={toggleCameraOpen}
-            customStyles={{
-              content: {
-                left: '25%',
-                right: '7.5%',
-              },
-            }}
-          />
-          <div>
-            <div>
-              <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-                Registration
-              </h1>
-              <div className="flex items-center justify-center mb-2 w-full">
-                <Autosuggest
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={onSuggestionsClearRequested}
-                  getSuggestionValue={getSuggestionValue}
-                  renderSuggestion={renderSuggestion}
-                  inputProps={inputProps}
-                  theme={autosuggestTheme}
-                />
-              </div>
-              <div className="flex items-center justify-center mb-6 gap-3">
-                <Button
-                  colour="green"
-                  text="Start Facial Recognition"
-                  onClick={() => {
-                    setScanModalIsOpen(true);
-                  }}
-                />
-                <Button
-                  colour="green"
-                  text="New Patient"
-                  onClick={() => {
-                    setModalIsOpen(true);
-                  }}
-                />
-              </div>
-              <PatientInfo
-                patient={patient}
-                submitNewVisit={() => submitNewVisit(patient)}
-              />
-            </div>
+          <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+            Registration
+          </h1>
+          <div className="flex items-center justify-center mb-2 w-full">
+            <Autosuggest
+              suggestions={suggestions}
+              onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={onSuggestionsClearRequested}
+              getSuggestionValue={getSuggestionValue}
+              renderSuggestion={renderSuggestion}
+              inputProps={inputProps}
+              theme={autosuggestTheme}
+            />
           </div>
+          <div className="flex items-center justify-center mb-6 gap-3">
+            <Button
+              colour="green"
+              text="Start Facial Recognition"
+              onClick={() => {
+                setScanModalIsOpen(true);
+              }}
+            />
+            <Button
+              colour="green"
+              text="New Patient"
+              onClick={() => {
+                setModalIsOpen(true);
+              }}
+            />
+          </div>
+          <PatientInfo
+            patient={patient}
+            submitNewVisit={() => submitNewVisit(patient)}
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 };
