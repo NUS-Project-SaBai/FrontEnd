@@ -52,7 +52,6 @@ const Orders = () => {
         });
         toast.success('Order approved successfully!');
         loadOrders();
-        router.reload();
       } catch (error) {
         toast.error(`Failed to approve order: ${error.message}`);
         console.error('Error updating orders:', error);
@@ -89,7 +88,9 @@ const Orders = () => {
           {Math.abs(order.medication_updates.quantity_changed)}
           <br />
           {order.medication_updates.medicine.notes && (
-            <div className="truncate">Notes: {order.medicine.notes}</div>
+            <div className="truncate">
+              Notes: {order.medication_updates.medicine.notes}
+            </div>
           )}
         </li>
       );

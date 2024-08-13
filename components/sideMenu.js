@@ -59,6 +59,13 @@ const navigation = [
     current: false,
   },
 ];
+
+const locations = [];
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export default function SideMenu() {
   const router = useRouter();
   const [navItems, setNavItems] = useState(navigation);
