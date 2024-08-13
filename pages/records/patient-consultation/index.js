@@ -355,7 +355,7 @@ const PatientConsultation = () => {
       <div className="mt-4 mx-6">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="mt-2 flow-root">
-            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
               <div className="inline-block min-w-full py-2 align-middle">
                 <table className="min-w-full border border-gray-700 divide-y divide-gray-300 rounded-lg overflow-hidden">
                   <thead>

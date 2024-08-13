@@ -214,7 +214,7 @@ const Stock = () => {
       </div>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
             <div className="inline-block min-w-full py-2 align-middle">
               <table className="min-w-full divide-y divide-gray-300">
                 <thead>
