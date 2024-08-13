@@ -1,32 +1,35 @@
-export function PrescriptionsTable({ content: prescriptions }) {
-  if (prescriptions.length == 0) {
+import { Button } from '@/components/TextComponents';
+
+export function ConsultationsTable({ content: consults, buttonOnClick }) {
+  if (consults.length == 0) {
     return (
       <div>
         <label className="text-base font-semibold leading-6 text-gray-900">
-          Prescriptions
+          Consultations
         </label>
         <h2>Not Done</h2>
       </div>
     );
   }
 
-  const prescriptionRows = prescriptions.map(prescription => {
-    const name =
-      prescription.medication_updates.medicine.medicine_name ||
-      'Prescription.medicine.medicine_name not found';
-    const quantity = Math.abs(prescription.medication_updates.quantity_changed);
-    const status = prescription.medication_updates.order_status.toUpperCase();
-    const rowColor = status === 'APPROVED' ? 'bg-green-100' : 'bg-red-100';
+  const consultRows = consults.map(consult => {
+    const doctor = consult.doctor.nickname;
+    const referredFor = consult.referred_for || 'Not referred';
+
     return (
-      <tr className={rowColor} key={prescription.id}>
+      <tr key={consult.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-          {name}
+          {doctor}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          {quantity}
+          {referredFor}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          {status}
+          <Button
+            colour="indigo"
+            text={'View'}
+            onClick={() => buttonOnClick(consult)}
+          />
         </td>
       </tr>
     );
@@ -35,10 +38,10 @@ export function PrescriptionsTable({ content: prescriptions }) {
   return (
     <div>
       <label className="text-base font-semibold leading-6 text-gray-900">
-        Prescriptions
+        Consultations
       </label>
       <div className="mt-4 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
@@ -48,25 +51,24 @@ export function PrescriptionsTable({ content: prescriptions }) {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Medicine Name
-                    </th>
-
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Quantity
+                      Doctor
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                      Status
+                      Referral Type
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Action
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {prescriptionRows}
+                  {consultRows}
                 </tbody>
               </table>
             </div>

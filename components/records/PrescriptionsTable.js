@@ -1,35 +1,32 @@
-import { Button } from '@/components/TextComponents/Button';
-
-export function ConsultationsTable({ content: consults, buttonOnClick }) {
-  if (consults.length == 0) {
+export function PrescriptionsTable({ content: prescriptions }) {
+  if (prescriptions.length == 0) {
     return (
       <div>
         <label className="text-base font-semibold leading-6 text-gray-900">
-          Consultations
+          Prescriptions
         </label>
         <h2>Not Done</h2>
       </div>
     );
   }
 
-  const consultRows = consults.map(consult => {
-    const doctor = consult.doctor.nickname;
-    const referredFor = consult.referred_for || 'Not referred';
-
+  const prescriptionRows = prescriptions.map(prescription => {
+    const name =
+      prescription.medication_updates.medicine.medicine_name ||
+      'Prescription.medicine.medicine_name not found';
+    const quantity = Math.abs(prescription.medication_updates.quantity_changed);
+    const status = prescription.medication_updates.order_status.toUpperCase();
+    const rowColor = status === 'APPROVED' ? 'bg-green-100' : 'bg-red-100';
     return (
-      <tr key={consult.id}>
+      <tr className={rowColor} key={prescription.id}>
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-          {doctor}
+          {name}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          {referredFor}
+          {quantity}
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          <Button
-            colour="indigo"
-            text={'View'}
-            onClick={() => buttonOnClick(consult)}
-          />
+          {status}
         </td>
       </tr>
     );
@@ -38,10 +35,10 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
   return (
     <div>
       <label className="text-base font-semibold leading-6 text-gray-900">
-        Consultations
+        Prescriptions
       </label>
       <div className="mt-4 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
@@ -51,24 +48,25 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                     >
-                      Doctor
+                      Medicine Name
+                    </th>
+
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                      Quantity
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                      Referral Type
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Action
+                      Status
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {consultRows}
+                  {prescriptionRows}
                 </tbody>
               </table>
             </div>

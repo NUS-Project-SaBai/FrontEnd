@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { API_URL } from '@/utils/constants';
+import { getAPI_URL } from '@/utils/constants';
 import Router from 'next/router';
 import { OFFLINE } from '@/utils/constants';
 
 const axiosInstance = axios.create({
-  baseURL: `${API_URL}`,
+  baseURL: `${getAPI_URL()}`,
 });
 
 axiosInstance.interceptors.request.use(async config => {

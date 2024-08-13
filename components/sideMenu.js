@@ -7,57 +7,59 @@ import {
   BeakerIcon,
   ClipboardDocumentListIcon,
   ArrowLeftStartOnRectangleIcon,
+  DeviceTabletIcon,
+  Cog8ToothIcon,
 } from '@heroicons/react/24/outline';
 import { OFFLINE } from '@/utils/constants';
 
-const locations = [
-  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
+const navigation = [
+  {
+    name: 'Registration',
+    href: '/registration',
+    icon: IdentificationIcon,
+    count: '5',
+    current: true,
+  },
+  {
+    name: 'Patient Records',
+    href: '/records',
+    icon: ClipboardDocumentListIcon,
+    count: '12',
+    current: false,
+  },
+  {
+    name: 'Pharmacy Orders',
+    href: '/pharmacy/orders',
+    icon: PencilIcon,
+    count: '20+',
+    current: false,
+  },
+  {
+    name: 'Pharmacy Stock',
+    href: '/pharmacy/stock',
+    icon: BeakerIcon,
+    current: false,
+  },
+  {
+    name: 'Debugging',
+    href: '/debug',
+    icon: DeviceTabletIcon,
+    current: false,
+  },
+  {
+    name: 'Settings',
+    href: '/settings',
+    icon: Cog8ToothIcon,
+    current: false,
+  },
+  {
+    name: 'Logout',
+    href: '/api/auth/logout',
+    icon: ArrowLeftStartOnRectangleIcon,
+    current: false,
+  },
 ];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
-
 export default function SideMenu() {
-  const navigation = [
-    {
-      name: 'Registration',
-      href: '/registration',
-      icon: IdentificationIcon,
-      count: '5',
-      current: true,
-    },
-
-    {
-      name: 'Patient Records',
-      href: '/records',
-      icon: ClipboardDocumentListIcon,
-      count: '12',
-      current: false,
-    },
-    {
-      name: 'Pharmacy Orders',
-      href: '/pharmacy/orders',
-      icon: PencilIcon,
-      count: '20+',
-      current: false,
-    },
-    {
-      name: 'Pharmacy Stock',
-      href: '/pharmacy/stock',
-      icon: BeakerIcon,
-      current: false,
-    },
-    {
-      name: 'Logout',
-      href: '/api/auth/logout',
-      icon: ArrowLeftStartOnRectangleIcon,
-      current: false,
-    },
-  ];
-
   const router = useRouter();
   const [navItems, setNavItems] = useState(navigation);
   const { user, isLoading } = useUser();

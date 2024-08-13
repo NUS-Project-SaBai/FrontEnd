@@ -17,23 +17,25 @@ export default [
       },
       globals: globals.browser,
     },
-    plugins: {
-      prettier,
-    },
+
     settings: {
       react: {
-        version: 'detect',  // Automatically detect the React version
+        version: 'detect', // Automatically detect the React version
       },
     },
     rules: {
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
-      indent: ['error', 2],
       'no-unused-vars': ['warn'],
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/display-name': 'off',
-      'prettier/prettier': 'error', // Add Prettier rules
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
       'arrow-parens': 'off',
       'comma-dangle': 'off',
       'max-len': 'off',
@@ -41,6 +43,8 @@ export default [
       'no-tabs': 'off',
       'space-before-function-paren': 'off',
     },
+    plugins: {
+      prettier,
+    },
   },
 ];
-
