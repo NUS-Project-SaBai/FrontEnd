@@ -13,7 +13,7 @@ import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import AppWebcam from '@/utils/webcam';
 
-import { PatientModal, ScanModal } from '@/components/registration';
+import { PatientModal } from '@/components/registration';
 import { DisplayField, Button } from '@/components/TextComponents/';
 import { useLoading } from '@/context/LoadingContext';
 
@@ -61,7 +61,6 @@ const Registration = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [patientsList, setPatientsList] = useState([]);
   const [patient, setPatient] = useState({});
-  const [scanModalIsOpen, setScanModalIsOpen] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [webcam, setWebcam] = useState(null);
@@ -306,21 +305,6 @@ const Registration = () => {
         submitNewPatient={submitNewPatient}
         toggleCameraOpen={toggleCameraOpen}
       />
-      <ScanModal
-        modalIsOpen={scanModalIsOpen}
-        cameraIsOpen={cameraIsOpen}
-        imageDetails={imageDetails}
-        closeScanModal={() => {
-          setScanModalIsOpen(false);
-        }}
-        renderWebcam={() => (
-          <AppWebcam
-            webcamSetRef={webcamSetRef}
-            webcamCapture={webcamCapture}
-          />
-        )}
-        toggleCameraOpen={toggleCameraOpen}
-      />
       <div>
         <div>
           <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
@@ -338,13 +322,6 @@ const Registration = () => {
             />
           </div>
           <div className="flex items-center justify-center mb-6 gap-3">
-            <Button
-              colour="green"
-              text="Start Facial Recognition"
-              onClick={() => {
-                setScanModalIsOpen(true);
-              }}
-            />
             <Button
               colour="green"
               text="New Patient"
