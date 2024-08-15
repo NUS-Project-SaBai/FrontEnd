@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { MedicationModal } from '@/components/pharmacy/stock/';
+import { MedicationForm } from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
 import {
   Button,
@@ -10,6 +10,7 @@ import {
 } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { useLoading } from '@/context/LoadingContext';
+import CustomModal from '@/components/CustomModal';
 
 const Stock = () => {
   const { setLoading } = useLoading();
@@ -191,56 +192,29 @@ const Stock = () => {
     });
   }
 
-  const medicationForm = () => {
-    return (
-      <div className="space-y-4">
-        <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-4">
-          Edit Medication
-        </label>
-
-        <InputField
-          name="medicine_name"
-          type="text"
-          label="Medicine Name"
-          onChange={handleMedicationChange}
-          value={medicationDetails.medicine_name}
-        />
-        <DisplayField
-          content={
-            medicationDetails.quantity == null ? 0 : medicationDetails.quantity
-          }
-          label="Current Quantity"
-        />
-
-        <InputField
-          label="Quantity to Add (Negative to subtract)"
-          name="quantityChange"
-          type="number"
-          onChange={handleMedicationChange}
-          value={medicationDetails.quantityChange}
-        />
-
-        <InputBox
-          label="Notes"
-          name="notes"
-          className="textarea"
-          placeholder="Textarea"
-          onChange={handleMedicationChange}
-          value={medicationDetails.notes}
-        />
-
-        <Button onClick={onSubmitForm} text="Submit" colour="green" />
-      </div>
-    );
-  };
-
   return (
     <div className="mt-4 mx-6">
-      <MedicationModal
-        modalIsOpen={modalIsOpen}
-        toggleModal={toggleModal}
-        medicationForm={medicationForm}
-      />
+      <CustomModal
+        isOpen={modalIsOpen}
+        onRequestClose={toggleModal}
+        style={{
+          content: {
+            left: '35%',
+            right: '12.5%',
+            top: '12.5%',
+            bottom: '12.5%',
+          },
+        }}
+      >
+        <MedicationForm
+          formDetails={medicationDetails}
+          modalIsOpen={modalIsOpen}
+          toggleModal={toggleModal}
+          handleInputChange={handleMedicationChange}
+          onSubmit={onSubmitForm}
+        />
+      </CustomModal>
+
       <h1 className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-6">
         Medication Stock
       </h1>
