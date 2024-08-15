@@ -1,6 +1,6 @@
 import { Button, InputField, InputBox } from '@/components/TextComponents';
 import { venueOptions } from '@/utils/constants';
-import AppWebcam from '@/components/webcam';
+import AppWebcam from '@/components/Webcam';
 import React, { useState } from 'react';
 
 const VenueOptions = ({ handleInputChange }) => (
