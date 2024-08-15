@@ -83,13 +83,13 @@ const Orders = () => {
     return ordersFiltered.map(order => {
       const visit = order.visit;
       const prescriptions = (
-        <li key={order.medication_updates.id}>
-          {order.medication_updates.medicine.medicine_name || ''}:{' '}
-          {Math.abs(order.medication_updates.quantity_changed)}
+        <li key={order.medication_review.id}>
+          {order.medication_review.medicine.medicine_name || ''}:{' '}
+          {Math.abs(order.medication_review.quantity_changed)}
           <br />
-          {order.medication_updates.medicine.notes && (
+          {order.medication_review.medicine.notes && (
             <div className="truncate">
-              Notes: {order.medication_updates.medicine.notes}
+              Notes: {order.medication_review.medicine.notes}
             </div>
           )}
         </li>
