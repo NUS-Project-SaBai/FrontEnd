@@ -1,3 +1,3 @@
-import { PatientModal } from './PatientModal';
+import { PatientRegistrationForm } from './PatientRegistrationForm';
 
-export { PatientModal };
+export { PatientRegistrationForm };

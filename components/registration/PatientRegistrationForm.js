@@ -1,6 +1,6 @@
 import { Button, InputField, InputBox } from '@/components/TextComponents';
 import { venueOptions } from '@/utils/constants';
-import AppWebcam from '@/utils/webcam';
+import AppWebcam from '@/components/webcam';
 import React, { useState } from 'react';
 
 const VenueOptions = ({ handleInputChange }) => (
@@ -29,14 +29,13 @@ const VenueOptions = ({ handleInputChange }) => (
   </div>
 );
 
-export function PatientModal({
+export function PatientRegistrationForm({
   formDetails,
   imageDetails,
   closeModal,
   handleInputChange,
   submitNewPatient,
   setImageDetails,
-  loading, //is this used?
 }) {
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [webcam, setWebcam] = useState(null);

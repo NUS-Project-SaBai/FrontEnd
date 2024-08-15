@@ -12,7 +12,7 @@ import {
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 
-import { PatientModal } from '@/components/registration';
+import { PatientRegistrationForm } from '@/components/registration';
 import { DisplayField, Button } from '@/components/TextComponents/';
 import { useLoading } from '@/context/LoadingContext';
 import CustomModal from '@/components/CustomModal';
@@ -278,7 +278,7 @@ const Registration = () => {
         onRequestClose={togglePatientModal}
         showCloseButton={false}
       >
-        <PatientModal
+        <PatientRegistrationForm
           formDetails={formDetails}
           imageDetails={imageDetails}
           setImageDetails={setImageDetails}
