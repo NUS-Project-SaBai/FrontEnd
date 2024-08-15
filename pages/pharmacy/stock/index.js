@@ -21,8 +21,8 @@ const Stock = () => {
     notes: '',
     remarks: '',
   });
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [MedicationHistoryModalIsOpen, setMedicationHistoryModalIsOpen] =
+  const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
+  const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
     useState(false);
   const [medication, setMedication] = useState(null);
 
@@ -55,12 +55,12 @@ const Stock = () => {
 
   const toggleModal = (medication = {}) => {
     setMedicationDetails(medication);
-    setModalIsOpen(!modalIsOpen);
+    setMedicationModalIsOpen(!medicationModalIsOpen);
   };
 
   const toggleMedicationHistoryModal = medication => {
     setMedication(medication);
-    setMedicationHistoryModalIsOpen(!MedicationHistoryModalIsOpen);
+    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
   };
 
   const createNewMedication = () => {
@@ -207,15 +207,15 @@ const Stock = () => {
     <div className="mt-4 mx-6">
       <MedicationModal
         formDetails={medicationDetails}
-        modalIsOpen={modalIsOpen}
+        medicationModalIsOpen={medicationModalIsOpen}
         toggleModal={toggleModal}
         handleInputChange={handleMedicationChange}
         onSubmit={onSubmitForm}
       />
 
       <MedicationHistoryModal
-        modalIsOpen={MedicationHistoryModalIsOpen}
-        toggleModal={() => setMedicationHistoryModalIsOpen(false)}
+        medicationModalIsOpen={medicationHistoryModalIsOpen}
+        toggleModal={() => setmedicationHistoryModalIsOpen(false)}
         medication={medication}
       />
 

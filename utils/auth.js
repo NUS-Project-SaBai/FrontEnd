@@ -7,14 +7,12 @@ const withAuth = Component => {
   const AuthComponent = props => {
     const router = useRouter();
     const { user, isLoading } = useUser();
-    const [offlineUser, setOfflineUser] = useState(null);
 
     useEffect(() => {
       // Fetch offlineUser from localStorage when component mounts
       let offlineUserFromStorage = null;
       if (typeof window !== 'undefined') {
         offlineUserFromStorage = window.localStorage.getItem('offline_user');
-        setOfflineUser(offlineUserFromStorage);
       }
 
       if (OFFLINE && !offlineUserFromStorage) {
