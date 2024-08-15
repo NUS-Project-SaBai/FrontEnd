@@ -4,56 +4,16 @@ import toast from 'react-hot-toast';
 import moment from 'moment';
 import axiosInstance from '@/pages/api/_axiosInstance';
 
-import {
-  CLOUDINARY_URL,
-  NO_PHOTO_MESSAGE,
-  venueOptions,
-} from '@/utils/constants';
+import { CLOUDINARY_URL, venueOptions } from '@/utils/constants';
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
-
-import { PatientRegistrationForm } from '@/components/registration';
-import { DisplayField, Button } from '@/components/TextComponents/';
+import {
+  PatientRegistrationForm,
+  PatientInfo,
+} from '@/components/registration';
+import { Button } from '@/components/TextComponents/';
 import { useLoading } from '@/context/LoadingContext';
 import CustomModal from '@/components/CustomModal';
-
-const PatientInfo = ({ patient, submitNewVisit }) => {
-  return patient.pk ? (
-    <div>
-      <div>
-        <img
-          src={`${CLOUDINARY_URL}/${patient.picture}`}
-          alt="Placeholder image"
-          className="has-ratio h-48 w-48 object-cover"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
-        <DisplayField
-          label="ID"
-          content={`${patient.village_prefix}${patient.pk
-            .toString()
-            .padStart(3, '0')}`}
-        />
-        <DisplayField label="Name" content={patient.name} />
-        <DisplayField
-          label="ID Number"
-          content={patient.identification_number}
-        />
-        <DisplayField label="Gender" content={patient.gender} />
-        <DisplayField label="Date of Birth" content={patient.date_of_birth} />
-        <DisplayField label="Drug Allergies" content={patient.drug_allergy} />
-
-        <Button
-          text="Create New Visit"
-          onClick={submitNewVisit}
-          colour="green"
-        />
-      </div>
-    </div>
-  ) : (
-    <div></div>
-  );
-};
 
 const Registration = () => {
   const { setLoading } = useLoading();
@@ -129,7 +89,7 @@ const Registration = () => {
     }
 
     if (imageDetails == null) {
-      toast.error(NO_PHOTO_MESSAGE);
+      toast.error('Please take a photo before submitting!');
       return;
     }
 

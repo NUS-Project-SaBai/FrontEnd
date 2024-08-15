@@ -1,3 +1,4 @@
 import { PatientRegistrationForm } from './PatientRegistrationForm';
+import { PatientInfo } from './PatientInfo';
 
-export { PatientRegistrationForm };
+export { PatientRegistrationForm, PatientInfo };
