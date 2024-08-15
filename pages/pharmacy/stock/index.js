@@ -2,12 +2,7 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { MedicationForm } from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
-import {
-  Button,
-  InputField,
-  InputBox,
-  DisplayField,
-} from '@/components/TextComponents';
+import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { useLoading } from '@/context/LoadingContext';
 import CustomModal from '@/components/CustomModal';
@@ -194,22 +189,9 @@ const Stock = () => {
 
   return (
     <div className="mt-4 mx-6">
-      <CustomModal
-        isOpen={modalIsOpen}
-        onRequestClose={toggleModal}
-        style={{
-          content: {
-            left: '35%',
-            right: '12.5%',
-            top: '12.5%',
-            bottom: '12.5%',
-          },
-        }}
-      >
+      <CustomModal isOpen={modalIsOpen} onRequestClose={toggleModal}>
         <MedicationForm
           formDetails={medicationDetails}
-          modalIsOpen={modalIsOpen}
-          toggleModal={toggleModal}
           handleInputChange={handleMedicationChange}
           onSubmit={onSubmitForm}
         />
