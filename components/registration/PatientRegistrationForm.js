@@ -1,5 +1,3 @@
-import Modal from 'react-modal';
-import CustomModal from '../CustomModal';
 import { Button, InputField, InputBox } from '@/components/TextComponents';
 import { venueOptions } from '@/utils/constants';
 import AppWebcam from '@/components/WebCamera';
@@ -31,24 +29,33 @@ const VenueOptions = ({ handleInputChange }) => (
   </div>
 );
 
-export function PatientModal({
-  modalIsOpen,
+export function PatientRegistrationForm({
   formDetails,
   imageDetails,
-  cameraIsOpen,
-  renderWebcam,
   closeModal,
   handleInputChange,
   submitNewPatient,
-  toggleCameraOpen,
-  loading,
+  setImageDetails,
 }) {
+  const [cameraIsOpen, setCameraIsOpen] = useState(false);
+  const [webcam, setWebcam] = useState(null);
+
+  const webcamSetRef = webcam => {
+    setWebcam(webcam);
+  };
+
+  const toggleCameraOpen = () => {
+    setCameraIsOpen(!cameraIsOpen);
+  };
+
+  const webcamCapture = () => {
+    const imageSrc = webcam.getScreenshot();
+    setImageDetails(imageSrc);
+    setCameraIsOpen(false);
+  };
+
   return (
-    <CustomModal
-      isOpen={modalIsOpen}
-      onRequestClose={closeModal}
-      showCloseButton={false}
-    >
+    <>
       <div className="grid grid-cols-2 gap-4">
         <InputField
           name="name"
@@ -116,7 +123,14 @@ export function PatientModal({
             </div>
           )}
 
-          {cameraIsOpen && <div>{renderWebcam()}</div>}
+          {cameraIsOpen && (
+            <div>
+              <AppWebcam
+                webcamSetRef={webcamSetRef}
+                webcamCapture={webcamCapture}
+              />
+            </div>
+          )}
           <div className="flex items-center justify-center mt-2">
             {cameraIsOpen ? (
               <Button colour="red" text="Cancel" onClick={toggleCameraOpen} />
@@ -135,6 +149,6 @@ export function PatientModal({
         <Button colour="green" text="Submit" onClick={submitNewPatient} />
         <Button colour="red" text="Close" onClick={closeModal} />
       </div>
-    </CustomModal>
+    </>
   );
 }

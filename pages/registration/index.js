@@ -11,11 +11,11 @@ import {
 } from '@/utils/constants';
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
-import AppWebcam from '@/utils/webcam';
 
-import { PatientModal, ScanModal } from '@/components/registration';
+import { PatientRegistrationForm } from '@/components/registration';
 import { DisplayField, Button } from '@/components/TextComponents/';
 import { useLoading } from '@/context/LoadingContext';
+import CustomModal from '@/components/CustomModal';
 
 const PatientInfo = ({ patient, submitNewVisit }) => {
   return patient.pk ? (
@@ -61,10 +61,7 @@ const Registration = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [patientsList, setPatientsList] = useState([]);
   const [patient, setPatient] = useState({});
-  const [scanModalIsOpen, setScanModalIsOpen] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [cameraIsOpen, setCameraIsOpen] = useState(false);
-  const [webcam, setWebcam] = useState(null);
+  const [patientModalOpen, setPatientModalOpen] = useState(false);
   const [imageDetails, setImageDetails] = useState(null);
   const [formDetails, setFormDetails] = useState({
     name: '',
@@ -93,23 +90,11 @@ const Registration = () => {
     }
   };
 
-  // Webcam functions
-
-  const webcamSetRef = webcam => {
-    setWebcam(webcam);
-  };
-
-  const webcamCapture = () => {
-    const imageSrc = webcam.getScreenshot();
-    setImageDetails(imageSrc);
-    setCameraIsOpen(false);
-  };
-
-  const toggleCameraOpen = () => {
-    setCameraIsOpen(!cameraIsOpen);
-  };
-
   // General functions
+
+  function togglePatientModal() {
+    setPatientModalOpen(!patientModalOpen);
+  }
 
   const handleInputChange = event => {
     const target = event.target;
@@ -183,7 +168,7 @@ const Registration = () => {
       setImageDetails(null);
       toast.success('New patient created!');
 
-      setModalIsOpen(false);
+      setPatientModalOpen(false);
       submitNewVisit(response);
     } catch (error) {
       toast.error('Failed to create new patient');
@@ -288,39 +273,20 @@ const Registration = () => {
 
   return (
     <div className="mx-4">
-      <PatientModal
-        modalIsOpen={modalIsOpen}
-        formDetails={formDetails}
-        imageDetails={imageDetails}
-        cameraIsOpen={cameraIsOpen}
-        renderWebcam={() => (
-          <AppWebcam
-            webcamSetRef={webcamSetRef}
-            webcamCapture={webcamCapture}
-          />
-        )}
-        closeModal={() => {
-          setModalIsOpen(false);
-        }}
-        handleInputChange={handleInputChange}
-        submitNewPatient={submitNewPatient}
-        toggleCameraOpen={toggleCameraOpen}
-      />
-      <ScanModal
-        modalIsOpen={scanModalIsOpen}
-        cameraIsOpen={cameraIsOpen}
-        imageDetails={imageDetails}
-        closeScanModal={() => {
-          setScanModalIsOpen(false);
-        }}
-        renderWebcam={() => (
-          <AppWebcam
-            webcamSetRef={webcamSetRef}
-            webcamCapture={webcamCapture}
-          />
-        )}
-        toggleCameraOpen={toggleCameraOpen}
-      />
+      <CustomModal
+        isOpen={patientModalOpen}
+        onRequestClose={togglePatientModal}
+        showCloseButton={false}
+      >
+        <PatientRegistrationForm
+          formDetails={formDetails}
+          imageDetails={imageDetails}
+          setImageDetails={setImageDetails}
+          closeModal={togglePatientModal}
+          handleInputChange={handleInputChange}
+          submitNewPatient={submitNewPatient}
+        />
+      </CustomModal>
       <div>
         <div>
           <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
@@ -340,16 +306,9 @@ const Registration = () => {
           <div className="flex items-center justify-center mb-6 gap-3">
             <Button
               colour="green"
-              text="Start Facial Recognition"
-              onClick={() => {
-                setScanModalIsOpen(true);
-              }}
-            />
-            <Button
-              colour="green"
               text="New Patient"
               onClick={() => {
-                setModalIsOpen(true);
+                setPatientModalOpen(true);
               }}
             />
           </div>
