@@ -13,9 +13,8 @@ export function MedicationHistoryModal({
   useEffect(() => {
     if (medication !== null) {
       axiosInstance
-        .get(`/medication_updates?medication_pk=${medication.pk}`)
+        .get(`/medication_review?medication_pk=${medication.pk}`)
         .then(response => {
-          //   console.log(response.data);
           setMedicationHistory(response.data);
         })
         .catch(error => console.error('Error loading page', error));
@@ -32,8 +31,8 @@ export function MedicationHistoryModal({
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .map(history => {
         const approval = history.approval.nickname;
-        const patient_name = history.consult?.visit.patient.name || 'NA';
-        const doctor = history.consult?.doctor.nickname || 'NA';
+        const patient_name = history.order.consult?.visit.patient.name || 'NA';
+        const doctor = history.order.consult?.doctor.nickname || 'NA';
         const qty_changed = history.quantity_changed;
         const qty_remaining = history.quantity_remaining;
         const time = moment(history.date).format('DD MMMM YYYY HH:mm');
