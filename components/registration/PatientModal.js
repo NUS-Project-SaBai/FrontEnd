@@ -2,6 +2,8 @@ import Modal from 'react-modal';
 import CustomModal from '../CustomModal';
 import { Button, InputField, InputBox } from '@/components/TextComponents';
 import { venueOptions } from '@/utils/constants';
+import AppWebcam from '@/components/WebCamera';
+import React, { useState } from 'react';
 
 const VenueOptions = ({ handleInputChange }) => (
   <div>
