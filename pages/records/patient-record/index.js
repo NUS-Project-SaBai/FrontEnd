@@ -105,6 +105,12 @@ const PatientRecord = () => {
     toggleConsultationModal();
   }
 
+  function showView() {
+  }
+
+  function uploadDocument() {
+  }
+
   function renderHeader() {
     return (
       <Header
@@ -145,6 +151,32 @@ const PatientRecord = () => {
     );
   }
 
+  function renderUpload() {
+    return (
+      <div className="my-2">
+          <Button
+            text={'Upload'}
+            onClick={() => uploadDocument()}
+            colour="green"
+          />
+        </div>
+      );
+    
+  }
+
+  function renderView() {
+    return (
+      <div className="my-2">
+          <Button
+            text={'View'}
+            onClick={() => showView()}
+            colour="blue"
+          />
+        </div>
+      );
+    
+  }
+
   function render() {
     if (noRecords)
       return (
@@ -182,12 +214,31 @@ const PatientRecord = () => {
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Records
         </h1>
-        {renderHeader()}
+        {
+          
+        
+        <div className="grid grid-cols-10 gap-x-5">
+          <div className = "col-span-8"> {renderHeader()}</div>
+            <div className = "col-span-2"> {
+              <div className = "grid grid-rows-2"> 
+                <div className = "row-span-1"> {renderUpload()} </div>
+                <div className = "row-span-1"> {renderView()} </div>
+              </div>
+              
+            }
+            </div>
+            
+            <div>{renderSecondColumn()}</div>
+        </div>
+        
+
+        }
 
         <hr className="mt-2" />
 
         <div className="grid grid-cols-2 gap-x-6">
           <div>{renderFirstColumn()}</div>
+          
           <div>{renderSecondColumn()}</div>
         </div>
       </div>
