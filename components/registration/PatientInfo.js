@@ -3,7 +3,7 @@ import { CLOUDINARY_URL } from '@/utils/constants';
 
 export function PatientInfo({ patient, submitNewVisit }) {
   if (!patient.pk) {
-    return null;
+    return <div></div>;
   }
   return (
     <div>
