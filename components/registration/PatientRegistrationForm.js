@@ -1,7 +1,7 @@
-import Modal from 'react-modal';
-import CustomModal from '../CustomModal';
 import { Button, InputField, InputBox } from '@/components/TextComponents';
 import { venueOptions } from '@/utils/constants';
+import AppWebcam from '@/components/WebCamera';
+import React, { useState } from 'react';
 
 const VenueOptions = ({ handleInputChange }) => (
   <div>
@@ -17,7 +17,7 @@ const VenueOptions = ({ handleInputChange }) => (
         id="village_prefix"
         onChange={handleInputChange}
         defaultValue={Object.keys(venueOptions)[0]}
-        className="flex-1 block w-full rounded-none rounded-l-md border-2 py-1.5 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+        className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
       >
         {Object.entries(venueOptions).map(([key, value]) => (
           <option value={key} key={value}>
@@ -29,24 +29,33 @@ const VenueOptions = ({ handleInputChange }) => (
   </div>
 );
 
-export function PatientModal({
-  modalIsOpen,
+export function PatientRegistrationForm({
   formDetails,
   imageDetails,
-  cameraIsOpen,
-  renderWebcam,
   closeModal,
   handleInputChange,
   submitNewPatient,
-  toggleCameraOpen,
-  loading,
+  setImageDetails,
 }) {
+  const [cameraIsOpen, setCameraIsOpen] = useState(false);
+  const [webcam, setWebcam] = useState(null);
+
+  const webcamSetRef = webcam => {
+    setWebcam(webcam);
+  };
+
+  const toggleCameraOpen = () => {
+    setCameraIsOpen(!cameraIsOpen);
+  };
+
+  const webcamCapture = () => {
+    const imageSrc = webcam.getScreenshot();
+    setImageDetails(imageSrc);
+    setCameraIsOpen(false);
+  };
+
   return (
-    <CustomModal
-      isOpen={modalIsOpen}
-      onRequestClose={closeModal}
-      showCloseButton={false}
-    >
+    <>
       <div className="grid grid-cols-2 gap-4">
         <InputField
           name="name"
@@ -82,7 +91,7 @@ export function PatientModal({
               name="gender"
               onChange={handleInputChange}
               defaultValue="Male"
-              className="flex-1 block w-full rounded-none rounded-l-md border-2 py-1.5 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+              className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
             >
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -114,7 +123,14 @@ export function PatientModal({
             </div>
           )}
 
-          {cameraIsOpen && <div>{renderWebcam()}</div>}
+          {cameraIsOpen && (
+            <div>
+              <AppWebcam
+                webcamSetRef={webcamSetRef}
+                webcamCapture={webcamCapture}
+              />
+            </div>
+          )}
           <div className="flex items-center justify-center mt-2">
             {cameraIsOpen ? (
               <Button colour="red" text="Cancel" onClick={toggleCameraOpen} />
@@ -129,10 +145,10 @@ export function PatientModal({
         </div>
       </div>
       <hr className="my-2" />
-      <div className="space-x-4">
+      <div className="flex justify-center items-center space-x-4">
         <Button colour="green" text="Submit" onClick={submitNewPatient} />
         <Button colour="red" text="Close" onClick={closeModal} />
       </div>
-    </CustomModal>
+    </>
   );
 }

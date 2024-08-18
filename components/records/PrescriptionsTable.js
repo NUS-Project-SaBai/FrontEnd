@@ -9,7 +9,7 @@ export function PrescriptionsTable({ content: prescriptions }) {
       </div>
     );
   }
-
+  console.dir(prescriptions);
   const prescriptionRows = prescriptions.map(prescription => {
     const name =
       prescription.medication_review.medicine.medicine_name ||

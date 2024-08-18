@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
-  MedicationModal,
-  MedicationHistoryModal,
-} from '@/components/pharmacy/stock';
+  MedicationForm,
+  MedicationHistoryForm,
+} from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { useLoading } from '@/context/LoadingContext';
+import CustomModal from '@/components/CustomModal';
 
 const Stock = () => {
   const { setLoading } = useLoading();
@@ -205,21 +206,22 @@ const Stock = () => {
 
   return (
     <div className="mt-4 mx-6">
-      <MedicationModal
-        formDetails={medicationDetails}
-        medicationModalIsOpen={medicationModalIsOpen}
-        toggleModal={toggleModal}
-        handleInputChange={handleMedicationChange}
-        onSubmit={onSubmitForm}
-      />
+      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
+        <MedicationForm
+          formDetails={medicationDetails}
+          handleInputChange={handleMedicationChange}
+          onSubmit={onSubmitForm}
+        />
+      </CustomModal>
 
-      <MedicationHistoryModal
-        medicationModalIsOpen={medicationHistoryModalIsOpen}
-        toggleModal={() => setmedicationHistoryModalIsOpen(false)}
-        medication={medication}
-      />
+      <CustomModal
+        isOpen={medicationHistoryModalIsOpen}
+        onRequestClose={toggleMedicationHistoryModal}
+      >
+        <MedicationHistoryForm medication={medication} />
+      </CustomModal>
 
-      <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
+      <h1 className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-6">
         Medication Stock
       </h1>
       <div className="space-y-2">
