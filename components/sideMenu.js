@@ -70,21 +70,6 @@ export default function SideMenu() {
   const [navItems, setNavItems] = useState(navigation);
   const { user, isLoading } = useUser();
 
-  const handleLogout = async () => {
-    const response = await fetch('/api/auth/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      router.push('/'); // Redirect to the homepage or login page after logout
-    } else {
-      // Handle error
-      console.error('Logout failed');
-    }
-  };
-
   useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
       ...item,
