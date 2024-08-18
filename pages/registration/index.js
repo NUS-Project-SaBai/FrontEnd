@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import moment from 'moment';
 import axiosInstance from '@/pages/api/_axiosInstance';
 
-import { CLOUDINARY_URL, venueOptions } from '@/utils/constants';
+import { venueOptions } from '@/utils/constants';
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import {
@@ -17,10 +17,14 @@ import CustomModal from '@/components/CustomModal';
 
 const Registration = () => {
   const { setLoading } = useLoading();
+
   const [patientsList, setPatientsList] = useState([]);
   const [patient, setPatient] = useState({});
+
   const [patientModalOpen, setPatientModalOpen] = useState(false);
+
   const [imageDetails, setImageDetails] = useState(null);
+
   const [formDetails, setFormDetails] = useState({
     name: '',
     identification_number: '',
@@ -137,8 +141,9 @@ const Registration = () => {
   };
 
   const submitNewVisit = async patient => {
+    setLoading(true);
     try {
-      let payload = {
+      const payload = {
         patient: patient.pk,
         status: 'started',
         visit_date: moment().format('DD MMMM YYYY HH:mm'),
@@ -148,6 +153,8 @@ const Registration = () => {
     } catch (error) {
       toast.error('Failed to create new visit');
       console.error('Error creating new visit:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

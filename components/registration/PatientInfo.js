@@ -2,7 +2,10 @@ import { DisplayField, Button } from '@/components/TextComponents/';
 import { CLOUDINARY_URL } from '@/utils/constants';
 
 export function PatientInfo({ patient, submitNewVisit }) {
-  return patient.pk ? (
+  if (!patient.pk) {
+    return null;
+  }
+  return (
     <div>
       <div>
         <img
@@ -34,7 +37,5 @@ export function PatientInfo({ patient, submitNewVisit }) {
         />
       </div>
     </div>
-  ) : (
-    <div></div>
   );
 }
