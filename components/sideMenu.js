@@ -10,6 +10,7 @@ import {
   DeviceTabletIcon,
   Cog8ToothIcon,
 } from '@heroicons/react/24/outline';
+import { OFFLINE } from '@/utils/constants';
 
 const navigation = [
   {
@@ -51,19 +52,9 @@ const navigation = [
     icon: Cog8ToothIcon,
     current: false,
   },
-  {
-    name: 'Logout',
-    href: '/api/auth/logout',
-    icon: ArrowLeftStartOnRectangleIcon,
-    current: false,
-  },
 ];
 
-const locations = [
-  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-];
+const locations = [];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -73,6 +64,24 @@ export default function SideMenu() {
   const router = useRouter();
   const [navItems, setNavItems] = useState(navigation);
   const { user, isLoading } = useUser();
+
+  const handleLogout = async () => {
+    if (OFFLINE) {
+      window.localStorage.removeItem('offline_user');
+      router.push('/');
+      return;
+    } else {
+      router.push('/api/auth/logout');
+    }
+  };
+
+  navigation.push({
+    name: 'Logout',
+    href: '#',
+    onClick: handleLogout,
+    icon: ArrowLeftStartOnRectangleIcon,
+    current: false,
+  });
 
   useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
@@ -98,6 +107,7 @@ export default function SideMenu() {
                 <li key={item.name}>
                   <a
                     href={item.href}
+                    onClick={item.onClick}
                     className={classNames(
                       item.current
                         ? 'bg-gray-800 text-white'
