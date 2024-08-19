@@ -136,7 +136,21 @@ const PatientVitals = () => {
       toast.success('Vitals completed!');
       Router.push('/records');
     } catch (error) {
-      toast.error(`Error submitting vitals: ${error.message}`);
+      let errorMessage = 'Error submitting vitals:';
+      if (error.request && error.request.response) {
+        try {
+          const errorResponse = JSON.parse(error.request.response);
+          for (const [field, messages] of Object.entries(errorResponse)) {
+            errorMessage += ` ${field.charAt(0).toUpperCase() + field.slice(1)} - ${messages.join(', ')}.`;
+          }
+          // eslint-disable-next-line no-unused-vars
+        } catch (parseError) {
+          errorMessage += ` ${error.request.response}`;
+        }
+      } else {
+        errorMessage += ' An unexpected error occurred';
+      }
+      toast.error(errorMessage);
       console.error('Error submitting vitals:', error);
     }
     setLoading(false);
