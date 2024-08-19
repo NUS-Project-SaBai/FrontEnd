@@ -75,7 +75,7 @@ const PatientConsultation = () => {
         loadMedicationStock();
       }
     } catch (error) {
-      toast.error('Error loading patient data. Please try again later.');
+      toast.error(`Error loading patient data: ${error.message}`);
       console.error('Error loading patient data:', error);
     } finally {
       setLoading(false);
@@ -101,7 +101,7 @@ const PatientConsultation = () => {
       setPrescriptions(prescriptions);
       setVitals(vitals[0] || {});
     } catch (error) {
-      toast.error('Error loading visit details. Please try again later.');
+      toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
     } finally {
       setLoading(false);
@@ -114,7 +114,7 @@ const PatientConsultation = () => {
       const { data: medications } = await axiosInstance.get('/medications');
       setMedications(medications);
     } catch (error) {
-      toast.error('Error loading medication stock.');
+      toast.error(`Error loading medication stock: ${error.message}`);
       console.error('Error loading medication stock:', error);
     } finally {
       setLoading(false);
@@ -244,7 +244,7 @@ const PatientConsultation = () => {
       toast.success('Medical Consult Completed!');
       Router.push('/records');
     } catch (error) {
-      toast.error('Error submitting consultation form.');
+      toast.error(`Error submitting consultation form: ${error.message}`);
       console.error('Error submitting consultation form:', error);
     } finally {
       setLoading(false);

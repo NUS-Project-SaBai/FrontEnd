@@ -30,7 +30,7 @@ function PatientList() {
         setPatients(response.data);
         setPatientsFiltered(response.data);
       } catch (error) {
-        toast.error('Error loading patients.');
+        toast.error(`Error loading patients: ${error.message}`);
         console.error('Error loading patients:', error);
       } finally {
         setLoading(false);
