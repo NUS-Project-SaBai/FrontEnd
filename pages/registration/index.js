@@ -86,7 +86,7 @@ const Registration = () => {
       const { data: patients } = await axiosInstance.get('/patients');
       setPatientsList(patients);
     } catch (error) {
-      toast.error('Failed to fetch patients');
+      toast.error(`Error fetching patients: ${error.message}`);
       console.error('Error fetching patients:', error);
     } finally {
       setLoading(false);
@@ -186,7 +186,7 @@ const Registration = () => {
       setModalIsOpen(false);
       submitNewVisit(response);
     } catch (error) {
-      toast.error('Failed to create new patient');
+      toast.error(`Error creating new patient: ${error.message}`);
       console.error('Error creating new patient:', error);
     } finally {
       setLoading(false);
@@ -203,7 +203,7 @@ const Registration = () => {
       await axiosInstance.post('/visits', payload);
       toast.success('New visit created for patient!');
     } catch (error) {
-      toast.error('Failed to create new visit');
+      toast.error(`Error creating new visit: ${error.message}`);
       console.error('Error creating new visit:', error);
     }
   };

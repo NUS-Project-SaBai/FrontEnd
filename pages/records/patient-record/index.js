@@ -60,7 +60,7 @@ const PatientRecord = () => {
         loadVisitDetails(visitID);
       }
     } catch (error) {
-      toast.error('Error loading patient data. Please try again later.');
+      toast.error(`Error loading patient data: ${error.message}`);
       console.error('Error loading patient data:', error);
     } finally {
       setLoading(false);
@@ -85,7 +85,7 @@ const PatientRecord = () => {
       setPrescriptions(prescriptions);
       setVitals(vitals[0] || {});
     } catch (error) {
-      toast.error('Error loading visit details. Please try again later.');
+      toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
     } finally {
       setLoading(false);

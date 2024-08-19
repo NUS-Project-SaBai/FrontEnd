@@ -77,7 +77,7 @@ const PatientVitals = () => {
         loadVisitDetails(visitID);
       }
     } catch (error) {
-      toast.error('Error loading patient data. Please try again later.');
+      toast.error(`Error loading patient data: ${error.message}`);
       console.error('Error loading patient data:', error);
     } finally {
       setLoading(false);
@@ -103,7 +103,7 @@ const PatientVitals = () => {
       setPrescriptions(prescriptions);
       setVitals(vitals[0] || {});
     } catch (error) {
-      toast.error('Error loading visit details. Please try again later.');
+      toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
     } finally {
       setLoading(false);
@@ -136,11 +136,10 @@ const PatientVitals = () => {
       toast.success('Vitals completed!');
       Router.push('/records');
     } catch (error) {
-      toast.error('Error submitting vitals. Please try again later.');
+      toast.error(`Error submitting vitals: ${error.message}`);
       console.error('Error submitting vitals:', error);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   }
 
   function handleVitalsFormOnChange(e) {
