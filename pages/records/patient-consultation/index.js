@@ -309,7 +309,7 @@ const PatientConsultation = () => {
       const quantity = order.quantity;
 
       return (
-        <tr key={order.id}>
+        <tr key={`${order.id}-${index}`}>
           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
             {name}
           </td>
