@@ -12,12 +12,10 @@ import {
   RegistrationAutoSuggest,
 } from '@/components/registration';
 import { Button } from '@/components/TextComponents/';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 
 const Registration = () => {
-  const { setLoading } = useLoading();
-
   const [patientsList, setPatientsList] = useState([]);
   const [patient, setPatient] = useState({});
 
@@ -39,18 +37,15 @@ const Registration = () => {
     onRefresh();
   }, []);
 
-  const onRefresh = async () => {
-    setLoading(true);
+  const onRefresh = useWithLoading(async () => {
     try {
       const { data: patients } = await axiosInstance.get('/patients');
       setPatientsList(patients);
     } catch (error) {
       toast.error(`Error fetching patients: ${error.message}`);
       console.error('Error fetching patients:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
   // General functions
 
@@ -69,7 +64,7 @@ const Registration = () => {
     }));
   };
 
-  const submitNewPatient = async () => {
+  const submitNewPatient = useWithLoading(async () => {
     let checklist = [
       'name',
       'identification_number',
@@ -94,8 +89,6 @@ const Registration = () => {
       toast.error('Please take a photo before submitting!');
       return;
     }
-
-    setLoading(true);
 
     try {
       const payload = {
@@ -135,13 +128,10 @@ const Registration = () => {
     } catch (error) {
       toast.error(`Error creating new patient: ${error.message}`);
       console.error('Error creating new patient:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
-  const submitNewVisit = async patient => {
-    setLoading(true);
+  const submitNewVisit = useWithLoading(async patient => {
     try {
       const payload = {
         patient: patient.pk,
@@ -153,10 +143,8 @@ const Registration = () => {
     } catch (error) {
       toast.error(`Error creating new visit: ${error.message}`);
       console.error('Error creating new visit:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
   return (
     <div className="mx-4">

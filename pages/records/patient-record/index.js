@@ -14,10 +14,9 @@ import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import toast from 'react-hot-toast';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 
 const PatientRecord = () => {
-  const { setLoading } = useLoading();
   const [noRecords, setNoRecords] = useState(true);
 
   const [patient, setPatient] = useState({});
@@ -41,9 +40,8 @@ const PatientRecord = () => {
     onRefresh();
   }, []);
 
-  async function onRefresh() {
+  const onRefresh = useWithLoading(async () => {
     const patientID = Router.query.id;
-    setLoading(true);
     try {
       const { data: patient } = await axiosInstance.get(
         `/patients/${patientID}`
@@ -62,13 +60,10 @@ const PatientRecord = () => {
     } catch (error) {
       toast.error(`Error loading patient data: ${error.message}`);
       console.error('Error loading patient data:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
-  async function loadVisitDetails(visitID) {
-    setLoading(true);
+  const loadVisitDetails = useWithLoading(async visitID => {
     try {
       const { data: consults } = await axiosInstance.get(
         `/consults?visit=${visitID}`
@@ -87,10 +82,8 @@ const PatientRecord = () => {
     } catch (error) {
       toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
   function toggleVitalsModal() {
     setVitalsModalOpen(!vitalsModalOpen);

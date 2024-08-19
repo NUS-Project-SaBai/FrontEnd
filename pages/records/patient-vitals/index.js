@@ -12,10 +12,9 @@ import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 
 const PatientVitals = () => {
-  const { setLoading } = useLoading();
   const [mounted, setMounted] = useState(false);
 
   const [patient, setPatient] = useState({});
@@ -58,9 +57,8 @@ const PatientVitals = () => {
     onRefresh();
   }, []);
 
-  async function onRefresh() {
+  const onRefresh = useWithLoading(async () => {
     const patientID = Router.query.id;
-    setLoading(true);
     try {
       const { data: patient } = await axiosInstance.get(
         `/patients/${patientID}`
@@ -79,13 +77,10 @@ const PatientVitals = () => {
     } catch (error) {
       toast.error(`Error loading patient data: ${error.message}`);
       console.error('Error loading patient data:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
-  async function loadVisitDetails(visitID) {
-    setLoading(true);
+  const loadVisitDetails = useWithLoading(async visitID => {
     try {
       const { data: consults } = await axiosInstance.get(
         `/consults?visit=${visitID}`
@@ -105,10 +100,8 @@ const PatientVitals = () => {
     } catch (error) {
       toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
   function toggleCustomModal() {
     setCustomModalOpen(!CustomModalOpen);
@@ -119,7 +112,7 @@ const PatientVitals = () => {
     toggleCustomModal();
   }
 
-  async function submitVitalsForm() {
+  const submitVitalsForm = useWithLoading(async () => {
     const formPayload = {
       visit: selectedVisit,
       ...vitalsFormDetails,
@@ -127,7 +120,6 @@ const PatientVitals = () => {
     const filteredFormPayload = Object.fromEntries(
       Object.entries(formPayload).filter(([value]) => value)
     );
-    setLoading(true);
     try {
       await axiosInstance.patch(
         `/vitals?visit=${selectedVisit}`,
@@ -153,8 +145,7 @@ const PatientVitals = () => {
       toast.error(errorMessage);
       console.error('Error submitting vitals:', error);
     }
-    setLoading(false);
-  }
+  });
 
   function handleVitalsFormOnChange(e) {
     const target = e.target;

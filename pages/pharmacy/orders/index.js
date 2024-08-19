@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import toast from 'react-hot-toast';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 
 const Orders = () => {
-  const { setLoading } = useLoading();
-
   const [orders, setOrders] = useState([]);
   const [ordersFiltered, setOrdersFiltered] = useState([]);
 
@@ -18,8 +15,7 @@ const Orders = () => {
     loadOrders();
   }, []);
 
-  const loadOrders = async () => {
-    setLoading(true);
+  const loadOrders = useWithLoading(async () => {
     try {
       const { data: orders } = await axiosInstance.get(
         '/orders?order_status=PENDING'
@@ -29,10 +25,8 @@ const Orders = () => {
     } catch (error) {
       toast.error(`Failed to fetch orders: ${error.message}`);
       console.error('Error loading orders:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
   const onFilterChange = event => {
     const filteredOrders = orders.filter(order => {
@@ -43,9 +37,8 @@ const Orders = () => {
     setOrdersFiltered(filteredOrders);
   };
 
-  const handleOrderApprove = async order => {
+  const handleOrderApprove = useWithLoading(async order => {
     if (window.confirm('Are you sure you want to approve this order?')) {
-      setLoading(true);
       try {
         await axiosInstance.patch(`/orders/${order.id}`, {
           order_status: 'APPROVED',
@@ -58,15 +51,12 @@ const Orders = () => {
       } catch (error) {
         toast.error(`Failed to approve order: ${error.message}`);
         console.error('Error updating orders:', error);
-      } finally {
-        setLoading(false);
       }
     }
-  };
+  });
 
-  const handleOrderCancel = async order => {
+  const handleOrderCancel = useWithLoading(async order => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
-      setLoading(true);
       try {
         await axiosInstance.patch(`/orders/${order.id}`, {
           order_status: 'CANCELLED',
@@ -76,11 +66,9 @@ const Orders = () => {
       } catch (error) {
         toast.error(`Failed to cancel order: ${error.message}`);
         console.error('Error updating orders:', error);
-      } finally {
-        setLoading(false);
       }
     }
-  };
+  });
 
   const renderTableContent = () => {
     return ordersFiltered.map(order => {

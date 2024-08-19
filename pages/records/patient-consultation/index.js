@@ -15,10 +15,9 @@ import toast from 'react-hot-toast';
 import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 
 const PatientConsultation = () => {
-  const { setLoading } = useLoading();
   const [mounted, setMounted] = useState(false);
 
   const [patient, setPatient] = useState({});
@@ -55,9 +54,8 @@ const PatientConsultation = () => {
     onRefresh();
   }, []);
 
-  async function onRefresh() {
+  const onRefresh = useWithLoading(async () => {
     const patientID = Router.query.id;
-    setLoading(true);
     try {
       const { data: patient } = await axiosInstance.get(
         `/patients/${patientID}`
@@ -77,13 +75,10 @@ const PatientConsultation = () => {
     } catch (error) {
       toast.error(`Error loading patient data: ${error.message}`);
       console.error('Error loading patient data:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
-  async function loadVisitDetails(visitID) {
-    setLoading(true);
+  const loadVisitDetails = useWithLoading(async visitID => {
     try {
       const { data: consults } = await axiosInstance.get(
         `/consults?visit=${visitID}`
@@ -103,23 +98,18 @@ const PatientConsultation = () => {
     } catch (error) {
       toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
-  async function loadMedicationStock() {
-    setLoading(true);
+  const loadMedicationStock = useWithLoading(async () => {
     try {
       const { data: medications } = await axiosInstance.get('/medications');
       setMedications(medications);
     } catch (error) {
       toast.error(`Error loading medication stock: ${error.message}`);
       console.error('Error loading medication stock:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
   // Consultations View Modal
   function toggleCustomModal() {
@@ -209,8 +199,7 @@ const PatientConsultation = () => {
     setConsultationFormDetails(prevState => ({ ...prevState, diagnoses }));
   }
 
-  async function submitConsultationForm() {
-    setLoading(true);
+  const submitConsultationForm = useWithLoading(async () => {
     try {
       const formPayload = {
         visit: selectedVisitID,
@@ -246,10 +235,8 @@ const PatientConsultation = () => {
     } catch (error) {
       toast.error(`Error submitting consultation form: ${error.message}`);
       console.error('Error submitting consultation form:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
   function renderHeader() {
     return (
