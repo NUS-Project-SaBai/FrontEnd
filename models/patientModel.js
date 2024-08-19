@@ -1,5 +1,4 @@
 import axiosInstance from '@/pages/api/_axiosInstance';
-import useWithLoading from '@/utils/loading';
 
 export const fetchPatientData = async patientID => {
   const { data: patient } = await axiosInstance.get(`/patients/${patientID}`);
