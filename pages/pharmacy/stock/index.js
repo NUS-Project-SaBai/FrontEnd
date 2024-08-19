@@ -4,11 +4,10 @@ import { MedicationForm } from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 
 const Stock = () => {
-  const { setLoading } = useLoading();
   const [medications, setMedications] = useState([]);
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
   const [medicationDetails, setMedicationDetails] = useState({
@@ -25,8 +24,7 @@ const Stock = () => {
     loadMedicine();
   }, []);
 
-  const loadMedicine = async () => {
-    setLoading(true);
+  const loadMedicine = useWithLoading(async () => {
     try {
       const { data: medicines } = await axiosInstance.get('/medications');
       setMedications(medicines);
@@ -34,10 +32,8 @@ const Stock = () => {
     } catch (error) {
       toast.error(`Failed to fetch medications: ${error.message}`);
       console.error('Error fetching medication:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
   const onFilterChange = event => {
     const filteredMedications = medications.filter(medication => {
@@ -73,7 +69,7 @@ const Stock = () => {
     setMedicationDetails(newMedicationDetails);
   };
 
-  const onSubmitForm = async () => {
+  const onSubmitForm = useWithLoading(async () => {
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
       return;
@@ -89,8 +85,6 @@ const Stock = () => {
       ...medicationDetails,
       medicine_name: nameEnriched,
     };
-
-    setLoading(true);
 
     try {
       if (updatedDetails.pk) {
@@ -127,18 +121,14 @@ const Stock = () => {
     } catch (error) {
       toast.error(`Error submitting medication: ${error.message}`);
       console.error('Error submitting medication:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
-  const handleDelete = async pk => {
+  const handleDelete = useWithLoading(async pk => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this medication?'
     );
     if (!confirmed) return;
-
-    setLoading(true);
 
     try {
       await axiosInstance.delete(`/medications/${pk}`);
@@ -150,10 +140,8 @@ const Stock = () => {
     } catch (error) {
       toast.error(`Failed to delete medication: ${error.message}`);
       console.error('Error deleting medication:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
   function renderRows() {
     return medicationsFiltered.map(medication => {
