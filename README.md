@@ -38,7 +38,7 @@
    ```
 
 4. Environmental Setup
-   Create a new `.env.local` file by making a copy of `.env.local.example` and filling it with relevant details, found under the "FRONTEND" heading in the "Key Credentials" document from the Google Drive.
+   Create a new `.env.local` file by making a copy of `.env.local.example` and filling it with relevant details under the "FRONTEND" heading in the "Key Credentials" document.
 
    ```bash
    # Run the following command to start the server:
