@@ -26,8 +26,12 @@ export function PatientInfo({ patient, submitNewVisit }) {
           label="ID Number"
           content={patient.identification_number}
         />
+        <DisplayField label="Contact" content={patient.contact_no} />
         <DisplayField label="Gender" content={patient.gender} />
         <DisplayField label="Date of Birth" content={patient.date_of_birth} />
+        <DisplayField label="Village" content={patient.village_prefix} />
+        <DisplayField label="POOR" content={patient.poor} />
+        <DisplayField label="BS2" content={patient.bs2} />
         <DisplayField label="Drug Allergies" content={patient.drug_allergy} />
 
         <Button
