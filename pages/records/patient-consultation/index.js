@@ -206,29 +206,25 @@ const PatientConsultation = () => {
         ...consultationFormDetails,
       };
 
-      const { data: consult } = await axiosInstance.post(
-        '/consults',
-        formPayload
-      );
-
-      const diagnosesPromises = consultationFormDetails.diagnoses.map(
-        diagnosis =>
-          axiosInstance.post('/diagnosis', {
-            consult: consult.id,
-            details: diagnosis.details,
-            category: diagnosis.type,
-          })
-      );
-      await Promise.all(diagnosesPromises);
-
-      const orderPromises = orders.map(order =>
-        axiosInstance.post('/orders', {
-          ...order,
-          visit: selectedVisitID,
-          consult: consult.id,
+      const diagnosesPayload = consultationFormDetails.diagnoses.map(
+        diagnosis => ({
+          details: diagnosis.details,
+          category: diagnosis.type,
         })
       );
-      await Promise.all(orderPromises);
+
+      const ordersPayload = orders.map(order => ({
+        ...order,
+        visit: selectedVisitID,
+      }));
+
+      const combinedPayload = {
+        consult: formPayload,
+        diagnoses: diagnosesPayload,
+        orders: ordersPayload,
+      };
+
+      await axiosInstance.post('/consults', combinedPayload);
 
       toast.success('Medical Consult Completed!');
       Router.push('/records');

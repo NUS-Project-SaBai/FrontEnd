@@ -9,13 +9,12 @@ export function PrescriptionsTable({ content: prescriptions }) {
       </div>
     );
   }
-
   const prescriptionRows = prescriptions.map(prescription => {
     const name =
-      prescription.medicine.medicine_name ||
+      prescription.medication_review.medicine.medicine_name ||
       'Prescription.medicine.medicine_name not found';
-    const quantity = prescription.quantity;
-    const status = prescription.order_status.toUpperCase();
+    const quantity = Math.abs(prescription.medication_review.quantity_changed);
+    const status = prescription.medication_review.order_status.toUpperCase();
     const rowColor = status === 'APPROVED' ? 'bg-green-100' : 'bg-red-100';
     return (
       <tr className={rowColor} key={prescription.id}>

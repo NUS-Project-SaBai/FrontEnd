@@ -43,9 +43,6 @@ const Orders = () => {
         await axiosInstance.patch(`/orders/${order.id}`, {
           order_status: 'APPROVED',
         });
-        await axiosInstance.patch(`/medications/${order.medicine.id}`, {
-          quantityChange: -order.quantity,
-        });
         toast.success('Order approved successfully!');
         loadOrders();
       } catch (error) {
@@ -74,11 +71,14 @@ const Orders = () => {
     return ordersFiltered.map(order => {
       const visit = order.visit;
       const prescriptions = (
-        <li key={order.medicine.id}>
-          {order.medicine?.medicine_name || ''}: {order.quantity}
+        <li key={order.medication_review.id}>
+          {order.medication_review.medicine.medicine_name || ''}:{' '}
+          {Math.abs(order.medication_review.quantity_changed)}
           <br />
-          {order.medicine.notes && (
-            <div className="truncate">Notes: {order.medicine.notes}</div>
+          {order.medication_review.medicine.notes && (
+            <div className="truncate">
+              Notes: {order.medication_review.medicine.notes}
+            </div>
           )}
         </li>
       );
