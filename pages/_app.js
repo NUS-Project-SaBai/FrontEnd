@@ -1,4 +1,3 @@
-import React from 'react';
 import Modal from 'react-modal';
 
 import { Toaster } from 'react-hot-toast';
@@ -8,6 +7,7 @@ import Layout from '@/components/layout';
 import '@/styles/globals.css';
 import { useLoading, LoadingProvider } from '@/context/LoadingContext';
 import Loading from '@/components/Loading';
+
 Modal.setAppElement('#__next');
 
 // Set to VERCEL_URL or override with AUTH0_BASE_URL

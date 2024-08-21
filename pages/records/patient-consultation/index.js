@@ -15,10 +15,9 @@ import toast from 'react-hot-toast';
 import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 
 const PatientConsultation = () => {
-  const { setLoading } = useLoading();
   const [mounted, setMounted] = useState(false);
 
   const [patient, setPatient] = useState({});
@@ -55,9 +54,8 @@ const PatientConsultation = () => {
     onRefresh();
   }, []);
 
-  async function onRefresh() {
+  const onRefresh = useWithLoading(async () => {
     const patientID = Router.query.id;
-    setLoading(true);
     try {
       const { data: patient } = await axiosInstance.get(
         `/patients/${patientID}`
@@ -77,13 +75,10 @@ const PatientConsultation = () => {
     } catch (error) {
       toast.error(`Error loading patient data: ${error.message}`);
       console.error('Error loading patient data:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
-  async function loadVisitDetails(visitID) {
-    setLoading(true);
+  const loadVisitDetails = useWithLoading(async visitID => {
     try {
       const { data: consults } = await axiosInstance.get(
         `/consults?visit=${visitID}`
@@ -103,23 +98,18 @@ const PatientConsultation = () => {
     } catch (error) {
       toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
-  async function loadMedicationStock() {
-    setLoading(true);
+  const loadMedicationStock = useWithLoading(async () => {
     try {
       const { data: medications } = await axiosInstance.get('/medications');
       setMedications(medications);
     } catch (error) {
       toast.error(`Error loading medication stock: ${error.message}`);
       console.error('Error loading medication stock:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
   // Consultations View Modal
   function toggleCustomModal() {
@@ -209,47 +199,40 @@ const PatientConsultation = () => {
     setConsultationFormDetails(prevState => ({ ...prevState, diagnoses }));
   }
 
-  async function submitConsultationForm() {
-    setLoading(true);
+  const submitConsultationForm = useWithLoading(async () => {
     try {
       const formPayload = {
         visit: selectedVisitID,
         ...consultationFormDetails,
       };
 
-      const { data: consult } = await axiosInstance.post(
-        '/consults',
-        formPayload
-      );
-
-      const diagnosesPromises = consultationFormDetails.diagnoses.map(
-        diagnosis =>
-          axiosInstance.post('/diagnosis', {
-            consult: consult.id,
-            details: diagnosis.details,
-            category: diagnosis.type,
-          })
-      );
-      await Promise.all(diagnosesPromises);
-
-      const orderPromises = orders.map(order =>
-        axiosInstance.post('/orders', {
-          ...order,
-          visit: selectedVisitID,
-          consult: consult.id,
+      const diagnosesPayload = consultationFormDetails.diagnoses.map(
+        diagnosis => ({
+          details: diagnosis.details,
+          category: diagnosis.type,
         })
       );
-      await Promise.all(orderPromises);
+
+      const ordersPayload = orders.map(order => ({
+        ...order,
+        visit: selectedVisitID,
+      }));
+
+      const combinedPayload = {
+        consult: formPayload,
+        diagnoses: diagnosesPayload,
+        orders: ordersPayload,
+      };
+
+      await axiosInstance.post('/consults', combinedPayload);
 
       toast.success('Medical Consult Completed!');
       Router.push('/records');
     } catch (error) {
       toast.error(`Error submitting consultation form: ${error.message}`);
       console.error('Error submitting consultation form:', error);
-    } finally {
-      setLoading(false);
     }
-  }
+  });
 
   function renderHeader() {
     return (
@@ -322,7 +305,7 @@ const PatientConsultation = () => {
       const quantity = order.quantity;
 
       return (
-        <tr key={order.id}>
+        <tr key={`${order.id}-${index}`}>
           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
             {name}
           </td>

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { MedicationForm } from '@/components/pharmacy/stock/';
+import {
+  MedicationForm,
+  MedicationHistoryForm,
+} from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 
 const Stock = () => {
-  const { setLoading } = useLoading();
   const [medications, setMedications] = useState([]);
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
   const [medicationDetails, setMedicationDetails] = useState({
@@ -19,14 +21,16 @@ const Stock = () => {
     notes: '',
     remarks: '',
   });
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
+  const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
+    useState(false);
+  const [medication, setMedication] = useState(null);
 
   useEffect(() => {
     loadMedicine();
   }, []);
 
-  const loadMedicine = async () => {
-    setLoading(true);
+  const loadMedicine = useWithLoading(async () => {
     try {
       const { data: medicines } = await axiosInstance.get('/medications');
       setMedications(medicines);
@@ -34,10 +38,8 @@ const Stock = () => {
     } catch (error) {
       toast.error(`Failed to fetch medications: ${error.message}`);
       console.error('Error fetching medication:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
   const onFilterChange = event => {
     const filteredMedications = medications.filter(medication => {
@@ -50,7 +52,12 @@ const Stock = () => {
 
   const toggleModal = (medication = {}) => {
     setMedicationDetails(medication);
-    setModalIsOpen(!modalIsOpen);
+    setMedicationModalIsOpen(!medicationModalIsOpen);
+  };
+
+  const toggleMedicationHistoryModal = medication => {
+    setMedication(medication);
+    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
   };
 
   const createNewMedication = () => {
@@ -73,7 +80,7 @@ const Stock = () => {
     setMedicationDetails(newMedicationDetails);
   };
 
-  const onSubmitForm = async () => {
+  const onSubmitForm = useWithLoading(async () => {
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
       return;
@@ -89,8 +96,6 @@ const Stock = () => {
       ...medicationDetails,
       medicine_name: nameEnriched,
     };
-
-    setLoading(true);
 
     try {
       if (updatedDetails.pk) {
@@ -127,18 +132,14 @@ const Stock = () => {
     } catch (error) {
       toast.error(`Error submitting medication: ${error.message}`);
       console.error('Error submitting medication:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
-  const handleDelete = async pk => {
+  const handleDelete = useWithLoading(async pk => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this medication?'
     );
     if (!confirmed) return;
-
-    setLoading(true);
 
     try {
       await axiosInstance.delete(`/medications/${pk}`);
@@ -150,10 +151,8 @@ const Stock = () => {
     } catch (error) {
       toast.error(`Failed to delete medication: ${error.message}`);
       console.error('Error deleting medication:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
   function renderRows() {
     return medicationsFiltered.map(medication => {
@@ -170,7 +169,7 @@ const Stock = () => {
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {medication.quantity}
           </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-5">
             <Button
               colour="green"
               text="Edit"
@@ -181,6 +180,12 @@ const Stock = () => {
               text="Delete"
               onClick={() => handleDelete(medicationDetails.pk)}
             />
+
+            <Button
+              colour="blue"
+              text="History"
+              onClick={() => toggleMedicationHistoryModal(medicationDetails)}
+            />
           </td>
         </tr>
       );
@@ -189,12 +194,19 @@ const Stock = () => {
 
   return (
     <div className="mt-4 mx-6">
-      <CustomModal isOpen={modalIsOpen} onRequestClose={toggleModal}>
+      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
           onSubmit={onSubmitForm}
         />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={medicationHistoryModalIsOpen}
+        onRequestClose={toggleMedicationHistoryModal}
+      >
+        <MedicationHistoryForm medication={medication} />
       </CustomModal>
 
       <h1 className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-6">

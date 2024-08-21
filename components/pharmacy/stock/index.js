@@ -1,3 +1,4 @@
 import { MedicationForm } from './MedicationForm';
+import { MedicationHistoryForm } from './MedicationHistoryForm';
 
-export { MedicationForm };
+export { MedicationForm, MedicationHistoryForm };
