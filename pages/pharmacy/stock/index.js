@@ -80,6 +80,25 @@ const Stock = () => {
     setMedicationDetails(newMedicationDetails);
   };
 
+  const handleDelete = useWithLoading(async pk => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this medication?'
+    );
+    if (!confirmed) return;
+
+    try {
+      await axiosInstance.delete(`/medications/${pk}`);
+      setMedications(medications.filter(medication => medication.id !== pk));
+      setMedicationsFiltered(
+        medicationsFiltered.filter(medication => medication.id !== pk)
+      );
+      toast.success('Medication successfully deleted!');
+    } catch (error) {
+      toast.error(`Failed to delete medication: ${error.message}`);
+      console.error('Error deleting medication:', error);
+    }
+  });
+
   const onSubmitForm = useWithLoading(async () => {
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
@@ -135,26 +154,7 @@ const Stock = () => {
     }
   });
 
-  const handleDelete = useWithLoading(async pk => {
-    const confirmed = window.confirm(
-      'Are you sure you want to delete this medication?'
-    );
-    if (!confirmed) return;
-
-    try {
-      await axiosInstance.delete(`/medications/${pk}`);
-      setMedications(medications.filter(medication => medication.id !== pk));
-      setMedicationsFiltered(
-        medicationsFiltered.filter(medication => medication.id !== pk)
-      );
-      toast.success('Medication successfully deleted!');
-    } catch (error) {
-      toast.error(`Failed to delete medication: ${error.message}`);
-      console.error('Error deleting medication:', error);
-    }
-  });
-
-  function renderRows() {
+  function Rows() {
     return medicationsFiltered.map(medication => {
       const medicationDetails = {
         ...medication,
@@ -254,7 +254,7 @@ const Stock = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {renderRows()}
+                  <Rows />
                 </tbody>
               </table>
             </div>
