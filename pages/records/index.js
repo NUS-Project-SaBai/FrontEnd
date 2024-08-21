@@ -4,7 +4,8 @@ import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '../api/_axiosInstance';
-import { venueOptions, venueColours, styles } from '@/utils/constants';
+import { venueOptions } from '@/utils/constants';
+import { TicketIcon } from '@heroicons/react/24/outline';
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
@@ -93,11 +94,14 @@ function PatientList() {
           />
         );
 
-        const className = `colours-village-${Object.keys(venueOptions).indexOf(patientVillagePrefix) + 1}`;
+        const className = `text-venue-${patientVillagePrefix.valueOf()}`;
+
 
         return (
           <tr key={patientID}>
-            <td className={className}>{patientID}</td>
+            <td className={className}>
+              {patientID}"{className}"
+            </td>
             <td>
               <img
                 src={imageUrl}

@@ -1,3 +1,5 @@
+import { venueColors } from "./utils/constants"; 
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -9,16 +11,21 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
-    colours: {
-      village: {
-        1: '#6D8A91', // Even darker pastel blue
-        2: '#CC7685', // Even darker pastel pink
-        3: '#7A7A70', // Even darker pastel gray
-        4: '#CCCC45', // Even darker pastel yellow
-        5: '#6A516D',
+    extend: {
+      colors: {
+        ...Object.keys(venueColors).reduce((acc, key) => {
+          acc[`venue-${key}`] = venueColors[key];
+          return acc;
+        }, {}),
       },
     },
   },
+  safelist: [
+    'text-venue-PC',
+    'text-venue-CA',
+    'text-venue-TT',
+    'text-venue-TK',
+    'text-venue-SV',
+  ],
   plugins: [],
 };
