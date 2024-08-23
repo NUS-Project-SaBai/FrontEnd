@@ -4,7 +4,8 @@
 
 1. Installation of Node Version Manager
 
-   - Refer to the GitHub on how to install [node version manager (GitHub)](https://github.com/nvm-sh/nvm)
+   - For Mac/Linux: Refer to the GitHub on how to install [node version manager (GitHub)](https://github.com/nvm-sh/nvm)
+   - For Windows: Refer to the Github [nvm-windows (Github)](https://github.com/coreybutler/nvm-windows/releases) and download nvm-setup.exe under "Assets"
    - `nvm install node` to install the latest version of node.js
    - Verify that you have installed node correctly `node -v`
    - Verify that you have `npm` by typing in `npm -v`
@@ -37,14 +38,17 @@
    ```
 
 4. Environmental Setup
-   Create a `.env.local` by making a copy of `.env.local.example` and filling it with relevant details from the "Key Credentials" document.
+
+   Create a new `.env.local` file by making a copy of `.env.local.example` and filling it with relevant details under the "FRONTEND" heading in the "Key Credentials" document.
 
    ```bash
    # Run the following command to start the server:
    pnpm dev
    ```
 
-   Login with the credentials in the key credential file.
+   \*Make sure you set up both the Frontend AND Backend before logging into localhost.
+
+   Log into localhost with the credentials in the "Key Credentials" document.
 
 ## Technology used
 
