@@ -41,45 +41,6 @@ const Stock = () => {
     }
   });
 
-  const onFilterChange = event => {
-    const filteredMedications = medications.filter(medication => {
-      const medicineName = medication.medicine_name.toLowerCase();
-      return medicineName.includes(event.target.value.toLowerCase());
-    });
-
-    setMedicationsFiltered(filteredMedications);
-  };
-
-  const toggleModal = (medication = {}) => {
-    setMedicationDetails(medication);
-    setMedicationModalIsOpen(!medicationModalIsOpen);
-  };
-
-  const toggleMedicationHistoryModal = medication => {
-    setMedication(medication);
-    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
-  };
-
-  const createNewMedication = () => {
-    setMedicationDetails({
-      medicine_name: '',
-      reserve_quantity: 0,
-      quantity: 0,
-      quantityChange: 0,
-      notes: '',
-      remarks: '',
-    });
-    toggleModal();
-  };
-
-  const handleMedicationChange = event => {
-    const newMedicationDetails = {
-      ...medicationDetails,
-      [event.target.name]: event.target.value,
-    };
-    setMedicationDetails(newMedicationDetails);
-  };
-
   const handleDelete = useWithLoading(async pk => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this medication?'
@@ -153,6 +114,45 @@ const Stock = () => {
       console.error('Error submitting medication:', error);
     }
   });
+
+  const onFilterChange = event => {
+    const filteredMedications = medications.filter(medication => {
+      const medicineName = medication.medicine_name.toLowerCase();
+      return medicineName.includes(event.target.value.toLowerCase());
+    });
+
+    setMedicationsFiltered(filteredMedications);
+  };
+
+  const toggleModal = (medication = {}) => {
+    setMedicationDetails(medication);
+    setMedicationModalIsOpen(!medicationModalIsOpen);
+  };
+
+  const toggleMedicationHistoryModal = medication => {
+    setMedication(medication);
+    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
+  };
+
+  const createNewMedication = () => {
+    setMedicationDetails({
+      medicine_name: '',
+      reserve_quantity: 0,
+      quantity: 0,
+      quantityChange: 0,
+      notes: '',
+      remarks: '',
+    });
+    toggleModal();
+  };
+
+  const handleMedicationChange = event => {
+    const newMedicationDetails = {
+      ...medicationDetails,
+      [event.target.name]: event.target.value,
+    };
+    setMedicationDetails(newMedicationDetails);
+  };
 
   function Rows() {
     return medicationsFiltered.map(medication => {
