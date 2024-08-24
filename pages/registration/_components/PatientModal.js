@@ -19,9 +19,8 @@ const VenueOptions = ({ handleInputChange }) => (
       defaultValue={Object.keys(venueOptions)[0]}
     >
       {Object.entries(venueOptions).map(([key, value]) => {
-        const colour = `colours-village-${Object.keys(venueOptions).indexOf(key) + 1}`;
         return (
-          <option className={colour} value={key} key={value}>
+          <option className={`text-venue-${key.valueOf()}`} value={key} key={value}>
             {value}
           </option>
         );

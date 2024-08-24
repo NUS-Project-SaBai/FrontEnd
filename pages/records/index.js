@@ -94,13 +94,10 @@ function PatientList() {
           />
         );
 
-        const className = `text-venue-${patientVillagePrefix.valueOf()}`;
-
-
         return (
           <tr key={patientID}>
-            <td className={className}>
-              {patientID}"{className}"
+            <td className={`text-venue-${patientVillagePrefix.valueOf()}`}>
+              {patientID}
             </td>
             <td>
               <img
@@ -153,7 +150,7 @@ function PatientList() {
                   {`${PATIENT_CODE_ALL}`}
                 </option>
                 {Object.entries(venueOptions).map(([key, value]) => (
-                  <option value={key} key={key}>
+                  <option className={`text-venue-${key.valueOf()}`} value={key} key={key}>
                     {key}
                   </option>
                 ))}
