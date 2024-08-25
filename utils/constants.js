@@ -9,12 +9,20 @@ export const venueOptions = {
   SV: 'Smong',
 };
 
+export const villageColorClasses = {
+  PC: 'text-red-500',
+  CA: 'text-blue-500',
+  TT: 'text-green-500',
+  TK: 'text-yellow-500',
+  SV: 'text-purple-500',
+};
+
 export const venueColors = {
-  'PC': '#6D8A91',  // Even darker pastel blue
-  'CA': '#CC7685',  // Even darker pastel pink
-  'TT': '#7A7A70',  // Even darker pastel gray
-  'TK': '#CCCC45',  // Even darker pastel yellow
-  'SV': '#6A516D',  // Even darker pastel purple
+  PC: '#6D8A91', // Even darker pastel blue
+  CA: '#CC7685', // Even darker pastel pink
+  TT: '#7A7A70', // Even darker pastel gray
+  TK: '#CCCC45', // Even darker pastel yellow
+  SV: '#6A516D', // Even darker pastel purple
 };
 
 export const NO_PHOTO_MESSAGE = 'Please take a photo before submitting!';

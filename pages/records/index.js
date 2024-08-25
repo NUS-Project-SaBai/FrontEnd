@@ -5,7 +5,7 @@ import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '../api/_axiosInstance';
 import { venueOptions } from '@/utils/constants';
-import { TicketIcon } from '@heroicons/react/24/outline';
+import { villageColorClasses } from '@/utils/constants';
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
@@ -93,10 +93,17 @@ function PatientList() {
             colour="green"
           />
         );
-
+        console.log(villageColorClasses);
+        console.log('Village Prefix:', patientVillagePrefix);
+        console.log(
+          'Village Color Class:',
+          villageColorClasses[patientVillagePrefix]
+        );
         return (
           <tr key={patientID}>
-            <td className={`text-venue-${patientVillagePrefix.valueOf()}`}>
+            <td
+              className={`whitespace-nowrap px-3 py-4 text-sm ${villageColorClasses[patientVillagePrefix] || 'text-orange-500'}`}
+            >
               {patientID}
             </td>
             <td>
@@ -150,7 +157,11 @@ function PatientList() {
                   {`${PATIENT_CODE_ALL}`}
                 </option>
                 {Object.entries(venueOptions).map(([key, value]) => (
-                  <option className={`text-venue-${key.valueOf()}`} value={key} key={key}>
+                  <option
+                    className={`text-venue-${key.valueOf()}`}
+                    value={key}
+                    key={key}
+                  >
                     {key}
                   </option>
                 ))}
@@ -249,3 +260,10 @@ function PatientList() {
 }
 
 export default withAuth(PatientList);
+
+/*
+Comments are for tailwind to recognise the colours
+text-red-500
+text-purple-500
+text-yellow-500
+*/
