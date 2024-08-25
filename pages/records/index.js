@@ -260,10 +260,3 @@ function PatientList() {
 }
 
 export default withAuth(PatientList);
-
-/*
-Comments are for tailwind to recognise the colours
-text-red-500
-text-purple-500
-text-yellow-500
-*/

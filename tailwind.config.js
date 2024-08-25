@@ -1,6 +1,41 @@
-import { venueColors } from "./utils/constants"; 
+import plugin from 'tailwindcss';
 
 /** @type {import('tailwindcss').Config} */
+
+const safelist = [
+  // Text colors from villageColorClasses
+  'text-red-500',
+  'text-blue-500',
+  'text-green-500',
+  'text-yellow-500',
+  'text-purple-500',
+
+  // Background and hover colors for buttons or other components
+  'bg-indigo-800',
+  'hover:bg-indigo-500',
+  'focus-visible:outline-indigo-600',
+
+  'bg-sky-800',
+  'hover:bg-sky-500',
+  'focus-visible:outline-sky-600',
+
+  'bg-blue-800',
+  'hover:bg-blue-500',
+  'focus-visible:outline-blue-600',
+
+  'bg-green-800',
+  'hover:bg-green-500',
+  'focus-visible:outline-green-600',
+
+  'bg-red-800',
+  'hover:bg-red-500',
+  'focus-visible:outline-red-600',
+
+  'bg-orange-800',
+  'hover:bg-orange-500',
+  'focus-visible:outline-orange-600',
+];
+
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
@@ -11,21 +46,8 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      colors: {
-        ...Object.keys(venueColors).reduce((acc, key) => {
-          acc[`venue-${key}`] = venueColors[key];
-          return acc;
-        }, {}),
-      },
-    },
+    extend: {},
   },
-  safelist: [
-    'text-venue-PC',
-    'text-venue-CA',
-    'text-venue-TT',
-    'text-venue-TK',
-    'text-venue-SV',
-  ],
+  safelist,
   plugins: [],
 };
