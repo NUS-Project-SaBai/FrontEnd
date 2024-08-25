@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import {
   MedicationForm,
   MedicationHistoryForm,
+  MedicationStockTable,
 } from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
@@ -154,44 +155,6 @@ const Stock = () => {
     setMedicationDetails(newMedicationDetails);
   };
 
-  function Rows() {
-    return medicationsFiltered.map(medication => {
-      const medicationDetails = {
-        ...medication,
-        pk: medication.id,
-        quantityChange: 0,
-      };
-      return (
-        <tr key={medication.id}>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            {medication.medicine_name}
-          </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            {medication.quantity}
-          </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-5">
-            <Button
-              colour="green"
-              text="Edit"
-              onClick={() => toggleModal(medicationDetails)}
-            />
-            <Button
-              colour="red"
-              text="Delete"
-              onClick={() => handleDelete(medicationDetails.pk)}
-            />
-
-            <Button
-              colour="blue"
-              text="History"
-              onClick={() => toggleMedicationHistoryModal(medicationDetails)}
-            />
-          </td>
-        </tr>
-      );
-    });
-  }
-
   return (
     <div className="mt-4 mx-6">
       <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
@@ -254,7 +217,12 @@ const Stock = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  <Rows />
+                  <MedicationStockTable
+                    medicationsFiltered={medicationsFiltered}
+                    toggleModal={toggleModal}
+                    handleDelete={handleDelete}
+                    toggleMedicationHistoryModal={toggleMedicationHistoryModal}
+                  />
                 </tbody>
               </table>
             </div>
