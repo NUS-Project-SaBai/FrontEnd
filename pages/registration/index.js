@@ -18,6 +18,7 @@ import CustomModal from '@/components/CustomModal';
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
   const [patient, setPatient] = useState({});
+  const [patientedit, setPatientedit] = useState({});
 
   const [patientModalOpen, setPatientModalOpen] = useState(false);
 

@@ -8,18 +8,21 @@ import {
   PatientView,
   PrescriptionsTable,
 } from '@/components/records';
-import withAuth from '@/utils/auth';
+import { PatientRegistrationForm } from '@/components/registration';
 import Router from 'next/router';
 import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import toast from 'react-hot-toast';
+import { urltoFile } from '@/utils/helpers';
+import withAuth from '@/utils/auth';
 import useWithLoading from '@/utils/loading';
 
 const PatientRecord = () => {
   const [noRecords, setNoRecords] = useState(true);
 
   const [patient, setPatient] = useState({});
+  const [patientEdit, setPatientEdit] = useState({});
   const [visits, setVisits] = useState([]);
   const [vitals, setVitals] = useState({});
 
@@ -30,11 +33,22 @@ const PatientRecord = () => {
 
   const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [editPatientModalOpen, setEditPatientModalOpen] = useState(false);
+
+  const [imageDetails, setImageDetails] = useState(null);
 
   const handleVisitChange = useCallback(event => {
     const value = event.target.value;
     loadVisitDetails(value);
   }, []);
+
+  const handlePatientChange = event => {
+    const newPatientDetails = {
+      ...patient,
+      [event.target.name]: event.target.value,
+    };
+    setPatientEdit(newPatientDetails);
+  };
 
   useEffect(() => {
     onRefresh();
@@ -93,10 +107,55 @@ const PatientRecord = () => {
     setConsultationModalOpen(!consultationModalOpen);
   }
 
+  function toggleEditPatientModal() {
+    setPatientEdit(patient);
+    setEditPatientModalOpen(!editPatientModalOpen);
+  }
+
   function selectConsult(consult) {
     setSelectedConsult(consult);
     toggleConsultationModal();
   }
+
+  const submitPatientEdit = useWithLoading(async () => {
+    if (!patientEdit.name) {
+      toast.error('Name cannot be empty.');
+      return;
+    }
+
+    const updatedPatient = {
+      ...patientEdit,
+    };
+
+    const formData = new FormData();
+    Object.keys(updatedPatient).forEach(key =>
+      formData.append(key, updatedPatient[key])
+    );
+
+    if (imageDetails) {
+      const pictureFile = await urltoFile(
+        imageDetails,
+        'patient_screenshot.jpg',
+        'image/jpg'
+      );
+      formData.append('picture', pictureFile);
+    }
+
+    if (updatedPatient.pk) {
+      try {
+        await axiosInstance.patch(`/patients/${Router.query.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        toast.success('Patient Details updated!');
+      } catch (error) {
+        toast.error(`Encountered an error when update! ${error.message}`);
+      }
+    }
+    toggleEditPatientModal();
+    onRefresh();
+  });
 
   function renderHeader() {
     return (
@@ -119,11 +178,18 @@ const PatientRecord = () => {
 
     return (
       <div className="my-2">
-        <Button
-          text={'View Vitals'}
-          onClick={() => toggleVitalsModal()}
-          colour="indigo"
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <Button
+            text={'View Vitals'}
+            onClick={() => toggleVitalsModal()}
+            colour="indigo"
+          />
+          <Button
+            text={'Edit Paitent Details'}
+            onClick={() => toggleEditPatientModal()}
+            colour="green"
+          />
+        </div>
         <PatientView content={patient} />
       </div>
     );
@@ -166,6 +232,22 @@ const PatientRecord = () => {
             </button>
           </div>
         </Modal>
+
+        <CustomModal
+          isOpen={editPatientModalOpen}
+          onRequestClose={toggleEditPatientModal}
+          showCloseButton={false}
+        >
+          <PatientRegistrationForm
+            formDetails={patientEdit}
+            imageDetails={imageDetails}
+            setImageDetails={setImageDetails}
+            closeModal={toggleEditPatientModal}
+            handleInputChange={handlePatientChange}
+            submitNewPatient={submitPatientEdit}
+          />
+        </CustomModal>
+
         <CustomModal
           isOpen={consultationModalOpen}
           onRequestClose={toggleConsultationModal}
