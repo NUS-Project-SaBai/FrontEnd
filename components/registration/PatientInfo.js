@@ -1,3 +1,6 @@
+import React from 'react';
+import moment from 'moment';
+
 import { DisplayField, Button } from '@/components/TextComponents/';
 import { CLOUDINARY_URL } from '@/utils/constants';
 
@@ -11,7 +14,11 @@ export function PatientInfo({ patient, submitNewVisit }) {
     { label: 'ID Number', key: 'identification_number' },
     { label: 'Contact', key: 'contact_no' },
     { label: 'Gender', key: 'gender' },
-    { label: 'Date of Birth', key: 'date_of_birth' },
+    {
+      label: 'Date of Birth',
+      key: 'date_of_birth',
+      calculate: dob => moment(dob).format('DD-MMMM-YYYY'),
+    },
     { label: 'Village', key: 'village_prefix' },
     { label: 'POOR', key: 'poor' },
     { label: 'BS2', key: 'bs2' },
