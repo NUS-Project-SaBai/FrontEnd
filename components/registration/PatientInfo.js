@@ -5,6 +5,19 @@ export function PatientInfo({ patient, submitNewVisit }) {
   if (!patient.pk) {
     return <div></div>;
   }
+
+  const fieldsArray = [
+    { label: 'Name', key: 'name' },
+    { label: 'ID Number', key: 'identification_number' },
+    { label: 'Contact', key: 'contact_no' },
+    { label: 'Gender', key: 'gender' },
+    { label: 'Date of Birth', key: 'date_of_birth' },
+    { label: 'Village', key: 'village_prefix' },
+    { label: 'POOR', key: 'poor' },
+    { label: 'BS2', key: 'bs2' },
+    { label: 'Allergies', key: 'drug_allergy' },
+  ];
+
   return (
     <div>
       <div>
@@ -15,24 +28,31 @@ export function PatientInfo({ patient, submitNewVisit }) {
         />
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
-        <DisplayField
-          label="ID"
-          content={`${patient.village_prefix}${patient.pk
-            .toString()
-            .padStart(3, '0')}`}
-        />
-        <DisplayField label="Name" content={patient.name} />
-        <DisplayField
-          label="ID Number"
-          content={patient.identification_number}
-        />
-        <DisplayField label="Contact" content={patient.contact_no} />
-        <DisplayField label="Gender" content={patient.gender} />
-        <DisplayField label="Date of Birth" content={patient.date_of_birth} />
-        <DisplayField label="Village" content={patient.village_prefix} />
-        <DisplayField label="POOR" content={patient.poor} />
-        <DisplayField label="BS2" content={patient.bs2} />
-        <DisplayField label="Drug Allergies" content={patient.drug_allergy} />
+        <div className="grid-cols-1" key={'ID'}>
+          <DisplayField
+            key={'ID'}
+            label={'ID'}
+            content={
+              patient.pk
+                ? `${patient.village_prefix}${patient.pk.toString().padStart(3, '0')}`
+                : 'NOT FILLED'
+            }
+          />
+        </div>
+
+        {fieldsArray.map((field, index) => (
+          <div className="grid-cols-1" key={index}>
+            <DisplayField
+              key={index}
+              label={field.label}
+              content={
+                field.calculate
+                  ? field.calculate(patient[field.key])
+                  : patient[field.key] || 'NOT FILLED'
+              }
+            />
+          </div>
+        ))}
 
         <Button
           text="Create New Visit"

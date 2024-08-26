@@ -33,7 +33,7 @@ export function PatientView({ content }) {
         content={
           field.calculate
             ? field.calculate(content[field.key])
-            : content[field.key]
+            : content[field.key] || 'NOT FILLED'
         }
       />
     </div>
