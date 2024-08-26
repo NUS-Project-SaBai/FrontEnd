@@ -29,8 +29,10 @@ const Registration = () => {
     contact_no: '',
     date_of_birth: '',
     drug_allergy: '',
-    gender: 'Male',
-    village_prefix: Object.keys(venueOptions)[0],
+    gender: 'Unspecified',
+    poor: 'No',
+    bs2: 'No',
+    village_prefix: '',
   });
 
   useEffect(() => {
@@ -73,15 +75,25 @@ const Registration = () => {
       'date_of_birth',
       'drug_allergy',
       'village_prefix',
+      'poor',
+      'bs2',
     ];
 
-    if (checklist.some(item => formDetails[item].length === 0)) {
-      toast.error('Please complete the form before submitting!');
+    if (formDetails.name == '') {
+      toast.error('Name cannot be empty.');
       return;
     }
 
-    if (formDetails['date_of_birth'].length !== 10) {
+    if (
+      formDetails['date_of_birth'].length !== 10 &&
+      formDetails['date_of_birth'].length !== 0
+    ) {
       toast.error('Please enter a valid date of birth!');
+      return;
+    }
+
+    if (formDetails.village_prefix == '') {
+      toast.error('Please select a village');
       return;
     }
 
