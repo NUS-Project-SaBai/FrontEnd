@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { MedicationForm } from '@/components/pharmacy/stock/';
+import {
+  MedicationForm,
+  MedicationHistoryForm,
+} from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
@@ -18,7 +21,10 @@ const Stock = () => {
     notes: '',
     remarks: '',
   });
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
+  const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
+    useState(false);
+  const [medication, setMedication] = useState(null);
 
   useEffect(() => {
     loadMedicine();
@@ -46,7 +52,12 @@ const Stock = () => {
 
   const toggleModal = (medication = {}) => {
     setMedicationDetails(medication);
-    setModalIsOpen(!modalIsOpen);
+    setMedicationModalIsOpen(!medicationModalIsOpen);
+  };
+
+  const toggleMedicationHistoryModal = medication => {
+    setMedication(medication);
+    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
   };
 
   const createNewMedication = () => {
@@ -158,7 +169,7 @@ const Stock = () => {
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {medication.quantity}
           </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-5">
             <Button
               colour="green"
               text="Edit"
@@ -169,6 +180,12 @@ const Stock = () => {
               text="Delete"
               onClick={() => handleDelete(medicationDetails.pk)}
             />
+
+            <Button
+              colour="blue"
+              text="History"
+              onClick={() => toggleMedicationHistoryModal(medicationDetails)}
+            />
           </td>
         </tr>
       );
@@ -177,12 +194,19 @@ const Stock = () => {
 
   return (
     <div className="mt-4 mx-6">
-      <CustomModal isOpen={modalIsOpen} onRequestClose={toggleModal}>
+      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
           onSubmit={onSubmitForm}
         />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={medicationHistoryModalIsOpen}
+        onRequestClose={toggleMedicationHistoryModal}
+      >
+        <MedicationHistoryForm medication={medication} />
       </CustomModal>
 
       <h1 className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-6">
