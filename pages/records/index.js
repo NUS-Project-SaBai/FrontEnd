@@ -6,10 +6,9 @@ import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { venueOptions } from '@/utils/constants';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 
 function PatientList() {
-  const { setLoading } = useLoading();
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
 
@@ -22,23 +21,20 @@ function PatientList() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  useEffect(() => {
-    const fetchPatients = async () => {
-      setLoading(true);
-      try {
-        const response = await axiosInstance.get('/patients');
-        setPatients(response.data);
-        setPatientsFiltered(response.data);
-      } catch (error) {
-        toast.error('Error loading patients.');
-        console.error('Error loading patients:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchPatients = useWithLoading(async () => {
+    try {
+      const response = await axiosInstance.get('/patients');
+      setPatients(response.data);
+      setPatientsFiltered(response.data);
+    } catch (error) {
+      toast.error(`Error loading patients: ${error.message}`);
+      console.error('Error loading patients:', error);
+    }
+  });
 
+  useEffect(() => {
     fetchPatients();
-  }, [setLoading]);
+  }, []);
 
   useEffect(() => {
     filterPatients();

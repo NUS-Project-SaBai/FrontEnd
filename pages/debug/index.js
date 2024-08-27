@@ -1,7 +1,7 @@
 import { APIComponent } from '@/components/debug';
 import { useState } from 'react';
 import { getAPI_URL } from '@/utils/constants';
-import { useLoading } from '@/context/LoadingContext';
+import useWithLoading from '@/utils/loading';
 
 const paths = [
   '/patients',
@@ -13,7 +13,6 @@ const paths = [
 ];
 
 export default function DebuggingPage() {
-  const { setLoading } = useLoading();
   const [baseURL, setBaseURL] = useState(getAPI_URL());
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -37,12 +36,9 @@ export default function DebuggingPage() {
   };
 
   const SimulateLoadingComponent = () => {
-    const simulateLoading = () => {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-      }, 3000); // Simulate a 3-second loading time
-    };
+    const simulateLoading = useWithLoading(async () => {
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate a 3-second loading time
+    });
 
     return (
       <button
