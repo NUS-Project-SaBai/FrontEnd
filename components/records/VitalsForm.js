@@ -91,7 +91,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
   ];
 
   return (
-    <form className="bg-blue-100 p-4 rounded-lg relative">
+    <form className="bg-blue-50 p-4 rounded-lg relative">
       <div>
         <label className="label text-lg font-semibold">
           Current Vital Signs
@@ -99,7 +99,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
       </div>
       <div>
         <div className="grid gap-6 md:grid-cols-3">
-          {vitalFields.slice(0, 2).map((field) => (
+          {vitalFields.slice(0, 2).map(field => (
             <InputField
               key={field.name}
               name={field.name}
@@ -147,7 +147,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
           </div>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {vitalFields.slice(2).map((field) => (
+          {vitalFields.slice(2).map(field => (
             <InputField
               key={field.name}
               name={field.name}
@@ -167,7 +167,7 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
         </div>
         <div>
           <div className="grid gap-6 md:grid-cols-2">
-            {statFields.map((field) => (
+            {statFields.map(field => (
               <InputField
                 key={field.name}
                 name={field.name}

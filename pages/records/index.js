@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
+import toast from 'react-hot-toast';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
-import axiosInstance from '../api/_axiosInstance';
+import axiosInstance from '@/pages/api/_axiosInstance';
 import { venueOptions } from '@/utils/constants';
+import useWithLoading from '@/utils/loading';
 import { villageColorClasses } from '@/utils/constants';
 
 function PatientList() {
@@ -20,14 +22,19 @@ function PatientList() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
+  const fetchPatients = useWithLoading(async () => {
+    try {
+      const response = await axiosInstance.get('/patients');
+      setPatients(response.data);
+      setPatientsFiltered(response.data);
+    } catch (error) {
+      toast.error(`Error loading patients: ${error.message}`);
+      console.error('Error loading patients:', error);
+    }
+  });
+
   useEffect(() => {
-    axiosInstance
-      .get('/patients')
-      .then((response) => {
-        setPatients(response.data);
-        setPatientsFiltered(response.data);
-      })
-      .catch((error) => console.error('Error loading page', error));
+    fetchPatients();
   }, []);
 
   useEffect(() => {
@@ -45,7 +52,7 @@ function PatientList() {
   }
 
   function filterPatients() {
-    const filteredPatients = patients.filter((patient) => {
+    const filteredPatients = patients.filter(patient => {
       return (
         patient.filter_string.includes(patientSearch) &&
         (patientCode === PATIENT_CODE_ALL ||
@@ -58,7 +65,7 @@ function PatientList() {
   function renderTableContent() {
     const patientRows = patientsFiltered
       .slice(startIndex, endIndex)
-      .map((patient, idx) => {
+      .map(patient => {
         const patientID = patient.patient_id;
         const patientVillagePrefix = patient.village_prefix;
         const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
@@ -148,7 +155,7 @@ function PatientList() {
                 Search by village code
               </label>
               <select
-                className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 name="patientDropdown"
                 id="patientDropdown"
                 onChange={handleCodeChange}
@@ -174,7 +181,7 @@ function PatientList() {
               <InputField
                 type="text"
                 name="Input Patient/ID to Search"
-                label="Search"
+                label="Input Patient/ID to Search"
                 onChange={handleSearchChange}
               />
             </div>
@@ -184,7 +191,7 @@ function PatientList() {
 
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="mt-2 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
             <div className="inline-block min-w-full py-2 align-middle">
               <table className="min-w-full divide-y divide-gray-300">
                 <thead>

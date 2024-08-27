@@ -1,5 +1,26 @@
-export const API_URL = 'http://localhost:8000';
+// export const API_URL = "https://projectsabai-vza8.onrender.com";
+
 export const CLOUDINARY_URL = 'https://res.cloudinary.com/dlusodadw';
+
+export const defaultAPI_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+const isWindowUndefined = typeof window === 'undefined';
+
+export const getAPI_URL = () => {
+  if (isWindowUndefined) {
+    return defaultAPI_URL;
+  } else {
+    if (window.localStorage.getItem('API_URL') === null) {
+      window.localStorage.setItem('API_URL', defaultAPI_URL);
+    }
+    return window.localStorage.getItem('API_URL');
+  }
+};
+
+export const changeAPI_URL = newURL => {
+  window.localStorage.setItem('API_URL', newURL);
+};
 
 export const venueOptions = {
   PC: 'PC',
@@ -16,7 +37,3 @@ export const villageColorClasses = {
   TK: 'text-yellow-300 font-bold',
   SV: 'text-purple-300 font-bold',
 };
-
-export const NO_PHOTO_MESSAGE = 'Please take a photo before submitting!';
-export const NO_MATCHES_FOUND_MESSAGE = 'No matches found!';
-export const MATCH_FOUND_MESSAGE = 'Match found!';

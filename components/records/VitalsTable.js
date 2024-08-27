@@ -1,4 +1,4 @@
-import { DisplayField } from '@/components/TextComponents/DisplayField';
+import { DisplayField } from '@/components/TextComponents';
 
 export function VitalsTable({ content }) {
   const isBloodPressureHigh = content.systolic > 140 || content.diastolic > 90;
@@ -13,37 +13,31 @@ export function VitalsTable({ content }) {
       highlight: shouldHighlightBloodPressure,
     },
     { label: 'Heart Rate', value: content.heart_rate },
-
     { label: 'Temperature', value: content.temperature },
     { label: '', value: '' },
-
     { label: 'Left Eye', value: content.left_eye_degree },
     { label: 'Right Eye', value: content.right_eye_degree },
-
     { label: 'Left Eye Pinhole', value: content.left_eye_pinhole },
     { label: 'Right Eye Pinhole', value: content.right_eye_pinhole },
-
     { label: 'Urine Dip Test', value: content.urine_test },
     { label: 'Hemocue Hb Count', value: content.hemocue_count },
-
     {
       label: 'Blood Glucose',
       value: content.blood_glucose,
       highlight: content.blood_glucose > 6.1,
     },
     { label: 'Diabetes Mellitus?', value: content.diabetes_mellitus },
-
     { label: 'Others', value: content.others },
   ];
 
-  function renderTableField(field) {
+  function renderTableField(field, index) {
     if (field.label === '') {
-      return <div></div>;
+      return <div key={index}></div>;
     }
 
     return (
       <DisplayField
-        key={field.label}
+        key={field.label + index} // Ensure each key is unique
         label={field.label}
         content={field.value}
         highlight={field.highlight}
@@ -59,7 +53,7 @@ export function VitalsTable({ content }) {
       <div>
         <div className="grid gap-6 md:grid-cols-3">
           <DisplayField key="height" label="Height" content={content.height} />
-          <DisplayField key="label" label="Weight" content={content.weight} />
+          <DisplayField key="weight" label="Weight" content={content.weight} />
           <DisplayField
             key="bmi"
             label="BMI"
@@ -70,7 +64,7 @@ export function VitalsTable({ content }) {
           />
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {vitalFields.map((field) => renderTableField(field))}
+          {vitalFields.map((field, index) => renderTableField(field, index))}
         </div>
       </div>
     </form>
