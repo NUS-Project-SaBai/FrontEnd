@@ -98,14 +98,6 @@ const PatientRecord = () => {
     toggleConsultationModal();
   }
 
-  function showView() {
-    console.log('button pressed');
-  }
-
-  function uploadDocument() {
-    console.log('upload document');
-  }
-
   function renderHeader() {
     return (
       <Header
