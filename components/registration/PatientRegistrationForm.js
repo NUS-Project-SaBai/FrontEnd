@@ -1,5 +1,5 @@
 import { Button, InputField, InputBox } from '@/components/TextComponents';
-import { venueOptions } from '@/utils/constants';
+import { venueOptions, villageColorClasses } from '@/utils/constants';
 import AppWebcam from '@/components/WebCamera';
 import React, { useState } from 'react';
 
@@ -23,7 +23,7 @@ const VenueOptions = ({ handleInputChange }) => (
           Please select an option
         </option>
         {Object.entries(venueOptions).map(([key, value]) => (
-          <option value={key} key={value}>
+          <option className={`${villageColorClasses[key] || 'text-orange-500'}`} value={key} key={value}>
             {value}
           </option>
         ))}
