@@ -29,3 +29,5 @@ export const venueOptions = {
   TK: 'TK',
   SV: 'Smong',
 };
+
+export const OFFLINE = process.env.NEXT_PUBLIC_OFFLINE || false;
