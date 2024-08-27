@@ -1,6 +1,6 @@
 import Modal from 'react-modal';
 import { Button, InputField, InputBox } from '@/components/TextComponents';
-import { venueOptions, venueColours } from '@/utils/constants';
+import { venueOptions, villageColorClasses } from '@/utils/constants';
 import React, { useState } from 'react';
 
 const VenueOptions = ({ handleInputChange }) => (
@@ -20,7 +20,7 @@ const VenueOptions = ({ handleInputChange }) => (
     >
       {Object.entries(venueOptions).map(([key, value]) => {
         return (
-          <option className={`text-venue-${key.valueOf()}`} value={key} key={value}>
+          <option className={`${villageColorClasses[key] || 'text-orange-500'}`} value={key} key={value}>
             {value}
           </option>
         );

@@ -158,7 +158,7 @@ function PatientList() {
                 </option>
                 {Object.entries(venueOptions).map(([key, value]) => (
                   <option
-                    className={`text-venue-${key.valueOf()}`}
+                    className={`${villageColorClasses[key] || 'text-orange-500'}`}
                     value={key}
                     key={key}
                   >
