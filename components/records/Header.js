@@ -25,7 +25,9 @@ export function Header({ patient, visits, handleVisitChange }) {
       <div className="col-span-12 md:col-span-3">
         <div>
           <label className="block text-gray-700">Village ID</label>
-          <p className={`${villageColorClasses[patient.village_prefix] || 'text-orange-500'}`}>{`${
+          <p
+            className={`${villageColorClasses[patient.village_prefix] || 'text-gray-500'}`}
+          >{`${
             patient.village_prefix
           }${patient.pk.toString().padStart(3, '0')}`}</p>
         </div>

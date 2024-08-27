@@ -7,7 +7,7 @@ export const VenueOptions = ({ handleInputChange }) => {
   const handleChangeWithStyle = event => {
     const selectedValue = event.target.value;
     event.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
-      villageColorClasses[selectedValue] || 'text-orange-500'
+      villageColorClasses[selectedValue] || 'text-gray-500'
     }`;
     handleInputChange(event);
   };
@@ -33,7 +33,7 @@ export const VenueOptions = ({ handleInputChange }) => {
           </option>
           {Object.entries(venueOptions).map(([key, value]) => (
             <option
-              className={`${villageColorClasses[key] || 'text-orange-500'}`}
+              className={`${villageColorClasses[key] || 'text-gray-500'}`}
               value={key}
               key={key}
             >

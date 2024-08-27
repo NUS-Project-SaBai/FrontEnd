@@ -108,16 +108,11 @@ function PatientList() {
             colour="green"
           />
         );
-        console.log(villageColorClasses);
-        console.log('Village Prefix:', patientVillagePrefix);
-        console.log(
-          'Village Color Class:',
-          villageColorClasses[patientVillagePrefix]
-        );
+
         return (
           <tr key={patientID}>
             <td
-              className={`whitespace-nowrap px-3 py-4 text-sm ${villageColorClasses[patientVillagePrefix] || 'text-orange-500'}`}
+              className={`whitespace-nowrap px-3 py-4 text-sm ${villageColorClasses[patientVillagePrefix] || 'text-gray-500'}`}
             >
               {patientID}
             </td>
@@ -173,7 +168,7 @@ function PatientList() {
                 </option>
                 {Object.entries(venueOptions).map(([key, value]) => (
                   <option
-                    className={`${villageColorClasses[key] || 'text-orange-500'}`}
+                    className={`${villageColorClasses[key] || 'text-gray-500'}`}
                     value={key}
                     key={key}
                   >
