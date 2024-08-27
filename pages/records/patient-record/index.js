@@ -146,26 +146,6 @@ const PatientRecord = () => {
     );
   }
 
-  function renderUpload() {
-    return (
-      <div className="my-2">
-        <Button
-          text={'Upload'}
-          onClick={() => uploadDocument()}
-          colour="green"
-        />
-      </div>
-    );
-  }
-
-  function renderView() {
-    return (
-      <div className="my-2">
-        <Button text={'View'} onClick={() => showView()} colour="blue" />
-      </div>
-    );
-  }
-
   function render() {
     if (noRecords)
       return (
@@ -206,15 +186,6 @@ const PatientRecord = () => {
         {
           <div className="grid grid-cols-10 gap-x-5">
             <div className="col-span-8"> {renderHeader()}</div>
-            <div className="col-span-2">
-              {' '}
-              {
-                <div className="grid grid-rows-2">
-                  <div className="row-span-1"> {renderUpload()} </div>
-                  <div className="row-span-1"> {renderView()} </div>
-                </div>
-              }
-            </div>
           </div>
         }
 
