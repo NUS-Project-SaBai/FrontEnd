@@ -4,11 +4,11 @@ import plugin from 'tailwindcss';
 
 const safelist = [
   // Text colors from villageColorClasses
-  'text-red-500',
-  'text-blue-500',
-  'text-green-500',
-  'text-yellow-500',
-  'text-purple-500',
+  'text-red-300',
+  'text-blue-300',
+  'text-green-300',
+  'text-yellow-300',
+  'text-purple-300',
 
   // Background and hover colors for buttons or other components
   'bg-indigo-800',

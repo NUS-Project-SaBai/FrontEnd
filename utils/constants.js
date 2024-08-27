@@ -10,11 +10,11 @@ export const venueOptions = {
 };
 
 export const villageColorClasses = {
-  PC: 'text-red-500',
-  CA: 'text-blue-500',
-  TT: 'text-green-500',
-  TK: 'text-yellow-500',
-  SV: 'text-purple-500',
+  PC: 'text-red-300 font-bold',
+  CA: 'text-blue-300 font-bold',
+  TT: 'text-green-300 font-bold',
+  TK: 'text-yellow-300 font-bold',
+  SV: 'text-purple-300 font-bold',
 };
 
 export const NO_PHOTO_MESSAGE = 'Please take a photo before submitting!';
