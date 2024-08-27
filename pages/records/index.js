@@ -51,6 +51,14 @@ function PatientList() {
     setPatientCode(searchValue);
   }
 
+  function handleChangeWithStyle(e) {
+    const selectedValue = e.target.value;
+    e.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
+      villageColorClasses[selectedValue] || 'text-gray-500'
+    }`;
+    handleCodeChange(e);
+  }
+
   function filterPatients() {
     const filteredPatients = patients.filter(patient => {
       return (
@@ -158,7 +166,7 @@ function PatientList() {
                 className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 name="patientDropdown"
                 id="patientDropdown"
-                onChange={handleCodeChange}
+                onChange={handleChangeWithStyle}
               >
                 <option value={PATIENT_CODE_ALL}>
                   {`${PATIENT_CODE_ALL}`}
