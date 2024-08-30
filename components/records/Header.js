@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { CLOUDINARY_URL, villageColorClasses } from '@/utils/constants';
+import { CLOUDINARY_URL, VILLAGECOLORCLASSES } from '@/utils/constants';
 
 export function Header({ patient, visits, handleVisitChange }) {
   const visitOptions = visits.map(visit => {
@@ -26,7 +26,7 @@ export function Header({ patient, visits, handleVisitChange }) {
         <div>
           <label className="block text-gray-700">Village ID</label>
           <p
-            className={`${villageColorClasses[patient.village_prefix] || 'text-gray-500'}`}
+            className={`${VILLAGECOLORCLASSES[patient.village_prefix] || 'text-gray-500'}`}
           >{`${
             patient.village_prefix
           }${patient.pk.toString().padStart(3, '0')}`}</p>

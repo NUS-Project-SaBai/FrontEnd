@@ -6,7 +6,7 @@ import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import toast from 'react-hot-toast';
 import useWithLoading from '@/utils/loading';
-import { villageColorClasses } from '@/utils/constants';
+import { VILLAGECOLORCLASSES } from '@/utils/constants';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -88,7 +88,7 @@ const Orders = () => {
       return (
         <tr key={order.id}>
           <td
-            className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8 ${villageColorClasses[patientVillagePrefix] || 'text-gray-500'}`}
+            className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8 ${VILLAGECOLORCLASSES[patientVillagePrefix] || 'text-gray-500'}`}
           >
             {visit.patient.patient_id}
           </td>

@@ -7,7 +7,7 @@ import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { venueOptions } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
-import { villageColorClasses } from '@/utils/constants';
+import { VILLAGECOLORCLASSES } from '@/utils/constants';
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
@@ -54,7 +54,7 @@ function PatientList() {
   function handleDropdownChangeWithStyle(e) {
     const selectedValue = e.target.value;
     e.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
-      villageColorClasses[selectedValue] || 'text-gray-500'
+      VILLAGECOLORCLASSES[selectedValue] || 'text-gray-500'
     }`;
     handleCodeChange(e);
   }
@@ -112,7 +112,7 @@ function PatientList() {
         return (
           <tr key={patientID}>
             <td
-              className={`whitespace-nowrap px-3 py-4 text-sm ${villageColorClasses[patientVillagePrefix] || 'text-gray-500'}`}
+              className={`whitespace-nowrap px-3 py-4 text-sm ${VILLAGECOLORCLASSES[patientVillagePrefix] || 'text-gray-500'}`}
             >
               {patientID}
             </td>
@@ -168,7 +168,7 @@ function PatientList() {
                 </option>
                 {Object.entries(venueOptions).map(([key, value]) => (
                   <option
-                    className={`${villageColorClasses[key] || 'text-gray-500'}`}
+                    className={`${VILLAGECOLORCLASSES[key] || 'text-gray-500'}`}
                     value={key}
                     key={key}
                   >

@@ -30,7 +30,7 @@ export const venueOptions = {
   SV: 'Smong',
 };
 
-export const villageColorClasses = {
+export const VILLAGECOLORCLASSES = {
   PC: 'text-red-300 font-bold',
   CA: 'text-blue-300 font-bold',
   TT: 'text-green-300 font-bold',
