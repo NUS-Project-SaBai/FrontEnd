@@ -8,3 +8,4 @@ package-lock.json
 .env.local
 user.json
 .vercel
+.vscode/settings.json.
