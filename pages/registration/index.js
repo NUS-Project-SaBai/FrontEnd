@@ -2,14 +2,6 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import axiosInstance from '@/pages/api/_axiosInstance';
-
-import {
-  CLOUDINARY_URL,
-  NO_PHOTO_MESSAGE,
-  venueOptions,
-  VENUE_COLORS,
-  STYLES,
-} from '@/utils/constants';
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import {
