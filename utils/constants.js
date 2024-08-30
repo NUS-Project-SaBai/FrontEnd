@@ -29,3 +29,11 @@ export const venueOptions = {
   TK: 'TK',
   SV: 'Smong',
 };
+
+export const VILLAGECOLORCLASSES = {
+  PC: 'text-red-300 font-bold',
+  CA: 'text-blue-300 font-bold',
+  TT: 'text-green-300 font-bold',
+  TK: 'text-yellow-300 font-bold',
+  SV: 'text-purple-300 font-bold',
+};
