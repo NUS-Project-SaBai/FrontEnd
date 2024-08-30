@@ -1,13 +1,13 @@
 import { Button, InputField, InputBox } from '@/components/TextComponents';
-import { venueOptions, VILLAGECOLORCLASSES } from '@/utils/constants';
+import { VENUE_OPTIONS, VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 import AppWebcam from '@/components/WebCamera';
 import React, { useState } from 'react';
 
-export const VenueOptions = ({ handleInputChange }) => {
+export const VenueOptionsDropdown = ({ handleInputChange }) => {
   const handleDropdownChangeWithStyle = event => {
     const selectedValue = event.target.value;
     event.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
-      VILLAGECOLORCLASSES[selectedValue] || 'text-gray-500'
+      VILLAGE_COLOR_CLASSES[selectedValue] || 'text-gray-500'
     }`;
     handleInputChange(event);
   };
@@ -31,9 +31,9 @@ export const VenueOptions = ({ handleInputChange }) => {
           <option hidden value="">
             Please select an option
           </option>
-          {Object.entries(venueOptions).map(([key, value]) => (
+          {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
             <option
-              className={`${VILLAGECOLORCLASSES[key] || 'text-gray-500'}`}
+              className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
               value={key}
               key={key}
             >
@@ -124,7 +124,8 @@ export function PatientRegistrationForm({
           onChange={handleInputChange}
           value={formDetails.date_of_birth}
         />
-        <VenueOptions handleInputChange={handleInputChange} />
+
+        <VenueOptionsDropdown handleInputChange={handleInputChange} />
 
         <div>
           <label
