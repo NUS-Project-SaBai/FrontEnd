@@ -1,40 +1,4 @@
-import plugin from 'tailwindcss';
-
 /** @type {import('tailwindcss').Config} */
-
-const safelist = [
-  // Text colors from villageColorClasses
-  'text-red-300',
-  'text-blue-300',
-  'text-green-300',
-  'text-yellow-300',
-  'text-purple-300',
-
-  // Background and hover colors for buttons or other components
-  'bg-indigo-800',
-  'hover:bg-indigo-500',
-  'focus-visible:outline-indigo-600',
-
-  'bg-sky-800',
-  'hover:bg-sky-500',
-  'focus-visible:outline-sky-600',
-
-  'bg-blue-800',
-  'hover:bg-blue-500',
-  'focus-visible:outline-blue-600',
-
-  'bg-green-800',
-  'hover:bg-green-500',
-  'focus-visible:outline-green-600',
-
-  'bg-red-800',
-  'hover:bg-red-500',
-  'focus-visible:outline-red-600',
-
-  'bg-orange-800',
-  'hover:bg-orange-500',
-  'focus-visible:outline-orange-600',
-];
 
 module.exports = {
   content: [
@@ -48,6 +12,16 @@ module.exports = {
   theme: {
     extend: {},
   },
-  safelist,
+  safelist: [
+    // Text colors
+    {
+      pattern: /^text-(red|blue|green|yellow|purple)-300$/,
+    },
+    // Background colors and hover states
+    {
+      pattern:
+        /^(bg|hover:bg|focus-visible:outline)-(indigo|sky|blue|green|red|orange)-(800|500|600)$/,
+    },
+  ],
   plugins: [],
 };
