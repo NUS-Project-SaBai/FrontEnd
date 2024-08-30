@@ -20,8 +20,8 @@ export function PatientView({ content }) {
       key: 'date_of_birth',
       calculate: dob => moment(dob).format('DD-MMMM-YYYY'),
     },
-    { label: 'POOR', key: 'poor' },
-    { label: 'BS2', key: 'bs2' },
+    { label: 'POOR Card', key: 'poor' },
+    { label: 'BS2 Card', key: 'bs2' },
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 

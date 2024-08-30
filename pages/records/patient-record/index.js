@@ -140,6 +140,7 @@ const PatientRecord = () => {
       );
       formData.append('picture', pictureFile);
     }
+    console.dir({ updatedPatient });
 
     if (updatedPatient.pk) {
       try {
