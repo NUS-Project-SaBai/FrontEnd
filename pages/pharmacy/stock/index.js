@@ -194,11 +194,14 @@ const Stock = () => {
 
   return (
     <div className="mt-4 mx-6">
-      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
+      <CustomModal
+        isOpen={medicationModalIsOpen}
+        onRequestClose={toggleModal}
+        onSubmit={onSubmitForm}
+      >
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
-          onSubmit={onSubmitForm}
         />
       </CustomModal>
 

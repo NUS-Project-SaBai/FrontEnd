@@ -237,15 +237,13 @@ const PatientRecord = () => {
         <CustomModal
           isOpen={editPatientModalOpen}
           onRequestClose={toggleEditPatientModal}
-          showCloseButton={false}
+          onSubmit={submitPatientEdit}
         >
           <PatientRegistrationForm
             formDetails={patientEdit}
             imageDetails={imageDetails}
             setImageDetails={setImageDetails}
-            closeModal={toggleEditPatientModal}
             handleInputChange={handlePatientChange}
-            submitNewPatient={submitPatientEdit}
           />
         </CustomModal>
 

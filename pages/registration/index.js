@@ -161,15 +161,13 @@ const Registration = () => {
       <CustomModal
         isOpen={patientModalOpen}
         onRequestClose={togglePatientModal}
-        showCloseButton={false}
+        onSubmit={submitNewPatient}
       >
         <PatientRegistrationForm
           formDetails={formDetails}
           imageDetails={imageDetails}
           setImageDetails={setImageDetails}
-          closeModal={togglePatientModal}
           handleInputChange={handleInputChange}
-          submitNewPatient={submitNewPatient}
         />
       </CustomModal>
       <div>
