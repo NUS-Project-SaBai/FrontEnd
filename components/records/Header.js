@@ -1,12 +1,40 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import axios from 'axios';
 import moment from 'moment';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
 
 export function Header({ patient, visits, handleVisitChange }) {
+  const fileInputRef = useRef(null);
+
   function uploadDocument() {
+    //function where on click triggers file selection
+    //then send to backend using axios of fetch
     console.log('Upload document');
+    fileInputRef.current.click(); //trigger file input click
+  }
+
+  function handleFileChange(event) {
+    console.log('event change');
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      axios
+        .post('http://127.0.0.1:8000/upload/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(response => {
+          console.log('File uploaded successfully', response.data);
+        })
+        .catch(error => {
+          console.error('Error uploading file:', error);
+        });
+    }
   }
 
   function viewDocument() {
@@ -54,11 +82,19 @@ export function Header({ patient, visits, handleVisitChange }) {
         <p className="text-lg font-medium">{patient.name}</p>
       </div>
       <div className="col-span-12 md:col-span-4 flex items-center justify-between md:justify-start md:space-x-4 mt-4 md:mt-0">
-        <Button
-          text="Upload Document"
-          onClick={uploadDocument}
-          colour="green"
-        />
+        <div>
+          <Button
+            text="Upload Document"
+            onClick={uploadDocument}
+            colour="green"
+          />
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+        </div>
         <Button text="View Document" onClick={viewDocument} colour="blue" />
       </div>
     </div>
