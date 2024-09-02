@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
-import { Button, InputField } from '@/components/TextComponents';
+import { Button, InputField, PageTitle } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import toast from 'react-hot-toast';
 import useWithLoading from '@/utils/loading';
@@ -27,15 +27,6 @@ const Orders = () => {
       console.error('Error loading orders:', error);
     }
   });
-
-  const onFilterChange = event => {
-    const filteredOrders = orders.filter(order => {
-      return order.visit.patient.filter_string.includes(
-        event.target.value.toUpperCase()
-      );
-    });
-    setOrdersFiltered(filteredOrders);
-  };
 
   const handleOrderApprove = useWithLoading(async order => {
     if (window.confirm('Are you sure you want to approve this order?')) {
@@ -67,7 +58,16 @@ const Orders = () => {
     }
   });
 
-  const renderTableContent = () => {
+  const onFilterChange = event => {
+    const filteredOrders = orders.filter(order => {
+      return order.visit.patient.filter_string.includes(
+        event.target.value.toUpperCase()
+      );
+    });
+    setOrdersFiltered(filteredOrders);
+  };
+
+  const TableContent = () => {
     return ordersFiltered.map(order => {
       const visit = order.visit;
       const prescriptions = (
@@ -123,9 +123,7 @@ const Orders = () => {
 
   return (
     <div className="mx-4 my-2">
-      <h1 className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-6">
-        Orders
-      </h1>
+      <PageTitle title="Orders" />
       <div className="field mb-4">
         <div className="control">
           <InputField
@@ -183,7 +181,7 @@ const Orders = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {renderTableContent()}
+                  <TableContent />
                 </tbody>
               </table>
             </div>
