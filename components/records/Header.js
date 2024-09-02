@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
+import CustomModal from '@/components/CustomModal';
 
 export function Header({ patient, visits, handleVisitChange }) {
-  function uploadDocument() {
-    console.log('Upload document');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
+
+  function openUploadModal() {
+    setModalContent('upload');
+    setIsModalOpen(true);
   }
 
-  function viewDocument() {
-    console.log('View document');
+  function openViewModal() {
+    setModalContent('view');
+    setIsModalOpen(true);
   }
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalContent(null);
+  };
 
   const visitOptions = visits.map(visit => {
     const date = moment(visit.date).format('DD MMMM YYYY HH:mm');
@@ -56,11 +67,28 @@ export function Header({ patient, visits, handleVisitChange }) {
       <div className="col-span-12 md:col-span-4 flex items-center justify-between md:justify-start md:space-x-4 mt-4 md:mt-0">
         <Button
           text="Upload Document"
-          onClick={uploadDocument}
+          onClick={openUploadModal}
           colour="green"
         />
-        <Button text="View Document" onClick={viewDocument} colour="blue" />
+        <Button text="View Document" onClick={openViewModal} colour="blue" />
       </div>
+
+      <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
+        {modalContent === 'upload' && (
+          <div>
+            <h2 className="text-xl font-bold mb-4">Upload Document</h2>
+            {/* Add upload form or file input here once decided*/}
+            <input type="file" />
+          </div>
+        )}
+        {modalContent === 'view' && (
+          <div>
+            <h2 className="text-xl font-bold mb-4">View Document</h2>
+            {/* Add document viewer here once decided*/}
+            <p>view component goes here.</p>
+          </div>
+        )}
+      </CustomModal>
     </div>
   );
 }
