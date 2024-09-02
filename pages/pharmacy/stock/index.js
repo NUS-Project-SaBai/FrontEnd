@@ -5,7 +5,7 @@ import {
   MedicationHistoryForm,
 } from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
-import { Button, InputField } from '@/components/TextComponents';
+import { Button, InputField, PageTitle } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
@@ -40,45 +40,6 @@ const Stock = () => {
       console.error('Error fetching medication:', error);
     }
   });
-
-  const onFilterChange = event => {
-    const filteredMedications = medications.filter(medication => {
-      const medicineName = medication.medicine_name.toLowerCase();
-      return medicineName.includes(event.target.value.toLowerCase());
-    });
-
-    setMedicationsFiltered(filteredMedications);
-  };
-
-  const toggleModal = (medication = {}) => {
-    setMedicationDetails(medication);
-    setMedicationModalIsOpen(!medicationModalIsOpen);
-  };
-
-  const toggleMedicationHistoryModal = medication => {
-    setMedication(medication);
-    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
-  };
-
-  const createNewMedication = () => {
-    setMedicationDetails({
-      medicine_name: '',
-      reserve_quantity: 0,
-      quantity: 0,
-      quantityChange: 0,
-      notes: '',
-      remarks: '',
-    });
-    toggleModal();
-  };
-
-  const handleMedicationChange = event => {
-    const newMedicationDetails = {
-      ...medicationDetails,
-      [event.target.name]: event.target.value,
-    };
-    setMedicationDetails(newMedicationDetails);
-  };
 
   const onSubmitForm = useWithLoading(async () => {
     if (!medicationDetails.medicine_name) {
@@ -154,7 +115,46 @@ const Stock = () => {
     }
   });
 
-  function renderRows() {
+  const onFilterChange = event => {
+    const filteredMedications = medications.filter(medication => {
+      const medicineName = medication.medicine_name.toLowerCase();
+      return medicineName.includes(event.target.value.toLowerCase());
+    });
+
+    setMedicationsFiltered(filteredMedications);
+  };
+
+  const toggleModal = (medication = {}) => {
+    setMedicationDetails(medication);
+    setMedicationModalIsOpen(!medicationModalIsOpen);
+  };
+
+  const toggleMedicationHistoryModal = medication => {
+    setMedication(medication);
+    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
+  };
+
+  const createNewMedication = () => {
+    setMedicationDetails({
+      medicine_name: '',
+      reserve_quantity: 0,
+      quantity: 0,
+      quantityChange: 0,
+      notes: '',
+      remarks: '',
+    });
+    toggleModal();
+  };
+
+  const handleMedicationChange = event => {
+    const newMedicationDetails = {
+      ...medicationDetails,
+      [event.target.name]: event.target.value,
+    };
+    setMedicationDetails(newMedicationDetails);
+  };
+
+  function Rows() {
     return medicationsFiltered.map(medication => {
       const medicationDetails = {
         ...medication,
@@ -209,9 +209,8 @@ const Stock = () => {
         <MedicationHistoryForm medication={medication} />
       </CustomModal>
 
-      <h1 className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-6">
-        Medication Stock
-      </h1>
+      <PageTitle title="Medication Stock" />
+
       <div className="space-y-2">
         <InputField
           label="Search for Medicine"
@@ -254,7 +253,7 @@ const Stock = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {renderRows()}
+                  <Rows />
                 </tbody>
               </table>
             </div>
