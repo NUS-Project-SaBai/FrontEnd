@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getAPI_URL, changeAPI_URL } from '@/utils/constants';
+import { PageTitle } from '@/components/TextComponents';
 
 function SettingsPage() {
   const [backendURL, setBackendURL] = useState(getAPI_URL());
@@ -13,14 +14,10 @@ function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
-      <header className="w-full max-w-3xl mb-6">
-        <h1 className="text-3xl font-bold text-center text-gray-800">
-          Settings Page
-        </h1>
-        <p className="text-center text-gray-600 mt-2">
-          Use this page to change the backend URL.
-        </p>
-      </header>
+      <PageTitle
+        title="Settings Page"
+        desc="Use this page to change the backend URL."
+      />
 
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
         <h2 className="text-xl font-semibold">Configuring Backend URL</h2>
