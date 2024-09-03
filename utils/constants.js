@@ -22,7 +22,7 @@ export const changeAPI_URL = newURL => {
   window.localStorage.setItem('API_URL', newURL);
 };
 
-export const venueOptions = {
+export const VENUE_OPTIONS = {
   PC: 'PC',
   CA: 'CA',
   TT: 'TT',
@@ -31,3 +31,10 @@ export const venueOptions = {
 };
 
 export const OFFLINE = process.env.NEXT_PUBLIC_OFFLINE;
+export const VILLAGE_COLOR_CLASSES = {
+  PC: 'text-red-300 font-bold',
+  CA: 'text-blue-300 font-bold',
+  TT: 'text-green-300 font-bold',
+  TK: 'text-yellow-300 font-bold',
+  SV: 'text-purple-300 font-bold',
+};

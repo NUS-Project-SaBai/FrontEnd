@@ -5,8 +5,9 @@ import { CLOUDINARY_URL, OFFLINE, defaultAPI_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
-import { venueOptions } from '@/utils/constants';
+import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
+import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
@@ -50,6 +51,14 @@ function PatientList() {
     setPatientCode(searchValue);
   }
 
+  function handleDropdownChangeWithStyle(e) {
+    const selectedValue = e.target.value;
+    e.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
+      VILLAGE_COLOR_CLASSES[selectedValue] || 'text-gray-500'
+    }`;
+    handleCodeChange(e);
+  }
+
   function filterPatients() {
     const filteredPatients = patients.filter(patient => {
       return (
@@ -70,7 +79,9 @@ function PatientList() {
           ? `${defaultAPI_URL}/${patient.offline_picture}`
           : `${CLOUDINARY_URL}/${patient.picture}`;
 
+        const patientVillagePrefix = patient.village_prefix;
         const fullName = patient.name;
+
         const record = (
           <Button
             text={'View'}
@@ -103,7 +114,9 @@ function PatientList() {
 
         return (
           <tr key={patientID}>
-            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+            <td
+              className={`whitespace-nowrap px-3 py-4 text-sm ${VILLAGE_COLOR_CLASSES[patientVillagePrefix] || 'text-gray-500'}`}
+            >
               {patientID}
             </td>
             <td>
@@ -151,13 +164,17 @@ function PatientList() {
                 className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
                 name="patientDropdown"
                 id="patientDropdown"
-                onChange={handleCodeChange}
+                onChange={handleDropdownChangeWithStyle}
               >
                 <option value={PATIENT_CODE_ALL}>
                   {`${PATIENT_CODE_ALL}`}
                 </option>
-                {Object.entries(venueOptions).map(([key]) => (
-                  <option value={key} key={key}>
+                {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
+                  <option
+                    className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
+                    value={key}
+                    key={key}
+                  >
                     {key}
                   </option>
                 ))}
