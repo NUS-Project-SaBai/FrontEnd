@@ -30,7 +30,7 @@ export const VENUE_OPTIONS = {
   SV: 'Smong',
 };
 
-export const OFFLINE = process.env.NEXT_PUBLIC_OFFLINE;
+export const OFFLINE = process.env.NEXT_PUBLIC_OFFLINE || false;
 export const VILLAGE_COLOR_CLASSES = {
   PC: 'text-red-300 font-bold',
   CA: 'text-blue-300 font-bold',
