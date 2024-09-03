@@ -201,33 +201,25 @@ const PatientVitals = () => {
     );
   }
 
-  function Render() {
-    if (!mounted) return null;
+  if (!mounted) return <></>;
 
-    return (
-      <div className="mt-7.5 mx-6 overflow-hidden">
-        <CustomModal
-          isOpen={CustomModalOpen}
-          onRequestClose={toggleCustomModal}
-        >
-          <ConsultationView content={selectedConsult} />
-        </CustomModal>
-        <PageTitle title="Patient Vitals" />
-        <PatientHeader />
-        <b>
-          Please remember to press the submit button at the end of the form!
-        </b>
+  return (
+    <div className="mt-7.5 mx-6 overflow-hidden">
+      <CustomModal isOpen={CustomModalOpen} onRequestClose={toggleCustomModal}>
+        <ConsultationView content={selectedConsult} />
+      </CustomModal>
+      <PageTitle title="Patient Vitals" />
+      <PatientHeader />
+      <b>Please remember to press the submit button at the end of the form!</b>
 
-        <hr />
+      <hr />
 
-        <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
-          <LeftColumn />
-          <RightColumn />
-        </div>
+      <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
+        <LeftColumn />
+        <RightColumn />
       </div>
-    );
-  }
-  return <Render />;
+    </div>
+  );
 };
 
 export default withAuth(PatientVitals);
