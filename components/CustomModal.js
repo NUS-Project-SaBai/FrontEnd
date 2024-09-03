@@ -16,9 +16,9 @@ const CustomModal = ({
       className={`fixed inset-0 left-[20%] right-[7.5%] flex items-center justify-center z-50 p-4 ${contentStyle}`}
       overlayClassName="fixed inset-0 bg-black bg-opacity-50"
     >
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[100vh] overflow-y-auto">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         {children}
-        <div className="flex justify-center items-center space-x-4 my-4">
+        <div className="flex justify-center items-center space-x-4 mt-4">
           {typeof onRequestClose === 'function' && (
             <Button text="Close" colour="red" onClick={onRequestClose} />
           )}
