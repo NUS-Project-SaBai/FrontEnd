@@ -12,7 +12,7 @@ import {
 } from '@/components/records';
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
-import { Button } from '@/components/TextComponents/';
+import { Button, PageTitle } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import useWithLoading from '@/utils/loading';
@@ -44,11 +44,6 @@ const PatientConsultation = () => {
   const [consultationFormDetails, setConsultationFormDetails] = useState({
     diagnoses: [],
   });
-
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
 
   useEffect(() => {
     onRefresh();
@@ -111,6 +106,41 @@ const PatientConsultation = () => {
     }
   });
 
+  const submitConsultationForm = useWithLoading(async () => {
+    try {
+      const formPayload = {
+        visit: selectedVisitID,
+        ...consultationFormDetails,
+      };
+
+      const diagnosesPayload = consultationFormDetails.diagnoses.map(
+        diagnosis => ({
+          details: diagnosis.details,
+          category: diagnosis.type,
+        })
+      );
+
+      const ordersPayload = orders.map(order => ({
+        ...order,
+        visit: selectedVisitID,
+      }));
+
+      const combinedPayload = {
+        consult: formPayload,
+        diagnoses: diagnosesPayload,
+        orders: ordersPayload,
+      };
+
+      await axiosInstance.post('/consults', combinedPayload);
+
+      toast.success('Medical Consult Completed!');
+      Router.push('/records');
+    } catch (error) {
+      toast.error(`Error submitting consultation form: ${error.message}`);
+      console.error('Error submitting consultation form:', error);
+    }
+  });
+
   // Consultations View Modal
   function toggleCustomModal() {
     setConsultationModalOpen(!consultationModalOpen);
@@ -131,6 +161,11 @@ const PatientConsultation = () => {
     loadMedicationStock();
     setOrderFormModalOpen(!orderFormModalOpen);
   }
+
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
 
   function handleOrderFormChange(e) {
     const target = e.target;
@@ -199,42 +234,7 @@ const PatientConsultation = () => {
     setConsultationFormDetails(prevState => ({ ...prevState, diagnoses }));
   }
 
-  const submitConsultationForm = useWithLoading(async () => {
-    try {
-      const formPayload = {
-        visit: selectedVisitID,
-        ...consultationFormDetails,
-      };
-
-      const diagnosesPayload = consultationFormDetails.diagnoses.map(
-        diagnosis => ({
-          details: diagnosis.details,
-          category: diagnosis.type,
-        })
-      );
-
-      const ordersPayload = orders.map(order => ({
-        ...order,
-        visit: selectedVisitID,
-      }));
-
-      const combinedPayload = {
-        consult: formPayload,
-        diagnoses: diagnosesPayload,
-        orders: ordersPayload,
-      };
-
-      await axiosInstance.post('/consults', combinedPayload);
-
-      toast.success('Medical Consult Completed!');
-      Router.push('/records');
-    } catch (error) {
-      toast.error(`Error submitting consultation form: ${error.message}`);
-      console.error('Error submitting consultation form:', error);
-    }
-  });
-
-  function renderHeader() {
+  function PatientHeader() {
     return (
       <Header
         patient={patient}
@@ -244,7 +244,7 @@ const PatientConsultation = () => {
     );
   }
 
-  function renderFirstColumn() {
+  function LeftColumn() {
     return (
       <div className="space-y-8">
         {typeof vitals === 'undefined' ? (
@@ -263,7 +263,7 @@ const PatientConsultation = () => {
     );
   }
 
-  function renderSecondColumn() {
+  function RightColumn() {
     return (
       <div className="bg-blue-50 p-4 rounded-lg relative space-y-2">
         <ConsultationForm
@@ -275,7 +275,7 @@ const PatientConsultation = () => {
           <h2 className="text-lg font-medium text-gray-900 mb-4">Orders</h2>
           <hr className="mb-4" />
           {orders.length > 0 ? (
-            renderOrdersTable()
+            <OrdersTable />
           ) : (
             <p className="text-gray-500 text-sm mb-4">No Orders</p>
           )}
@@ -299,7 +299,7 @@ const PatientConsultation = () => {
     );
   }
 
-  function renderOrdersTable() {
+  function OrdersTable() {
     const orderRows = orders.map((order, index) => {
       const name = order.medicine_name;
       const quantity = order.quantity;
@@ -375,7 +375,7 @@ const PatientConsultation = () => {
     );
   }
 
-  function render() {
+  function Render() {
     if (!mounted) return null;
 
     return (
@@ -416,23 +416,25 @@ const PatientConsultation = () => {
         >
           <ConsultationView content={selectedConsult} />
         </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Consultation
-        </h1>
-        {renderHeader()}
+        <PageTitle title="Patient Consultation" />
+        <PatientHeader />
         <b>
           Please remember to press the submit button at the end of the form!
         </b>
         <hr />
         <div className="grid grid-cols-2 gap-x-4 mb-4">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
+          <div>
+            <LeftColumn />
+          </div>
+          <div>
+            <RightColumn />
+          </div>
         </div>
       </div>
     );
   }
 
-  return <>{render()}</>;
+  return <Render />;
 };
 
 export default withAuth(PatientConsultation);
