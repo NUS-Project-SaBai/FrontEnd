@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
-import Modal from 'react-modal';
 import {
   ConsultationsTable,
   PrescriptionsTable,
@@ -380,12 +379,6 @@ const PatientConsultation = () => {
 
     return (
       <div className="mt-7 mx-6 overflow-hidden">
-        {/* <Modal
-          isOpen={orderFormModalOpen}
-          onRequestClose={toggleOrderFormModal}
-          className="fixed inset-0 flex items-center justify-center z-50 p-4"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-        > */}
         <CustomModal
           isOpen={orderFormModalOpen}
           onRequestClose={toggleOrderFormModal}
