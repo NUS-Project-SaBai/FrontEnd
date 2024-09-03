@@ -138,54 +138,50 @@ const PatientRecord = () => {
     );
   }
 
-  function Render() {
-    if (noRecords)
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <h2 className="text-black text-xl">
-            This patient has no records currently
-          </h2>
-        </div>
-      );
-
+  if (noRecords)
     return (
-      <div className="mt-7.5 mx-6 overflow-hidden">
-        <Modal
-          isOpen={vitalsModalOpen}
-          onRequestClose={toggleVitalsModal}
-          className="fixed inset-0 flex items-center justify-center z-50 p-4"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-        >
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
-            <VitalsTable content={vitals} />
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              onClick={toggleVitalsModal}
-            >
-              Close
-            </button>
-          </div>
-        </Modal>
-        <CustomModal
-          isOpen={consultationModalOpen}
-          onRequestClose={toggleConsultationModal}
-        >
-          <ConsultationView content={selectedConsult} />
-        </CustomModal>
-        <PageTitle title="Patient Records" />
-        <PatientHeader />
-
-        <hr className="mt-2" />
-
-        <div className="grid grid-cols-2 gap-x-6">
-          <LeftColumn />
-          <RightColumn />
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <h2 className="text-black text-xl">
+          This patient has no records currently
+        </h2>
       </div>
     );
-  }
 
-  return <Render />;
+  return (
+    <div className="mt-7.5 mx-6 overflow-hidden">
+      <Modal
+        isOpen={vitalsModalOpen}
+        onRequestClose={toggleVitalsModal}
+        className="fixed inset-0 flex items-center justify-center z-50 p-4"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      >
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
+          <VitalsTable content={vitals} />
+          <button
+            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onClick={toggleVitalsModal}
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleConsultationModal}
+      >
+        <ConsultationView content={selectedConsult} />
+      </CustomModal>
+      <PageTitle title="Patient Records" />
+      <PatientHeader />
+
+      <hr className="mt-2" />
+
+      <div className="grid grid-cols-2 gap-x-6">
+        <LeftColumn />
+        <RightColumn />
+      </div>
+    </div>
+  );
 };
 
 export default withAuth(PatientRecord);
