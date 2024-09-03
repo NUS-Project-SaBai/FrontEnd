@@ -10,7 +10,7 @@ import {
 } from '@/components/records';
 import withAuth from '@/utils/auth';
 import Router from 'next/router';
-import { Button } from '@/components/TextComponents/';
+import { Button, PageTitle } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import toast from 'react-hot-toast';
@@ -30,11 +30,6 @@ const PatientRecord = () => {
 
   const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
-
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
 
   useEffect(() => {
     onRefresh();
@@ -85,6 +80,11 @@ const PatientRecord = () => {
     }
   });
 
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
+
   function toggleVitalsModal() {
     setVitalsModalOpen(!vitalsModalOpen);
   }
@@ -98,7 +98,7 @@ const PatientRecord = () => {
     toggleConsultationModal();
   }
 
-  function renderHeader() {
+  function PatientHeader() {
     return (
       <Header
         patient={patient}
@@ -108,7 +108,7 @@ const PatientRecord = () => {
     );
   }
 
-  function renderFirstColumn() {
+  function LeftColumn() {
     if (typeof vitals === 'undefined') {
       return (
         <div className="my-2">
@@ -129,7 +129,7 @@ const PatientRecord = () => {
     );
   }
 
-  function renderSecondColumn() {
+  function RightColumn() {
     return (
       <div className="space-y-8">
         <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
@@ -138,7 +138,7 @@ const PatientRecord = () => {
     );
   }
 
-  function render() {
+  function Render() {
     if (noRecords)
       return (
         <div className="flex justify-center items-center h-screen">
@@ -172,22 +172,20 @@ const PatientRecord = () => {
         >
           <ConsultationView content={selectedConsult} />
         </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Records
-        </h1>
-        {renderHeader()}
+        <PageTitle title="Patient Records" />
+        <PatientHeader />
 
         <hr className="mt-2" />
 
         <div className="grid grid-cols-2 gap-x-6">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
+          <LeftColumn />
+          <RightColumn />
         </div>
       </div>
     );
   }
 
-  return <>{render()}</>;
+  return <Render />;
 };
 
 export default withAuth(PatientRecord);
