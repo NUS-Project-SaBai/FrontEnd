@@ -12,6 +12,7 @@ import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
+import { PageTitle } from '@/components/TextComponents';
 import useWithLoading from '@/utils/loading';
 
 const PatientVitals = () => {
@@ -47,11 +48,6 @@ const PatientVitals = () => {
   });
 
   const [CustomModalOpen, setCustomModalOpen] = useState(false);
-
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
 
   useEffect(() => {
     onRefresh();
@@ -102,6 +98,11 @@ const PatientVitals = () => {
       console.error('Error loading visit details:', error);
     }
   });
+
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
 
   function toggleCustomModal() {
     setCustomModalOpen(!CustomModalOpen);
@@ -158,7 +159,7 @@ const PatientVitals = () => {
     }));
   }
 
-  function renderHeader() {
+  function PatientHeader() {
     return (
       <Header
         patient={patient}
@@ -168,7 +169,7 @@ const PatientVitals = () => {
     );
   }
 
-  function renderFirstColumn() {
+  function LeftColumn() {
     return (
       <div className="space-y-4">
         {typeof vitals === 'undefined' ? (
@@ -187,7 +188,7 @@ const PatientVitals = () => {
     );
   }
 
-  function renderSecondColumn() {
+  function RightColumn() {
     return (
       <div className="space-y-2">
         <VitalsForm
@@ -200,7 +201,7 @@ const PatientVitals = () => {
     );
   }
 
-  function render() {
+  function Render() {
     if (!mounted) return null;
 
     return (
@@ -211,10 +212,8 @@ const PatientVitals = () => {
         >
           <ConsultationView content={selectedConsult} />
         </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Vitals
-        </h1>
-        {renderHeader()}
+        <PageTitle title="Patient Vitals" />
+        <PatientHeader />
         <b>
           Please remember to press the submit button at the end of the form!
         </b>
@@ -222,13 +221,13 @@ const PatientVitals = () => {
         <hr />
 
         <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
+          <LeftColumn />
+          <RightColumn />
         </div>
       </div>
     );
   }
-  return render();
+  return <Render />;
 };
 
 export default withAuth(PatientVitals);
