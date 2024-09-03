@@ -164,7 +164,10 @@ const PatientConsultation = () => {
     }
 
     // Decimal check
-    if (!Number.isInteger(orderFormDetails.quantity - 0)) {
+    if (
+      !orderFormDetails.quantity ||
+      !Number.isInteger(orderFormDetails.quantity - 0)
+    ) {
       toast.error('Please enter a valid quantity.');
       return;
     }
