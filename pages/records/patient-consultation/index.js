@@ -375,66 +375,60 @@ const PatientConsultation = () => {
     );
   }
 
-  function Render() {
-    if (!mounted) return null;
+  if (!mounted) return <></>;
 
-    return (
-      <div className="mt-7 mx-6 overflow-hidden">
-        <Modal
-          isOpen={orderFormModalOpen}
-          onRequestClose={toggleOrderFormModal}
-          className="fixed inset-0 flex items-center justify-center z-50 p-4"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-        >
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
-            <OrderForm
-              allergies={patient.drug_allergy}
-              medications={medications}
-              handleInputChange={handleOrderFormChange}
-              orderDetails={orderFormDetails}
-              medicationOptions={medications.map(medication => (
-                <option
-                  key={medication.id}
-                  value={`${medication.id} ${medication.medicine_name}`}
-                >
-                  {medication.medicine_name}
-                </option>
-              ))}
-              onSubmit={submitNewOrder}
-            />
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              onClick={toggleOrderFormModal}
-            >
-              Close
-            </button>
-          </div>
-        </Modal>
-        <CustomModal
-          isOpen={consultationModalOpen}
-          onRequestClose={toggleCustomModal}
-        >
-          <ConsultationView content={selectedConsult} />
-        </CustomModal>
-        <PageTitle title="Patient Consultation" />
-        <PatientHeader />
-        <b>
-          Please remember to press the submit button at the end of the form!
-        </b>
-        <hr />
-        <div className="grid grid-cols-2 gap-x-4 mb-4">
-          <div>
-            <LeftColumn />
-          </div>
-          <div>
-            <RightColumn />
-          </div>
+  return (
+    <div className="mt-7 mx-6 overflow-hidden">
+      <Modal
+        isOpen={orderFormModalOpen}
+        onRequestClose={toggleOrderFormModal}
+        className="fixed inset-0 flex items-center justify-center z-50 p-4"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      >
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
+          <OrderForm
+            allergies={patient.drug_allergy}
+            medications={medications}
+            handleInputChange={handleOrderFormChange}
+            orderDetails={orderFormDetails}
+            medicationOptions={medications.map(medication => (
+              <option
+                key={medication.id}
+                value={`${medication.id} ${medication.medicine_name}`}
+              >
+                {medication.medicine_name}
+              </option>
+            ))}
+            onSubmit={submitNewOrder}
+          />
+          <button
+            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onClick={toggleOrderFormModal}
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleCustomModal}
+      >
+        <ConsultationView content={selectedConsult} />
+      </CustomModal>
+      <PageTitle title="Patient Consultation" />
+      <PatientHeader />
+      <b>Please remember to press the submit button at the end of the form!</b>
+      <hr />
+      <div className="grid grid-cols-2 gap-x-4 mb-4">
+        <div>
+          <LeftColumn />
+        </div>
+        <div>
+          <RightColumn />
         </div>
       </div>
-    );
-  }
-
-  return <Render />;
+    </div>
+  );
 };
 
 export default withAuth(PatientConsultation);
