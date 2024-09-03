@@ -3,7 +3,7 @@ import Router from 'next/router';
 import toast from 'react-hot-toast';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
-import { Button, InputField } from '@/components/TextComponents';
+import { Button, InputField, PageTitle } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { venueOptions } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
@@ -21,6 +21,14 @@ function PatientList() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+
+  useEffect(() => {
+    filterPatients();
+  }, [patientSearch, patientCode]);
+
   const fetchPatients = useWithLoading(async () => {
     try {
       const response = await axiosInstance.get('/patients');
@@ -31,14 +39,6 @@ function PatientList() {
       console.error('Error loading patients:', error);
     }
   });
-
-  useEffect(() => {
-    fetchPatients();
-  }, []);
-
-  useEffect(() => {
-    filterPatients();
-  }, [patientSearch, patientCode]);
 
   function handleSearchChange(e) {
     const searchValue = e.target.value.toLowerCase();
@@ -61,7 +61,7 @@ function PatientList() {
     setPatientsFiltered(filteredPatients);
   }
 
-  function renderTableContent() {
+  function TableContent() {
     const patientRows = patientsFiltered
       .slice(startIndex, endIndex)
       .map(patient => {
@@ -132,9 +132,7 @@ function PatientList() {
   return (
     <div className="mx-4 mt-2">
       <div className="mx-4 mt-2">
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patients List
-        </h1>
+        <PageTitle title="Patients List" />
         <div className="flex items-center space-x-4">
           <div className="field">
             <div className="control">
@@ -221,7 +219,7 @@ function PatientList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {renderTableContent()}
+                  <TableContent />
                 </tbody>
               </table>
             </div>
