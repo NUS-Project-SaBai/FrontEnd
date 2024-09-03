@@ -1,18 +1,13 @@
-import { useEffect, useRef } from 'react';
-
 export function InputField({ name, label, type, value, onChange, unit }) {
-  const inputRef = useRef(null);
+  const isNumberField = type === 'number';
 
-  useEffect(() => {
-    if (type !== 'number') return;
-    const ignoreScroll = e => {
-      e.preventDefault();
-    };
-    inputRef.current?.addEventListener('wheel', ignoreScroll);
-    return () => {
-      inputElement.removeEventListener('wheel', preventScroll);
-    };
-  }, [inputRef]);
+  function numberOnChangeInterceptor(e) {
+    const data = e.nativeEvent.data;
+    // allow numbers, and null for backspace
+    if (data === null || RegExp(/[0-9]/).test(data)) {
+      onChange(e);
+    }
+  }
 
   return (
     <div className="flex flex-col">
@@ -24,12 +19,11 @@ export function InputField({ name, label, type, value, onChange, unit }) {
       </label>
       <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
         <input
-          ref={inputRef}
           id={name}
           name={name}
-          type={type}
+          type={isNumberField ? 'text' : type}
           value={value}
-          onChange={onChange}
+          onChange={isNumberField ? numberOnChangeInterceptor : onChange}
           className="flex-1 block w-full rounded-md border-2 py-1.5 px-1.5 bg-white text-gray-900  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
         />
         {unit && (
