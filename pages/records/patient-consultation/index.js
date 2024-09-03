@@ -37,7 +37,7 @@ const PatientConsultation = () => {
 
   // Order Form Modal hooks
   const [orders, setOrders] = useState([]);
-  const [orderFormDetails, setOrderFormDetails] = useState({});
+  const [orderFormDetails, setOrderFormDetails] = useState({ quantity: '' });
   const [orderFormModalOpen, setOrderFormModalOpen] = useState(false);
 
   // Consultation Form hooks
