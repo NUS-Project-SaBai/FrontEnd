@@ -1,13 +1,12 @@
 import React from 'react';
 
 import {
-  Button,
   InputField,
   InputBox,
   DisplayField,
 } from '@/components/TextComponents/';
 
-export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
+export function MedicationForm({ handleInputChange, formDetails }) {
   return (
     <div className="space-y-2">
       <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-2">
@@ -42,8 +41,6 @@ export function MedicationForm({ onSubmit, handleInputChange, formDetails }) {
         onChange={handleInputChange}
         value={formDetails.notes}
       />
-
-      <Button onClick={onSubmit} text="Submit" colour="green" />
     </div>
   );
 }
