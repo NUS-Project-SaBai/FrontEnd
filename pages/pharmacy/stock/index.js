@@ -78,6 +78,10 @@ const Stock = () => {
       toast.error('Medicine name cannot be empty.');
       return;
     }
+    if (!medicationDetails.quantityChange) {
+      toast.error('Quantity to Add cannot be empty.');
+      return;
+    }
 
     const quantityChange = medicationDetails.quantityChange;
 
@@ -184,9 +188,6 @@ const Stock = () => {
       );
     });
   }
-
-  console.log('medicationDetails');
-  console.dir(medicationDetails);
 
   return (
     <div className="mt-4 mx-6">
