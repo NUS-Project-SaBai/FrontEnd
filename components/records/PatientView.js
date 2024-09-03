@@ -12,6 +12,7 @@ export function PatientView({ content }) {
   };
   const fieldsArray = [
     { label: 'ID Number', key: 'identification_number' },
+    { label: 'Contact', key: 'contact_no' },
     { label: 'Gender', key: 'gender' },
     { label: 'Age', key: 'date_of_birth', calculate: calculate_age },
     {
@@ -19,6 +20,8 @@ export function PatientView({ content }) {
       key: 'date_of_birth',
       calculate: dob => moment(dob).format('DD-MMMM-YYYY'),
     },
+    { label: 'POOR Card', key: 'poor' },
+    { label: 'BS2 Card', key: 'bs2' },
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 
@@ -30,7 +33,7 @@ export function PatientView({ content }) {
         content={
           field.calculate
             ? field.calculate(content[field.key])
-            : content[field.key]
+            : content[field.key] || 'NOT FILLED'
         }
       />
     </div>

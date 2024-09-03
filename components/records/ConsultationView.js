@@ -53,7 +53,7 @@ export function ConsultationView({ content: consult }) {
       <DisplayField
         key={'doctor'}
         label={'Consultation done by'}
-        content={consult.doctor?.nickname}
+        content={consult.doctor.nickname}
       />
 
       <DisplayField
