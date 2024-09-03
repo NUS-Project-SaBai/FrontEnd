@@ -1,4 +1,19 @@
+import { useEffect, useRef } from 'react';
+
 export function InputField({ name, label, type, value, onChange, unit }) {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (type !== 'number') return;
+    const ignoreScroll = e => {
+      e.preventDefault();
+    };
+    inputRef.current?.addEventListener('wheel', ignoreScroll);
+    return () => {
+      inputElement.removeEventListener('wheel', preventScroll);
+    };
+  }, [inputRef]);
+
   return (
     <div className="flex flex-col">
       <label
@@ -9,6 +24,7 @@ export function InputField({ name, label, type, value, onChange, unit }) {
       </label>
       <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
         <input
+          ref={inputRef}
           id={name}
           name={name}
           type={type}
