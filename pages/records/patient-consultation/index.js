@@ -36,7 +36,14 @@ const PatientConsultation = () => {
 
   // Order Form Modal hooks
   const [orders, setOrders] = useState([]);
-  const [orderFormDetails, setOrderFormDetails] = useState({});
+  const blankOrderFormDetails = {
+    quantity: '',
+    medicine: '',
+    medicine_name: '',
+  };
+  const [orderFormDetails, setOrderFormDetails] = useState(
+    blankOrderFormDetails
+  );
   const [orderFormModalOpen, setOrderFormModalOpen] = useState(false);
 
   // Consultation Form hooks
@@ -163,7 +170,10 @@ const PatientConsultation = () => {
     }
 
     // Decimal check
-    if (!Number.isInteger(orderFormDetails.quantity - 0)) {
+    if (
+      !orderFormDetails.quantity ||
+      !Number.isInteger(orderFormDetails.quantity - 0)
+    ) {
       toast.error('Please enter a valid quantity.');
       return;
     }
@@ -178,7 +188,7 @@ const PatientConsultation = () => {
     }
 
     setOrders([...orders]);
-    setOrderFormDetails({});
+    setOrderFormDetails(blankOrderFormDetails);
     toggleOrderFormModal();
   }
 

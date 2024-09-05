@@ -31,6 +31,7 @@ export function MedicationForm({ handleInputChange, formDetails }) {
         type="number"
         onChange={handleInputChange}
         value={formDetails.quantityChange}
+        allowNegativeNumbers
       />
 
       <InputBox
