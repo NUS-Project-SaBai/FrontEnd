@@ -13,11 +13,9 @@ import CustomModal from '@/components/CustomModal';
 const Stock = () => {
   const blankMedicationDetails = {
     medicine_name: '',
-    reserve_quantity: 0,
     quantity: 0,
     quantityChange: 0,
     notes: '',
-    remarks: '',
   };
   const [medications, setMedications] = useState([]);
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
