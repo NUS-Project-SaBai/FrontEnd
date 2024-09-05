@@ -76,7 +76,7 @@ const Stock = () => {
       toast.error('Medicine name cannot be empty.');
       return;
     }
-    if (!medicationDetails.quantityChange) {
+    if (medicationDetails.quantityChange === '') {
       toast.error('Quantity to Add cannot be empty.');
       return;
     }

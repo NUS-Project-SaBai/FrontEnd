@@ -1,4 +1,12 @@
-export function InputField({ name, label, type, value, onChange, unit }) {
+export function InputField({
+  name,
+  label,
+  type,
+  value,
+  onChange,
+  unit,
+  allowNegativeNumbers = false,
+}) {
   const isNumberField = type === 'number';
 
   function numberOnChangeInterceptor(e) {
@@ -7,7 +15,7 @@ export function InputField({ name, label, type, value, onChange, unit }) {
     if (
       data === null ||
       RegExp(/[0-9]/).test(data) ||
-      (data === '-' && e.target.value === '-')
+      (allowNegativeNumbers && data === '-' && e.target.value === '-')
     ) {
       onChange(e);
     }
