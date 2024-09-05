@@ -3,8 +3,12 @@ export function InputField({ name, label, type, value, onChange, unit }) {
 
   function numberOnChangeInterceptor(e) {
     const data = e.nativeEvent.data;
-    // allow numbers, and null for backspace
-    if (data === null || RegExp(/[0-9]/).test(data)) {
+    // allow null for backspace, numbers, or negative sign at the start of the input
+    if (
+      data === null ||
+      RegExp(/[0-9]/).test(data) ||
+      (data === '-' && e.target.value === '-')
+    ) {
       onChange(e);
     }
   }
