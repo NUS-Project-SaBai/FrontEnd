@@ -4,9 +4,39 @@ import moment from 'moment';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
+import { useEffect, useState } from 'react';
 
 export function Header({ patient, visits, handleVisitChange }) {
   const fileInputRef = useRef(null);
+  const [csrfToken, setCsrfToken] = useState(null);
+
+  //Fetch the CSRF token when the component loads
+  useEffect(() => {
+    axios
+      .get('http://127.0.0.1:8000/api/get-csrf-token/')
+      .then(response => {
+        setCsrfToken(response.data.csrfToken);
+        console.log('Fetched CSRF token:', response.data.csrfToken);
+      })
+      .catch(error => {
+        console.error('Error fetching CSRF token:', error);
+      });
+  }, []);
+
+  // function getCookie(name) {
+  //   let cookieValue = null;
+  //   if (document.cookie && document.cookie !== '') {
+  //     const cookies = document.cookie.split(';');
+  //     for (let i = 0; i < cookies.length; i++) {
+  //       const cookie = cookies[i].trim();
+  //       if (cookie.substring(0, name.length + 1) === (name + '=')) {
+  //         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   return cookieValue;
+  // }
 
   function uploadDocument() {
     //function where on click triggers file selection
@@ -18,6 +48,7 @@ export function Header({ patient, visits, handleVisitChange }) {
   function handleFileChange(event) {
     console.log('event change');
     const file = event.target.files[0];
+    console.log(csrfToken);
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
@@ -25,6 +56,7 @@ export function Header({ patient, visits, handleVisitChange }) {
       axios
         .post('http://127.0.0.1:8000/upload/', formData, {
           headers: {
+            'X-CSRFToken': csrfToken,
             'Content-Type': 'multipart/form-data',
           },
         })
