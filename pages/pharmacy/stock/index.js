@@ -192,39 +192,8 @@ const Stock = () => {
     });
   }
 
-  return (
-    <div className="mt-4 mx-6">
-      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
-        <MedicationForm
-          formDetails={medicationDetails}
-          handleInputChange={handleMedicationChange}
-          onSubmit={onSubmitForm}
-        />
-      </CustomModal>
-
-      <CustomModal
-        isOpen={medicationHistoryModalIsOpen}
-        onRequestClose={toggleMedicationHistoryModal}
-      >
-        <MedicationHistoryForm medication={medication} />
-      </CustomModal>
-
-      <PageTitle title="Medication Stock" />
-
-      <div className="space-y-2">
-        <InputField
-          label="Search for Medicine"
-          type="text"
-          name="search"
-          onChange={onFilterChange}
-          className="mb-2"
-        />
-        <Button
-          colour="green"
-          text="Add New Medicine"
-          onClick={createNewMedication}
-        />
-      </div>
+  const Table = () => {
+    return (
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flow-root">
           <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
@@ -260,6 +229,43 @@ const Stock = () => {
           </div>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="mt-4 mx-6">
+      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
+        <MedicationForm
+          formDetails={medicationDetails}
+          handleInputChange={handleMedicationChange}
+          onSubmit={onSubmitForm}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={medicationHistoryModalIsOpen}
+        onRequestClose={toggleMedicationHistoryModal}
+      >
+        <MedicationHistoryForm medication={medication} />
+      </CustomModal>
+
+      <PageTitle title="Medication Stock" />
+
+      <div className="space-y-2">
+        <InputField
+          label="Search for Medicine"
+          type="text"
+          name="search"
+          onChange={onFilterChange}
+          className="mb-2"
+        />
+        <Button
+          colour="green"
+          text="Add New Medicine"
+          onClick={createNewMedication}
+        />
+      </div>
+      <Table />
     </div>
   );
 };
