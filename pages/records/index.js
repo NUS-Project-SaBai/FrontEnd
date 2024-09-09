@@ -129,50 +129,8 @@ function PatientList() {
     return <>{patientRows}</>;
   }
 
-  return (
-    <div className="mx-4 mt-2">
-      <div className="mx-4 mt-2">
-        <PageTitle title="Patients List" />
-        <div className="flex items-center space-x-4">
-          <div className="field">
-            <div className="control">
-              <label
-                htmlFor="patientDropdown"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Search by village code
-              </label>
-              <select
-                className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                name="patientDropdown"
-                id="patientDropdown"
-                onChange={handleCodeChange}
-              >
-                <option value={PATIENT_CODE_ALL}>
-                  {`${PATIENT_CODE_ALL}`}
-                </option>
-                {Object.entries(venueOptions).map(([key]) => (
-                  <option value={key} key={key}>
-                    {key}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="field flex-[3]">
-            <div className="control">
-              <InputField
-                type="text"
-                name="Input Patient/ID to Search"
-                label="Input Patient/ID to Search"
-                onChange={handleSearchChange}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
+  function Table() {
+    return (
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="mt-2 flow-root">
           <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
@@ -246,6 +204,52 @@ function PatientList() {
           </button>
         </span>
       </div>
+    );
+  }
+
+  return (
+    <div className="mx-4 mt-2">
+      <div className="mx-4 mt-2">
+        <PageTitle title="Patients List" />
+        <div className="flex items-center space-x-4">
+          <div className="field">
+            <div className="control">
+              <label
+                htmlFor="patientDropdown"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Search by village code
+              </label>
+              <select
+                className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                name="patientDropdown"
+                id="patientDropdown"
+                onChange={handleCodeChange}
+              >
+                <option value={PATIENT_CODE_ALL}>
+                  {`${PATIENT_CODE_ALL}`}
+                </option>
+                {Object.entries(venueOptions).map(([key]) => (
+                  <option value={key} key={key}>
+                    {key}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="field flex-[3]">
+            <div className="control">
+              <InputField
+                type="text"
+                name="Input Patient/ID to Search"
+                label="Input Patient/ID to Search"
+                onChange={handleSearchChange}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <Table />
     </div>
   );
 }
