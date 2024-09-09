@@ -410,7 +410,10 @@ const PatientConsultation = () => {
             medications={medications}
             handleInputChange={handleOrderFormChange}
             orderDetails={orderFormDetails}
-            medicationOptions={medications.map(medication => (
+            medicationOptions={
+              medications
+                  .filter(med => orders.includes(med))
+                  .map(medication => (
               <option
                 key={medication.id}
                 value={`${medication.id} ${medication.medicine_name}`}
