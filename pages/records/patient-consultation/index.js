@@ -176,6 +176,17 @@ const PatientConsultation = () => {
     ) {
       toast.error('Please enter a valid quantity.');
       return;
+    } 
+
+    // Check if quantity to be ordered < stock
+    const stockMedication = medications.find(med => orderFormDetails.medicine === med.id);
+    console.log(stockMedication.quantity);
+    const quantityStockMedication = stockMedication ? stockMedication.quantity : 0;
+    if (
+      orderFormDetails.quantity > quantityStockMedication
+    ) {
+      toast.error('Not enough medication in stock.');
+      return;
     }
 
     const index = orders.findIndex(
