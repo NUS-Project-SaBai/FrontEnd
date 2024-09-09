@@ -180,7 +180,6 @@ const PatientConsultation = () => {
 
     // Check if quantity to be ordered < stock
     const stockMedication = medications.find(med => orderFormDetails.medicine === med.id);
-    console.log(stockMedication.quantity);
     const quantityStockMedication = stockMedication ? stockMedication.quantity : 0;
     if (
       orderFormDetails.quantity > quantityStockMedication
@@ -397,7 +396,11 @@ const PatientConsultation = () => {
 
   function render() {
     if (!mounted) return null;
-
+    console.log(medications
+      .filter(med => orders.find(orderMed => orderMed.medicine == med.id) == null));
+    console.log(medications);
+    console.log(orders);
+    console.log("help");
     return (
       <div className="mt-7 mx-6 overflow-hidden">
         <CustomModal
@@ -412,7 +415,7 @@ const PatientConsultation = () => {
             orderDetails={orderFormDetails}
             medicationOptions={
               medications
-                  .filter(med => orders.includes(med))
+                  .filter(med => orders.find(orderMed => orderMed.medicine == med.id) == null)
                   .map(medication => (
               <option
                 key={medication.id}
