@@ -160,7 +160,7 @@ const Registration = () => {
   });
 
   return (
-    <div className="mx-4 my-2">
+    <div className="mx-4">
       <CustomModal
         isOpen={patientModalOpen}
         onRequestClose={togglePatientModal}
