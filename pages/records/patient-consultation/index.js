@@ -17,150 +17,6 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import useWithLoading from '@/utils/loading';
 
-const OrdersTable = ({ orders, selectOrder, setOrders }) => {
-  const orderRows = orders.map((order, index) => {
-    const name = order.medicine_name;
-    const quantity = order.quantity;
-
-    return (
-      <tr key={`${order.id}-${index}`}>
-        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
-          {name}
-        </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          {quantity}
-        </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
-          <Button
-            colour="green"
-            text="Edit"
-            onClick={() => selectOrder(order)}
-          />
-          <Button
-            colour="red"
-            text="Delete"
-            onClick={() => {
-              setOrders(prevOrders => {
-                const updatedOrders = [...prevOrders];
-                updatedOrders.splice(index, 1);
-                return updatedOrders;
-              });
-            }}
-          />
-        </td>
-      </tr>
-    );
-  });
-
-  return (
-    <div className="mt-4 mx-6">
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="mt-2 flow-root">
-          <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
-            <div className="inline-block min-w-full py-2 align-middle">
-              <table className="min-w-full border border-gray-700 divide-y divide-gray-300 rounded-lg overflow-hidden">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
-                    >
-                      Medicine
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
-                    >
-                      Quantity
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
-                    >
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {orderRows}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const LeftColumn = ({ consult, selectConsult, prescriptions }) => {
-  return (
-    <div className="space-y-8">
-      {typeof vitals === 'undefined' ? (
-        <>
-          <label className="label">Vital Signs</label>
-          <h2>Not Done</h2>
-        </>
-      ) : (
-        <VitalsTable content={vitals} />
-      )}
-
-      <ConsultationsTable content={consult} buttonOnClick={selectConsult} />
-
-      <PrescriptionsTable content={prescriptions} />
-    </div>
-  );
-};
-
-const RightColumn = ({
-  handleConsultationFormInputChange,
-  consultationFormDetails,
-  handleConsultationFormDiagnosis,
-  orders,
-  selectOrder,
-  setOrders,
-  toggleOrderFormModal,
-  submitConsultationForm,
-}) => {
-  return (
-    <div className="bg-blue-50 p-4 rounded-lg relative space-y-2">
-      <ConsultationForm
-        handleInputChange={handleConsultationFormInputChange}
-        formDetails={consultationFormDetails}
-        handleDiagnosis={handleConsultationFormDiagnosis}
-      />
-      <div className="my-4 p-4 bg-gray-50 rounded-lg shadow-sm">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Orders</h2>
-        <hr className="mb-4" />
-        {orders.length > 0 ? (
-          <OrdersTable
-            orders={orders}
-            selectOrder={selectOrder}
-            setOrders={setOrders}
-          />
-        ) : (
-          <p className="text-gray-500 text-sm mb-4">No Orders</p>
-        )}
-        <div className="flex justify-between items-center mt-4">
-          <Button
-            colour="green"
-            text={'Add Orders'}
-            onClick={() => toggleOrderFormModal()}
-            className="mr-2"
-          />
-        </div>
-      </div>
-      <hr className="my-4" />
-
-      <Button
-        colour="green"
-        text={'Submit'}
-        onClick={() => submitConsultationForm()}
-      />
-    </div>
-  );
-};
-
 const PatientConsultation = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -388,6 +244,82 @@ const PatientConsultation = () => {
     );
   };
 
+  const OrdersTable = () => {
+    const orderRows = orders.map((order, index) => {
+      const name = order.medicine_name;
+      const quantity = order.quantity;
+
+      return (
+        <tr key={`${order.id}-${index}`}>
+          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
+            {name}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {quantity}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
+            <Button
+              colour="green"
+              text="Edit"
+              onClick={() => selectOrder(order)}
+            />
+            <Button
+              colour="red"
+              text="Delete"
+              onClick={() => {
+                setOrders(prevOrders => {
+                  const updatedOrders = [...prevOrders];
+                  updatedOrders.splice(index, 1);
+                  return updatedOrders;
+                });
+              }}
+            />
+          </td>
+        </tr>
+      );
+    });
+
+    return (
+      <div className="mt-4 mx-6">
+        <div className="px-4 sm:px-6 lg:px-8">
+          <div className="mt-2 flow-root">
+            <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
+              <div className="inline-block min-w-full py-2 align-middle">
+                <table className="min-w-full border border-gray-700 divide-y divide-gray-300 rounded-lg overflow-hidden">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
+                      >
+                        Medicine
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
+                      >
+                        Quantity
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {orderRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (!mounted) return <></>;
 
   return (
@@ -433,26 +365,58 @@ const PatientConsultation = () => {
       <b>Please remember to press the submit button at the end of the form!</b>
       <hr />
       <div className="grid grid-cols-2 gap-x-4 mb-4">
+        {/* Left Column */}
         <div>
-          <LeftColumn
-            consult={consult}
-            selectConsult={selectConsult}
-            prescriptions={prescriptions}
-          />
+          <div className="space-y-8">
+            {typeof vitals === 'undefined' ? (
+              <>
+                <label className="label">Vital Signs</label>
+                <h2>Not Done</h2>
+              </>
+            ) : (
+              <VitalsTable content={vitals} />
+            )}
+            <ConsultationsTable
+              content={consult}
+              buttonOnClick={selectConsult}
+            />
+            <PrescriptionsTable content={prescriptions} />
+          </div>
         </div>
+
+        {/* Right Column */}
         <div>
-          <RightColumn
-            handleConsultationFormInputChange={
-              handleConsultationFormInputChange
-            }
-            consultationFormDetails={consultationFormDetails}
-            handleConsultationFormDiagnosis={handleConsultationFormDiagnosis}
-            orders={orders}
-            toggleOrderFormModal={toggleOrderFormModal}
-            selectOrder={selectOrder}
-            setOrders={setOrders}
-            submitConsultationForm={submitConsultationForm}
-          />
+          <div className="bg-blue-50 p-4 rounded-lg relative space-y-2">
+            <ConsultationForm
+              handleInputChange={handleConsultationFormInputChange}
+              formDetails={consultationFormDetails}
+              handleDiagnosis={handleConsultationFormDiagnosis}
+            />
+            <div className="my-4 p-4 bg-gray-50 rounded-lg shadow-sm">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Orders</h2>
+              <hr className="mb-4" />
+              {orders.length > 0 ? (
+                <OrdersTable />
+              ) : (
+                <p className="text-gray-500 text-sm mb-4">No Orders</p>
+              )}
+              <div className="flex justify-between items-center mt-4">
+                <Button
+                  colour="green"
+                  text={'Add Orders'}
+                  onClick={() => toggleOrderFormModal()}
+                  className="mr-2"
+                />
+              </div>
+            </div>
+            <hr className="my-4" />
+
+            <Button
+              colour="green"
+              text={'Submit'}
+              onClick={() => submitConsultationForm()}
+            />
+          </div>
         </div>
       </div>
     </div>

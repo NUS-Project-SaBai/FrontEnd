@@ -15,41 +15,6 @@ import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
 import useWithLoading from '@/utils/loading';
 
-const LeftColumn = ({ vitals, consults, selectConsult, prescriptions }) => {
-  return (
-    <div className="space-y-4">
-      {typeof vitals === 'undefined' ? (
-        <>
-          <label className="label">Vital Signs</label>
-          <h2>Not Done</h2>
-        </>
-      ) : (
-        <VitalsTable content={vitals} />
-      )}
-      <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
-      <PrescriptionsTable content={prescriptions} />
-    </div>
-  );
-};
-
-const RightColumn = ({
-  vitalsFormDetails,
-  handleVitalsFormOnChange,
-  patient,
-  submitVitalsForm,
-}) => {
-  return (
-    <div className="space-y-2">
-      <VitalsForm
-        formDetails={vitalsFormDetails}
-        handleOnChange={handleVitalsFormOnChange}
-        patient={patient}
-        onSubmit={submitVitalsForm}
-      />
-    </div>
-  );
-};
-
 const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);
 
@@ -218,18 +183,32 @@ const PatientVitals = () => {
       <hr />
 
       <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
-        <LeftColumn
-          vitals={vitals}
-          consults={consults}
-          selectConsult={selectConsult}
-          prescriptions={prescriptions}
-        />
-        <RightColumn
-          vitalsFormDetails={vitalsFormDetails}
-          handleVitalsFormOnChange={handleVitalsFormOnChange}
-          patient={patient}
-          submitVitalsForm={submitVitalsForm}
-        />
+        {/* Left Column */}
+        <div className="space-y-4">
+          {typeof vitals === 'undefined' ? (
+            <>
+              <label className="label">Vital Signs</label>
+              <h2>Not Done</h2>
+            </>
+          ) : (
+            <VitalsTable content={vitals} />
+          )}
+          <ConsultationsTable
+            content={consults}
+            buttonOnClick={selectConsult}
+          />
+          <PrescriptionsTable content={prescriptions} />
+        </div>
+
+        {/* Right Column */}
+        <div className="space-y-2">
+          <VitalsForm
+            formDetails={vitalsFormDetails}
+            handleOnChange={handleVitalsFormOnChange}
+            patient={patient}
+            onSubmit={submitVitalsForm}
+          />
+        </div>
       </div>
     </div>
   );
