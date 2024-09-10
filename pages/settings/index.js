@@ -13,7 +13,7 @@ function SettingsPage() {
     setBackendURL(getAPI_URL());
   };
 
-  function ChangeBackendURLForm() {
+  const ChangeBackendURLForm = () => {
     return (
       <form onSubmit={handleSubmit}>
         <label
@@ -39,10 +39,10 @@ function SettingsPage() {
         </div>
       </form>
     );
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center px-2">
       <PageTitle
         title="Settings Page"
         desc="Use this page to change the backend URL."
