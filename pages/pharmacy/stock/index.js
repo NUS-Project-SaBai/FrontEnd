@@ -15,11 +15,9 @@ const Stock = () => {
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
   const [medicationDetails, setMedicationDetails] = useState({
     medicine_name: '',
-    reserve_quantity: 0,
     quantity: 0,
     quantityChange: 0,
     notes: '',
-    remarks: '',
   });
   const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
   const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
@@ -137,11 +135,9 @@ const Stock = () => {
   const createNewMedication = () => {
     setMedicationDetails({
       medicine_name: '',
-      reserve_quantity: 0,
       quantity: 0,
       quantityChange: 0,
       notes: '',
-      remarks: '',
     });
     toggleModal();
   };
@@ -234,21 +230,6 @@ const Stock = () => {
 
   return (
     <div className="mt-4 mx-6">
-      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
-        <MedicationForm
-          formDetails={medicationDetails}
-          handleInputChange={handleMedicationChange}
-          onSubmit={onSubmitForm}
-        />
-      </CustomModal>
-
-      <CustomModal
-        isOpen={medicationHistoryModalIsOpen}
-        onRequestClose={toggleMedicationHistoryModal}
-      >
-        <MedicationHistoryForm medication={medication} />
-      </CustomModal>
-
       <PageTitle title="Medication Stock" />
 
       <div className="space-y-2">
@@ -266,6 +247,20 @@ const Stock = () => {
         />
       </div>
       <Table />
+      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
+        <MedicationForm
+          formDetails={medicationDetails}
+          handleInputChange={handleMedicationChange}
+          onSubmit={onSubmitForm}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={medicationHistoryModalIsOpen}
+        onRequestClose={toggleMedicationHistoryModal}
+      >
+        <MedicationHistoryForm medication={medication} />
+      </CustomModal>
     </div>
   );
 };
