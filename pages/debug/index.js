@@ -1,4 +1,4 @@
-import { APIComponent } from '@/components/debug';
+import { APIComponent, DebugCard } from '@/components/debug';
 import { useState } from 'react';
 import { getAPI_URL } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
@@ -17,8 +17,39 @@ export default function DebuggingPage() {
   const [baseURL, setBaseURL] = useState(getAPI_URL());
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  const ChangeBaseURLForm = () => {
+    return (
+      <div>
+        <label
+          htmlFor="baseURL"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Set Base URL:
+        </label>
+        <input
+          type="text"
+          id="baseURL"
+          value={baseURL}
+          onChange={e => setBaseURL(e.target.value)}
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+        />
+      </div>
+    );
+  };
+
   const handleRefresh = () => {
     setRefreshTrigger(prev => prev + 1);
+  };
+
+  const RefreshEndpointsButton = () => {
+    return (
+      <button
+        onClick={handleRefresh}
+        className="mt-4 p-2 bg-blue-500 text-white rounded-md"
+      >
+        Refresh Endpoints
+      </button>
+    );
   };
 
   const ErrorThrowingComponent = () => {
@@ -57,29 +88,13 @@ export default function DebuggingPage() {
         title="API Debugging Tool"
         desc="Use this tool to test and debug your API endpoints."
       />
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
-        <label
-          htmlFor="baseURL"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Set Base URL:
-        </label>
-        <input
-          type="text"
-          id="baseURL"
-          value={baseURL}
-          onChange={e => setBaseURL(e.target.value)}
-          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-        />
-        <button
-          onClick={handleRefresh}
-          className="mt-4 p-2 bg-blue-500 text-white rounded-md"
-        >
-          Refresh Endpoints
-        </button>
+
+      <DebugCard>
+        <ChangeBaseURLForm />
+        <RefreshEndpointsButton />
         <ErrorThrowingComponent />
         <SimulateLoadingComponent />
-      </div>
+      </DebugCard>
 
       <div className="grid grid-cols-1 gap-6 w-full max-w-3xl">
         {paths.map(path => (
