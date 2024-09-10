@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
-import Modal from 'react-modal';
 import {
   ConsultationsTable,
   PrescriptionsTable,
@@ -37,7 +36,14 @@ const PatientConsultation = () => {
 
   // Order Form Modal hooks
   const [orders, setOrders] = useState([]);
-  const [orderFormDetails, setOrderFormDetails] = useState({});
+  const blankOrderFormDetails = {
+    quantity: '',
+    medicine: '',
+    medicine_name: '',
+  };
+  const [orderFormDetails, setOrderFormDetails] = useState(
+    blankOrderFormDetails
+  );
   const [orderFormModalOpen, setOrderFormModalOpen] = useState(false);
 
   // Consultation Form hooks
@@ -164,7 +170,10 @@ const PatientConsultation = () => {
     }
 
     // Decimal check
-    if (!Number.isInteger(orderFormDetails.quantity - 0)) {
+    if (
+      !orderFormDetails.quantity ||
+      !Number.isInteger(orderFormDetails.quantity - 0)
+    ) {
       toast.error('Please enter a valid quantity.');
       return;
     }
@@ -179,7 +188,7 @@ const PatientConsultation = () => {
     }
 
     setOrders([...orders]);
-    setOrderFormDetails({});
+    setOrderFormDetails(blankOrderFormDetails);
     toggleOrderFormModal();
   }
 
@@ -380,36 +389,27 @@ const PatientConsultation = () => {
 
     return (
       <div className="mt-7 mx-6 overflow-hidden">
-        <Modal
+        <CustomModal
           isOpen={orderFormModalOpen}
           onRequestClose={toggleOrderFormModal}
-          className="fixed inset-0 flex items-center justify-center z-50 p-4"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+          onSubmit={submitNewOrder}
         >
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
-            <OrderForm
-              allergies={patient.drug_allergy}
-              medications={medications}
-              handleInputChange={handleOrderFormChange}
-              orderDetails={orderFormDetails}
-              medicationOptions={medications.map(medication => (
-                <option
-                  key={medication.id}
-                  value={`${medication.id} ${medication.medicine_name}`}
-                >
-                  {medication.medicine_name}
-                </option>
-              ))}
-              onSubmit={submitNewOrder}
-            />
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              onClick={toggleOrderFormModal}
-            >
-              Close
-            </button>
-          </div>
-        </Modal>
+          <OrderForm
+            allergies={patient.drug_allergy}
+            medications={medications}
+            handleInputChange={handleOrderFormChange}
+            orderDetails={orderFormDetails}
+            medicationOptions={medications.map(medication => (
+              <option
+                key={medication.id}
+                value={`${medication.id} ${medication.medicine_name}`}
+              >
+                {medication.medicine_name}
+              </option>
+            ))}
+          />
+        </CustomModal>
+
         <CustomModal
           isOpen={consultationModalOpen}
           onRequestClose={toggleCustomModal}

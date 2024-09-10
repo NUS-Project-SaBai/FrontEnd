@@ -49,9 +49,7 @@ export const VenueOptionsDropdown = ({ handleInputChange }) => {
 export function PatientRegistrationForm({
   formDetails,
   imageDetails,
-  closeModal,
   handleInputChange,
-  submitNewPatient,
   setImageDetails,
 }) {
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
@@ -204,11 +202,7 @@ export function PatientRegistrationForm({
           </div>
         </div>
       </div>
-      <hr className="my-2" />
-      <div className="flex justify-center items-center space-x-4">
-        <Button colour="green" text="Submit" onClick={submitNewPatient} />
-        <Button colour="red" text="Close" onClick={closeModal} />
-      </div>
+      <hr />
     </>
   );
 }

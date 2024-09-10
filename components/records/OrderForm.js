@@ -11,7 +11,6 @@ export function OrderForm({
   handleInputChange,
   orderDetails,
   medicationOptions,
-  onSubmit,
 }) {
   function calculateMedicineCurrentStock(medicine) {
     const medication = medications.find(med => medicine === med.id);
@@ -87,8 +86,6 @@ export function OrderForm({
         onChange={handleInputChange}
         value={orderDetails.notes}
       />
-
-      <Button colour="green" text="Submit" onClick={onSubmit} />
     </div>
   );
 }
