@@ -98,7 +98,7 @@ const PatientRecord = () => {
     toggleConsultationModal();
   }
 
-  function PatientHeader() {
+  const PatientHeader = () => {
     return (
       <Header
         patient={patient}
@@ -106,9 +106,9 @@ const PatientRecord = () => {
         handleVisitChange={handleVisitChange}
       />
     );
-  }
+  };
 
-  function LeftColumn() {
+  const LeftColumn = () => {
     if (typeof vitals === 'undefined') {
       return (
         <div className="my-2">
@@ -127,16 +127,16 @@ const PatientRecord = () => {
         <PatientView content={patient} />
       </div>
     );
-  }
+  };
 
-  function RightColumn() {
+  const RightColumn = () => {
     return (
       <div className="space-y-8">
         <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
         <PrescriptionsTable content={prescriptions} />
       </div>
     );
-  }
+  };
 
   if (noRecords)
     return (
