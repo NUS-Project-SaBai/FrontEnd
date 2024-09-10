@@ -1,37 +1,44 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
 import CustomModal from '@/components/CustomModal';
 
 export function Header({ patient, visits, handleVisitChange }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
+  const [modal, setModal] = useState({ isOpen: false, content: null });
 
-  function openUploadModal() {
-    setModalContent('upload');
-    setIsModalOpen(true);
-  }
+  const openModal = content => setModal({ isOpen: true, content });
+  const closeModal = () => setModal({ isOpen: false, content: null });
 
-  function openViewModal() {
-    setModalContent('view');
-    setIsModalOpen(true);
-  }
+  const visitOptions = visits.map(visit => (
+    <option key={visit.id} value={visit.id}>
+      {moment(visit.date).format('DD MMMM YYYY HH:mm')}
+    </option>
+  ));
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalContent(null);
+  const ModalContent = () => {
+    switch (modal.content) {
+      case 'upload':
+        return (
+          <div>
+            <h2 className="text-xl font-bold mb-4">Upload Document</h2>
+            <input
+              type="file"
+              className="border border-gray-300 rounded-md p-2 w-full"
+            />
+          </div>
+        );
+      case 'view':
+        return (
+          <div>
+            <h2 className="text-xl font-bold mb-4">View Document</h2>
+            <p>Document viewer component goes here.</p>
+          </div>
+        );
+      default:
+        return null;
+    }
   };
-
-  const visitOptions = visits.map(visit => {
-    const date = moment(visit.date).format('DD MMMM YYYY HH:mm');
-    return (
-      <option key={visit.id} value={visit.id}>
-        {date}
-      </option>
-    );
-  });
 
   return (
     <div className="grid grid-cols-12 gap-4 mb-2">
@@ -39,55 +46,56 @@ export function Header({ patient, visits, handleVisitChange }) {
         <img
           src={`${CLOUDINARY_URL}/${patient.picture}`}
           alt="Patient"
-          className="h-48 w-48 object-cover rounded-md"
+          className="h-48 w-48 object-cover rounded-md shadow-sm"
         />
       </div>
-      <div className="col-span-12 md:col-span-3">
-        <label className="text-gray-700 block">Village ID</label>
-        <p className="text-lg font-medium">{`${patient.village_prefix}${patient.pk.toString().padStart(3, '0')}`}</p>
 
-        <div className="mt-4">
-          <label className="text-gray-700 block">Visit on</label>
-          <div className="relative">
-            <select
-              name="medication"
-              onChange={handleVisitChange}
-              className="w-full bg-white border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
-            >
-              {visitOptions}
-            </select>
-            <ChevronDownIcon className="absolute inset-y-0 right-0 h-5 w-5 text-gray-700 pointer-events-none my-auto mr-2" />
-          </div>
+      <div className="col-span-12 md:col-span-3">
+        <div className="mb-4">
+          <label className="text-sm font-semibold text-gray-700">
+            Village ID
+          </label>
+          <p className="text-lg font-medium text-gray-800">
+            {`${patient.village_prefix}${patient.pk.toString().padStart(3, '0')}`}
+          </p>
+        </div>
+
+        <div className="mb-4">
+          <label className="text-sm font-semibold text-gray-700">
+            Visit on
+          </label>
+          <select
+            name="visit"
+            onChange={handleVisitChange}
+            className="w-full bg-white border border-gray-300 rounded-md py-2 px-4 shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          >
+            {visitOptions}
+          </select>
         </div>
       </div>
+
       <div className="col-span-12 md:col-span-3">
-        <label className="text-gray-700 block">Name</label>
-        <p className="text-lg font-medium">{patient.name}</p>
+        <div className="mb-4">
+          <label className="text-sm font-semibold text-gray-700">Name</label>
+          <p className="text-lg font-medium text-gray-800">{patient.name}</p>
+        </div>
       </div>
+
       <div className="col-span-12 md:col-span-4 flex items-center justify-between md:justify-start md:space-x-4 mt-4 md:mt-0">
         <Button
           text="Upload Document"
-          onClick={openUploadModal}
+          onClick={() => openModal('upload')}
           colour="green"
         />
-        <Button text="View Document" onClick={openViewModal} colour="blue" />
+        <Button
+          text="View Document"
+          onClick={() => openModal('view')}
+          colour="blue"
+        />
       </div>
 
-      <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
-        {modalContent === 'upload' && (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Upload Document</h2>
-            {/* Add upload form or file input here once decided*/}
-            <input type="file" />
-          </div>
-        )}
-        {modalContent === 'view' && (
-          <div>
-            <h2 className="text-xl font-bold mb-4">View Document</h2>
-            {/* Add document viewer here once decided*/}
-            <p>view component goes here.</p>
-          </div>
-        )}
+      <CustomModal isOpen={modal.isOpen} onRequestClose={closeModal}>
+        <ModalContent />
       </CustomModal>
     </div>
   );
