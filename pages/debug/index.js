@@ -2,6 +2,7 @@ import { APIComponent } from '@/components/debug';
 import { useState } from 'react';
 import { getAPI_URL } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
+import { PageTitle } from '@/components/TextComponents/PageTitle';
 
 const paths = [
   '/patients',
@@ -52,14 +53,10 @@ export default function DebuggingPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
-      <header className="w-full max-w-3xl mb-6">
-        <h1 className="text-3xl font-bold text-center text-gray-800">
-          API Debugging Tool
-        </h1>
-        <p className="text-center text-gray-600 mt-2">
-          Use this tool to test and debug your API endpoints.
-        </p>
-      </header>
+      <PageTitle
+        title="API Debugging Tool"
+        desc="Use this tool to test and debug your API endpoints."
+      />
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
         <label
           htmlFor="baseURL"
