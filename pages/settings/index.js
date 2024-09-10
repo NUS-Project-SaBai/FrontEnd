@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { getAPI_URL, changeAPI_URL } from '@/utils/constants';
+import { PageTitle } from '@/components/TextComponents';
+import { DebugCard } from '@/components/debug';
 
 function SettingsPage() {
   const [backendURL, setBackendURL] = useState(getAPI_URL());
@@ -11,53 +13,47 @@ function SettingsPage() {
     setBackendURL(getAPI_URL());
   };
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
-      <header className="w-full max-w-3xl mb-6">
-        <h1 className="text-3xl font-bold text-center text-gray-800">
-          Settings Page
-        </h1>
-        <p className="text-center text-gray-600 mt-2">
-          Use this page to change the backend URL.
-        </p>
-      </header>
-
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
-        <h2 className="text-xl font-semibold">Configuring Backend URL</h2>
-
-        <label className="block text-sm font-medium text-gray-700 mt-6">
-          Current Backend URL:
+  const ChangeBackendURLForm = () => {
+    return (
+      <form onSubmit={handleSubmit}>
+        <label
+          htmlFor="baseURL"
+          className="block text-sm font-medium text-gray-700 mt-6"
+        >
+          Change Backend URL:
         </label>
-        <p className="bg-gray-100 p-4 border border-gray-300 rounded-md mt-2 w-full overflow-auto">
-          {backendURL}
-        </p>
-
-        <form onSubmit={handleSubmit}>
-          <label
-            htmlFor="baseURL"
-            className="block text-sm font-medium text-gray-700 mt-6"
+        <div className="flex space-x-4 items-end">
+          <input
+            type="text"
+            id="baseURL"
+            defaultValue={backendURL}
+            onChange={e => setNewURL(e.target.value)}
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
           >
-            Change Backend URL:
-          </label>
-          <div className="flex space-x-4 items-end">
-            <input
-              type="text"
-              id="baseURL"
-              defaultValue={backendURL}
-              onChange={e => setNewURL(e.target.value)}
-              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
+            Submit
+          </button>
+        </div>
+      </form>
+    );
+  };
 
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl mb-6">
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center px-2">
+      <PageTitle
+        title="Settings Page"
+        desc="Use this page to change the backend URL."
+      />
+
+      <DebugCard>
+        <h2 className="text-xl font-semibold">Configuring Backend URL</h2>
+        <ChangeBackendURLForm />
+      </DebugCard>
+
+      <DebugCard>
         <h2 className="text-xl font-semibold">Download Data from Database</h2>
         <button
           type="submit"
@@ -65,7 +61,7 @@ function SettingsPage() {
         >
           Download .csv File
         </button>
-      </div>
+      </DebugCard>
     </div>
   );
 }
