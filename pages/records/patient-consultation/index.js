@@ -169,10 +169,11 @@ const PatientConsultation = () => {
       return;
     }
 
-    // Decimal check
+    // Decimal check, make sure quantity to be added is not 0
     if (
       !orderFormDetails.quantity ||
-      !Number.isInteger(orderFormDetails.quantity - 0)
+      !Number.isInteger(orderFormDetails.quantity - 0) ||
+      orderFormDetails.quantity == 0
     ) {
       toast.error('Please enter a valid quantity.');
       return;
@@ -396,11 +397,7 @@ const PatientConsultation = () => {
 
   function render() {
     if (!mounted) return null;
-    console.log(medications
-      .filter(med => orders.find(orderMed => orderMed.medicine == med.id) == null));
-    console.log(medications);
-    console.log(orders);
-    console.log("help");
+    
     return (
       <div className="mt-7 mx-6 overflow-hidden">
         <CustomModal
