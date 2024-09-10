@@ -11,16 +11,17 @@ import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 
 const Stock = () => {
-  const [medications, setMedications] = useState([]);
-  const [medicationsFiltered, setMedicationsFiltered] = useState([]);
-  const [medicationDetails, setMedicationDetails] = useState({
+  const blankMedicationDetails = {
     medicine_name: '',
-    reserve_quantity: 0,
     quantity: 0,
     quantityChange: 0,
     notes: '',
-    remarks: '',
-  });
+  };
+  const [medications, setMedications] = useState([]);
+  const [medicationsFiltered, setMedicationsFiltered] = useState([]);
+  const [medicationDetails, setMedicationDetails] = useState(
+    blankMedicationDetails
+  );
   const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
   const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
     useState(false);
@@ -50,7 +51,7 @@ const Stock = () => {
     setMedicationsFiltered(filteredMedications);
   };
 
-  const toggleModal = (medication = {}) => {
+  const toggleModal = (medication = blankMedicationDetails) => {
     setMedicationDetails(medication);
     setMedicationModalIsOpen(!medicationModalIsOpen);
   };
@@ -60,17 +61,7 @@ const Stock = () => {
     setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
   };
 
-  const createNewMedication = () => {
-    setMedicationDetails({
-      medicine_name: '',
-      reserve_quantity: 0,
-      quantity: 0,
-      quantityChange: 0,
-      notes: '',
-      remarks: '',
-    });
-    toggleModal();
-  };
+  const createNewMedication = toggleModal;
 
   const handleMedicationChange = event => {
     const newMedicationDetails = {
@@ -83,6 +74,10 @@ const Stock = () => {
   const onSubmitForm = useWithLoading(async () => {
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
+      return;
+    }
+    if (medicationDetails.quantityChange === '') {
+      toast.error('Quantity to Add cannot be empty.');
       return;
     }
 
@@ -194,11 +189,14 @@ const Stock = () => {
 
   return (
     <div className="mt-4 mx-6">
-      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
+      <CustomModal
+        isOpen={medicationModalIsOpen}
+        onRequestClose={toggleModal}
+        onSubmit={onSubmitForm}
+      >
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
-          onSubmit={onSubmitForm}
         />
       </CustomModal>
 

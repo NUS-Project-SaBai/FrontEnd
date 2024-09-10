@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Modal from 'react-modal';
 import {
   ConsultationView,
   ConsultationsTable,
@@ -217,35 +216,23 @@ const PatientRecord = () => {
 
     return (
       <div className="mt-7.5 mx-6 overflow-hidden">
-        <Modal
+        <CustomModal
           isOpen={vitalsModalOpen}
           onRequestClose={toggleVitalsModal}
-          className="fixed inset-0 flex items-center justify-center z-50 p-4"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
         >
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
-            <VitalsTable content={vitals} />
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              onClick={toggleVitalsModal}
-            >
-              Close
-            </button>
-          </div>
-        </Modal>
+          <VitalsTable content={vitals} />
+        </CustomModal>
 
         <CustomModal
           isOpen={editPatientModalOpen}
           onRequestClose={toggleEditPatientModal}
-          showCloseButton={false}
+          onSubmit={submitPatientEdit}
         >
           <PatientRegistrationForm
             formDetails={patientEdit}
             imageDetails={imageDetails}
             setImageDetails={setImageDetails}
-            closeModal={toggleEditPatientModal}
             handleInputChange={handlePatientChange}
-            submitNewPatient={submitPatientEdit}
           />
         </CustomModal>
 
