@@ -215,10 +215,13 @@ const PatientConsultation = () => {
   }
 
   function handleConsultationFormDiagnosis(diagnoses) {
+    console.log('handleConsultationFormDiagnosis', diagnoses);
     setConsultationFormDetails(prevState => ({ ...prevState, diagnoses }));
   }
 
   const submitConsultationForm = useWithLoading(async () => {
+    console.log(consultationFormDetails);
+    if (consultationFormDetails) return;
     try {
       const formPayload = {
         visit: selectedVisitID,
