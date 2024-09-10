@@ -150,7 +150,7 @@ const Stock = () => {
     setMedicationDetails(newMedicationDetails);
   };
 
-  function Rows() {
+  const Rows = () => {
     return medicationsFiltered.map(medication => {
       const medicationDetails = {
         ...medication,
@@ -186,7 +186,7 @@ const Stock = () => {
         </tr>
       );
     });
-  }
+  };
 
   const Table = () => {
     return (
