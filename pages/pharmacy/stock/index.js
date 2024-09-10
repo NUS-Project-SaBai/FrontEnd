@@ -13,7 +13,7 @@ import CustomModal from '@/components/CustomModal';
 const Stock = () => {
   const blankMedicationDetails = {
     medicine_name: '',
-    quantity: 0,
+    quantity: 0, // number field but the value is actually string because we don't want the scrolling effect with the number field
     quantityChange: 0,
     notes: '',
   };
@@ -77,6 +77,7 @@ const Stock = () => {
       return;
     }
     if (medicationDetails.quantityChange === '') {
+      // check explicitly for empty string as the "!medicationDetails.quantityChange" check will catch zeros, which is allowed
       toast.error('Quantity to Add cannot be empty.');
       return;
     }
