@@ -22,7 +22,7 @@ const PatientConsultation = () => {
   const [patient, setPatient] = useState({});
   const [visits, setVisits] = useState([]);
 
-  const [consult, setConsult] = useState({});
+  const [consults, setConsult] = useState({});
   const [vitals, setVitals] = useState({});
   const [prescriptions, setPrescriptions] = useState([]);
 
@@ -38,7 +38,7 @@ const PatientConsultation = () => {
   const [orders, setOrders] = useState([]);
   const blankOrderFormDetails = {
     quantity: '',
-    medicine: '',
+    medicine: 0, // refers to the medcine id
     medicine_name: '',
   };
   const [orderFormDetails, setOrderFormDetails] = useState(
@@ -161,20 +161,30 @@ const PatientConsultation = () => {
   }
 
   function submitNewOrder() {
-    // Non-existent medication check
-    if (orderFormDetails.medicine == null || orderFormDetails.medicine === 0) {
+    // Non-existent medication check: check if orderFormDetails.medicine (which is the id) is === 0 (which is the default value in the state obj)
+    if (orderFormDetails.medicine === 0) {
       toast.error(
         'Please select the name of the medication you would like to prescribe.'
       );
       return;
     }
 
-    // Decimal check
-    if (
-      !orderFormDetails.quantity ||
-      !Number.isInteger(orderFormDetails.quantity - 0)
-    ) {
+    // Decimal check, make sure quantity to be added is not an empty string or 0
+    if (!orderFormDetails.quantity || orderFormDetails.quantity === '0') {
+      // quantity comes from number field but is string due to the workaround of the number field scrolling effect with a text field
       toast.error('Please enter a valid quantity.');
+      return;
+    }
+
+    // Check if quantity to be ordered < stock
+    const stockMedication = medications.find(
+      med => orderFormDetails.medicine === med.id
+    );
+    const quantityStockMedication = stockMedication
+      ? stockMedication.quantity
+      : 0;
+    if (orderFormDetails.quantity > quantityStockMedication) {
+      toast.error('Not enough medication in stock.');
       return;
     }
 
@@ -262,12 +272,12 @@ const PatientConsultation = () => {
             <h2>Not Done</h2>
           </>
         ) : (
-          <VitalsTable content={vitals} />
+          <VitalsTable vitals={vitals} />
         )}
 
-        <ConsultationsTable content={consult} buttonOnClick={selectConsult} />
+        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
 
-        <PrescriptionsTable content={prescriptions} />
+        <PrescriptionsTable prescriptions={prescriptions} />
       </div>
     );
   }
@@ -399,14 +409,19 @@ const PatientConsultation = () => {
             medications={medications}
             handleInputChange={handleOrderFormChange}
             orderDetails={orderFormDetails}
-            medicationOptions={medications.map(medication => (
-              <option
-                key={medication.id}
-                value={`${medication.id} ${medication.medicine_name}`}
-              >
-                {medication.medicine_name}
-              </option>
-            ))}
+            medicationOptions={medications
+              .filter(
+                med =>
+                  orders.find(orderMed => orderMed.medicine == med.id) == null
+              )
+              .map(medication => (
+                <option
+                  key={medication.id}
+                  value={`${medication.id} ${medication.medicine_name}`}
+                >
+                  {medication.medicine_name}
+                </option>
+              ))}
           />
         </CustomModal>
 
@@ -414,7 +429,7 @@ const PatientConsultation = () => {
           isOpen={consultationModalOpen}
           onRequestClose={toggleCustomModal}
         >
-          <ConsultationView content={selectedConsult} />
+          <ConsultationView consult={selectedConsult} />
         </CustomModal>
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Consultation
