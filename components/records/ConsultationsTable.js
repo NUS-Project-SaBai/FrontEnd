@@ -12,28 +12,30 @@ export function ConsultationsTable({ consults, buttonOnClick }) {
     );
   }
 
-  const ConsultRows = consults.map(consult => {
-    const doctor = consult.doctor.nickname;
-    const referredFor = consult.referred_for || 'Not referred';
+  function ConsultRows() {
+    return consults.map(consult => {
+      const doctor = consult.doctor.nickname;
+      const referredFor = consult.referred_for || 'Not referred';
 
-    return (
-      <tr key={consult.id}>
-        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-          {doctor}
-        </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          {referredFor}
-        </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          <Button
-            colour="indigo"
-            text={'View'}
-            onClick={() => buttonOnClick(consult)}
-          />
-        </td>
-      </tr>
-    );
-  });
+      return (
+        <tr key={consult.id}>
+          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+            {doctor}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {referredFor}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            <Button
+              colour="indigo"
+              text={'View'}
+              onClick={() => buttonOnClick(consult)}
+            />
+          </td>
+        </tr>
+      );
+    });
+  }
 
   return (
     <div>
