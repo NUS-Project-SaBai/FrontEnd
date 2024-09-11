@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { CLOUDINARY_URL } from '@/utils/constants';
+import { CLOUDINARY_URL, VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 import { Button } from '../TextComponents';
 import CustomModal from '@/components/CustomModal';
 
@@ -51,13 +51,13 @@ export function Header({ patient, visits, handleVisitChange }) {
       </div>
 
       <div className="col-span-12 md:col-span-3">
-        <div className="mb-4">
-          <label className="text-sm font-semibold text-gray-700">
-            Village ID
-          </label>
-          <p className="text-lg font-medium text-gray-800">
-            {`${patient.village_prefix}${patient.pk.toString().padStart(3, '0')}`}
-          </p>
+        <div>
+          <label className="block text-gray-700">Village ID</label>
+          <p
+            className={`${VILLAGE_COLOR_CLASSES[patient.village_prefix] || 'text-gray-500'}`}
+          >{`${
+            patient.village_prefix
+          }${patient.pk.toString().padStart(3, '0')}`}</p>
         </div>
 
         <div className="mb-4">

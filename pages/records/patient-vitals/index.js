@@ -177,12 +177,12 @@ const PatientVitals = () => {
             <h2>Not Done</h2>
           </>
         ) : (
-          <VitalsTable content={vitals} />
+          <VitalsTable vitals={vitals} />
         )}
 
-        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
+        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
 
-        <PrescriptionsTable content={prescriptions} />
+        <PrescriptionsTable prescriptions={prescriptions} />
       </div>
     );
   }
@@ -209,7 +209,7 @@ const PatientVitals = () => {
           isOpen={CustomModalOpen}
           onRequestClose={toggleCustomModal}
         >
-          <ConsultationView content={selectedConsult} />
+          <ConsultationView consult={selectedConsult} />
         </CustomModal>
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Vitals

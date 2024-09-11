@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { DisplayField } from '@/components/TextComponents';
 
-export function PatientView({ content }) {
+export function PatientView({ patient }) {
   const calculate_age = dob => {
     const birthDate = new Date(dob);
     const difference = Date.now() - birthDate.getTime();
@@ -20,8 +20,8 @@ export function PatientView({ content }) {
       key: 'date_of_birth',
       calculate: dob => moment(dob).format('DD-MMMM-YYYY'),
     },
-    { label: 'POOR', key: 'poor' },
-    { label: 'BS2', key: 'bs2' },
+    { label: 'POOR Card', key: 'poor' },
+    { label: 'BS2 Card', key: 'bs2' },
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 
@@ -32,8 +32,8 @@ export function PatientView({ content }) {
         label={field.label}
         content={
           field.calculate
-            ? field.calculate(content[field.key])
-            : content[field.key] || 'NOT FILLED'
+            ? field.calculate(patient[field.key])
+            : patient[field.key] || 'NOT FILLED'
         }
       />
     </div>
