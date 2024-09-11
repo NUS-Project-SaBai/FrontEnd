@@ -1,6 +1,6 @@
 import { Button } from '@/components/TextComponents';
 
-export function ConsultationsTable({ content: consults, buttonOnClick }) {
+export function ConsultationsTable({ consults, buttonOnClick }) {
   if (consults.length == 0) {
     return (
       <div>
@@ -12,7 +12,7 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
     );
   }
 
-  const consultRows = consults.map(consult => {
+  const ConsultRows = consults.map(consult => {
     const doctor = consult.doctor.nickname;
     const referredFor = consult.referred_for || 'Not referred';
 
@@ -68,7 +68,7 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {consultRows}
+                  <ConsultRows />
                 </tbody>
               </table>
             </div>
