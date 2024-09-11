@@ -24,7 +24,7 @@ export function ConsultationView({ consult }) {
   }
 
   const renderPrescriptions = prescriptions => {
-    return <PrescriptionsTable content={prescriptions} />;
+    return <PrescriptionsTable prescriptions={prescriptions} />;
   };
 
   const diagnosisRows = diagnosisArray.map(diagnosis => {
