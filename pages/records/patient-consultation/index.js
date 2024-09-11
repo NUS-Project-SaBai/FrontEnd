@@ -429,7 +429,7 @@ const PatientConsultation = () => {
           isOpen={consultationModalOpen}
           onRequestClose={toggleCustomModal}
         >
-          <ConsultationView content={selectedConsult} />
+          <ConsultationView consult={selectedConsult} />
         </CustomModal>
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Consultation
