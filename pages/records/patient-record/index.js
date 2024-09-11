@@ -190,7 +190,7 @@ const PatientRecord = () => {
             colour="green"
           />
         </div>
-        <PatientView content={patient} />
+        <PatientView patient={patient} />
       </div>
     );
   }
@@ -198,8 +198,8 @@ const PatientRecord = () => {
   function renderSecondColumn() {
     return (
       <div className="space-y-8">
-        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
-        <PrescriptionsTable content={prescriptions} />
+        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
+        <PrescriptionsTable prescriptions={prescriptions} />
       </div>
     );
   }
@@ -220,7 +220,7 @@ const PatientRecord = () => {
           isOpen={vitalsModalOpen}
           onRequestClose={toggleVitalsModal}
         >
-          <VitalsTable content={vitals} />
+          <VitalsTable vitals={vitals} />
         </CustomModal>
 
         <CustomModal
@@ -240,7 +240,7 @@ const PatientRecord = () => {
           isOpen={consultationModalOpen}
           onRequestClose={toggleConsultationModal}
         >
-          <ConsultationView content={selectedConsult} />
+          <ConsultationView consult={selectedConsult} />
         </CustomModal>
         <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
           Patient Records

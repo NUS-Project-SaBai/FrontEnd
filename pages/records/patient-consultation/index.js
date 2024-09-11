@@ -22,7 +22,7 @@ const PatientConsultation = () => {
   const [patient, setPatient] = useState({});
   const [visits, setVisits] = useState([]);
 
-  const [consult, setConsult] = useState({});
+  const [consults, setConsult] = useState({});
   const [vitals, setVitals] = useState({});
   const [prescriptions, setPrescriptions] = useState([]);
 
@@ -272,12 +272,12 @@ const PatientConsultation = () => {
             <h2>Not Done</h2>
           </>
         ) : (
-          <VitalsTable content={vitals} />
+          <VitalsTable vitals={vitals} />
         )}
 
-        <ConsultationsTable content={consult} buttonOnClick={selectConsult} />
+        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
 
-        <PrescriptionsTable content={prescriptions} />
+        <PrescriptionsTable prescriptions={prescriptions} />
       </div>
     );
   }

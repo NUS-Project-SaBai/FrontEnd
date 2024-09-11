@@ -177,12 +177,12 @@ const PatientVitals = () => {
             <h2>Not Done</h2>
           </>
         ) : (
-          <VitalsTable content={vitals} />
+          <VitalsTable vitals={vitals} />
         )}
 
-        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
+        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
 
-        <PrescriptionsTable content={prescriptions} />
+        <PrescriptionsTable prescriptions={prescriptions} />
       </div>
     );
   }

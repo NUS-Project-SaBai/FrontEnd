@@ -1,4 +1,4 @@
-export function PrescriptionsTable({ content: prescriptions }) {
+export function PrescriptionsTable({ prescriptions }) {
   if (prescriptions.length == 0) {
     return (
       <div>
@@ -9,7 +9,7 @@ export function PrescriptionsTable({ content: prescriptions }) {
       </div>
     );
   }
-  const prescriptionRows = prescriptions.map(prescription => {
+  const PrescriptionRows = prescriptions.map(prescription => {
     const name =
       prescription.medication_review.medicine.medicine_name ||
       'Prescription.medicine.medicine_name not found';
@@ -65,7 +65,7 @@ export function PrescriptionsTable({ content: prescriptions }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {prescriptionRows}
+                  <PrescriptionRows />
                 </tbody>
               </table>
             </div>
