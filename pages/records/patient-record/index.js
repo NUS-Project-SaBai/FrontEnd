@@ -157,16 +157,6 @@ const PatientRecord = () => {
     onRefresh();
   });
 
-  function renderHeader() {
-    return (
-      <Header
-        patient={patient}
-        visits={visits}
-        handleVisitChange={handleVisitChange}
-      />
-    );
-  }
-
   function FirstColumn() {
     if (typeof vitals === 'undefined') {
       return (
@@ -215,7 +205,7 @@ const PatientRecord = () => {
   }
 
   return (
-    <div className="mt-7.5 mx-6 overflow-hidden">
+    <div className="mx-6 overflow-hidden">
       <CustomModal isOpen={vitalsModalOpen} onRequestClose={toggleVitalsModal}>
         <VitalsTable vitals={vitals} />
       </CustomModal>
