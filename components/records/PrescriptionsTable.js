@@ -9,27 +9,31 @@ export function PrescriptionsTable({ prescriptions }) {
       </div>
     );
   }
-  const PrescriptionRows = prescriptions.map(prescription => {
-    const name =
-      prescription.medication_review.medicine.medicine_name ||
-      'Prescription.medicine.medicine_name not found';
-    const quantity = Math.abs(prescription.medication_review.quantity_changed);
-    const status = prescription.medication_review.order_status.toUpperCase();
-    const rowColor = status === 'APPROVED' ? 'bg-green-100' : 'bg-red-100';
-    return (
-      <tr className={rowColor} key={prescription.id}>
-        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-          {name}
-        </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          {quantity}
-        </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          {status}
-        </td>
-      </tr>
-    );
-  });
+  function PrescriptionRows() {
+    return prescriptions.map(prescription => {
+      const name =
+        prescription.medication_review.medicine.medicine_name ||
+        'Prescription.medicine.medicine_name not found';
+      const quantity = Math.abs(
+        prescription.medication_review.quantity_changed
+      );
+      const status = prescription.medication_review.order_status.toUpperCase();
+      const rowColor = status === 'APPROVED' ? 'bg-green-100' : 'bg-red-100';
+      return (
+        <tr className={rowColor} key={prescription.id}>
+          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+            {name}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {quantity}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {status}
+          </td>
+        </tr>
+      );
+    });
+  }
 
   return (
     <div>
