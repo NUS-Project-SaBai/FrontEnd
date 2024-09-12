@@ -10,7 +10,7 @@ import {
 } from '@/components/records';
 import { PatientRegistrationForm } from '@/components/registration';
 import Router from 'next/router';
-import { Button } from '@/components/TextComponents/';
+import { Button, PageTitle } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import toast from 'react-hot-toast';
@@ -159,17 +159,7 @@ const PatientRecord = () => {
     onRefresh();
   });
 
-  function renderHeader() {
-    return (
-      <Header
-        patient={patient}
-        visits={visits}
-        handleVisitChange={handleVisitChange}
-      />
-    );
-  }
-
-  function renderFirstColumn() {
+  function FirstColumn() {
     if (typeof vitals === 'undefined') {
       return (
         <div className="my-2">
@@ -197,7 +187,7 @@ const PatientRecord = () => {
     );
   }
 
-  function renderSecondColumn() {
+  function SecondColumn() {
     return (
       <div className="space-y-8">
         <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
@@ -215,64 +205,54 @@ const PatientRecord = () => {
     );
   }
 
-  function render() {
-    if (noRecords)
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <h2 className="text-black text-xl">
-            This patient has no records currently
-          </h2>
-        </div>
-      );
-
+  if (noRecords) {
     return (
-      <div className="mt-7.5 mx-6 overflow-hidden">
-        <CustomModal
-          isOpen={vitalsModalOpen}
-          onRequestClose={toggleVitalsModal}
-        >
-          <VitalsTable
-            vitals={vitals}
-            patient={patient}
-            visit={visits.find(visit => visit.id === selectedVisitID)}
-          />
-        </CustomModal>
-
-        <CustomModal
-          isOpen={editPatientModalOpen}
-          onRequestClose={toggleEditPatientModal}
-          onSubmit={submitPatientEdit}
-        >
-          <PatientRegistrationForm
-            formDetails={patientEdit}
-            imageDetails={imageDetails}
-            setImageDetails={setImageDetails}
-            handleInputChange={handlePatientChange}
-          />
-        </CustomModal>
-
-        <CustomModal
-          isOpen={consultationModalOpen}
-          onRequestClose={toggleConsultationModal}
-        >
-          <ConsultationView consult={selectedConsult} />
-        </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Records
-        </h1>
-        {renderHeader()}
-
-        <hr className="mt-2" />
-
-        <div className="grid grid-cols-2 gap-x-6">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <h2 className="text-black text-xl">
+          This patient has no records currently
+        </h2>
       </div>
     );
   }
 
-  return <>{render()}</>;
+  return (
+    <div className="mx-6 overflow-hidden">
+      <CustomModal isOpen={vitalsModalOpen} onRequestClose={toggleVitalsModal}>
+        <VitalsTable vitals={vitals} />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={editPatientModalOpen}
+        onRequestClose={toggleEditPatientModal}
+        onSubmit={submitPatientEdit}
+      >
+        <PatientRegistrationForm
+          formDetails={patientEdit}
+          imageDetails={imageDetails}
+          setImageDetails={setImageDetails}
+          handleInputChange={handlePatientChange}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleConsultationModal}
+      >
+        <ConsultationView consult={selectedConsult} />
+      </CustomModal>
+      <PageTitle title="Patient Records" desc="" />
+      <Header
+        patient={patient}
+        visits={visits}
+        handleVisitChange={handleVisitChange}
+      />
+      <hr className="mt-2" />
+      <div className="grid grid-cols-2 gap-x-6">
+        <FirstColumn />
+        <SecondColumn />
+      </div>
+    </div>
+  );
 };
 
 export default withAuth(PatientRecord);
