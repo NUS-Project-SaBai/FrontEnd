@@ -45,6 +45,22 @@ const PatientVitals = () => {
     systolic: '',
     diastolic: '',
     diabetes_mellitus: '',
+    // children
+    gross_motor: '',
+    red_reflex: '',
+    scoliosis: '',
+    thelarche: '',
+    thelarche_age: '',
+    pubarche: '',
+    pubarche_age: '',
+    menarche: '',
+    menarche_age: '',
+    pallor: '',
+    oral_cavity: '',
+    heart: '',
+    lungs: '',
+    abdomen: '',
+    hernial_orifices: '',
   });
 
   const [CustomModalOpen, setCustomModalOpen] = useState(false);
@@ -188,6 +204,16 @@ const PatientVitals = () => {
         <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
 
         <PrescriptionsTable prescriptions={prescriptions} />
+
+        <HeightWeightGraph
+          age={
+            new Date(
+              visits.find(visit => visit.id === selectedVisitID).date
+            ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+          }
+          weight={vitals.weight}
+          height={vitals.height}
+        />
       </div>
     );
   }
@@ -199,16 +225,8 @@ const PatientVitals = () => {
           formDetails={vitalsFormDetails}
           handleOnChange={handleVitalsFormOnChange}
           patient={patient}
+          visit={visits.find(visit => visit.id === selectedVisitID)}
           onSubmit={submitVitalsForm}
-        />
-        <HeightWeightGraph
-          age={
-            new Date(
-              visits.find(visit => visit.id === selectedVisitID).date
-            ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
-          }
-          weight={vitals.weight}
-          height={vitals.height}
         />
       </div>
     );

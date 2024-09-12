@@ -34,7 +34,7 @@ export function VitalsTable({ vitals, patient, visit }) {
     { label: 'Others', value: vitals.others },
   ];
 
-  const childrenVitalFields = [
+  const childrenFemaleVitalFields = [
     {
       label: 'Gross Motor',
       value: vitals.gross_motor,
@@ -138,7 +138,7 @@ export function VitalsTable({ vitals, patient, visit }) {
           patientAgeVisit >= 4 && (
             <div>
               <div className="grid gap-6 md:grid-cols-2">
-                {childrenVitalFields
+                {childrenFemaleVitalFields
                   .filter((field, _) =>
                     field.ageToTest.includes(patientAgeVisit)
                   )

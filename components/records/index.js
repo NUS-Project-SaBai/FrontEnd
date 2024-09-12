@@ -1,3 +1,4 @@
+import { ChildrenVitalsFields } from './ChildrenVitalsFields';
 import { ConsultationForm } from './ConsultationForm';
 import { ConsultationsTable } from './ConsultationsTable';
 import { ConsultationView } from './ConsultationView';
@@ -10,6 +11,7 @@ import { VitalsForm } from './VitalsForm';
 import { VitalsTable } from './VitalsTable';
 
 export {
+  ChildrenVitalsFields,
   ConsultationForm,
   ConsultationsTable,
   ConsultationView,
