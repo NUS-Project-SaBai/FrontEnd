@@ -218,7 +218,11 @@ const PatientRecord = () => {
   return (
     <div className="mx-6 overflow-hidden">
       <CustomModal isOpen={vitalsModalOpen} onRequestClose={toggleVitalsModal}>
-        <VitalsTable vitals={vitals} />
+        <VitalsTable
+          vitals={vitals}
+          patient={patient}
+          visit={visits.find(visit => visit.id === selectedVisitID)}
+        />
       </CustomModal>
 
       <CustomModal
