@@ -200,6 +200,7 @@ const PatientRecord = () => {
           }
           weight={vitals.weight}
           height={vitals.height}
+          gender={patient.gender}
         />
       </div>
     );

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 
-export function HeightWeightGraph({ age, weight, height }) {
-  if (age < 4 || age > 18) {
+export function HeightWeightGraph({ age, weight, height, gender }) {
+  if (age < 2 || age > 18) {
     return <div></div>;
   }
-  if (!weight || !height) {
+  if (!weight || !height || (gender !== 'Female' && gender !== 'Male')) {
     return <div></div>;
   }
   const canvasRef = useRef(null);
@@ -24,11 +24,22 @@ export function HeightWeightGraph({ age, weight, height }) {
 
     const image = new Image();
     image.crossOrigin = 'Anonymous'; // Set CORS attribute
-    image.src = '/growth.png'; // Fixed image URL
 
-    const xPixel = 115 + (age - 2) * 22.67;
-    const weightPixel = 742 - (weight - 10) * 4.25;
-    const heightPixel = 593 - (height - 80) * 4.25;
+    let xPixel, weightPixel, heightPixel;
+
+    if (gender === 'Female') {
+      image.src = '/girlhwgraph.png'; // Fixed image URL
+      xPixel = 115 + (age - 2) * 22.67;
+      weightPixel = 742 - (weight - 10) * 4.25;
+      heightPixel = 593 - (height - 80) * 4.25;
+    }
+    if (gender === 'Male') {
+      image.src = '/boyhwgraph.png'; // Fixed image URL
+      xPixel = 95 + (age - 2) * 23.5;
+      weightPixel = 765 - (weight - 10) * 4.52;
+      heightPixel = 607 - (height - 80) * 4.52;
+    }
+
     const crossHeight = 3;
 
     image.onload = () => {

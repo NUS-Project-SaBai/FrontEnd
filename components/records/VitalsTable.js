@@ -34,7 +34,7 @@ export function VitalsTable({ vitals, patient, visit }) {
     { label: 'Others', value: vitals.others },
   ];
 
-  const childrenFemaleVitalFields = [
+  const childrenVitalFields = [
     {
       label: 'Gross Motor',
       value: vitals.gross_motor,
@@ -45,36 +45,6 @@ export function VitalsTable({ vitals, patient, visit }) {
       label: 'Scoliosis',
       value: vitals.scoliosis,
       ageToTest: [13, 14, 15, 16],
-    },
-    {
-      label: 'Thelarche',
-      value: vitals.thelarche,
-      ageToTest: [13, 14, 15, 16, 17, 18],
-    },
-    {
-      label: 'Thelarche Age',
-      value: vitals.thelarche_age,
-      ageToTest: [13, 14, 15, 16, 17, 18],
-    },
-    {
-      label: 'Pubarche',
-      value: vitals.pubarche,
-      ageToTest: [13, 14, 15, 16, 17, 18],
-    },
-    {
-      label: 'Pubarche Age',
-      value: vitals.pubarche_age,
-      ageToTest: [13, 14, 15, 16, 17, 18],
-    },
-    {
-      label: 'Menarche',
-      value: vitals.menarche,
-      ageToTest: [13, 14, 15, 16, 17, 18],
-    },
-    {
-      label: 'Menarche Age',
-      value: vitals.menarche_age,
-      ageToTest: [13, 14, 15, 16, 17, 18],
     },
     { label: 'Pallor', value: vitals.pallor, ageToTest: [4, 5, 7, 8, 11, 12] },
     {
@@ -95,6 +65,66 @@ export function VitalsTable({ vitals, patient, visit }) {
       ageToTest: [4, 5, 7, 8],
     },
   ];
+  const PubertyFields = [
+    {
+      label: 'Pubarche',
+      value: vitals.pubarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+    },
+    {
+      label: 'Pubarche Age',
+      value: vitals.pubarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+    },
+    {
+      label: 'Thelarche',
+      value: vitals.thelarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Thelarche Age',
+      value: vitals.thelarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Menarche',
+      value: vitals.menarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Menarche Age',
+      value: vitals.menarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Voice Change',
+      value: vitals.voice_change,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Voice Change Age',
+      value: vitals.voice_change_age,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Testicular Growth >= 4ml',
+      value: vitals.testicular_growth,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Testicular Growth Age',
+      value: vitals.testicular_growth_age,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+  ];
 
   function renderTableField(field, index) {
     if (field.label === '') {
@@ -110,6 +140,7 @@ export function VitalsTable({ vitals, patient, visit }) {
       />
     );
   }
+  console.log(patientAgeVisit);
 
   return (
     <form className="">
@@ -133,19 +164,26 @@ export function VitalsTable({ vitals, patient, visit }) {
           {vitalFields.map((field, index) => renderTableField(field, index))}
         </div>
 
-        {patient.gender === 'Female' &&
-          patientAgeVisit <= 18 &&
-          patientAgeVisit >= 4 && (
-            <div>
-              <div className="grid gap-6 md:grid-cols-2">
-                {childrenFemaleVitalFields
-                  .filter((field, _) =>
-                    field.ageToTest.includes(patientAgeVisit)
-                  )
-                  .map((field, index) => renderTableField(field, index))}
-              </div>
+        {patientAgeVisit <= 18 && patientAgeVisit >= 4 && (
+          <div>
+            <div className="grid gap-6 md:grid-cols-2">
+              {childrenVitalFields
+                .filter((field, _) => {
+                  return field.ageToTest.includes(patientAgeVisit);
+                })
+                .map((field, index) => renderTableField(field, index))}
             </div>
-          )}
+
+            <div className="grid gap-6 md:grid-cols-2">
+              {PubertyFields.filter((field, _) => {
+                return (
+                  field.ageToTest.includes(patientAgeVisit) &&
+                  (field.gender ? field.gender === patient.gender : true)
+                );
+              }).map((field, index) => renderTableField(field, index))}
+            </div>
+          </div>
+        )}
       </div>
     </form>
   );

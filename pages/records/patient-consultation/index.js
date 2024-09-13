@@ -292,6 +292,7 @@ const PatientConsultation = () => {
           }
           weight={vitals.weight}
           height={vitals.height}
+          gender={patient.gender}
         />
       </div>
     );
