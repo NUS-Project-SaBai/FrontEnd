@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import axiosInstance from '@/pages/api/_axiosInstance';
-
-import { venueOptions } from '@/utils/constants';
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import {
@@ -14,6 +12,7 @@ import {
 import { Button } from '@/components/TextComponents/';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
+import { PageTitle } from '@/components/TextComponents';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
@@ -163,22 +162,18 @@ const Registration = () => {
       <CustomModal
         isOpen={patientModalOpen}
         onRequestClose={togglePatientModal}
-        showCloseButton={false}
+        onSubmit={submitNewPatient}
       >
         <PatientRegistrationForm
           formDetails={formDetails}
           imageDetails={imageDetails}
           setImageDetails={setImageDetails}
-          closeModal={togglePatientModal}
           handleInputChange={handleInputChange}
-          submitNewPatient={submitNewPatient}
         />
       </CustomModal>
       <div>
         <div>
-          <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-            Registration
-          </h1>
+          <PageTitle title="Registration" desc="" />
           <div className="flex items-center justify-center mb-2 w-full">
             <RegistrationAutoSuggest
               patientsList={patientsList}

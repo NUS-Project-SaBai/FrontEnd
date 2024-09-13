@@ -183,6 +183,7 @@ const PatientVitals = () => {
       <hr />
 
       <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
+        
         {/* Left Column */}
         <div className="space-y-4">
           {typeof vitals === 'undefined' ? (

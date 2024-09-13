@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
-import Modal from 'react-modal';
 import {
   ConsultationsTable,
   PrescriptionsTable,
@@ -23,7 +22,7 @@ const PatientConsultation = () => {
   const [patient, setPatient] = useState({});
   const [visits, setVisits] = useState([]);
 
-  const [consult, setConsult] = useState({});
+  const [consults, setConsult] = useState({});
   const [vitals, setVitals] = useState({});
   const [prescriptions, setPrescriptions] = useState([]);
 
@@ -37,7 +36,14 @@ const PatientConsultation = () => {
 
   // Order Form Modal hooks
   const [orders, setOrders] = useState([]);
-  const [orderFormDetails, setOrderFormDetails] = useState({});
+  const blankOrderFormDetails = {
+    quantity: '',
+    medicine: 0, // refers to the medcine id
+    medicine_name: '',
+  };
+  const [orderFormDetails, setOrderFormDetails] = useState(
+    blankOrderFormDetails
+  );
   const [orderFormModalOpen, setOrderFormModalOpen] = useState(false);
 
   // Consultation Form hooks
@@ -190,17 +196,30 @@ const PatientConsultation = () => {
   }
 
   function submitNewOrder() {
-    // Non-existent medication check
-    if (orderFormDetails.medicine == null || orderFormDetails.medicine === 0) {
+    // Non-existent medication check: check if orderFormDetails.medicine (which is the id) is === 0 (which is the default value in the state obj)
+    if (orderFormDetails.medicine === 0) {
       toast.error(
         'Please select the name of the medication you would like to prescribe.'
       );
       return;
     }
 
-    // Decimal check
-    if (!Number.isInteger(orderFormDetails.quantity - 0)) {
+    // Decimal check, make sure quantity to be added is not an empty string or 0
+    if (!orderFormDetails.quantity || orderFormDetails.quantity === '0') {
+      // quantity comes from number field but is string due to the workaround of the number field scrolling effect with a text field
       toast.error('Please enter a valid quantity.');
+      return;
+    }
+
+    // Check if quantity to be ordered < stock
+    const stockMedication = medications.find(
+      med => orderFormDetails.medicine === med.id
+    );
+    const quantityStockMedication = stockMedication
+      ? stockMedication.quantity
+      : 0;
+    if (orderFormDetails.quantity > quantityStockMedication) {
+      toast.error('Not enough medication in stock.');
       return;
     }
 
@@ -214,7 +233,7 @@ const PatientConsultation = () => {
     }
 
     setOrders([...orders]);
-    setOrderFormDetails({});
+    setOrderFormDetails(blankOrderFormDetails);
     toggleOrderFormModal();
   }
 
@@ -324,47 +343,13 @@ const PatientConsultation = () => {
 
   return (
     <div className="mt-7 mx-6 overflow-hidden">
-      <Modal
-        isOpen={orderFormModalOpen}
-        onRequestClose={toggleOrderFormModal}
-        className="fixed inset-0 flex items-center justify-center z-50 p-4"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-      >
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
-          <OrderForm
-            allergies={patient.drug_allergy}
-            medications={medications}
-            handleInputChange={handleOrderFormChange}
-            orderDetails={orderFormDetails}
-            medicationOptions={medications.map(medication => (
-              <option
-                key={medication.id}
-                value={`${medication.id} ${medication.medicine_name}`}
-              >
-                {medication.medicine_name}
-              </option>
-            ))}
-            onSubmit={submitNewOrder}
-          />
-          <button
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            onClick={toggleOrderFormModal}
-          >
-            Close
-          </button>
-        </div>
-      </Modal>
-      <CustomModal
-        isOpen={consultationModalOpen}
-        onRequestClose={toggleCustomModal}
-      >
-        <ConsultationView content={selectedConsult} />
-      </CustomModal>
+
       <PageTitle title="Patient Consultation" />
       <PatientHeader />
       <b>Please remember to press the submit button at the end of the form!</b>
       <hr />
       <div className="grid grid-cols-2 gap-x-4 mb-4">
+      
         {/* Left Column */}
         <div>
           <div className="space-y-8">
@@ -410,7 +395,6 @@ const PatientConsultation = () => {
               </div>
             </div>
             <hr className="my-4" />
-
             <Button
               colour="green"
               text={'Submit'}
@@ -419,6 +403,43 @@ const PatientConsultation = () => {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={orderFormModalOpen}
+        onRequestClose={toggleOrderFormModal}
+        className="fixed inset-0 flex items-center justify-center z-50 p-4"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+      >
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
+          <OrderForm
+            allergies={patient.drug_allergy}
+            medications={medications}
+            handleInputChange={handleOrderFormChange}
+            orderDetails={orderFormDetails}
+            medicationOptions={medications.map(medication => (
+              <option
+                key={medication.id}
+                value={`${medication.id} ${medication.medicine_name}`}
+              >
+                {medication.medicine_name}
+              </option>
+            ))}
+            onSubmit={submitNewOrder}
+          />
+          <button
+            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onClick={toggleOrderFormModal}
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
+      
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleCustomModal}
+      >
+        <ConsultationView content={selectedConsult} />
+      </CustomModal>
     </div>
   );
 };
