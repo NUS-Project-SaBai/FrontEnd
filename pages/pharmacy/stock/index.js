@@ -11,14 +11,18 @@ import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 
 const Stock = () => {
-  const [medications, setMedications] = useState([]);
-  const [medicationsFiltered, setMedicationsFiltered] = useState([]);
-  const [medicationDetails, setMedicationDetails] = useState({
+  const blankMedicationDetails = {
     medicine_name: '',
-    quantity: 0,
+    quantity: 0, // number field but the value is actually string because we don't want the scrolling effect with the number field
     quantityChange: 0,
     notes: '',
-  });
+  };
+  const [medications, setMedications] = useState([]);
+  const [medicationsFiltered, setMedicationsFiltered] = useState([]);
+  const [medicationDetails, setMedicationDetails] = useState(
+    blankMedicationDetails
+  );
+
   const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
   const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
     useState(false);
@@ -42,6 +46,11 @@ const Stock = () => {
   const onSubmitForm = useWithLoading(async () => {
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
+      return;
+    }
+    if (medicationDetails.quantityChange === '') {
+      // check explicitly for empty string as the "!medicationDetails.quantityChange" check will catch zeros, which is allowed
+      toast.error('Quantity to Add cannot be empty.');
       return;
     }
 
@@ -122,7 +131,7 @@ const Stock = () => {
     setMedicationsFiltered(filteredMedications);
   };
 
-  const toggleModal = (medication = {}) => {
+  const toggleModal = (medication = blankMedicationDetails) => {
     setMedicationDetails(medication);
     setMedicationModalIsOpen(!medicationModalIsOpen);
   };
@@ -132,15 +141,7 @@ const Stock = () => {
     setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
   };
 
-  const createNewMedication = () => {
-    setMedicationDetails({
-      medicine_name: '',
-      quantity: 0,
-      quantityChange: 0,
-      notes: '',
-    });
-    toggleModal();
-  };
+  const createNewMedication = toggleModal;
 
   const handleMedicationChange = event => {
     const newMedicationDetails = {
@@ -247,11 +248,14 @@ const Stock = () => {
         />
       </div>
       <Table />
-      <CustomModal isOpen={medicationModalIsOpen} onRequestClose={toggleModal}>
+      <CustomModal
+        isOpen={medicationModalIsOpen}
+        onRequestClose={toggleModal}
+        onSubmit={onSubmitForm}
+      >
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
-          onSubmit={onSubmitForm}
         />
       </CustomModal>
 
