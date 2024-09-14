@@ -8,55 +8,27 @@ import { useEffect, useState } from 'react';
 
 export function Header({ patient, visits, handleVisitChange }) {
   const fileInputRef = useRef(null);
-  const [csrfToken, setCsrfToken] = useState(null);
-
-  //Fetch the CSRF token when the component loads
-  // useEffect(() => {
-  //   axios
-  //     .get('http://127.0.0.1:8000/api/get-csrf-token/')
-  //     .then(response => {
-  //       setCsrfToken(response.data.csrfToken);
-  //       console.log('Fetched CSRF token:', response.data.csrfToken);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching CSRF token:', error);
-  //     });
-  // }, []);
-
-  // function getCookie(name) {
-  //   let cookieValue = null;
-  //   if (document.cookie && document.cookie !== '') {
-  //     const cookies = document.cookie.split(';');
-  //     for (let i = 0; i < cookies.length; i++) {
-  //       const cookie = cookies[i].trim();
-  //       if (cookie.substring(0, name.length + 1) === (name + '=')) {
-  //         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   return cookieValue;
-  // }
 
   function uploadDocument() {
-    //function where on click triggers file selection
-    //then send to backend using axios of fetch
-    console.log('Upload document');
     fileInputRef.current.click(); //trigger file input click
   }
 
   function handleFileChange(event) {
-    console.log('event change');
     const file = event.target.files[0];
-    //console.log(csrfToken);
     if (file) {
+      const currentDate = moment().format('YYYY-MM-DD');
+      const patientName = patient.name;
+      const documentName = file.name;
+
+      const labeledDocumentName = `${patientName}-${currentDate}-${documentName}`;
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', file, labeledDocumentName);
+      formData.append('file_name', labeledDocumentName);
 
       axios
         .post('http://127.0.0.1:8000/upload/', formData, {
           headers: {
-            //'X-CSRFToken': csrfToken,
             'Content-Type': 'multipart/form-data',
           },
         })
