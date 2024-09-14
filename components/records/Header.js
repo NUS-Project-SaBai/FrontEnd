@@ -11,17 +11,17 @@ export function Header({ patient, visits, handleVisitChange }) {
   const [csrfToken, setCsrfToken] = useState(null);
 
   //Fetch the CSRF token when the component loads
-  useEffect(() => {
-    axios
-      .get('http://127.0.0.1:8000/api/get-csrf-token/')
-      .then(response => {
-        setCsrfToken(response.data.csrfToken);
-        console.log('Fetched CSRF token:', response.data.csrfToken);
-      })
-      .catch(error => {
-        console.error('Error fetching CSRF token:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get('http://127.0.0.1:8000/api/get-csrf-token/')
+  //     .then(response => {
+  //       setCsrfToken(response.data.csrfToken);
+  //       console.log('Fetched CSRF token:', response.data.csrfToken);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching CSRF token:', error);
+  //     });
+  // }, []);
 
   // function getCookie(name) {
   //   let cookieValue = null;
@@ -48,7 +48,7 @@ export function Header({ patient, visits, handleVisitChange }) {
   function handleFileChange(event) {
     console.log('event change');
     const file = event.target.files[0];
-    console.log(csrfToken);
+    //console.log(csrfToken);
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
@@ -56,7 +56,7 @@ export function Header({ patient, visits, handleVisitChange }) {
       axios
         .post('http://127.0.0.1:8000/upload/', formData, {
           headers: {
-            'X-CSRFToken': csrfToken,
+            //'X-CSRFToken': csrfToken,
             'Content-Type': 'multipart/form-data',
           },
         })
