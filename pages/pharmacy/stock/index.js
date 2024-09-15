@@ -141,8 +141,6 @@ const Stock = () => {
     setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
   };
 
-  const createNewMedication = toggleModal;
-
   const handleMedicationChange = event => {
     const newMedicationDetails = {
       ...medicationDetails,
@@ -241,11 +239,7 @@ const Stock = () => {
           onChange={onFilterChange}
           className="mb-2"
         />
-        <Button
-          colour="green"
-          text="Add New Medicine"
-          onClick={createNewMedication}
-        />
+        <Button colour="green" text="Add New Medicine" onClick={toggleModal} />
       </div>
       <Table />
       <CustomModal
