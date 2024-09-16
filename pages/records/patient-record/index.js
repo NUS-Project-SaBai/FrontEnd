@@ -36,19 +36,6 @@ const PatientRecord = () => {
 
   const [imageDetails, setImageDetails] = useState(null);
 
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
-
-  const handlePatientChange = event => {
-    const newPatientDetails = {
-      ...patient,
-      [event.target.name]: event.target.value,
-    };
-    setPatientEdit(newPatientDetails);
-  };
-
   useEffect(() => {
     onRefresh();
   }, []);
@@ -98,24 +85,6 @@ const PatientRecord = () => {
     }
   });
 
-  function toggleVitalsModal() {
-    setVitalsModalOpen(!vitalsModalOpen);
-  }
-
-  function toggleConsultationModal() {
-    setConsultationModalOpen(!consultationModalOpen);
-  }
-
-  function toggleEditPatientModal() {
-    setPatientEdit(patient);
-    setEditPatientModalOpen(!editPatientModalOpen);
-  }
-
-  function selectConsult(consult) {
-    setSelectedConsult(consult);
-    toggleConsultationModal();
-  }
-
   const submitPatientEdit = useWithLoading(async () => {
     if (!patientEdit.name) {
       toast.error('Name cannot be empty.');
@@ -157,7 +126,38 @@ const PatientRecord = () => {
     onRefresh();
   });
 
-  function FirstColumn() {
+  function toggleVitalsModal() {
+    setVitalsModalOpen(!vitalsModalOpen);
+  }
+
+  function toggleConsultationModal() {
+    setConsultationModalOpen(!consultationModalOpen);
+  }
+
+  function toggleEditPatientModal() {
+    setPatientEdit(patient);
+    setEditPatientModalOpen(!editPatientModalOpen);
+  }
+
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleConsultationModal();
+  }
+
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
+
+  const handlePatientChange = event => {
+    const newPatientDetails = {
+      ...patient,
+      [event.target.name]: event.target.value,
+    };
+    setPatientEdit(newPatientDetails);
+  };
+
+  function LeftColumn() {
     if (typeof vitals === 'undefined') {
       return (
         <div className="my-2">
@@ -185,7 +185,7 @@ const PatientRecord = () => {
     );
   }
 
-  function SecondColumn() {
+  function RightColumn() {
     return (
       <div className="space-y-8">
         <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
@@ -237,8 +237,8 @@ const PatientRecord = () => {
       />
       <hr className="mt-2" />
       <div className="grid grid-cols-2 gap-x-6">
-        <FirstColumn />
-        <SecondColumn />
+        <LeftColumn />
+        <RightColumn />
       </div>
     </div>
   );
