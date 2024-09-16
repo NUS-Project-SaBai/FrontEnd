@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
@@ -6,9 +6,16 @@ import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import useWithLoading from '@/utils/loading';
+import CustomModal from '../CustomModal';
+import { FileForm } from './FileForm';
 
 export function Header({ patient, visits, handleVisitChange }) {
   const fileInputRef = useRef(null);
+  const [fileModalIsOpen, setFileModalIsOpen] = useState(false);
+
+  const toggleFileModal = medication => {
+    setFileModalIsOpen(!fileModalIsOpen);
+  };
 
   const uploadFile = useWithLoading(async file => {
     const currentDate = moment().format('YYYY-MM-DD');
@@ -20,6 +27,7 @@ export function Header({ patient, visits, handleVisitChange }) {
     const formData = new FormData();
     formData.append('file', file, labeledDocumentName);
     formData.append('file_name', labeledDocumentName);
+    formData.append('patient_pk', patient.pk);
 
     try {
       await axiosInstance.post('/upload/', formData, {
@@ -45,10 +53,7 @@ export function Header({ patient, visits, handleVisitChange }) {
   };
 
   const viewDocument = () => {
-    window.open(
-      'https://drive.google.com/drive/folders/1yYfYXACDQoJ5LX51C4r7_d850Tq37aJf',
-      '_blank'
-    );
+    toggleFileModal();
   };
 
   const visitOptions = visits.map(visit => {
@@ -62,6 +67,9 @@ export function Header({ patient, visits, handleVisitChange }) {
 
   return (
     <div className="grid grid-cols-12 gap-4 mb-2">
+      <CustomModal isOpen={fileModalIsOpen} onRequestClose={toggleFileModal}>
+        <FileForm patient={patient} />
+      </CustomModal>
       <div className="col-span-12 md:col-span-2">
         <img
           src={`${CLOUDINARY_URL}/${patient.picture}`}
