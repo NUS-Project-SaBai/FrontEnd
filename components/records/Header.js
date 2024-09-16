@@ -5,48 +5,51 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
+import useWithLoading from '@/utils/loading';
 
 export function Header({ patient, visits, handleVisitChange }) {
   const fileInputRef = useRef(null);
 
-  function uploadDocument() {
-    fileInputRef.current.click(); //trigger file input click
-  }
+  const uploadFile = useWithLoading(async file => {
+    const currentDate = moment().format('YYYY-MM-DD');
+    const patientName = patient.name;
+    const documentName = file.name;
 
-  function handleFileChange(event) {
+    const labeledDocumentName = `${patientName}-${currentDate}-${documentName}`;
+
+    const formData = new FormData();
+    formData.append('file', file, labeledDocumentName);
+    formData.append('file_name', labeledDocumentName);
+
+    try {
+      await axiosInstance.post('/upload/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      toast.success('File uploaded successfully');
+    } catch (error) {
+      toast.error('Error uploading file: ' + error);
+    }
+  });
+
+  const uploadDocument = () => {
+    fileInputRef.current.click(); // trigger file input click
+  };
+
+  const handleFileChange = event => {
     const file = event.target.files[0];
     if (file) {
-      const currentDate = moment().format('YYYY-MM-DD');
-      const patientName = patient.name;
-      const documentName = file.name;
-
-      const labeledDocumentName = `${patientName}-${currentDate}-${documentName}`;
-
-      const formData = new FormData();
-      formData.append('file', file, labeledDocumentName);
-      formData.append('file_name', labeledDocumentName);
-
-      axiosInstance
-        .post('/upload/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        .then(response => {
-          toast.success('File uploaded successfully');
-        })
-        .catch(error => {
-          toast.error('Error uploading file: ' + error);
-        });
+      uploadFile(file);
     }
-  }
+  };
 
-  function viewDocument() {
+  const viewDocument = () => {
     window.open(
       'https://drive.google.com/drive/folders/1yYfYXACDQoJ5LX51C4r7_d850Tq37aJf',
       '_blank'
     );
-  }
+  };
 
   const visitOptions = visits.map(visit => {
     const date = moment(visit.date).format('DD MMMM YYYY HH:mm');
@@ -99,7 +102,10 @@ export function Header({ patient, visits, handleVisitChange }) {
             type="file"
             ref={fileInputRef}
             style={{ display: 'none' }}
-            onChange={handleFileChange}
+            onChange={e => {
+              handleFileChange(e);
+              e.target.value = '';
+            }}
           />
         </div>
         <Button text="View Document" onClick={viewDocument} colour="blue" />
