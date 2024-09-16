@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
-import axios from 'axios';
+import toast from 'react-hot-toast';
 import moment from 'moment';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
-import { useEffect, useState } from 'react';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 export function Header({ patient, visits, handleVisitChange }) {
   const fileInputRef = useRef(null);
@@ -26,23 +26,26 @@ export function Header({ patient, visits, handleVisitChange }) {
       formData.append('file', file, labeledDocumentName);
       formData.append('file_name', labeledDocumentName);
 
-      axios
-        .post('http://127.0.0.1:8000/upload/', formData, {
+      axiosInstance
+        .post('/upload/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         })
         .then(response => {
-          console.log('File uploaded successfully', response.data);
+          toast.success('File uploaded successfully');
         })
         .catch(error => {
-          console.error('Error uploading file:', error);
+          toast.error('Error uploading file: ' + error);
         });
     }
   }
 
   function viewDocument() {
-    console.log('View document');
+    window.open(
+      'https://drive.google.com/drive/folders/1yYfYXACDQoJ5LX51C4r7_d850Tq37aJf',
+      '_blank'
+    );
   }
 
   const visitOptions = visits.map(visit => {
