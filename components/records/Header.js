@@ -12,10 +12,10 @@ export function Header({ patient, visits, handleVisitChange }) {
 
   const uploadFile = useWithLoading(async file => {
     const currentDate = moment().format('YYYY-MM-DD');
-    const patientName = patient.name;
+    const patientIdentifier = `${patient.village_prefix}${patient.pk.toString().padStart(3, '0')}`;
     const documentName = file.name;
 
-    const labeledDocumentName = `${patientName}-${currentDate}-${documentName}`;
+    const labeledDocumentName = `${patientIdentifier}-${currentDate}-${documentName}`;
 
     const formData = new FormData();
     formData.append('file', file, labeledDocumentName);
