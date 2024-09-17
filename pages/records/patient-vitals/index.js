@@ -65,11 +65,6 @@ const PatientVitals = () => {
 
   const [CustomModalOpen, setCustomModalOpen] = useState(false);
 
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
-
   useEffect(() => {
     onRefresh();
   }, []);
@@ -120,15 +115,6 @@ const PatientVitals = () => {
     }
   });
 
-  function toggleCustomModal() {
-    setCustomModalOpen(!CustomModalOpen);
-  }
-
-  function selectConsult(consult) {
-    setSelectedConsult(consult);
-    toggleCustomModal();
-  }
-
   const submitVitalsForm = useWithLoading(async () => {
     const formPayload = {
       visit: selectedVisitID,
@@ -164,6 +150,20 @@ const PatientVitals = () => {
     }
   });
 
+  function toggleCustomModal() {
+    setCustomModalOpen(!CustomModalOpen);
+  }
+
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleCustomModal();
+  }
+
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
+
   function handleVitalsFormOnChange(e) {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -175,93 +175,71 @@ const PatientVitals = () => {
     }));
   }
 
-  function renderHeader() {
-    return (
+  if (!mounted) return null;
+
+  return (
+    <div className="mt-7.5 mx-6 overflow-hidden">
+      <CustomModal isOpen={CustomModalOpen} onRequestClose={toggleCustomModal}>
+        <ConsultationView consult={selectedConsult} />
+      </CustomModal>
+      <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+        Patient Vitals
+      </h1>
       <Header
         patient={patient}
         visits={visits}
         handleVisitChange={handleVisitChange}
       />
-    );
-  }
+      <b>Please remember to press the submit button at the end of the form!</b>
 
-  function renderFirstColumn() {
-    return (
-      <div className="space-y-4">
-        {typeof vitals === 'undefined' ? (
-          <>
-            <label className="label">Vital Signs</label>
-            <h2>Not Done</h2>
-          </>
-        ) : (
-          <VitalsTable
-            vitals={vitals}
+      <hr />
+
+      <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
+        {/*Left Column*/}
+        <div className="space-y-4">
+          {typeof vitals === 'undefined' ? (
+            <>
+              <label className="label">Vital Signs</label>
+              <h2>Not Done</h2>
+            </>
+          ) : (
+            <VitalsTable
+              vitals={vitals}
+              patient={patient}
+              visit={visits.find(visit => visit.id === selectedVisitID)}
+            />
+          )}
+
+          <ConsultationsTable
+            consults={consults}
+            buttonOnClick={selectConsult}
+          />
+
+          <PrescriptionsTable prescriptions={prescriptions} />
+          <HeightWeightGraph
+            age={
+              new Date(
+                visits.find(visit => visit.id === selectedVisitID).date
+              ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+            }
+            weight={vitals.weight}
+            height={vitals.height}
+            gender={patient.gender}
+          />
+        </div>
+        {/*Right Column*/}
+        <div className="space-y-2">
+          <VitalsForm
+            formDetails={vitalsFormDetails}
+            handleOnChange={handleVitalsFormOnChange}
             patient={patient}
             visit={visits.find(visit => visit.id === selectedVisitID)}
+            onSubmit={submitVitalsForm}
           />
-        )}
-
-        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
-
-        <PrescriptionsTable prescriptions={prescriptions} />
-
-        <HeightWeightGraph
-          age={
-            new Date(
-              visits.find(visit => visit.id === selectedVisitID).date
-            ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
-          }
-          weight={vitals.weight}
-          height={vitals.height}
-          gender={patient.gender}
-        />
-      </div>
-    );
-  }
-
-  function renderSecondColumn() {
-    return (
-      <div className="space-y-2">
-        <VitalsForm
-          formDetails={vitalsFormDetails}
-          handleOnChange={handleVitalsFormOnChange}
-          patient={patient}
-          visit={visits.find(visit => visit.id === selectedVisitID)}
-          onSubmit={submitVitalsForm}
-        />
-      </div>
-    );
-  }
-
-  function render() {
-    if (!mounted) return null;
-
-    return (
-      <div className="mt-7.5 mx-6 overflow-hidden">
-        <CustomModal
-          isOpen={CustomModalOpen}
-          onRequestClose={toggleCustomModal}
-        >
-          <ConsultationView consult={selectedConsult} />
-        </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Vitals
-        </h1>
-        {renderHeader()}
-        <b>
-          Please remember to press the submit button at the end of the form!
-        </b>
-
-        <hr />
-
-        <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
         </div>
       </div>
-    );
-  }
-  return render();
+    </div>
+  );
 };
 
 export default withAuth(PatientVitals);
