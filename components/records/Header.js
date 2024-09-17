@@ -13,7 +13,7 @@ export function Header({ patient, visits, handleVisitChange }) {
   const fileInputRef = useRef(null);
   const [fileModalIsOpen, setFileModalIsOpen] = useState(false);
 
-  const toggleFileModal = medication => {
+  const toggleFileModal = () => {
     setFileModalIsOpen(!fileModalIsOpen);
   };
 
