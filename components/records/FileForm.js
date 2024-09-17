@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import axiosInstance from '@/pages/api/_axiosInstance';
+import { defaultAPI_URL } from '@/utils/constants';
 
 export function FileForm({ patient }) {
   const [files, setFiles] = useState([]);
@@ -27,7 +28,8 @@ export function FileForm({ patient }) {
       .map(file => {
         const time = moment(file.created_at).format('DD MMMM YYYY HH:mm');
         const file_name = file.file_name;
-        const file_url = file.file_path;
+        const file_url =
+          file.file_path || `${defaultAPI_URL}/${file.offline_file}`;
 
         return (
           <tr key={file.id}>
