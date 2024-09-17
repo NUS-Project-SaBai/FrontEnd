@@ -7,6 +7,7 @@ import {
   VitalsTable,
   PrescriptionsTable,
   Header,
+  HeightWeightGraph,
 } from '@/components/records';
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
@@ -24,7 +25,7 @@ const PatientVitals = () => {
   const [prescriptions, setPrescriptions] = useState([]);
   const [vitals, setVitals] = useState({});
 
-  const [selectedVisit, setSelectedVisit] = useState(null);
+  const [selectedVisitID, setSelectedVisitID] = useState(null);
   const [selectedConsult, setSelectedConsult] = useState({});
 
   const [vitalsFormDetails, setVitalsFormDetails] = useState({
@@ -44,6 +45,22 @@ const PatientVitals = () => {
     systolic: '',
     diastolic: '',
     diabetes_mellitus: '',
+    // children
+    gross_motor: '',
+    red_reflex: '',
+    scoliosis: '',
+    thelarche: '',
+    thelarche_age: '',
+    pubarche: '',
+    pubarche_age: '',
+    menarche: '',
+    menarche_age: '',
+    pallor: '',
+    oral_cavity: '',
+    heart: '',
+    lungs: '',
+    abdomen: '',
+    hernial_orifices: '',
   });
 
   const [CustomModalOpen, setCustomModalOpen] = useState(false);
@@ -88,7 +105,7 @@ const PatientVitals = () => {
       );
 
       setMounted(true);
-      setSelectedVisit(visitID);
+      setSelectedVisitID(visitID);
       setConsults(consults);
       setPrescriptions(prescriptions);
       setVitals(vitals[0] || {});
@@ -100,7 +117,7 @@ const PatientVitals = () => {
 
   const submitVitalsForm = useWithLoading(async () => {
     const formPayload = {
-      visit: selectedVisit,
+      visit: selectedVisitID,
       ...vitalsFormDetails,
     };
     const filteredFormPayload = Object.fromEntries(
@@ -108,7 +125,7 @@ const PatientVitals = () => {
     );
     try {
       await axiosInstance.patch(
-        `/vitals?visit=${selectedVisit}`,
+        `/vitals?visit=${selectedVisitID}`,
         filteredFormPayload
       );
       toast.success('Vitals completed!');
@@ -186,7 +203,11 @@ const PatientVitals = () => {
               <h2>Not Done</h2>
             </>
           ) : (
-            <VitalsTable vitals={vitals} />
+            <VitalsTable
+              vitals={vitals}
+              patient={patient}
+              visit={visits.find(visit => visit.id === selectedVisitID)}
+            />
           )}
 
           <ConsultationsTable
@@ -195,14 +216,24 @@ const PatientVitals = () => {
           />
 
           <PrescriptionsTable prescriptions={prescriptions} />
+          <HeightWeightGraph
+            age={
+              new Date(
+                visits.find(visit => visit.id === selectedVisitID).date
+              ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+            }
+            weight={vitals.weight}
+            height={vitals.height}
+            gender={patient.gender}
+          />
         </div>
-
         {/*Right Column*/}
         <div className="space-y-2">
           <VitalsForm
             formDetails={vitalsFormDetails}
             handleOnChange={handleVitalsFormOnChange}
             patient={patient}
+            visit={visits.find(visit => visit.id === selectedVisitID)}
             onSubmit={submitVitalsForm}
           />
         </div>

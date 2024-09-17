@@ -6,6 +6,7 @@ import {
   Header,
   PatientView,
   PrescriptionsTable,
+  HeightWeightGraph,
 } from '@/components/records';
 import { PatientRegistrationForm } from '@/components/registration';
 import Router from 'next/router';
@@ -24,9 +25,9 @@ const PatientRecord = () => {
   const [patientEdit, setPatientEdit] = useState({});
   const [visits, setVisits] = useState([]);
   const [vitals, setVitals] = useState({});
-
   const [consults, setConsults] = useState([]);
   const [selectedConsult, setSelectedConsult] = useState(null);
+  const [selectedVisitID, setSelectedVisitID] = useState(null);
 
   const [prescriptions, setPrescriptions] = useState([]);
 
@@ -79,6 +80,7 @@ const PatientRecord = () => {
       setConsults(consults);
       setPrescriptions(prescriptions);
       setVitals(vitals[0] || {});
+      setSelectedVisitID(visitID);
     } catch (error) {
       toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
@@ -145,8 +147,8 @@ const PatientRecord = () => {
   }
 
   const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
+    const visitID = event.target.value;
+    loadVisitDetails(visitID);
   }, []);
 
   const handlePatientChange = event => {
@@ -190,6 +192,16 @@ const PatientRecord = () => {
       <div className="space-y-8">
         <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
         <PrescriptionsTable prescriptions={prescriptions} />
+        <HeightWeightGraph
+          age={
+            new Date(
+              visits.find(visit => visit.id === selectedVisitID).date
+            ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+          }
+          weight={vitals.weight}
+          height={vitals.height}
+          gender={patient.gender}
+        />
       </div>
     );
   }
@@ -207,7 +219,11 @@ const PatientRecord = () => {
   return (
     <div className="mx-6 overflow-hidden">
       <CustomModal isOpen={vitalsModalOpen} onRequestClose={toggleVitalsModal}>
-        <VitalsTable vitals={vitals} />
+        <VitalsTable
+          vitals={vitals}
+          patient={patient}
+          visit={visits.find(visit => visit.id === selectedVisitID)}
+        />
       </CustomModal>
 
       <CustomModal

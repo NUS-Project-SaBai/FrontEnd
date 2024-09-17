@@ -8,6 +8,7 @@ import {
   ConsultationForm,
   OrderForm,
   Header,
+  HeightWeightGraph,
 } from '@/components/records';
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
@@ -384,7 +385,11 @@ const PatientConsultation = () => {
               <h2>Not Done</h2>
             </>
           ) : (
-            <VitalsTable vitals={vitals} />
+            <VitalsTable
+              vitals={vitals}
+              patient={patient}
+              visit={visits.find(visit => visit.id === selectedVisitID)}
+            />
           )}
 
           <ConsultationsTable
@@ -393,6 +398,17 @@ const PatientConsultation = () => {
           />
 
           <PrescriptionsTable prescriptions={prescriptions} />
+
+          <HeightWeightGraph
+            age={
+              new Date(
+                visits.find(visit => visit.id === selectedVisitID).date
+              ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+            }
+            weight={vitals.weight}
+            height={vitals.height}
+            gender={patient.gender}
+          />
         </div>
 
         {/*Right Column*/}
