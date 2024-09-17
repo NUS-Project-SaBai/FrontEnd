@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Modal from 'react-modal';
 import {
   ConsultationView,
   ConsultationsTable,
@@ -8,18 +7,21 @@ import {
   PatientView,
   PrescriptionsTable,
 } from '@/components/records';
-import withAuth from '@/utils/auth';
+import { PatientRegistrationForm } from '@/components/registration';
 import Router from 'next/router';
-import { Button } from '@/components/TextComponents/';
+import { Button, PageTitle } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import toast from 'react-hot-toast';
+import { urltoFile } from '@/utils/helpers';
+import withAuth from '@/utils/auth';
 import useWithLoading from '@/utils/loading';
 
 const PatientRecord = () => {
   const [noRecords, setNoRecords] = useState(true);
 
   const [patient, setPatient] = useState({});
+  const [patientEdit, setPatientEdit] = useState({});
   const [visits, setVisits] = useState([]);
   const [vitals, setVitals] = useState({});
 
@@ -30,11 +32,9 @@ const PatientRecord = () => {
 
   const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [editPatientModalOpen, setEditPatientModalOpen] = useState(false);
 
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
+  const [imageDetails, setImageDetails] = useState(null);
 
   useEffect(() => {
     onRefresh();
@@ -85,6 +85,47 @@ const PatientRecord = () => {
     }
   });
 
+  const submitPatientEdit = useWithLoading(async () => {
+    if (!patientEdit.name) {
+      toast.error('Name cannot be empty.');
+      return;
+    }
+
+    const updatedPatient = {
+      ...patientEdit,
+    };
+
+    const formData = new FormData();
+    Object.keys(updatedPatient).forEach(key =>
+      formData.append(key, updatedPatient[key])
+    );
+
+    if (imageDetails) {
+      const pictureFile = await urltoFile(
+        imageDetails,
+        'patient_screenshot.jpg',
+        'image/jpg'
+      );
+      formData.append('picture', pictureFile);
+    }
+    console.dir({ updatedPatient });
+
+    if (updatedPatient.pk) {
+      try {
+        await axiosInstance.patch(`/patients/${Router.query.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        toast.success('Patient Details updated!');
+      } catch (error) {
+        toast.error(`Encountered an error when update! ${error.message}`);
+      }
+    }
+    toggleEditPatientModal();
+    onRefresh();
+  });
+
   function toggleVitalsModal() {
     setVitalsModalOpen(!vitalsModalOpen);
   }
@@ -93,30 +134,30 @@ const PatientRecord = () => {
     setConsultationModalOpen(!consultationModalOpen);
   }
 
+  function toggleEditPatientModal() {
+    setPatientEdit(patient);
+    setEditPatientModalOpen(!editPatientModalOpen);
+  }
+
   function selectConsult(consult) {
     setSelectedConsult(consult);
     toggleConsultationModal();
   }
 
-  function showView() {
-    console.log('button pressed');
-  }
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
 
-  function uploadDocument() {
-    console.log('upload document');
-  }
+  const handlePatientChange = event => {
+    const newPatientDetails = {
+      ...patient,
+      [event.target.name]: event.target.value,
+    };
+    setPatientEdit(newPatientDetails);
+  };
 
-  function renderHeader() {
-    return (
-      <Header
-        patient={patient}
-        visits={visits}
-        handleVisitChange={handleVisitChange}
-      />
-    );
-  }
-
-  function renderFirstColumn() {
+  function LeftColumn() {
     if (typeof vitals === 'undefined') {
       return (
         <div className="my-2">
@@ -127,80 +168,80 @@ const PatientRecord = () => {
 
     return (
       <div className="my-2">
-        <Button
-          text={'View Vitals'}
-          onClick={() => toggleVitalsModal()}
-          colour="indigo"
-        />
-        <PatientView content={patient} />
+        <div className="grid grid-cols-2 gap-4">
+          <Button
+            text={'View Vitals'}
+            onClick={() => toggleVitalsModal()}
+            colour="indigo"
+          />
+          <Button
+            text={'Edit Paitent Details'}
+            onClick={() => toggleEditPatientModal()}
+            colour="green"
+          />
+        </div>
+        <PatientView patient={patient} />
       </div>
     );
   }
 
-  function renderSecondColumn() {
+  function RightColumn() {
     return (
       <div className="space-y-8">
-        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
-        <PrescriptionsTable content={prescriptions} />
+        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
+        <PrescriptionsTable prescriptions={prescriptions} />
       </div>
     );
   }
 
-  function render() {
-    if (noRecords)
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <h2 className="text-black text-xl">
-            This patient has no records currently
-          </h2>
-        </div>
-      );
-
+  if (noRecords) {
     return (
-      <div className="mt-7.5 mx-6 overflow-hidden">
-        <Modal
-          isOpen={vitalsModalOpen}
-          onRequestClose={toggleVitalsModal}
-          className="fixed inset-0 flex items-center justify-center z-50 p-4"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-        >
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
-            <VitalsTable content={vitals} />
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              onClick={toggleVitalsModal}
-            >
-              Close
-            </button>
-          </div>
-        </Modal>
-        <CustomModal
-          isOpen={consultationModalOpen}
-          onRequestClose={toggleConsultationModal}
-        >
-          <ConsultationView content={selectedConsult} />
-        </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Records
-        </h1>
-        {
-          <div className="grid grid-cols-10 gap-x-5">
-            <div className="col-span-8"> {renderHeader()}</div>
-          </div>
-        }
-
-        <hr className="mt-2" />
-
-        <div className="grid grid-cols-2 gap-x-6">
-          <div>{renderFirstColumn()}</div>
-
-          <div>{renderSecondColumn()}</div>
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <h2 className="text-black text-xl">
+          This patient has no records currently
+        </h2>
       </div>
     );
   }
 
-  return <>{render()}</>;
+  return (
+    <div className="mx-6 overflow-hidden">
+      <CustomModal isOpen={vitalsModalOpen} onRequestClose={toggleVitalsModal}>
+        <VitalsTable vitals={vitals} />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={editPatientModalOpen}
+        onRequestClose={toggleEditPatientModal}
+        onSubmit={submitPatientEdit}
+      >
+        <PatientRegistrationForm
+          formDetails={patientEdit}
+          imageDetails={imageDetails}
+          setImageDetails={setImageDetails}
+          handleInputChange={handlePatientChange}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleConsultationModal}
+      >
+        <ConsultationView consult={selectedConsult} />
+      </CustomModal>
+      <PageTitle title="Patient Records" desc="" />
+      <Header
+        patient={patient}
+        visits={visits}
+        handleVisitChange={handleVisitChange}
+      />
+      <hr className="mt-2" />
+      <div className="grid grid-cols-2 gap-x-6">
+        <LeftColumn />
+        <RightColumn />
+      </div>
+    </div>
+  );
 };
 
 export default withAuth(PatientRecord);
