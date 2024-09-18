@@ -123,7 +123,7 @@ const PatientConsultation = () => {
       const diagnosesPayload = consultationFormDetails.diagnoses.map(
         diagnosis => ({
           details: diagnosis.details,
-          category: diagnosis.type,
+          category: diagnosis.category,
         })
       );
 
