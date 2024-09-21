@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
-import { CLOUDINARY_URL } from '@/utils/constants';
+import { CLOUDINARY_URL, OFFLINE, defaultAPI_URL } from '@/utils/constants';
 
 export function RegistrationAutoSuggest({ setPatient, patientsList }) {
   const [value, setValue] = useState('');
@@ -11,7 +11,9 @@ export function RegistrationAutoSuggest({ setPatient, patientsList }) {
     const id = `${suggestion.village_prefix} ${suggestion.pk
       .toString()
       .padStart(3, '0')}`;
-    const imageURL = suggestion.picture;
+    const imageUrl = OFFLINE
+      ? `${defaultAPI_URL}/${suggestion.offline_picture}`
+      : `${CLOUDINARY_URL}/${suggestion.picture}`;
 
     return (
       <div
@@ -20,7 +22,7 @@ export function RegistrationAutoSuggest({ setPatient, patientsList }) {
       >
         <div className="self-center">
           <img
-            src={`${CLOUDINARY_URL}/${imageURL}`}
+            src={imageUrl}
             alt="Placeholder image"
             className="object-cover h-28 w-28 my-2"
           />
