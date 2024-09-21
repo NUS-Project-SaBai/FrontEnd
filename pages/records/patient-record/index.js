@@ -6,10 +6,11 @@ import {
   Header,
   PatientView,
   PrescriptionsTable,
+  HeightWeightGraph,
 } from '@/components/records';
 import { PatientRegistrationForm } from '@/components/registration';
 import Router from 'next/router';
-import { Button } from '@/components/TextComponents/';
+import { Button, PageTitle } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import toast from 'react-hot-toast';
@@ -24,9 +25,9 @@ const PatientRecord = () => {
   const [patientEdit, setPatientEdit] = useState({});
   const [visits, setVisits] = useState([]);
   const [vitals, setVitals] = useState({});
-
   const [consults, setConsults] = useState([]);
   const [selectedConsult, setSelectedConsult] = useState(null);
+  const [selectedVisitID, setSelectedVisitID] = useState(null);
 
   const [prescriptions, setPrescriptions] = useState([]);
 
@@ -35,19 +36,6 @@ const PatientRecord = () => {
   const [editPatientModalOpen, setEditPatientModalOpen] = useState(false);
 
   const [imageDetails, setImageDetails] = useState(null);
-
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
-
-  const handlePatientChange = event => {
-    const newPatientDetails = {
-      ...patient,
-      [event.target.name]: event.target.value,
-    };
-    setPatientEdit(newPatientDetails);
-  };
 
   useEffect(() => {
     onRefresh();
@@ -92,29 +80,12 @@ const PatientRecord = () => {
       setConsults(consults);
       setPrescriptions(prescriptions);
       setVitals(vitals[0] || {});
+      setSelectedVisitID(visitID);
     } catch (error) {
       toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
     }
   });
-
-  function toggleVitalsModal() {
-    setVitalsModalOpen(!vitalsModalOpen);
-  }
-
-  function toggleConsultationModal() {
-    setConsultationModalOpen(!consultationModalOpen);
-  }
-
-  function toggleEditPatientModal() {
-    setPatientEdit(patient);
-    setEditPatientModalOpen(!editPatientModalOpen);
-  }
-
-  function selectConsult(consult) {
-    setSelectedConsult(consult);
-    toggleConsultationModal();
-  }
 
   const submitPatientEdit = useWithLoading(async () => {
     if (!patientEdit.name) {
@@ -157,17 +128,38 @@ const PatientRecord = () => {
     onRefresh();
   });
 
-  function renderHeader() {
-    return (
-      <Header
-        patient={patient}
-        visits={visits}
-        handleVisitChange={handleVisitChange}
-      />
-    );
+  function toggleVitalsModal() {
+    setVitalsModalOpen(!vitalsModalOpen);
   }
 
-  function renderFirstColumn() {
+  function toggleConsultationModal() {
+    setConsultationModalOpen(!consultationModalOpen);
+  }
+
+  function toggleEditPatientModal() {
+    setPatientEdit(patient);
+    setEditPatientModalOpen(!editPatientModalOpen);
+  }
+
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleConsultationModal();
+  }
+
+  const handleVisitChange = useCallback(event => {
+    const visitID = event.target.value;
+    loadVisitDetails(visitID);
+  }, []);
+
+  const handlePatientChange = event => {
+    const newPatientDetails = {
+      ...patient,
+      [event.target.name]: event.target.value,
+    };
+    setPatientEdit(newPatientDetails);
+  };
+
+  function LeftColumn() {
     if (typeof vitals === 'undefined') {
       return (
         <div className="my-2">
@@ -190,74 +182,82 @@ const PatientRecord = () => {
             colour="green"
           />
         </div>
-        <PatientView content={patient} />
+        <PatientView patient={patient} />
       </div>
     );
   }
 
-  function renderSecondColumn() {
+  function RightColumn() {
     return (
       <div className="space-y-8">
-        <ConsultationsTable content={consults} buttonOnClick={selectConsult} />
-        <PrescriptionsTable content={prescriptions} />
+        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
+        <PrescriptionsTable prescriptions={prescriptions} />
+        <HeightWeightGraph
+          age={
+            new Date(
+              visits.find(visit => visit.id === selectedVisitID).date
+            ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+          }
+          weight={vitals.weight}
+          height={vitals.height}
+          gender={patient.gender}
+        />
       </div>
     );
   }
 
-  function render() {
-    if (noRecords)
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <h2 className="text-black text-xl">
-            This patient has no records currently
-          </h2>
-        </div>
-      );
-
+  if (noRecords) {
     return (
-      <div className="mt-7.5 mx-6 overflow-hidden">
-        <CustomModal
-          isOpen={vitalsModalOpen}
-          onRequestClose={toggleVitalsModal}
-        >
-          <VitalsTable content={vitals} />
-        </CustomModal>
-
-        <CustomModal
-          isOpen={editPatientModalOpen}
-          onRequestClose={toggleEditPatientModal}
-          onSubmit={submitPatientEdit}
-        >
-          <PatientRegistrationForm
-            formDetails={patientEdit}
-            imageDetails={imageDetails}
-            setImageDetails={setImageDetails}
-            handleInputChange={handlePatientChange}
-          />
-        </CustomModal>
-
-        <CustomModal
-          isOpen={consultationModalOpen}
-          onRequestClose={toggleConsultationModal}
-        >
-          <ConsultationView content={selectedConsult} />
-        </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Records
-        </h1>
-        {renderHeader()}
-
-        <hr className="mt-2" />
-
-        <div className="grid grid-cols-2 gap-x-6">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <h2 className="text-black text-xl">
+          This patient has no records currently
+        </h2>
       </div>
     );
   }
 
-  return <>{render()}</>;
+  return (
+    <div className="mx-6 overflow-hidden">
+      <CustomModal isOpen={vitalsModalOpen} onRequestClose={toggleVitalsModal}>
+        <VitalsTable
+          vitals={vitals}
+          patient={patient}
+          visit={visits.find(visit => visit.id === selectedVisitID)}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={editPatientModalOpen}
+        onRequestClose={toggleEditPatientModal}
+        onSubmit={submitPatientEdit}
+      >
+        <PatientRegistrationForm
+          formDetails={patientEdit}
+          imageDetails={imageDetails}
+          setImageDetails={setImageDetails}
+          handleInputChange={handlePatientChange}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleConsultationModal}
+      >
+        <ConsultationView consult={selectedConsult} />
+      </CustomModal>
+      <PageTitle title="Patient Records" desc="" />
+      <Header
+        patient={patient}
+        visits={visits}
+        handleVisitChange={handleVisitChange}
+      />
+      <hr className="mt-2" />
+      <div className="grid grid-cols-2 gap-x-6">
+        <LeftColumn />
+        <RightColumn />
+      </div>
+    </div>
+  );
 };
 
 export default withAuth(PatientRecord);
