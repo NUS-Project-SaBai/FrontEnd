@@ -14,7 +14,9 @@ const Login = () => {
     e.preventDefault();
     // Handle form submission logic here, such as API calls or validation
     window.localStorage.setItem('offline_user', email);
-    Router.push('/records');
+    Router.push('/records').then(() => {
+      window.location.reload();
+    });
   };
 
   return (

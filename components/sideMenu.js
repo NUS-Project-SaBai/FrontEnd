@@ -72,7 +72,9 @@ export default function SideMenu() {
   const handleLogout = async () => {
     if (OFFLINE) {
       window.localStorage.removeItem('offline_user');
-      router.push('/');
+      router.push('/').then(() => {
+        window.location.reload();
+      });
       return;
     } else {
       router.push('/api/auth/logout');
