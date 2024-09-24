@@ -1,13 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import toast from 'react-hot-toast';
-import { CLOUDINARY_URL } from '@/utils/constants';
+import { CLOUDINARY_URL, OFFLINE, defaultAPI_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
+
+function VillageDropdown({ handleDropdownChangeWithStyle, PATIENT_CODE_ALL }) {
+  return (
+    <div className="field">
+      <div className="control">
+        <label
+          htmlFor="patientDropdown"
+          className="block text-gray-700 text-sm font-bold mb-2"
+        >
+          Search by village code
+        </label>
+        <select
+          className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          name="patientDropdown"
+          id="patientDropdown"
+          onChange={handleDropdownChangeWithStyle}
+        >
+          <option value={PATIENT_CODE_ALL}>{`${PATIENT_CODE_ALL}`}</option>
+          {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
+            <option
+              className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
+              value={key}
+              key={key}
+            >
+              {key}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+}
+
+function SearchField({ handleSearchChange }) {
+  return (
+    <div className="field flex-[3]">
+      <div className="control">
+        <InputField
+          type="text"
+          name="Input Patient/ID to Search"
+          label="Input Patient/ID to Search"
+          onChange={handleSearchChange}
+        />
+      </div>
+    </div>
+  );
+}
 
 function PatientList() {
   const [patients, setPatients] = useState([]);
@@ -70,13 +117,16 @@ function PatientList() {
     setPatientsFiltered(filteredPatients);
   }
 
-  function renderTableContent() {
+  function TableContent() {
     const patientRows = patientsFiltered
       .slice(startIndex, endIndex)
       .map(patient => {
         const patientID = patient.patient_id;
+        const imageUrl = OFFLINE
+          ? `${defaultAPI_URL}/${patient.offline_picture}`
+          : `${CLOUDINARY_URL}/${patient.picture}`;
+
         const patientVillagePrefix = patient.village_prefix;
-        const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
         const fullName = patient.name;
 
         const record = (
@@ -142,56 +192,8 @@ function PatientList() {
     return <>{patientRows}</>;
   }
 
-  return (
-    <div className="mx-4 mt-2">
-      <div className="mx-4 mt-2">
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patients List
-        </h1>
-        <div className="flex items-center space-x-4">
-          <div className="field">
-            <div className="control">
-              <label
-                htmlFor="patientDropdown"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Search by village code
-              </label>
-              <select
-                className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                name="patientDropdown"
-                id="patientDropdown"
-                onChange={handleDropdownChangeWithStyle}
-              >
-                <option value={PATIENT_CODE_ALL}>
-                  {`${PATIENT_CODE_ALL}`}
-                </option>
-                {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
-                  <option
-                    className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
-                    value={key}
-                    key={key}
-                  >
-                    {key}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="field flex-[3]">
-            <div className="control">
-              <InputField
-                type="text"
-                name="Input Patient/ID to Search"
-                label="Input Patient/ID to Search"
-                onChange={handleSearchChange}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
+  function Table() {
+    return (
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="mt-2 flow-root">
           <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
@@ -238,7 +240,7 @@ function PatientList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {renderTableContent()}
+                  <TableContent />
                 </tbody>
               </table>
             </div>
@@ -265,6 +267,25 @@ function PatientList() {
           </button>
         </span>
       </div>
+    );
+  }
+
+  return (
+    <div className="mx-4 mt-2">
+      <div className="mx-4 mt-2">
+        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+          Patients List
+        </h1>
+        <div className="flex items-center space-x-4">
+          <VillageDropdown
+            handleDropdownChangeWithStyle={handleDropdownChangeWithStyle}
+            PATIENT_CODE_ALL={PATIENT_CODE_ALL}
+          />
+          <SearchField handleSearchChange={handleSearchChange} />
+        </div>
+      </div>
+
+      <Table />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Button,
   InputField,
@@ -5,7 +6,15 @@ import {
   DropDown,
 } from '@/components/TextComponents';
 
-export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
+import { ChildrenVitalsFields } from '@/components/records';
+
+export function VitalsForm({
+  handleOnChange,
+  formDetails,
+  onSubmit,
+  patient,
+  visit,
+}) {
   const vitalFields = [
     {
       name: 'height',
@@ -22,11 +31,18 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
       unit: 'kg',
     },
     {
-      name: 'temperature',
-      label: 'Temperature / °C',
-      value: formDetails.temperature,
+      name: 'systolic',
+      label: 'Systolic / mmHg',
+      value: formDetails.systolic,
       type: 'number',
-      unit: '°C',
+      unit: 'mmHg',
+    },
+    {
+      name: 'diastolic',
+      label: 'Diastolic / mmHg',
+      value: formDetails.diastolic,
+      type: 'number',
+      unit: 'mmHg',
     },
     {
       name: 'heart_rate',
@@ -34,6 +50,13 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
       value: formDetails.heart_rate,
       type: 'number',
       unit: 'BPM',
+    },
+    {
+      name: 'temperature',
+      label: 'Temperature / °C',
+      value: formDetails.temperature,
+      type: 'number',
+      unit: '°C',
     },
     {
       name: 'left_eye_degree',
@@ -59,8 +82,21 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
       value: formDetails.right_eye_pinhole,
       type: 'text',
     },
-    // Add more fields as needed
   ];
+
+  const vitalFieldsComponent = vitalFields.map(field => {
+    return (
+      <InputField
+        key={field.name}
+        name={field.name}
+        label={field.label}
+        type={field.type}
+        value={field.value}
+        onChange={handleOnChange}
+        unit={field.unit}
+      />
+    );
+  });
 
   const statFields = [
     {
@@ -90,6 +126,20 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
     },
   ];
 
+  const statFieldsComponent = statFields.map(field => {
+    return (
+      <InputField
+        key={field.name}
+        name={field.name}
+        label={field.label}
+        type={field.type}
+        value={field.value}
+        onChange={handleOnChange}
+        unit={field.unit}
+      />
+    );
+  });
+
   return (
     <form className="bg-blue-50 p-4 rounded-lg relative">
       <div>
@@ -98,99 +148,87 @@ export function VitalsForm({ handleOnChange, formDetails, onSubmit, patient }) {
         </label>
       </div>
       <div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {vitalFields.slice(0, 2).map(field => (
-            <InputField
-              key={field.name}
-              name={field.name}
-              label={field.label}
-              type={field.type}
-              value={field.value}
-              onChange={handleOnChange}
-              unit={field.unit}
-            />
-          ))}
-          <DisplayField
-            label="BMI"
-            content={
-              isNaN(formDetails.weight / formDetails.height ** 2)
-                ? 'Please enter valid height and weight'
-                : (
-                    formDetails.weight /
-                    (formDetails.height / 100) ** 2
-                  ).toFixed(2)
-            }
-          />
-        </div>
-        <div className="my-4">
-          <label className="label">
-            Blood Pressure (Systolic / Diastolic) / mmHg
-          </label>
-          <div className="flex">
-            <InputField
-              key="systolic"
-              name="systolic"
-              type="number"
-              value={formDetails.systolic}
-              onChange={handleOnChange}
-              unit="mmHg"
-            />
-            <span className="mx-2 my-2 text-lg">/</span>
-            <InputField
-              key="diastolic"
-              name="diastolic"
-              type="number"
-              value={formDetails.diastolic}
-              onChange={handleOnChange}
-              unit="mmHg"
+        <div>
+          <label className="label text-lg font-semibold">Height / Weight</label>
+          <div className="grid gap-6 md:grid-cols-3">
+            {vitalFieldsComponent.slice(0, 2)}
+            <DisplayField
+              label="BMI"
+              content={
+                isNaN(formDetails.weight / formDetails.height ** 2)
+                  ? 'Please enter valid height and weight'
+                  : (
+                      formDetails.weight /
+                      (formDetails.height / 100) ** 2
+                    ).toFixed(2)
+              }
             />
           </div>
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {vitalFields.slice(2).map(field => (
-            <InputField
-              key={field.name}
-              name={field.name}
-              label={field.label}
-              type={field.type}
-              value={field.value}
-              onChange={handleOnChange}
-              unit={field.unit}
-            />
-          ))}
+
+        <div className="my-4">
+          <label className="label text-lg font-semibold">
+            Blood Pressure (Systolic / Diastolic) / mmHg and Heart Rate / BPM
+          </label>
+          <div className="flex gap-6">
+            {vitalFieldsComponent.slice(2, 3)}
+            <span className="mx-2 my-2 text-lg">/</span>
+            {vitalFieldsComponent.slice(3, 5)}
+          </div>
+        </div>
+
+        <div>
+          <label className="label text-lg font-semibold">
+            Temperature Fields
+          </label>
+          <div className="flex">{vitalFieldsComponent.slice(5, 6)}</div>
+        </div>
+
+        <div>
+          <label className="label text-lg font-semibold">Visual Acuity</label>
+          <div className="grid gap-6 md:grid-cols-2">
+            {vitalFieldsComponent.slice(6)}
+          </div>
         </div>
 
         <div>
           <label className="label text-lg font-semibold">
             STAT Investigations
           </label>
-        </div>
-        <div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {statFields.map(field => (
-              <InputField
-                key={field.name}
-                name={field.name}
-                label={field.label}
-                type={field.type}
-                value={field.value}
-                onChange={handleOnChange}
-                unit={field.unit}
-              />
-            ))}
-            <div className="flex items-center space-x-4">
-              <DropDown
-                name="diabetes_mellitus"
-                label="Diabetes?"
-                defaultValue="Please select..."
-                options={['Please select...', 'No', 'Yes']}
-                onChange={handleOnChange}
-                value={formDetails.diabetes_mellitus}
-              />
+          <div>
+            <div className="grid gap-6 md:grid-cols-2">
+              {statFieldsComponent}
+              <div className="flex items-center space-x-4">
+                <DropDown
+                  key="diabetes_mellitus"
+                  name="diabetes_mellitus"
+                  label="Diabetes?"
+                  defaultValue="Please select..."
+                  options={['Please select...', 'Yes', 'No']}
+                  onChange={handleOnChange}
+                  value={formDetails.diabetes_mellitus}
+                />
+              </div>
             </div>
           </div>
         </div>
+
+        <div>
+          <label className="label text-lg font-semibold">
+            Children Vital Fields
+          </label>
+
+          <ChildrenVitalsFields
+            handleOnChange={handleOnChange}
+            formDetails={formDetails}
+            patient={patient}
+            visit={visit}
+          />
+        </div>
       </div>
+
+      <div style={{ height: '50px' }}></div>
+
       <div className="absolute bottom-4 right-4">
         <Button colour="green" text={'Submit'} onClick={onSubmit} />
       </div>
