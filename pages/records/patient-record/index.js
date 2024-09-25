@@ -177,7 +177,7 @@ const PatientRecord = () => {
             colour="indigo"
           />
           <Button
-            text={'Edit Paitent Details'}
+            text={'Edit Patient Details'}
             onClick={() => toggleEditPatientModal()}
             colour="green"
           />
