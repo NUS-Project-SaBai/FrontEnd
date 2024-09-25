@@ -203,8 +203,8 @@ export function VitalsForm({
                   key="diabetes_mellitus"
                   name="diabetes_mellitus"
                   label="Diabetes?"
-                  defaultValue="Please select..."
-                  options={['Please select...', 'Yes', 'No']}
+                  defaultValue="Unknown"
+                  options={['Unknown', 'Yes', 'No']}
                   onChange={handleOnChange}
                   value={formDetails.diabetes_mellitus}
                 />
