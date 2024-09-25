@@ -94,6 +94,8 @@ export function VitalsForm({
         value={field.value}
         onChange={handleOnChange}
         unit={field.unit}
+        allowNegativeNumbers={field.allowNegativeNumbers}
+        allowDecimals={field.allowDecimals}
       />
     );
   });
