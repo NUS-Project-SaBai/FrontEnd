@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField, PageTitle } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import toast from 'react-hot-toast';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
+import { getImageUrl } from '@/utils/helpers';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -97,7 +97,7 @@ const Orders = () => {
           </td>
           <td className="whitespace-nowrap px-3 py-4">
             <img
-              src={`${CLOUDINARY_URL}/${visit.patient.picture}`}
+              src={getImageUrl(visit.patient)}
               alt="Patient"
               className="object-cover h-28 w-28 rounded-lg"
             />

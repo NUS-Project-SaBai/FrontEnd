@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import toast from 'react-hot-toast';
-import { CLOUDINARY_URL, OFFLINE, defaultAPI_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
+import { getImageUrl } from '@/utils/helpers';
 
 function VillageDropdown({ handleDropdownChangeWithStyle, PATIENT_CODE_ALL }) {
   return (
@@ -122,9 +122,6 @@ function PatientList() {
       .slice(startIndex, endIndex)
       .map(patient => {
         const patientID = patient.patient_id;
-        const imageUrl = OFFLINE
-          ? `${defaultAPI_URL}/${patient.offline_picture}`
-          : `${CLOUDINARY_URL}/${patient.picture}`;
 
         const patientVillagePrefix = patient.village_prefix;
         const fullName = patient.name;
@@ -168,7 +165,7 @@ function PatientList() {
             </td>
             <td>
               <img
-                src={imageUrl}
+                src={getImageUrl(patient)}
                 alt="Placeholder image"
                 className="object-cover h-28 w-28 my-2"
               />

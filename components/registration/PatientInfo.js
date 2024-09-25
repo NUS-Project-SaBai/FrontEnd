@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 import { DisplayField, Button } from '@/components/TextComponents/';
-import { CLOUDINARY_URL, OFFLINE, defaultAPI_URL } from '@/utils/constants';
+import { getImageUrl } from '@/utils/helpers';
 
 export function PatientInfo({ patient, submitNewVisit }) {
   if (!patient.pk) {
@@ -25,17 +25,11 @@ export function PatientInfo({ patient, submitNewVisit }) {
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 
-  const imageUrl = OFFLINE
-    ? `${defaultAPI_URL}/${patient.offline_picture}`
-    : `${CLOUDINARY_URL}/${patient.picture}`;
-
-  console.log(OFFLINE);
-
   return (
     <div>
       <div>
         <img
-          src={imageUrl}
+          src={getImageUrl(patient)}
           alt="Placeholder image"
           className="has-ratio h-48 w-48 object-cover"
         />
