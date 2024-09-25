@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { getAPI_URL, changeAPI_URL } from '@/utils/constants';
 import { PageTitle } from '@/components/TextComponents';
@@ -37,8 +38,9 @@ function SettingsPage() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    changeAPI_URL(backendURL);
+    changeAPI_URL(backendURL == '' ? getAPI_URL() : backendURL);
     setBackendURL(getAPI_URL());
+    toast.success(`Backend URL is now: ` + getAPI_URL());
   };
 
   return (
@@ -50,7 +52,7 @@ function SettingsPage() {
 
       <DebugCard>
         <h2 className="text-xl font-semibold">Configuring Backend URL</h2>
-        <ChangeBackendURLForm backendURL={backendURL} setBackendURL={setBackendURL} handleSubmit={handleSubmit}/>
+        <ChangeBackendURLForm backendURL={backendURL} initialURL={getAPI_URL()} setBackendURL={setBackendURL} handleSubmit={handleSubmit}/>
       </DebugCard>
 
       <DebugCard>
