@@ -61,9 +61,9 @@ const Orders = () => {
 
   const onFilterChange = event => {
     const filteredOrders = orders.filter(order => {
-      return order.visit.patient.filter_string.includes(
-        event.target.value.toUpperCase()
-      );
+      return order.visit.patient.filter_string
+        .toLowerCase()
+        .includes(event.target.value.toLowerCase());
     });
     setOrdersFiltered(filteredOrders);
   };
