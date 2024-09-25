@@ -5,7 +5,7 @@ import {
   MedicationHistoryForm,
 } from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
-import { Button, InputField } from '@/components/TextComponents';
+import { Button, InputField, PageTitle } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
@@ -13,7 +13,7 @@ import CustomModal from '@/components/CustomModal';
 const Stock = () => {
   const blankMedicationDetails = {
     medicine_name: '',
-    quantity: 0,
+    quantity: 0, // number field but the value is actually string because we don't want the scrolling effect with the number field
     quantityChange: 0,
     notes: '',
   };
@@ -22,6 +22,7 @@ const Stock = () => {
   const [medicationDetails, setMedicationDetails] = useState(
     blankMedicationDetails
   );
+
   const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
   const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
     useState(false);
@@ -42,41 +43,13 @@ const Stock = () => {
     }
   });
 
-  const onFilterChange = event => {
-    const filteredMedications = medications.filter(medication => {
-      const medicineName = medication.medicine_name.toLowerCase();
-      return medicineName.includes(event.target.value.toLowerCase());
-    });
-
-    setMedicationsFiltered(filteredMedications);
-  };
-
-  const toggleModal = (medication = blankMedicationDetails) => {
-    setMedicationDetails(medication);
-    setMedicationModalIsOpen(!medicationModalIsOpen);
-  };
-
-  const toggleMedicationHistoryModal = medication => {
-    setMedication(medication);
-    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
-  };
-
-  const createNewMedication = toggleModal;
-
-  const handleMedicationChange = event => {
-    const newMedicationDetails = {
-      ...medicationDetails,
-      [event.target.name]: event.target.value,
-    };
-    setMedicationDetails(newMedicationDetails);
-  };
-
   const onSubmitForm = useWithLoading(async () => {
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
       return;
     }
     if (medicationDetails.quantityChange === '') {
+      // check explicitly for empty string as the "!medicationDetails.quantityChange" check will catch zeros, which is allowed
       toast.error('Quantity to Add cannot be empty.');
       return;
     }
@@ -149,7 +122,34 @@ const Stock = () => {
     }
   });
 
-  function renderRows() {
+  const onFilterChange = event => {
+    const filteredMedications = medications.filter(medication => {
+      const medicineName = medication.medicine_name.toLowerCase();
+      return medicineName.includes(event.target.value.toLowerCase());
+    });
+
+    setMedicationsFiltered(filteredMedications);
+  };
+
+  const toggleModal = (medication = blankMedicationDetails) => {
+    setMedicationDetails(medication);
+    setMedicationModalIsOpen(!medicationModalIsOpen);
+  };
+
+  const toggleMedicationHistoryModal = medication => {
+    setMedication(medication);
+    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
+  };
+
+  const handleMedicationChange = event => {
+    const newMedicationDetails = {
+      ...medicationDetails,
+      [event.target.name]: event.target.value,
+    };
+    setMedicationDetails(newMedicationDetails);
+  };
+
+  const Rows = () => {
     return medicationsFiltered.map(medication => {
       const medicationDetails = {
         ...medication,
@@ -185,45 +185,10 @@ const Stock = () => {
         </tr>
       );
     });
-  }
+  };
 
-  return (
-    <div className="mt-4 mx-6">
-      <CustomModal
-        isOpen={medicationModalIsOpen}
-        onRequestClose={toggleModal}
-        onSubmit={onSubmitForm}
-      >
-        <MedicationForm
-          formDetails={medicationDetails}
-          handleInputChange={handleMedicationChange}
-        />
-      </CustomModal>
-
-      <CustomModal
-        isOpen={medicationHistoryModalIsOpen}
-        onRequestClose={toggleMedicationHistoryModal}
-      >
-        <MedicationHistoryForm medication={medication} />
-      </CustomModal>
-
-      <h1 className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-6">
-        Medication Stock
-      </h1>
-      <div className="space-y-2">
-        <InputField
-          label="Search for Medicine"
-          type="text"
-          name="search"
-          onChange={onFilterChange}
-          className="mb-2"
-        />
-        <Button
-          colour="green"
-          text="Add New Medicine"
-          onClick={createNewMedication}
-        />
-      </div>
+  const Table = () => {
+    return (
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flow-root">
           <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
@@ -252,13 +217,48 @@ const Stock = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {renderRows()}
+                  <Rows />
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="mt-4 mx-6">
+      <PageTitle title="Medication Stock" />
+
+      <div className="space-y-2">
+        <InputField
+          label="Search for Medicine"
+          type="text"
+          name="search"
+          onChange={onFilterChange}
+          className="mb-2"
+        />
+        <Button colour="green" text="Add New Medicine" onClick={toggleModal} />
+      </div>
+      <Table />
+      <CustomModal
+        isOpen={medicationModalIsOpen}
+        onRequestClose={toggleModal}
+        onSubmit={onSubmitForm}
+      >
+        <MedicationForm
+          formDetails={medicationDetails}
+          handleInputChange={handleMedicationChange}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={medicationHistoryModalIsOpen}
+        onRequestClose={toggleMedicationHistoryModal}
+      >
+        <MedicationHistoryForm medication={medication} />
+      </CustomModal>
     </div>
   );
 };

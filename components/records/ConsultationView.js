@@ -3,7 +3,7 @@ import { DisplayField } from '@/components/TextComponents/';
 import { PrescriptionsTable } from './PrescriptionsTable';
 import axiosInstance from '@/pages/api/_axiosInstance';
 
-export function ConsultationView({ content: consult }) {
+export function ConsultationView({ consult }) {
   const [diagnosisArray, setDiagnosisArray] = useState([]);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function ConsultationView({ content: consult }) {
   }
 
   const renderPrescriptions = prescriptions => {
-    return <PrescriptionsTable content={prescriptions} />;
+    return <PrescriptionsTable prescriptions={prescriptions} />;
   };
 
   const diagnosisRows = diagnosisArray.map(diagnosis => {
