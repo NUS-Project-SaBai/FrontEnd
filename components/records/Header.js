@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import moment from 'moment';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
@@ -88,7 +87,6 @@ export function Header({ patient, visits, handleVisitChange }) {
             >
               {visitOptions}
             </select>
-            <ChevronDownIcon className="absolute inset-y-0 right-0 h-5 w-5 text-gray-700 pointer-events-none my-auto mr-2" />
           </div>
         </div>
       </div>
