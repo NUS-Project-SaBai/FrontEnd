@@ -109,7 +109,7 @@ function PatientList() {
   function filterPatients() {
     const filteredPatients = patients.filter(patient => {
       return (
-        patient.filter_string.includes(patientSearch) &&
+        patient.filter_string.toLowerCase().includes(patientSearch) &&
         (patientCode === PATIENT_CODE_ALL ||
           patient.village_prefix === patientCode)
       );
