@@ -14,7 +14,7 @@ import { Button, PageTitle } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import toast from 'react-hot-toast';
-import { urltoFile } from '@/utils/helpers';
+import { getImageUrl, urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import useWithLoading from '@/utils/loading';
 
@@ -51,6 +51,9 @@ const PatientRecord = () => {
         `/visits?patient=${patientID}`
       );
 
+      // patient.date_of_birth is in ISOstring YYYY-MM-DDTHH:mm:ss.sssZ
+      patient.date_of_birth = patient.date_of_birth.split('T')[0];
+      setImageDetails(getImageUrl(patient));
       setPatient(patient);
       setVisits(visits);
 
@@ -110,7 +113,6 @@ const PatientRecord = () => {
       );
       formData.append('picture', pictureFile);
     }
-    console.dir({ updatedPatient });
 
     if (updatedPatient.pk) {
       try {
