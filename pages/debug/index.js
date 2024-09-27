@@ -13,7 +13,7 @@ const paths = [
   '/orders',
 ];
 
-const ChangeBaseURLForm = (props) => {
+const ChangeBaseURLForm = props => {
   return (
     <div>
       <label
