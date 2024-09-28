@@ -63,7 +63,8 @@ const Orders = () => {
     const filteredOrders = orders.filter(order => {
       return order.visit.patient.filter_string
         .toLowerCase()
-        .includes(event.target.value.toLowerCase());
+        .trim()
+        .includes(event.target.value.toLowerCase().trim());
     });
     setOrdersFiltered(filteredOrders);
   };
