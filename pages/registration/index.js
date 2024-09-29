@@ -133,6 +133,7 @@ const Registration = () => {
       }));
       setImageDetails(null);
       toast.success('New patient created!');
+      onRefresh();
 
       setPatientModalOpen(false);
       submitNewVisit(response);
