@@ -9,7 +9,7 @@ import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 
-function VillageDropdown({ handleDropdownChangeWithStyle, PATIENT_CODE_ALL }) {
+function VillageDropdown({ onVillageChange, currentVillage }) {
   return (
     <div className="field">
       <div className="control">
@@ -20,12 +20,18 @@ function VillageDropdown({ handleDropdownChangeWithStyle, PATIENT_CODE_ALL }) {
           Search by village code
         </label>
         <select
-          className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          className={
+            'flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ' +
+              VILLAGE_COLOR_CLASSES[currentVillage] || 'text-gray-900'
+          }
           name="patientDropdown"
           id="patientDropdown"
-          onChange={handleDropdownChangeWithStyle}
+          onChange={onVillageChange}
+          value={currentVillage}
         >
-          <option value={PATIENT_CODE_ALL}>{`${PATIENT_CODE_ALL}`}</option>
+          <option value="ALL" className="text-gray-900">
+            ALL
+          </option>
           {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
             <option
               className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
@@ -60,8 +66,10 @@ function PatientList() {
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
 
-  const PATIENT_CODE_ALL = 'ALL';
-  const [patientCode, setPatientCode] = useState(PATIENT_CODE_ALL);
+  const VILLAGE_CODE_ALL = 'ALL';
+  const [currentVillage, setCurrentVillage] = useState(
+    localStorage.getItem('currentVillage') || VILLAGE_CODE_ALL
+  );
   const [patientSearch, setPatientSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -73,7 +81,6 @@ function PatientList() {
     try {
       const response = await axiosInstance.get('/patients');
       setPatients(response.data);
-      setPatientsFiltered(response.data);
     } catch (error) {
       toast.error(`Error loading patients: ${error.message}`);
       console.error('Error loading patients:', error);
@@ -86,8 +93,10 @@ function PatientList() {
 
   useEffect(() => {
     filterPatients();
-  }, [patientSearch, patientCode]);
-
+  }, [patientSearch, currentVillage, patients]);
+  useEffect(() => {
+    localStorage.setItem('currentVillage', currentVillage);
+  }, [currentVillage]);
   function handleSearchChange(e) {
     const searchValue = e.target.value.toLowerCase();
     setPatientSearch(searchValue);
@@ -95,23 +104,15 @@ function PatientList() {
 
   function handleCodeChange(e) {
     const searchValue = e.target.value;
-    setPatientCode(searchValue);
-  }
-
-  function handleDropdownChangeWithStyle(e) {
-    const selectedValue = e.target.value;
-    e.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
-      VILLAGE_COLOR_CLASSES[selectedValue] || 'text-gray-500'
-    }`;
-    handleCodeChange(e);
+    setCurrentVillage(searchValue);
   }
 
   function filterPatients() {
     const filteredPatients = patients.filter(patient => {
       return (
         patient.filter_string.includes(patientSearch) &&
-        (patientCode === PATIENT_CODE_ALL ||
-          patient.village_prefix === patientCode)
+        (currentVillage === VILLAGE_CODE_ALL ||
+          patient.village_prefix === currentVillage)
       );
     });
     setPatientsFiltered(filteredPatients);
@@ -278,8 +279,8 @@ function PatientList() {
         </h1>
         <div className="flex items-center space-x-4">
           <VillageDropdown
-            handleDropdownChangeWithStyle={handleDropdownChangeWithStyle}
-            PATIENT_CODE_ALL={PATIENT_CODE_ALL}
+            onVillageChange={handleCodeChange}
+            currentVillage={currentVillage}
           />
           <SearchField handleSearchChange={handleSearchChange} />
         </div>
