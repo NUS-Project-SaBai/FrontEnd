@@ -22,6 +22,7 @@ export const VenueOptionsDropdown = ({
         className="block text-sm font-medium leading-6 text-gray-900"
       >
         Village
+        <span className="text-red-500">*</span> {/* indicate required */}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
         <select
@@ -83,6 +84,7 @@ export function PatientRegistrationForm({
             type="text"
             onChange={handleInputChange}
             value={formDetails.name}
+            required={true}
           />
           {formValidationState.name.hasError && (
             <p className="text-red-500 text-sm">
@@ -202,6 +204,13 @@ export function PatientRegistrationForm({
         />
 
         <div>
+          <label
+            htmlFor="village_prefix"
+            className="block text-sm font-medium leading-6 text-gray-900"
+          >
+            Photo
+            <span className="text-red-500">*</span> {/* indicate required */}
+          </label>
           <div className="flex flex-col items-center">
             {!cameraIsOpen && (
               <div className="h-64 w-64 bg-gray-400 flex items-center justify-center">
