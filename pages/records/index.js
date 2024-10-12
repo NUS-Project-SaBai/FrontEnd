@@ -79,7 +79,9 @@ function PatientList() {
 
   const fetchPatients = useWithLoading(async () => {
     try {
-      const response = await axiosInstance.get('/patients');
+      const response = await axiosInstance.get(
+        `/patients?village=${currentVillage}`
+      );
       setPatients(response.data);
     } catch (error) {
       toast.error(`Error loading patients: ${error.message}`);
