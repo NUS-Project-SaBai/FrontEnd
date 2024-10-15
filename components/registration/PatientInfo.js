@@ -24,7 +24,7 @@ export function PatientInfo({ patient, submitNewVisit }) {
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 
-  const imageUrl = `${patient.picture}`;
+  const imageUrl = patient.picture;
 
   return (
     <div>

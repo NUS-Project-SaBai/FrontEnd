@@ -68,7 +68,7 @@ export function Header({ patient, visits, handleVisitChange }) {
     <div className="grid grid-cols-12 gap-4 mb-2">
       <div className="col-span-12 md:col-span-2">
         <img
-          src={`${patient.picture}`}
+          src={patient.picture}
           alt="Patient"
           className="h-48 w-48 object-cover rounded-md"
         />

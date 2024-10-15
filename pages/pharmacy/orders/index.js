@@ -97,7 +97,7 @@ const Orders = () => {
           </td>
           <td className="whitespace-nowrap px-3 py-4">
             <img
-              src={`${visit.patient.picture}`}
+              src={visit.patient.picture}
               alt="Patient"
               className="object-cover h-28 w-28 rounded-lg"
             />
