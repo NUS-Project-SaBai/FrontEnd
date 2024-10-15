@@ -25,9 +25,7 @@ export function PatientInfo({ patient, submitNewVisit }) {
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 
-  const imageUrl = OFFLINE
-    ? `${defaultAPI_URL}/${patient.offline_picture}`
-    : `${CLOUDINARY_URL}/${patient.picture}`;
+  const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
 
   console.log(OFFLINE);
 

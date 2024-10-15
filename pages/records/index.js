@@ -122,9 +122,7 @@ function PatientList() {
       .slice(startIndex, endIndex)
       .map(patient => {
         const patientID = patient.patient_id;
-        const imageUrl = OFFLINE
-          ? `${defaultAPI_URL}/${patient.offline_picture}`
-          : `${CLOUDINARY_URL}/${patient.picture}`;
+        const imageUrl = `${CLOUDINARY_URL}/${patient.picture}`;
 
         const patientVillagePrefix = patient.village_prefix;
         const fullName = patient.name;

@@ -11,9 +11,7 @@ export function RegistrationAutoSuggest({ setPatient, patientsList }) {
     const id = `${suggestion.village_prefix} ${suggestion.pk
       .toString()
       .padStart(3, '0')}`;
-    const imageUrl = OFFLINE
-      ? `${defaultAPI_URL}/${suggestion.offline_picture}`
-      : `${CLOUDINARY_URL}/${suggestion.picture}`;
+    const imageUrl = `${CLOUDINARY_URL}/${suggestion.picture}`;
 
     return (
       <div
