@@ -30,7 +30,7 @@ export function getImageUrl(data) {
       data
     );
   }
-  return OFFLINE
+  return OFFLINE && data.offline_picture != null
     ? `${defaultAPI_URL}/${data.offline_picture}`
     : `${CLOUDINARY_URL}/${data.picture}`;
 }
