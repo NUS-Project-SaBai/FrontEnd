@@ -13,6 +13,7 @@ import { Button } from '@/components/TextComponents/';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
+import { useFormValidation } from '@/components/FormValidation';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
@@ -34,6 +35,23 @@ const Registration = () => {
     village_prefix: '',
   });
 
+  const initialValidationState = {
+    name: { hasError: false, message: 'Name is required' },
+    date_of_birth: { hasError: false, message: 'Invalid Date of Birth' },
+    village_prefix: { hasError: false, message: 'Village Prefix is required' },
+    imageDetails: {
+      hasError: false,
+      message: 'Please take a photo before submitting',
+    },
+  };
+
+  const {
+    formValidationState,
+    resetFormValidationState,
+    setErrorState,
+    hasAnyError,
+  } = useFormValidation(initialValidationState);
+
   useEffect(() => {
     onRefresh();
   }, []);
@@ -51,6 +69,7 @@ const Registration = () => {
   // General functions
 
   function togglePatientModal() {
+    resetFormValidationState();
     setPatientModalOpen(!patientModalOpen);
   }
 
@@ -78,26 +97,32 @@ const Registration = () => {
       'bs2',
     ];
 
+    resetFormValidationState();
+    let local_error_state = false;
     if (formDetails.name == '') {
-      toast.error('Name cannot be empty.');
-      return;
+      setErrorState('name');
+      local_error_state = true;
     }
 
     if (
       formDetails['date_of_birth'].length !== 10 &&
       formDetails['date_of_birth'].length !== 0
     ) {
-      toast.error('Please enter a valid date of birth!');
-      return;
+      setErrorState('date_of_birth');
+      local_error_state = true;
     }
 
     if (formDetails.village_prefix == '') {
-      toast.error('Please select a village');
-      return;
+      setErrorState('village_prefix');
+      local_error_state = true;
     }
 
     if (imageDetails == null) {
-      toast.error('Please take a photo before submitting!');
+      setErrorState('imageDetails');
+      local_error_state = true;
+    }
+
+    if (local_error_state) {
       return;
     }
 
@@ -167,6 +192,7 @@ const Registration = () => {
       >
         <PatientRegistrationForm
           formDetails={formDetails}
+          formValidationState={formValidationState}
           imageDetails={imageDetails}
           setImageDetails={setImageDetails}
           handleInputChange={handleInputChange}

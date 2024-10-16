@@ -6,6 +6,7 @@ export function InputField({
   onChange,
   unit,
   allowNegativeNumbers = false,
+  required = false,
 }) {
   const isNumberField = type === 'number';
 
@@ -28,6 +29,7 @@ export function InputField({
         className="block text-sm font-medium leading-6 text-gray-900"
       >
         {label}
+        {required && <span className="text-red-500">*</span>}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
         <input
