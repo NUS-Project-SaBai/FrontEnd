@@ -1,539 +1,287 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import _ from "lodash";
-import Router from "next/router";
-import Modal from "react-modal";
-import moment from "moment";
-import { ConsultationForm, PrescriptionForm } from "@/pages/records/Forms";
-import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
-import { VitalsTable } from "@/pages/records/VitalsTable";
-import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
-import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
-import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import toast from "react-hot-toast";
-import { Button } from "@/components/TextComponents/Button";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import React, { useState, useEffect, useCallback } from 'react';
+import Router from 'next/router';
+import {
+  ConsultationsTable,
+  PrescriptionsTable,
+  VitalsTable,
+  ConsultationView,
+  ConsultationForm,
+  OrderForm,
+  Header,
+  HeightWeightGraph,
+} from '@/components/records';
+import withAuth from '@/utils/auth';
+import toast from 'react-hot-toast';
+import { Button } from '@/components/TextComponents/';
+import axiosInstance from '@/pages/api/_axiosInstance';
+import CustomModal from '@/components/CustomModal';
+import useWithLoading from '@/utils/loading';
 
 const PatientConsultation = () => {
-  const [state, setState] = useState({
-    mounted: false,
-    patient: {},
-    medications: [],
-    visits: [],
-    visitID: null,
-    consults: [],
-    orders: [],
-    referredFor: [],
-    vitals: {},
-    formDetails: { diagnoses: [] },
-    medicationDetails: {},
-    formModalOpen: false,
-    isEditing: false,
-    viewModalOpen: false,
-    modalContent: {},
+  const [mounted, setMounted] = useState(false);
+
+  const [patient, setPatient] = useState({});
+  const [visits, setVisits] = useState([]);
+
+  const [consults, setConsult] = useState({});
+  const [vitals, setVitals] = useState({});
+  const [prescriptions, setPrescriptions] = useState([]);
+
+  const [medications, setMedications] = useState([]);
+
+  const [selectedVisitID, setSelectedVisitID] = useState(null);
+  const [selectedConsult, setSelectedConsult] = useState({});
+
+  // Consultation View Modal hooks
+  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+
+  // Order Form Modal hooks
+  const [orders, setOrders] = useState([]);
+  const blankOrderFormDetails = {
+    quantity: '',
+    medicine: 0, // refers to the medcine id
+    medicine_name: '',
+  };
+  const [orderFormDetails, setOrderFormDetails] = useState(
+    blankOrderFormDetails
+  );
+  const [orderFormModalOpen, setOrderFormModalOpen] = useState(false);
+
+  // Consultation Form hooks
+  const [consultationFormDetails, setConsultationFormDetails] = useState({
+    diagnoses: [],
   });
 
   useEffect(() => {
     onRefresh();
   }, []);
 
-  async function onRefresh() {
-    // let { id: patientId } = this.props.query;
-    const router = Router;
-    const { query } = router;
-    const { id: patientId } = query;
+  const onRefresh = useWithLoading(async () => {
+    const patientID = Router.query.id;
+    try {
+      const { data: patient } = await axiosInstance.get(
+        `/patients/${patientID}`
+      );
+      const { data: visits } = await axiosInstance.get(
+        `/visits?patient=${patientID}`
+      );
 
-    // gets patient data
-    let { data: patient } = await axios.get(`${API_URL}/patients/${patientId}`);
+      setPatient(patient);
+      setVisits(visits);
 
-    // gets all visit data
-    let { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientId}`,
-    );
-
-    // sorts
-    let visitsSorted = visits.sort((a, b) => {
-      return b.id - a.id;
-    });
-
-    setState((prevState) => ({
-      ...prevState,
-      patient: patient,
-      visits: visitsSorted,
-    }));
-
-    let visitID = visitsSorted[0].id;
-    loadVisitDetails(visitID);
-    loadMedicationStock();
-  }
-
-  function toggleViewModal(viewType = null, consult = {}) {
-    setState((prevState) => ({
-      ...prevState,
-      viewModalOpen: !state.viewModalOpen,
-      viewType,
-      consult,
-    }));
-  }
-
-  function renderViewModal() {
-    let { viewModalOpen, consult } = state;
-
-    let modalContent = <ConsultationsView content={consult} />;
-    return (
-      <Modal
-        isOpen={viewModalOpen}
-        onRequestClose={() => toggleViewModal()}
-        style={viewModalStyles}
-        contentLabel="Example Modal"
-      >
-        {modalContent}
-      </Modal>
-    );
-  }
-
-  function toggleFormModal(order = {}) {
-    loadMedicationStock();
-
-    setState((prevState) => ({
-      ...prevState,
-      formModalIsOpen: !state.formModalIsOpen,
-      medicationDetails: order,
-      isEditing: Object.keys(order).length > 0,
-    }));
-  }
-
-  async function loadMedicationStock() {
-    let { data: medications } = await axios.get(`${API_URL}/medications`);
-
-    let { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`,
-    );
-
-    // key -> medicine pk
-    // value -> total reserved
-    let reservedMedications = {};
-    orders.forEach((order) => {
-      let medicationID = order.medicine;
-      let quantityReserved = order.quantity;
-
-      if (typeof reservedMedications[medicationID] === "undefined") {
-        reservedMedications[medicationID] = quantityReserved;
-      } else {
-        reservedMedications[medicationID] =
-          reservedMedications[medicationID] + quantityReserved;
+      if (visits.length > 0) {
+        const visitID = visits[0].id;
+        loadVisitDetails(visitID);
+        loadMedicationStock();
       }
-    });
+    } catch (error) {
+      toast.error(`Error loading patient data: ${error.message}`);
+      console.error('Error loading patient data:', error);
+    }
+  });
 
-    setState((prevState) => ({
-      ...prevState,
-      medications,
-      reservedMedications,
-    }));
+  const loadVisitDetails = useWithLoading(async visitID => {
+    try {
+      const { data: consults } = await axiosInstance.get(
+        `/consults?visit=${visitID}`
+      );
+      const prescriptions = consults
+        .flatMap(consult => consult.prescriptions)
+        .filter(prescription => prescription != null);
+      const { data: vitals } = await axiosInstance.get(
+        `/vitals?visit=${visitID}`
+      );
+
+      setMounted(true);
+      setSelectedVisitID(visitID);
+      setConsult(consults);
+      setPrescriptions(prescriptions);
+      setVitals(vitals[0] || {});
+    } catch (error) {
+      toast.error(`Error loading visit details: ${error.message}`);
+      console.error('Error loading visit details:', error);
+    }
+  });
+
+  const loadMedicationStock = useWithLoading(async () => {
+    try {
+      const { data: medications } = await axiosInstance.get('/medications');
+      setMedications(medications);
+    } catch (error) {
+      toast.error(`Error loading medication stock: ${error.message}`);
+      console.error('Error loading medication stock:', error);
+    }
+  });
+
+  const submitConsultationForm = useWithLoading(async () => {
+    try {
+      const formPayload = {
+        visit: selectedVisitID,
+        ...consultationFormDetails,
+      };
+
+      const diagnosesPayload = consultationFormDetails.diagnoses.map(
+        diagnosis => ({
+          details: diagnosis.details,
+          category: diagnosis.category,
+        })
+      );
+
+      const ordersPayload = orders.map(order => ({
+        ...order,
+        visit: selectedVisitID,
+      }));
+
+      const combinedPayload = {
+        consult: formPayload,
+        diagnoses: diagnosesPayload,
+        orders: ordersPayload,
+      };
+
+      await axiosInstance.post('/consults', combinedPayload);
+
+      toast.success('Medical Consult Completed!');
+      Router.push('/records');
+    } catch (error) {
+      toast.error(`Error submitting consultation form: ${error.message}`);
+      console.error('Error submitting consultation form:', error);
+    }
+  });
+
+  // Consultations View Modal
+  function toggleCustomModal() {
+    setConsultationModalOpen(!consultationModalOpen);
   }
 
-  function renderFormModal() {
-    let {
-      patient,
-      isEditing,
-      medications,
-      medicationDetails,
-      formModalIsOpen,
-      reservedMedications,
-      orders,
-    } = state;
-    let options = medications
-      .filter((medication) => {
-        for (let i = 0; i < orders.length; i++) {
-          if (orders[i].medicine == medication.pk) return false;
-        }
-        return true;
-      })
-      .map((medication) => {
-        let name = medication.fields.medicine_name;
-        let pKey = medication.pk;
-
-        var value = "";
-        if (Object.keys(medicationDetails).length > 0)
-          value = `${medicationDetails.medicine} ${medicationDetails.medicine_name}`;
-
-        if (value == `${pKey} ${name}`)
-          return (
-            <option key={pKey} value={`${pKey} ${name}`}>
-              {name}
-            </option>
-          );
-        return (
-          <option key={pKey} value={`${pKey} ${name}`}>
-            {name}
-          </option>
-        );
-      });
-
-    return (
-      <Modal
-        isOpen={formModalIsOpen}
-        onRequestClose={() => toggleFormModal()}
-        style={formModalStyles}
-        contentLabel="Example Modal"
-      >
-        <PrescriptionForm
-          allergies={patient.drug_allergy}
-          handleInputChange={handlePrescriptionChange}
-          formDetails={medicationDetails}
-          isEditing={isEditing}
-          medicationOptions={options}
-          medications={medications}
-          reservedMedications={reservedMedications}
-          onSubmit={() => submitNewPrescription()}
-        />
-      </Modal>
-    );
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleCustomModal();
   }
 
-  function handlePrescriptionChange(e) {
-    let { medicationDetails } = state;
+  // Order Form Modal
+  function selectOrder(order) {
+    setOrderFormDetails(order);
+    toggleOrderFormModal();
+  }
 
+  function toggleOrderFormModal() {
+    loadMedicationStock();
+    setOrderFormModalOpen(!orderFormModalOpen);
+  }
+
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
+
+  function handleOrderFormChange(e) {
     const target = e.target;
     const value = target.value;
     const name = target.name;
 
-    if (name === "medication") {
-      let pKey = value.split(" ")[0];
-      let medicineName = value.split(" ").slice(1).join(" ");
+    if (name === 'medication') {
+      const pKey = parseInt(value.split(' ')[0]);
+      const medicineName = value.split(' ').slice(1).join(' ');
 
-      medicationDetails["medicine"] = pKey;
-      medicationDetails["medicine_name"] = medicineName;
+      setOrderFormDetails(prevState => ({
+        ...prevState,
+        medicine: pKey,
+        medicine_name: medicineName,
+      }));
     } else {
-      medicationDetails[name] = value;
+      setOrderFormDetails(prevState => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
-
-    setState((prevState) => ({
-      ...prevState,
-      medicationDetails,
-    }));
   }
 
-  function submitNewPrescription() {
-    let { orders, medicationDetails, isEditing } = state;
-
-    if (isEditing) {
-      // go find that order
-      let index = orders.findIndex((order) => {
-        order.medication == medicationDetails.medication;
-      });
-      orders[index] = medicationDetails;
-      // edit that order
-    } else orders.push({ ...medicationDetails, order_status: "PENDING" });
-
-    setState((prevState) => ({
-      ...prevState,
-      orders: orders,
-      medicationDetails: {},
-      formModalIsOpen: false,
-    }));
-  }
-
-  async function loadVisitDetails(visitID) {
-    let { data: consults } = await axios.get(
-      `${API_URL}/consults?visit=${visitID}`,
-    );
-
-    let { data: prescriptions } = await axios.get(
-      `${API_URL}/orders?visit=${visitID}`,
-    );
-
-    let consultsEnriched = consults.map((consult) => {
-      let consultPrescriptions = prescriptions.filter((prescription) => {
-        return prescription.consult.id === consult.id;
-      });
-
-      return {
-        ...consult,
-        prescriptions: consultPrescriptions,
-      };
-    });
-
-    let { data: vitals } = await axios.get(
-      `${API_URL}/vitals?visit=${visitID}`,
-    );
-
-    setState((prevState) => ({
-      ...prevState,
-      consults: consultsEnriched,
-      vitals: vitals[0] || {},
-      visitPrescriptions: consultsEnriched.flatMap((x) => x.prescriptions),
-      mounted: true,
-      visitID,
-    }));
-  }
-
-  async function submitForm() {
-    //Post 405 error
-    const router = Router;
-    const { query } = router;
-    let { formDetails, visitID, orders } = state;
-
-    orders.forEach((order) => {
-      axios.patch(`${API_URL}/medications/${order.medicine}`, {
-        quantityChange: -parseInt(order.quantity),
-      });
-    });
-
-    console.log(formDetails);
-
-    var formPayload = {
-      visit: visitID,
-      ...formDetails,
-    };
-
-    delete formPayload.diagnoses;
-
-    //For Referrals, we are also using a standardised text format to store information
-    //from referred_for and referred_notes
-
-    // if (formDetails.referred_for) {
-    //   const referrals = `
-    //       Referred For: ${formDetails.referred_for}
-    //       Notes:
-    //       ${formDetails.referred_notes || "No Notes Provided"}`;
-    //   formPayload = {
-    //     ...formPayload,
-    //     referrals: referrals,
-    //   };
-    // }
-
-    var consultId;
-    var orderPromises;
-
-    console.log(formPayload);
-
-    let { data: medicalConsult } = await axios.post(`${API_URL}/consults`, {
-      ...formPayload,
-      doctor: window.localStorage.getItem("userID"),
-    });
-
-    consultId = medicalConsult.id;
-    orderPromises = [];
-
-    let diagnosisFormat = "";
-
-    for (let i = 0; i < formDetails.diagnoses.length; i++) {
-      diagnosisFormat += `DIAGNOSIS ${i + 1}
-          ${formDetails.diagnoses[i].details}
-          ${
-            !formDetails.diagnoses[i].type
-              ? "Cardiovascular"
-              : formDetails.diagnoses[i].type
-          }
-          
-          `;
-      console.log(diagnosisFormat);
-    }
-
-    for (let i = 0; i < formDetails.diagnoses.length; i++) {
-      let { data: medicalDiagnosis } = await axios.post(
-        `${API_URL}/diagnosis`,
-        {
-          consult: consultId,
-          details: formDetails.diagnoses[i].details,
-          category: formDetails.diagnoses[i].type,
-        },
+  function submitNewOrder() {
+    // Non-existent medication check: check if orderFormDetails.medicine (which is the id) is === 0 (which is the default value in the state obj)
+    if (orderFormDetails.medicine === 0) {
+      toast.error(
+        'Please select the name of the medication you would like to prescribe.'
       );
+      return;
     }
 
-    orders.forEach((order) => {
-      let orderPayload = {
-        ...order,
-        visit: visitID,
-        doctor: window.localStorage.getItem("userID"),
-        consult: consultId,
-      };
-      orderPromises.push(axios.post(`${API_URL}/orders`, orderPayload));
-    });
+    // Decimal check, make sure quantity to be added is not an empty string or 0
+    if (!orderFormDetails.quantity || orderFormDetails.quantity === '0') {
+      // quantity comes from number field but is string due to the workaround of the number field scrolling effect with a text field
+      toast.error('Please enter a valid quantity.');
+      return;
+    }
 
-    await Promise.all(orderPromises);
-    toast.success("Medical Consult Completed!");
+    // Check if quantity to be ordered < stock
+    const stockMedication = medications.find(
+      med => orderFormDetails.medicine === med.id
+    );
+    const quantityStockMedication = stockMedication
+      ? stockMedication.quantity
+      : 0;
+    if (orderFormDetails.quantity > quantityStockMedication) {
+      toast.error('Not enough medication in stock.');
+      return;
+    }
 
-    Router.push("/records");
+    const index = orders.findIndex(
+      order => order.medicine === orderFormDetails.medicine
+    );
+    if (index !== -1) {
+      orders[index] = orderFormDetails;
+    } else {
+      orders.push({ ...orderFormDetails, order_status: 'PENDING' });
+    }
+
+    setOrders([...orders]);
+    setOrderFormDetails(blankOrderFormDetails);
+    toggleOrderFormModal();
   }
 
-  function updateFormDetails(diagnoses) {
-    // update the form details
-    let { formDetails } = state;
-    formDetails = { ...formDetails, diagnoses: diagnoses };
-
-    setState((prevState) => ({ ...prevState, formDetails }));
-  }
-
-  function handleInputChange(e) {
-    let { formDetails } = state;
-
+  // Consultation Form
+  function handleConsultationFormInputChange(e) {
     const target = e.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    formDetails[name] = value;
-
-    setState((prevState) => ({
+    setConsultationFormDetails(prevState => ({
       ...prevState,
-      formDetails,
+      [name]: value,
     }));
   }
 
-  function handleVisitChange(e) {
-    const value = e.target.value;
-
-    // pull the latest visit
-
-    // this.setState({ visitID: value });
-    loadVisitDetails(value);
+  function handleConsultationFormDiagnosis(diagnoses) {
+    setConsultationFormDetails(prevState => ({ ...prevState, diagnoses }));
   }
 
-  function renderHeader() {
-    const { patient, visits } = state;
-    console.log("Render: ", state);
-    const visitOptions = visits.map((visit) => {
-      const date = moment(visit.date).format("DD MMMM YYYY");
-      return (
-        <option key={visit.id} value={visit.id}>
-          {date}
-        </option>
-      );
-    });
-
-    return (
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 md:col-span-2">
-          <img
-            src={`${CLOUDINARY_URL}/${patient.picture}`}
-            alt="Placeholder image"
-            className="h-48 w-48 object-cover rounded-md"
-          />
-        </div>
-        <div className="col-span-12 md:col-span-3">
-          <div>
-            <label className="block text-gray-700">Village ID</label>
-            <p className="text-lg font-medium">{`${
-              patient.village_prefix
-            }${patient.pk.toString().padStart(3, "0")}`}</p>
-          </div>
-          <div className="mt-4">
-            <label className="block text-gray-700">Visit on</label>
-            <div className="relative">
-              <select
-                name="medication"
-                onChange={handleVisitChange}
-                className="block w-full bg-white border border-gray-300 rounded-md py-2 px-4 appearance-none focus:outline-none focus:border-blue-500"
-              >
-                {visitOptions}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <ChevronDownIcon className="h-5 w-5" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-span-12 md:col-span-3">
-          <div>
-            <label className="block text-gray-700">Name</label>
-            <p className="text-lg font-medium">{patient.name}</p>
-          </div>
-        </div>
-        <div className="col-span-12 md:col-span-4"></div>
-      </div>
-    );
-  }
-
-  function renderFirstColumn() {
-    let { vitals, consults, visitPrescriptions } = state;
-
-    return (
-      <div className="space-y-8">
-        {typeof vitals === "undefined" ? (
-          <>
-            <label className="label">Vital Signs</label>
-            <h2>Not Done</h2>
-          </>
-        ) : (
-          <VitalsTable content={vitals} />
-        )}
-
-        <ConsultationsTable
-          content={consults}
-          buttonFunction={toggleViewModal}
-        />
-
-        <VisitPrescriptionsTable content={visitPrescriptions} />
-      </div>
-    );
-  }
-
-  function renderSecondColumn() {
-    //let { form } = this.props.query;
-
-    let { formDetails, orders } = state;
-
-    let formContent = () => {
-      return (
-        <div className="space-y-2">
-          <ConsultationForm
-            updateFormDetails={updateFormDetails}
-            formDetails={formDetails}
-            handleInputChange={handleInputChange}
-          />
-          <hr />
-          <label className="block text-sm font-medium text-gray-900 mt-4">
-            Prescriptions
-          </label>
-          {orders.length > 0 ? renderPrescriptionTable() : "No Prescriptions"}
-          <hr />
-          <Button
-            colour="green"
-            text={"Add Prescriptions"}
-            onClick={() => toggleFormModal()}
-          />
-        </div>
-      );
-    };
-
-    return (
-      <div className="space-y-2">
-        {formContent()}
-
-        <Button colour="green" text={"Submit"} onClick={() => submitForm()} />
-      </div>
-    );
-  }
-
-  function renderPrescriptionTable() {
-    let { orders } = state;
-
-    let orderRows = orders.map((order, index) => {
-      let name = order.medicine_name;
-      let quantity = order.quantity;
+  function OrdersTable() {
+    const orderRows = orders.map((order, index) => {
+      const name = order.medicine_name;
+      const quantity = order.quantity;
 
       return (
-        <tr key={order.id}>
+        <tr key={`${order.id}-${index}`}>
           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8">
             {name}
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {quantity}
           </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
             <Button
               colour="green"
               text="Edit"
-              onClick={() => toggleFormModal(order)}
+              onClick={() => selectOrder(order)}
             />
             <Button
               colour="red"
               text="Delete"
               onClick={() => {
-                orders.splice(index, 1);
-                setState((prevState) => ({ ...prevState, orders }));
+                setOrders(prevOrders => {
+                  const updatedOrders = [...prevOrders];
+                  updatedOrders.splice(index, 1);
+                  return updatedOrders;
+                });
               }}
             />
           </td>
@@ -542,37 +290,29 @@ const PatientConsultation = () => {
     });
 
     return (
-      <div
-        style={{
-          marginTop: 15,
-          marginLeft: 25,
-          marginRight: 25,
-          // position: "relative"
-        }}
-      >
+      <div className="mt-4 mx-6">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="mt-2 flow-root">
-            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
               <div className="inline-block min-w-full py-2 align-middle">
-                <table className="min-w-full divide-y divide-gray-300">
+                <table className="min-w-full border border-gray-700 divide-y divide-gray-300 rounded-lg overflow-hidden">
                   <thead>
-                    <tr>
+                    <tr className="bg-gray-200">
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
                       >
                         Medicine
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
                       >
                         Quantity
                       </th>
-
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                        className="px-3 py-3.5 text-left text-base font-semibold text-gray-900 border-b border-gray-700"
                       >
                         Actions
                       </th>
@@ -590,63 +330,122 @@ const PatientConsultation = () => {
     );
   }
 
-  function render() {
-    console.log("STATE:", state);
-    if (!state.mounted) return null;
+  if (!mounted) return null;
 
-    return (
-      <div
-        style={{
-          marginTop: 27.5,
-          marginLeft: 25,
-          marginRight: 25,
-          overflowX: "hidden", //remove horizontal scrollbar
-        }}
+  return (
+    <div className="mt-7 mx-6 overflow-hidden">
+      <CustomModal
+        isOpen={orderFormModalOpen}
+        onRequestClose={toggleOrderFormModal}
+        onSubmit={submitNewOrder}
       >
-        {renderFormModal()}
-        {renderViewModal()}
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Consultation
-        </h1>
-        {renderHeader()}
-        <b>
-          Please remember to press the submit button at the end of the form!
-        </b>
+        <OrderForm
+          allergies={patient.drug_allergy}
+          medications={medications}
+          handleInputChange={handleOrderFormChange}
+          orderDetails={orderFormDetails}
+          medicationOptions={medications
+            .filter(
+              med =>
+                orders.find(orderMed => orderMed.medicine == med.id) == null
+            )
+            .map(medication => (
+              <option
+                key={medication.id}
+                value={`${medication.id} ${medication.medicine_name}`}
+              >
+                {medication.medicine_name}
+              </option>
+            ))}
+        />
+      </CustomModal>
 
-        <hr />
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleCustomModal}
+      >
+        <ConsultationView consult={selectedConsult} />
+      </CustomModal>
+      <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+        Patient Consultation
+      </h1>
+      <Header
+        patient={patient}
+        visits={visits}
+        handleVisitChange={handleVisitChange}
+      />
+      <b>Please remember to press the submit button at the end of the form!</b>
+      <hr />
+      <div className="grid grid-cols-2 gap-x-4 mb-4">
+        {/*Left Column*/}
+        <div className="space-y-8">
+          {typeof vitals === 'undefined' ? (
+            <>
+              <label className="label">Vital Signs</label>
+              <h2>Not Done</h2>
+            </>
+          ) : (
+            <VitalsTable
+              vitals={vitals}
+              patient={patient}
+              visit={visits.find(visit => visit.id === selectedVisitID)}
+            />
+          )}
 
-        <div className="grid grid-cols-2 gap-x-4 mb-4">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
+          <ConsultationsTable
+            consults={consults}
+            buttonOnClick={selectConsult}
+          />
+
+          <PrescriptionsTable prescriptions={prescriptions} />
+
+          <HeightWeightGraph
+            age={
+              new Date(
+                visits.find(visit => visit.id === selectedVisitID).date
+              ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+            }
+            weight={vitals.weight}
+            height={vitals.height}
+            gender={patient.gender}
+          />
+        </div>
+
+        {/*Right Column*/}
+        <div className="bg-blue-50 p-4 rounded-lg relative space-y-2">
+          <ConsultationForm
+            handleInputChange={handleConsultationFormInputChange}
+            formDetails={consultationFormDetails}
+            handleDiagnosis={handleConsultationFormDiagnosis}
+          />
+          <div className="my-4 p-4 bg-gray-50 rounded-lg shadow-sm">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Orders</h2>
+            <hr className="mb-4" />
+            {orders.length > 0 ? (
+              <OrdersTable />
+            ) : (
+              <p className="text-gray-500 text-sm mb-4">No Orders</p>
+            )}
+            <div className="flex justify-between items-center mt-4">
+              <Button
+                colour="green"
+                text={'Add Orders'}
+                onClick={() => toggleOrderFormModal()}
+                className="mr-2"
+              />
+            </div>
+          </div>
+          <hr className="my-4" />
+
+          <Button
+            colour="green"
+            text={'Submit'}
+            onClick={() => submitConsultationForm()}
+          />
         </div>
       </div>
-    );
-  }
-  return <>{render()}</>;
-};
-
-const formModalStyles = {
-  content: {
-    left: "35%",
-    right: "17.5%",
-    top: "12.5%",
-    bottom: "12.5%",
-  },
-  overlay: {
-    zIndex: 4,
-  },
-};
-
-const viewModalStyles = {
-  content: {
-    left: "30%",
-    right: "12.5%",
-    top: "12.5%",
-    bottom: "12.5%",
-  },
-  overlay: {
-    zIndex: 4,
-  },
+    </div>
+  );
 };
 
 export default withAuth(PatientConsultation);

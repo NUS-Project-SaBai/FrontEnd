@@ -1,43 +1,57 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { MedicationModal } from "./MedicationModal";
-import { API_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import { Button } from "@/components/TextComponents/Button";
-import { InputField } from "@/components/TextComponents/InputField";
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import {
+  MedicationForm,
+  MedicationHistoryForm,
+} from '@/components/pharmacy/stock/';
+import withAuth from '@/utils/auth';
+import { Button, InputField, PageTitle } from '@/components/TextComponents';
+import axiosInstance from '@/pages/api/_axiosInstance';
+import useWithLoading from '@/utils/loading';
+import CustomModal from '@/components/CustomModal';
 
 const Stock = () => {
+  const blankMedicationDetails = {
+    medicine_name: '',
+    quantity: 0, // number field but the value is actually string because we don't want the scrolling effect with the number field
+    quantityChange: 0,
+    notes: '',
+  };
   const [medications, setMedications] = useState([]);
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
-  const [medicationDetails, setMedicationDetails] = useState({
-    medicine_name: "",
-    reserve_quantity: 0,
-    quantity: 0,
-    quantityChange: 0,
-    notes: "",
-    remarks: "",
-  });
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [medicationDetails, setMedicationDetails] = useState(
+    blankMedicationDetails
+  );
+
+  const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
+  const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
+    useState(false);
+  const [medication, setMedication] = useState(null);
 
   useEffect(() => {
-    onRefresh();
+    loadMedicine();
   }, []);
 
-  const onRefresh = async () => {
+  const loadMedicine = useWithLoading(async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/medications`);
-      setMedications(data);
-      setMedicationsFiltered(data);
+      const { data: medicines } = await axiosInstance.get('/medications');
+      medicines.sort((a, b) => a.medicine_name.localeCompare(b.medicine_name));
+      setMedications(medicines);
+      setMedicationsFiltered(medicines);
     } catch (error) {
       toast.error(`Failed to fetch medications: ${error.message}`);
+      console.error('Error fetching medication:', error);
+    }
+  });
+
+  const onSubmitForm = useWithLoading(async () => {
+    if (!medicationDetails.medicine_name) {
+      toast.error('Medicine name cannot be empty.');
       return;
     }
-  };
-
-  const onSubmitForm = async () => {
-    if (!medicationDetails.medicine_name) {
-      toast.error("Medicine name cannot be empty.");
+    if (medicationDetails.quantityChange === '') {
+      // check explicitly for empty string as the "!medicationDetails.quantityChange" check will catch zeros, which is allowed
+      toast.error('Quantity to Add cannot be empty.');
       return;
     }
 
@@ -52,99 +66,83 @@ const Stock = () => {
       medicine_name: nameEnriched,
     };
 
-    if (updatedDetails.pk) {
-      const quantity =
-        parseInt(updatedDetails.quantity) + parseInt(quantityChange);
+    try {
+      if (updatedDetails.pk) {
+        const quantity =
+          parseInt(updatedDetails.quantity) + parseInt(quantityChange);
 
-      if (quantity < 0) {
-        toast.error("Insufficient Medication!");
-        return;
-      }
+        if (quantity < 0) {
+          toast.error('Insufficient Medication!');
+          return;
+        }
 
-      await axios
-        .patch(`${API_URL}/medications/${updatedDetails.pk}`, {
+        await axiosInstance.patch(`/medications/${updatedDetails.pk}`, {
           quantityChange: parseInt(quantityChange),
-        })
-        .catch((error) => {
-          toast.error(`Encountered an error when update! ${error.message}`);
-          return;
+          medicine_name: updatedDetails.medicine_name,
+          notes: updatedDetails.notes,
         });
-      toast.success("Medication Quantity updated!");
-    }
+        toast.success('Medication updated!');
+      } else {
+        if (quantityChange < 0) {
+          toast.error('Invalid Number!');
+          return;
+        } else if (!Number.isInteger(quantityChange - 0)) {
+          toast.error('No decimals allowed!');
+          return;
+        }
 
-    if (!updatedDetails.pk) {
-      if (quantityChange < 0) {
-        toast.error("Invalid Number!");
-        return;
+        updatedDetails.quantity = quantityChange;
+        await axiosInstance.post('/medications', updatedDetails);
+        toast.success('New Medication created!');
       }
 
-      updatedDetails.quantity = quantityChange;
-      await axios
-        .post(`${API_URL}/medications`, updatedDetails)
-        .catch((error) => {
-          toast.error(`Failed to create medication: ${error.message}`);
-          return;
-        });
-      toast.success("New Medication created!");
+      toggleModal();
+      loadMedicine();
+    } catch (error) {
+      toast.error(`Error submitting medication: ${error.message}`);
+      console.error('Error submitting medication:', error);
     }
+  });
 
-    toggleModal();
-    onRefresh();
-  };
-
-  const handleDelete = async (pk) => {
+  const handleDelete = useWithLoading(async pk => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this medication?",
+      'Are you sure you want to delete this medication?'
     );
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
-    await axios.delete(`${API_URL}/medications/${pk}`).catch((error) => {
+    try {
+      await axiosInstance.delete(`/medications/${pk}`);
+      setMedications(medications.filter(medication => medication.id !== pk));
+      setMedicationsFiltered(
+        medicationsFiltered.filter(medication => medication.id !== pk)
+      );
+      toast.success('Medication successfully deleted!');
+    } catch (error) {
       toast.error(`Failed to delete medication: ${error.message}`);
-      return;
-    });
+      console.error('Error deleting medication:', error);
+    }
+  });
 
-    const updatedMedications = medications.filter(
-      (medication) => medication.pk !== pk,
-    );
-    const updatedMedicationsFiltered = medicationsFiltered.filter(
-      (medication) => medication.pk !== pk,
-    );
-    setMedications(updatedMedications);
-    setMedicationsFiltered(updatedMedicationsFiltered);
-
-    toast.success("Medication successfully deleted!");
-  };
-
-  const onFilterChange = (event) => {
-    const filteredMedications = medications.filter((medication) => {
-      const medicineName = medication.fields.medicine_name.toLowerCase();
-
+  const onFilterChange = event => {
+    const filteredMedications = medications.filter(medication => {
+      const medicineName = medication.medicine_name.toLowerCase();
       return medicineName.includes(event.target.value.toLowerCase());
     });
 
     setMedicationsFiltered(filteredMedications);
   };
 
-  const createNewMedication = () => {
-    setMedicationDetails({
-      medicine_name: "",
-      reserve_quantity: 0,
-      quantity: 0,
-      quantityChange: 0,
-      notes: "",
-      remarks: "",
-    });
-    toggleModal(medicationDetails);
-  };
-
-  const toggleModal = (medication = {}) => {
+  const toggleModal = (medication = blankMedicationDetails) => {
     setMedicationDetails(medication);
-    setModalIsOpen((prevModalIsOpen) => !prevModalIsOpen);
+    setMedicationModalIsOpen(!medicationModalIsOpen);
   };
 
-  const handleMedicationChange = (event) => {
+  const toggleMedicationHistoryModal = medication => {
+    setMedication(medication);
+    setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
+  };
+
+  const handleMedicationChange = event => {
     const newMedicationDetails = {
       ...medicationDetails,
       [event.target.name]: event.target.value,
@@ -152,82 +150,49 @@ const Stock = () => {
     setMedicationDetails(newMedicationDetails);
   };
 
-  function renderRows() {
-    // Displays the list of medications in stock
-    const tableRows = medicationsFiltered.map((medication) => {
+  const Rows = () => {
+    return medicationsFiltered.map(medication => {
       const medicationDetails = {
-        ...medication.fields,
-        pk: medication.pk,
+        ...medication,
+        pk: medication.id,
         quantityChange: 0,
       };
-      const name = medicationDetails.medicine_name;
-      const quantity = medicationDetails.quantity;
-
       return (
-        <tr key={name + quantity}>
+        <tr key={medication.id}>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            {name}
+            {medication.medicine_name}
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            {quantity}
+            {medication.quantity}
           </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-5">
             <Button
               colour="green"
-              text="Edit Quantity"
+              text="Edit"
               onClick={() => toggleModal(medicationDetails)}
             />
-
             <Button
               colour="red"
               text="Delete"
               onClick={() => handleDelete(medicationDetails.pk)}
             />
+
+            <Button
+              colour="blue"
+              text="History"
+              onClick={() => toggleMedicationHistoryModal(medicationDetails)}
+            />
           </td>
         </tr>
       );
     });
-    return tableRows;
-  }
+  };
 
-  return (
-    <div
-      style={{
-        marginTop: 15,
-        marginLeft: 25,
-        marginRight: 25,
-      }}
-    >
-      <MedicationModal
-        modalIsOpen={modalIsOpen}
-        toggleModal={toggleModal}
-        onSubmit={onSubmitForm}
-        handleInputChange={handleMedicationChange}
-        formDetails={medicationDetails}
-      />
-
-      <h1 className="flex items-center justify-center text-3xl font-bold  text-sky-800 mb-6">
-        Medication Stock
-      </h1>
-      <div className="control">
-        <InputField
-          label="Search for Medicine"
-          type="text"
-          name="Input Medication to Search"
-          onChange={onFilterChange}
-        />
-      </div>
-      <div className="mt-2">
-        <Button
-          colour="green"
-          text="Add New Medicine"
-          onClick={createNewMedication}
-        />
-      </div>
-
+  const Table = () => {
+    return (
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="mt-2 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="flow-root">
+          <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
             <div className="inline-block min-w-full py-2 align-middle">
               <table className="min-w-full divide-y divide-gray-300">
                 <thead>
@@ -244,7 +209,6 @@ const Stock = () => {
                     >
                       Quantity
                     </th>
-
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
@@ -254,13 +218,48 @@ const Stock = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {renderRows()}
+                  <Rows />
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="mt-4 mx-6">
+      <PageTitle title="Medication Stock" />
+
+      <div className="space-y-2">
+        <InputField
+          label="Search for Medicine"
+          type="text"
+          name="search"
+          onChange={onFilterChange}
+          className="mb-2"
+        />
+        <Button colour="green" text="Add New Medicine" onClick={toggleModal} />
+      </div>
+      <Table />
+      <CustomModal
+        isOpen={medicationModalIsOpen}
+        onRequestClose={toggleModal}
+        onSubmit={onSubmitForm}
+      >
+        <MedicationForm
+          formDetails={medicationDetails}
+          handleInputChange={handleMedicationChange}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={medicationHistoryModalIsOpen}
+        onRequestClose={toggleMedicationHistoryModal}
+      >
+        <MedicationHistoryForm medication={medication} />
+      </CustomModal>
     </div>
   );
 };
