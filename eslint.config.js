@@ -30,7 +30,12 @@ export default [
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/display-name': 'off',
-      'prettier/prettier': 'error', // Add Prettier rules
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
       'arrow-parens': 'off',
       'comma-dangle': 'off',
       'max-len': 'off',

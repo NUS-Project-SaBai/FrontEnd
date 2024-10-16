@@ -1,6 +1,6 @@
 import { Button } from '@/components/TextComponents';
 
-export function ConsultationsTable({ content: consults, buttonOnClick }) {
+export function ConsultationsTable({ consults, buttonOnClick }) {
   if (consults.length == 0) {
     return (
       <div>
@@ -12,28 +12,30 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
     );
   }
 
-  const consultRows = consults.map(consult => {
-    const doctor = consult.doctor.username;
-    const referredFor = consult.referred_for || 'Not referred';
+  function ConsultRows() {
+    return consults.map(consult => {
+      const doctor = consult.doctor.nickname;
+      const referredFor = consult.referred_for || 'Not referred';
 
-    return (
-      <tr key={consult.id}>
-        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-          {doctor}
-        </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          {referredFor}
-        </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-          <Button
-            colour="indigo"
-            text={'View'}
-            onClick={() => buttonOnClick(consult)}
-          />
-        </td>
-      </tr>
-    );
-  });
+      return (
+        <tr key={consult.id}>
+          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+            {doctor}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {referredFor}
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            <Button
+              colour="indigo"
+              text={'View'}
+              onClick={() => buttonOnClick(consult)}
+            />
+          </td>
+        </tr>
+      );
+    });
+  }
 
   return (
     <div>
@@ -41,7 +43,7 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
         Consultations
       </label>
       <div className="mt-4 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="-mx-2 overflow-x-auto sm:-mx-4 lg:-mx-6">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
@@ -68,7 +70,7 @@ export function ConsultationsTable({ content: consults, buttonOnClick }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {consultRows}
+                  <ConsultRows />
                 </tbody>
               </table>
             </div>

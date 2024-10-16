@@ -1,4 +1,26 @@
-export function InputField({ name, label, type, value, onChange, unit }) {
+export function InputField({
+  name,
+  label,
+  type,
+  value,
+  onChange,
+  unit,
+  allowNegativeNumbers = false,
+}) {
+  const isNumberField = type === 'number';
+
+  function numberOnChangeInterceptor(e) {
+    const data = e.nativeEvent.data;
+    // allow null for backspace, numbers, or negative sign at the start of the input
+    if (
+      data === null ||
+      RegExp(/[0-9]/).test(data) ||
+      (allowNegativeNumbers && data === '-' && e.target.value === '-')
+    ) {
+      onChange(e);
+    }
+  }
+
   return (
     <div className="flex flex-col">
       <label
@@ -7,14 +29,14 @@ export function InputField({ name, label, type, value, onChange, unit }) {
       >
         {label}
       </label>
-      <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300">
+      <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
         <input
           id={name}
           name={name}
-          type={type}
+          type={isNumberField ? 'text' : type}
           value={value}
-          onChange={onChange}
-          className="flex-1 block w-full rounded-none rounded-l-md border-0 py-1.5 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          onChange={isNumberField ? numberOnChangeInterceptor : onChange}
+          className="flex-1 block w-full rounded-md border-2 py-1.5 px-1.5 bg-white text-gray-900  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
         />
         {unit && (
           <span className="inline-flex items-center px-3 rounded-none rounded-r-md border-0 bg-gray-200 text-gray-900 ring-1 ring-inset ring-gray-300 sm:text-sm">

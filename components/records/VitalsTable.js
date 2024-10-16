@@ -1,55 +1,146 @@
 import { DisplayField } from '@/components/TextComponents';
 
-export function VitalsTable({ content }) {
-  const isBloodPressureHigh = content.systolic > 140 || content.diastolic > 90;
-  const isBloodPressureLow = content.systolic < 90 || content.diastolic < 60;
+export function VitalsTable({ vitals, patient, visit }) {
+  const isBloodPressureHigh = vitals.systolic > 140 || vitals.diastolic > 90;
+  const isBloodPressureLow = vitals.systolic < 90 || vitals.diastolic < 60;
   const shouldHighlightBloodPressure =
     isBloodPressureHigh || isBloodPressureLow;
+
+  const patientAgeVisit =
+    new Date(visit.date).getFullYear() -
+    new Date(patient.date_of_birth).getFullYear();
 
   const vitalFields = [
     {
       label: 'Blood Pressure (Systolic / Diastolic) / mmHg',
-      value: `${content.systolic} / ${content.diastolic}`,
+      value: `${vitals.systolic} / ${vitals.diastolic}`,
       highlight: shouldHighlightBloodPressure,
     },
-    { label: 'Heart Rate', value: content.heart_rate },
-
-    { label: 'Temperature', value: content.temperature },
+    { label: 'Heart Rate', value: vitals.heart_rate },
+    { label: 'Temperature', value: vitals.temperature },
     { label: '', value: '' },
-
-    { label: 'Left Eye', value: content.left_eye_degree },
-    { label: 'Right Eye', value: content.right_eye_degree },
-
-    { label: 'Left Eye Pinhole', value: content.left_eye_pinhole },
-    { label: 'Right Eye Pinhole', value: content.right_eye_pinhole },
-
-    { label: 'Urine Dip Test', value: content.urine_test },
-    { label: 'Hemocue Hb Count', value: content.hemocue_count },
-
+    { label: 'Left Eye', value: vitals.left_eye_degree },
+    { label: 'Right Eye', value: vitals.right_eye_degree },
+    { label: 'Left Eye Pinhole', value: vitals.left_eye_pinhole },
+    { label: 'Right Eye Pinhole', value: vitals.right_eye_pinhole },
+    { label: 'Urine Dip Test', value: vitals.urine_test },
+    { label: 'Hemocue Hb Count', value: vitals.hemocue_count },
     {
       label: 'Blood Glucose',
-      value: content.blood_glucose,
-      highlight: content.blood_glucose > 6.1,
+      value: vitals.blood_glucose,
+      highlight: vitals.blood_glucose > 6.1,
     },
-    { label: 'Diabetes Mellitus?', value: content.diabetes_mellitus },
-
-    { label: 'Others', value: content.others },
+    { label: 'Diabetes Mellitus?', value: vitals.diabetes_mellitus },
+    { label: 'Others', value: vitals.others },
   ];
 
-  function renderTableField(field) {
+  const childrenVitalFields = [
+    {
+      label: 'Gross Motor',
+      value: vitals.gross_motor,
+      ageToTest: [4, 5, 6],
+    },
+    { label: 'Red Reflex', value: vitals.red_reflex, ageToTest: [4, 5, 6] },
+    {
+      label: 'Scoliosis',
+      value: vitals.scoliosis,
+      ageToTest: [13, 14, 15, 16],
+    },
+    { label: 'Pallor', value: vitals.pallor, ageToTest: [4, 5, 7, 8, 11, 12] },
+    {
+      label: 'Oral Cavity',
+      value: vitals.oral_cavity,
+      ageToTest: [4, 5, 7, 8, 11, 12],
+    },
+    { label: 'Heart', value: vitals.heart, ageToTest: [4, 5, 7, 8, 11, 12] },
+    { label: 'Lungs', value: vitals.lungs, ageToTest: [4, 5, 7, 8, 11, 12] },
+    {
+      label: 'Abdomen',
+      value: vitals.abdomen,
+      ageToTest: [4, 5, 7, 8, 11, 12],
+    },
+    {
+      label: 'Hernial Orifices',
+      value: vitals.hernial_orifices,
+      ageToTest: [4, 5, 7, 8],
+    },
+  ];
+  const PubertyFields = [
+    {
+      label: 'Pubarche',
+      value: vitals.pubarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+    },
+    {
+      label: 'Pubarche Age',
+      value: vitals.pubarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+    },
+    {
+      label: 'Thelarche',
+      value: vitals.thelarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Thelarche Age',
+      value: vitals.thelarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Menarche',
+      value: vitals.menarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Menarche Age',
+      value: vitals.menarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Voice Change',
+      value: vitals.voice_change,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Voice Change Age',
+      value: vitals.voice_change_age,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Testicular Growth >= 4ml',
+      value: vitals.testicular_growth,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Testicular Growth Age',
+      value: vitals.testicular_growth_age,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+  ];
+
+  function renderTableField(field, index) {
     if (field.label === '') {
-      return <div></div>;
+      return <div key={index}></div>;
     }
 
     return (
       <DisplayField
-        key={field.label}
+        key={field.label + index} // Ensure each key is unique
         label={field.label}
         content={field.value}
         highlight={field.highlight}
       />
     );
   }
+  console.log(patientAgeVisit);
 
   return (
     <form className="">
@@ -58,20 +149,41 @@ export function VitalsTable({ content }) {
       </div>
       <div>
         <div className="grid gap-6 md:grid-cols-3">
-          <DisplayField key="height" label="Height" content={content.height} />
-          <DisplayField key="label" label="Weight" content={content.weight} />
+          <DisplayField key="height" label="Height" content={vitals.height} />
+          <DisplayField key="weight" label="Weight" content={vitals.weight} />
           <DisplayField
             key="bmi"
             label="BMI"
             content={(
-              parseFloat(content.weight) /
-              parseFloat(content.height / 100) ** 2
+              parseFloat(vitals.weight) /
+              parseFloat(vitals.height / 100) ** 2
             ).toFixed(2)}
           />
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          {vitalFields.map(field => renderTableField(field))}
+          {vitalFields.map((field, index) => renderTableField(field, index))}
         </div>
+
+        {patientAgeVisit <= 18 && patientAgeVisit >= 4 && (
+          <div>
+            <div className="grid gap-6 md:grid-cols-2">
+              {childrenVitalFields
+                .filter((field, _) => {
+                  return field.ageToTest.includes(patientAgeVisit);
+                })
+                .map((field, index) => renderTableField(field, index))}
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              {PubertyFields.filter((field, _) => {
+                return (
+                  field.ageToTest.includes(patientAgeVisit) &&
+                  (field.gender ? field.gender === patient.gender : true)
+                );
+              }).map((field, index) => renderTableField(field, index))}
+            </div>
+          </div>
+        )}
       </div>
     </form>
   );
