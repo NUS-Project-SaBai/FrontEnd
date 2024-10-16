@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { CLOUDINARY_URL } from '@/utils/constants';
 import { Button } from '../TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import useWithLoading from '@/utils/loading';
@@ -69,7 +68,7 @@ export function Header({ patient, visits, handleVisitChange }) {
     <div className="grid grid-cols-12 gap-4 mb-2">
       <div className="col-span-12 md:col-span-2">
         <img
-          src={`${CLOUDINARY_URL}/${patient.picture}`}
+          src={patient.picture}
           alt="Patient"
           className="h-48 w-48 object-cover rounded-md"
         />
@@ -84,7 +83,7 @@ export function Header({ patient, visits, handleVisitChange }) {
             <select
               name="medication"
               onChange={handleVisitChange}
-              className="w-full bg-white border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
+              className="w-full bg-white border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 appearance-none"
             >
               {visitOptions}
             </select>
