@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import toast from 'react-hot-toast';
-import { CLOUDINARY_URL, OFFLINE, defaultAPI_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
@@ -100,7 +99,7 @@ function PatientList() {
     localStorage.setItem('currentVillage', currentVillage);
   }, [currentVillage]);
   function handleSearchChange(e) {
-    const searchValue = e.target.value.toLowerCase();
+    const searchValue = e.target.value.toLowerCase().trim();
     setPatientSearch(searchValue);
   }
 
@@ -112,7 +111,7 @@ function PatientList() {
   function filterPatients() {
     const filteredPatients = patients.filter(patient => {
       return (
-        patient.filter_string.includes(patientSearch) &&
+        patient.filter_string.toLowerCase().trim().includes(patientSearch) &&
         (currentVillage === VILLAGE_CODE_ALL ||
           patient.village_prefix === currentVillage)
       );
@@ -125,9 +124,7 @@ function PatientList() {
       .slice(startIndex, endIndex)
       .map(patient => {
         const patientID = patient.patient_id;
-        const imageUrl = OFFLINE
-          ? `${defaultAPI_URL}/${patient.offline_picture}`
-          : `${CLOUDINARY_URL}/${patient.picture}`;
+        const imageUrl = patient.picture;
 
         const patientVillagePrefix = patient.village_prefix;
         const fullName = patient.name;

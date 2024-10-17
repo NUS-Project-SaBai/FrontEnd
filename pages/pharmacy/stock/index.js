@@ -35,6 +35,7 @@ const Stock = () => {
   const loadMedicine = useWithLoading(async () => {
     try {
       const { data: medicines } = await axiosInstance.get('/medications');
+      medicines.sort((a, b) => a.medicine_name.localeCompare(b.medicine_name));
       setMedications(medicines);
       setMedicationsFiltered(medicines);
     } catch (error) {
