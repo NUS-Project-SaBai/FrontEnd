@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import {
+  AddMedicationForm,
   MedicationForm,
   MedicationHistoryForm,
 } from '@/components/pharmacy/stock/';
@@ -26,7 +27,10 @@ const Stock = () => {
   const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
   const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
     useState(false);
+  const [addMedicationModalIsOpen, setAddMedicationModalIsOpen] = useState(false);
   const [medication, setMedication] = useState(null);
+
+  const [isEditing, setIsEditing] = useState(false); // distinguish between edit and add modal
 
   useEffect(() => {
     loadMedicine();
@@ -35,7 +39,6 @@ const Stock = () => {
   const loadMedicine = useWithLoading(async () => {
     try {
       const { data: medicines } = await axiosInstance.get('/medications');
-      medicines.sort((a, b) => a.medicine_name.localeCompare(b.medicine_name));
       setMedications(medicines);
       setMedicationsFiltered(medicines);
     } catch (error) {
@@ -96,7 +99,12 @@ const Stock = () => {
         toast.success('New Medication created!');
       }
 
-      toggleModal();
+      if (isEditing) {
+        toggleModal();
+      } else {
+        toggleAddMedicationModal();
+      }
+
       loadMedicine();
     } catch (error) {
       toast.error(`Error submitting medication: ${error.message}`);
@@ -134,12 +142,19 @@ const Stock = () => {
 
   const toggleModal = (medication = blankMedicationDetails) => {
     setMedicationDetails(medication);
+    setIsEditing(true);
     setMedicationModalIsOpen(!medicationModalIsOpen);
   };
 
   const toggleMedicationHistoryModal = medication => {
     setMedication(medication);
+    setIsEditing(false);
     setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
+  };
+
+  const toggleAddMedicationModal = (medication = blankMedicationDetails) => {
+    setMedicationDetails(medication);
+    setAddMedicationModalIsOpen(!addMedicationModalIsOpen);
   };
 
   const handleMedicationChange = event => {
@@ -149,6 +164,14 @@ const Stock = () => {
     };
     setMedicationDetails(newMedicationDetails);
   };
+
+  const rowMedications = medications.map(medication => 
+      medication = {
+        ...medication,
+        pk: medication.id,
+        quantityChange: 0,
+      }
+  );
 
   const Rows = () => {
     return medicationsFiltered.map(medication => {
@@ -240,7 +263,7 @@ const Stock = () => {
           onChange={onFilterChange}
           className="mb-2"
         />
-        <Button colour="green" text="Add New Medicine" onClick={toggleModal} />
+        <Button colour="green" text="Add New Medicine" onClick={toggleAddMedicationModal} />
       </div>
       <Table />
       <CustomModal
@@ -251,6 +274,20 @@ const Stock = () => {
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={addMedicationModalIsOpen}
+        onRequestClose={toggleAddMedicationModal}
+        onSubmit={onSubmitForm}
+      >
+        <AddMedicationForm
+          medicationDetails={medicationDetails}
+          handleInputChange={handleMedicationChange}
+          medications={rowMedications}
+          setMedicationDetails={setMedicationDetails}
+          setIsEditing={setIsEditing}
         />
       </CustomModal>
 
