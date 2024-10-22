@@ -1,3 +1,6 @@
+import React from 'react';
+import { useController } from 'react-hook-form';
+
 export function InputField({
   name,
   label,
@@ -6,8 +9,22 @@ export function InputField({
   onChange,
   unit,
   allowNegativeNumbers = false,
+  control, // Added control prop from useForm
+  rules = {}, // Add validation rules
+  defaultValue = '', // Default value if not provided
 }) {
   const isNumberField = type === 'number';
+
+  // Get the controller methods for this field
+  const {
+    field: { field_onChange, onBlur, field_value, ref },
+    fieldState: { error }, // Capture error from the field state
+  } = useController({
+    name,
+    control,
+    rules,
+    defaultValue, // Default value for the field
+  });
 
   function numberOnChangeInterceptor(e) {
     const data = e.nativeEvent.data;
@@ -28,6 +45,8 @@ export function InputField({
         className="block text-sm font-medium leading-6 text-gray-900"
       >
         {label}
+        {/* Required Asterisk */}
+        {rules.required && <span className="text-red-500"> *</span>}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
         <input
@@ -44,6 +63,8 @@ export function InputField({
           </span>
         )}
       </div>
+      {/* Display error message if validation fails */}
+      {error && <p className="text-red-500 text-sm">{error.message}</p>}
     </div>
   );
 }

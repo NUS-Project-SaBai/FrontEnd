@@ -2,6 +2,7 @@ import { Button, InputField, InputBox } from '@/components/TextComponents';
 import { VENUE_OPTIONS, VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 import AppWebcam from '@/components/WebCamera';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 export const VenueOptionsDropdown = ({ handleInputChange }) => {
   const handleDropdownChangeWithStyle = event => {
@@ -78,6 +79,8 @@ export function PatientRegistrationForm({
           type="text"
           onChange={handleInputChange}
           value={formDetails.name}
+          control={control}
+          rules={{ required: 'Name is required' }}
         />
         <InputField
           name="identification_number"
@@ -85,6 +88,7 @@ export function PatientRegistrationForm({
           type="text"
           onChange={handleInputChange}
           value={formDetails.identification_number}
+          control={control}
         />
         <InputField
           name="contact_no"
@@ -93,6 +97,7 @@ export function PatientRegistrationForm({
           type="tel"
           onChange={handleInputChange}
           value={formDetails.contact_no}
+          control={control}
         />
         <div>
           <label
@@ -121,6 +126,7 @@ export function PatientRegistrationForm({
           type="date"
           onChange={handleInputChange}
           value={formDetails.date_of_birth}
+          control={control}
         />
 
         <VenueOptionsDropdown handleInputChange={handleInputChange} />

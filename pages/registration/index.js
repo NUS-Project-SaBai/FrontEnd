@@ -13,6 +13,7 @@ import { Button } from '@/components/TextComponents/';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
+import { useForm } from 'react-hook-form';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
@@ -157,7 +158,7 @@ const Registration = () => {
       console.error('Error creating new visit:', error);
     }
   });
-
+  const { handleSubmit, control } = useForm();
   return (
     <div className="mx-4">
       <CustomModal
