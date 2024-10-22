@@ -14,8 +14,6 @@ import useSWR, { useSWRConfig } from 'swr';
 const fetcher = url => axiosInstance.get(url).then(res => res.data);
 
 function PatientList() {
-  const { cache } = useSWRConfig();
-  //const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
 
   const PATIENT_CODE_ALL = 'ALL';
@@ -36,25 +34,6 @@ function PatientList() {
       console.error('Error loading patients:', err);
     },
   });
-
-  // const fetchPatients = useWithLoading(async () => {
-  //   try {
-  //     const response = await axiosInstance.get('/patients');
-  //     setPatients(response.data);
-  //     setPatientsFiltered(response.data);
-  //   } catch (error) {
-  //     toast.error(`Error loading patients: ${error.message}`);
-  //     console.error('Error loading patients:', error);
-  //   }
-  // });
-
-  // useEffect(() => {
-  //   fetchPatients();
-  // }, []);
-
-  useEffect(() => {
-    console.log('SWR Cache:', cache.get('/patients')); // Log cached data
-  }, [cache, patients]);
 
   useEffect(() => {
     if (patients) {
@@ -268,26 +247,6 @@ function PatientList() {
             </div>
           </div>
         </div>
-        <span className="isolate inline-flex rounded-md shadow-sm mt-2">
-          <button
-            type="button"
-            className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={
-              currentPage === Math.ceil(patientsFiltered.length / itemsPerPage)
-            }
-          >
-            Next
-          </button>
-        </span>
       </div>
     </div>
   );
