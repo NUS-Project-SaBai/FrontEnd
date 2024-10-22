@@ -72,7 +72,7 @@ export function ConsultationForm({
 
         <Button
           colour="red"
-          text="Delete Assessment"
+          text="Delete Diagnosis"
           onClick={() => handleDiagnosisDelete(index)}
         />
       </div>
