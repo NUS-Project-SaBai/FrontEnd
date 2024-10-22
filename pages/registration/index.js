@@ -6,6 +6,7 @@ import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import {
   PatientRegistrationForm,
+  PatientScanForm,
   PatientInfo,
   RegistrationAutoSuggest,
 } from '@/components/registration';
@@ -21,6 +22,10 @@ const Registration = () => {
   const [patientModalOpen, setPatientModalOpen] = useState(false);
 
   const [imageDetails, setImageDetails] = useState(null);
+
+  const [scanModalOpen, setScanModalOpen] = useState(false);
+
+  const [scanImageDetails, setScanImageDetails] = useState(null);
 
   const [formDetails, setFormDetails] = useState({
     name: '',
@@ -52,6 +57,10 @@ const Registration = () => {
 
   function togglePatientModal() {
     setPatientModalOpen(!patientModalOpen);
+  }
+
+  function toggleScanModal() {
+    setScanModalOpen(!scanModalOpen);
   }
 
   const handleInputChange = event => {
@@ -136,10 +145,42 @@ const Registration = () => {
       onRefresh();
 
       setPatientModalOpen(false);
+      console.log(response);
       submitNewVisit(response);
     } catch (error) {
       toast.error(`Error creating new patient: ${error.message}`);
       console.error('Error creating new patient:', error);
+    }
+  });
+
+  const submitScan = useWithLoading(async () => {
+    if (scanImageDetails == null) {
+      toast.error('Please take a photo before submitting!');
+      return;
+    }
+
+    try {
+      const scanFormData = new FormData();
+      scanFormData.append(
+        'picture',
+        await urltoFile(scanImageDetails, 'patient_screenshot.jpg', 'image/jpg')
+      );
+
+      const { data: response } = await axiosInstance.post(
+        '/patients/search_face',
+        scanFormData
+      );
+
+      setPatient(response[0]);
+
+      setScanImageDetails(null);
+
+      toast.success('Patient Found!');
+
+      setScanModalOpen(false);
+    } catch (error) {
+      toast.error(`Error scanning face: ${error.meesage}`);
+      console.error('Error scanning face:', error);
     }
   });
 
@@ -172,6 +213,17 @@ const Registration = () => {
           handleInputChange={handleInputChange}
         />
       </CustomModal>
+
+      <CustomModal
+        isOpen={scanModalOpen}
+        onRequestClose={toggleScanModal}
+        onSubmit={submitScan}
+      >
+        <PatientScanForm
+          imageDetails={scanImageDetails}
+          setImageDetails={setScanImageDetails}
+        />
+      </CustomModal>
       <div>
         <div>
           <PageTitle title="Registration" desc="" />
@@ -187,6 +239,13 @@ const Registration = () => {
               text="New Patient"
               onClick={() => {
                 setPatientModalOpen(true);
+              }}
+            />
+            <Button
+              colour="green"
+              text="Scan Face"
+              onClick={() => {
+                setScanModalOpen(true);
               }}
             />
           </div>
