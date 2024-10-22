@@ -6,9 +6,10 @@ import {
   DisplayField,
 } from '@/components/TextComponents/';
 
-export function AddMedicationForm({ handleInputChange, medicationDetails, setMedicationDetails, medications, set }) {
+export function AddMedicationForm({ handleInputChange, medicationDetails, setMedicationDetails, medications}) {
   const [filteredMedications, setFilteredMedications] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isEditMessage, setIsEditMessage] = useState(false);
 
   console.log(medications);
   
@@ -30,13 +31,14 @@ export function AddMedicationForm({ handleInputChange, medicationDetails, setMed
   const handleMedicationSelect = (medication) => {
     setMedicationDetails(medication);
     setIsDropdownOpen(false);
+    setIsEditMessage(true);
   };
 
 
   return (
     <div className="space-y-2">
       <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-2">
-        Add Medication
+        {isEditMessage ? "Edit Medication" : "Add Medication"}
       </label>
 
       <InputField

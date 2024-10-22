@@ -30,7 +30,7 @@ const Stock = () => {
   const [addMedicationModalIsOpen, setAddMedicationModalIsOpen] = useState(false);
   const [medication, setMedication] = useState(null);
 
-  const [isEditing, setIsEditing] = useState(false); // distinguish between edit and add modal
+  const [isEditing, setIsEditing] = useState(true); // distinguish between edit and add modal
 
   useEffect(() => {
     loadMedicine();
@@ -148,13 +148,13 @@ const Stock = () => {
 
   const toggleMedicationHistoryModal = medication => {
     setMedication(medication);
-    setIsEditing(false);
     setmedicationHistoryModalIsOpen(!medicationHistoryModalIsOpen);
   };
 
   const toggleAddMedicationModal = (medication = blankMedicationDetails) => {
     setMedicationDetails(medication);
     setAddMedicationModalIsOpen(!addMedicationModalIsOpen);
+    setIsEditing(false);
   };
 
   const handleMedicationChange = event => {
@@ -287,7 +287,6 @@ const Stock = () => {
           handleInputChange={handleMedicationChange}
           medications={rowMedications}
           setMedicationDetails={setMedicationDetails}
-          setIsEditing={setIsEditing}
         />
       </CustomModal>
 
