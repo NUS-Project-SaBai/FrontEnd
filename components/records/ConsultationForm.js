@@ -58,9 +58,9 @@ export function ConsultationForm({
           }`}
           name="category"
           onChange={e => handleDiagnosisChange(e, index)}
-          value={diagnosis.category}
+          value={diagnosis.category || 'nil'}
         >
-          <option disabled selected>
+          <option disabled value="nil">
             Please select...
           </option>
           {diagnosisOptions.map((option, optionIndex) => (
