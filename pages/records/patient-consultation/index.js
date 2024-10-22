@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
-import Modal from 'react-modal';
 import {
   ConsultationsTable,
   PrescriptionsTable,
@@ -9,6 +8,7 @@ import {
   ConsultationForm,
   OrderForm,
   Header,
+  HeightWeightGraph,
 } from '@/components/records';
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
@@ -23,7 +23,7 @@ const PatientConsultation = () => {
   const [patient, setPatient] = useState({});
   const [visits, setVisits] = useState([]);
 
-  const [consult, setConsult] = useState({});
+  const [consults, setConsult] = useState({});
   const [vitals, setVitals] = useState({});
   const [prescriptions, setPrescriptions] = useState([]);
 
@@ -37,18 +37,20 @@ const PatientConsultation = () => {
 
   // Order Form Modal hooks
   const [orders, setOrders] = useState([]);
-  const [orderFormDetails, setOrderFormDetails] = useState({});
+  const blankOrderFormDetails = {
+    quantity: '',
+    medicine: 0, // refers to the medcine id
+    medicine_name: '',
+  };
+  const [orderFormDetails, setOrderFormDetails] = useState(
+    blankOrderFormDetails
+  );
   const [orderFormModalOpen, setOrderFormModalOpen] = useState(false);
 
   // Consultation Form hooks
   const [consultationFormDetails, setConsultationFormDetails] = useState({
     diagnoses: [],
   });
-
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
 
   useEffect(() => {
     onRefresh();
@@ -111,94 +113,6 @@ const PatientConsultation = () => {
     }
   });
 
-  // Consultations View Modal
-  function toggleCustomModal() {
-    setConsultationModalOpen(!consultationModalOpen);
-  }
-
-  function selectConsult(consult) {
-    setSelectedConsult(consult);
-    toggleCustomModal();
-  }
-
-  // Order Form Modal
-  function selectOrder(order) {
-    setOrderFormDetails(order);
-    toggleOrderFormModal();
-  }
-
-  function toggleOrderFormModal() {
-    loadMedicationStock();
-    setOrderFormModalOpen(!orderFormModalOpen);
-  }
-
-  function handleOrderFormChange(e) {
-    const target = e.target;
-    const value = target.value;
-    const name = target.name;
-
-    if (name === 'medication') {
-      const pKey = parseInt(value.split(' ')[0]);
-      const medicineName = value.split(' ').slice(1).join(' ');
-
-      setOrderFormDetails(prevState => ({
-        ...prevState,
-        medicine: pKey,
-        medicine_name: medicineName,
-      }));
-    } else {
-      setOrderFormDetails(prevState => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
-  }
-
-  function submitNewOrder() {
-    // Non-existent medication check
-    if (orderFormDetails.medicine == null || orderFormDetails.medicine === 0) {
-      toast.error(
-        'Please select the name of the medication you would like to prescribe.'
-      );
-      return;
-    }
-
-    // Decimal check
-    if (!Number.isInteger(orderFormDetails.quantity - 0)) {
-      toast.error('Please enter a valid quantity.');
-      return;
-    }
-
-    const index = orders.findIndex(
-      order => order.medicine === orderFormDetails.medicine
-    );
-    if (index !== -1) {
-      orders[index] = orderFormDetails;
-    } else {
-      orders.push({ ...orderFormDetails, order_status: 'PENDING' });
-    }
-
-    setOrders([...orders]);
-    setOrderFormDetails({});
-    toggleOrderFormModal();
-  }
-
-  // Consultation Form
-  function handleConsultationFormInputChange(e) {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
-    setConsultationFormDetails(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }
-
-  function handleConsultationFormDiagnosis(diagnoses) {
-    setConsultationFormDetails(prevState => ({ ...prevState, diagnoses }));
-  }
-
   const submitConsultationForm = useWithLoading(async () => {
     try {
       const formPayload = {
@@ -209,7 +123,7 @@ const PatientConsultation = () => {
       const diagnosesPayload = consultationFormDetails.diagnoses.map(
         diagnosis => ({
           details: diagnosis.details,
-          category: diagnosis.type,
+          category: diagnosis.category,
         })
       );
 
@@ -234,72 +148,113 @@ const PatientConsultation = () => {
     }
   });
 
-  function renderHeader() {
-    return (
-      <Header
-        patient={patient}
-        visits={visits}
-        handleVisitChange={handleVisitChange}
-      />
-    );
+  // Consultations View Modal
+  function toggleCustomModal() {
+    setConsultationModalOpen(!consultationModalOpen);
   }
 
-  function renderFirstColumn() {
-    return (
-      <div className="space-y-8">
-        {typeof vitals === 'undefined' ? (
-          <>
-            <label className="label">Vital Signs</label>
-            <h2>Not Done</h2>
-          </>
-        ) : (
-          <VitalsTable content={vitals} />
-        )}
-
-        <ConsultationsTable content={consult} buttonOnClick={selectConsult} />
-
-        <PrescriptionsTable content={prescriptions} />
-      </div>
-    );
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleCustomModal();
   }
 
-  function renderSecondColumn() {
-    return (
-      <div className="bg-blue-50 p-4 rounded-lg relative space-y-2">
-        <ConsultationForm
-          handleInputChange={handleConsultationFormInputChange}
-          formDetails={consultationFormDetails}
-          handleDiagnosis={handleConsultationFormDiagnosis}
-        />
-        <div className="my-4 p-4 bg-gray-50 rounded-lg shadow-sm">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Orders</h2>
-          <hr className="mb-4" />
-          {orders.length > 0 ? (
-            renderOrdersTable()
-          ) : (
-            <p className="text-gray-500 text-sm mb-4">No Orders</p>
-          )}
-          <div className="flex justify-between items-center mt-4">
-            <Button
-              colour="green"
-              text={'Add Orders'}
-              onClick={() => toggleOrderFormModal()}
-              className="mr-2"
-            />
-          </div>
-        </div>
-        <hr className="my-4" />
-
-        <Button
-          colour="green"
-          text={'Submit'}
-          onClick={() => submitConsultationForm()}
-        />
-      </div>
-    );
+  // Order Form Modal
+  function selectOrder(order) {
+    setOrderFormDetails(order);
+    toggleOrderFormModal();
   }
 
-  function renderOrdersTable() {
+  function toggleOrderFormModal() {
+    loadMedicationStock();
+    setOrderFormModalOpen(!orderFormModalOpen);
+  }
+
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
+
+  function handleOrderFormChange(e) {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+
+    if (name === 'medication') {
+      const pKey = parseInt(value.split(' ')[0]);
+      const medicineName = value.split(' ').slice(1).join(' ');
+
+      setOrderFormDetails(prevState => ({
+        ...prevState,
+        medicine: pKey,
+        medicine_name: medicineName,
+      }));
+    } else {
+      setOrderFormDetails(prevState => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+  }
+
+  function submitNewOrder() {
+    // Non-existent medication check: check if orderFormDetails.medicine (which is the id) is === 0 (which is the default value in the state obj)
+    if (orderFormDetails.medicine === 0) {
+      toast.error(
+        'Please select the name of the medication you would like to prescribe.'
+      );
+      return;
+    }
+
+    // Decimal check, make sure quantity to be added is not an empty string or 0
+    if (!orderFormDetails.quantity || orderFormDetails.quantity === '0') {
+      // quantity comes from number field but is string due to the workaround of the number field scrolling effect with a text field
+      toast.error('Please enter a valid quantity.');
+      return;
+    }
+
+    // Check if quantity to be ordered < stock
+    const stockMedication = medications.find(
+      med => orderFormDetails.medicine === med.id
+    );
+    const quantityStockMedication = stockMedication
+      ? stockMedication.quantity
+      : 0;
+    if (orderFormDetails.quantity > quantityStockMedication) {
+      toast.error('Not enough medication in stock.');
+      return;
+    }
+
+    const index = orders.findIndex(
+      order => order.medicine === orderFormDetails.medicine
+    );
+    if (index !== -1) {
+      orders[index] = orderFormDetails;
+    } else {
+      orders.push({ ...orderFormDetails, order_status: 'PENDING' });
+    }
+
+    setOrders([...orders]);
+    setOrderFormDetails(blankOrderFormDetails);
+    toggleOrderFormModal();
+  }
+
+  // Consultation Form
+  function handleConsultationFormInputChange(e) {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    setConsultationFormDetails(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }
+
+  function handleConsultationFormDiagnosis(diagnoses) {
+    setConsultationFormDetails(prevState => ({ ...prevState, diagnoses }));
+  }
+
+  function OrdersTable() {
     const orderRows = orders.map((order, index) => {
       const name = order.medicine_name;
       const quantity = order.quantity;
@@ -375,64 +330,122 @@ const PatientConsultation = () => {
     );
   }
 
-  function render() {
-    if (!mounted) return null;
+  if (!mounted) return null;
 
-    return (
-      <div className="mt-7 mx-6 overflow-hidden">
-        <Modal
-          isOpen={orderFormModalOpen}
-          onRequestClose={toggleOrderFormModal}
-          className="fixed inset-0 flex items-center justify-center z-50 p-4"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-        >
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
-            <OrderForm
-              allergies={patient.drug_allergy}
-              medications={medications}
-              handleInputChange={handleOrderFormChange}
-              orderDetails={orderFormDetails}
-              medicationOptions={medications.map(medication => (
-                <option
-                  key={medication.id}
-                  value={`${medication.id} ${medication.medicine_name}`}
-                >
-                  {medication.medicine_name}
-                </option>
-              ))}
-              onSubmit={submitNewOrder}
+  return (
+    <div className="mt-7 mx-6 overflow-hidden">
+      <CustomModal
+        isOpen={orderFormModalOpen}
+        onRequestClose={toggleOrderFormModal}
+        onSubmit={submitNewOrder}
+      >
+        <OrderForm
+          allergies={patient.drug_allergy}
+          medications={medications}
+          handleInputChange={handleOrderFormChange}
+          orderDetails={orderFormDetails}
+          medicationOptions={medications
+            .filter(
+              med =>
+                orders.find(orderMed => orderMed.medicine == med.id) == null
+            )
+            .map(medication => (
+              <option
+                key={medication.id}
+                value={`${medication.id} ${medication.medicine_name}`}
+              >
+                {medication.medicine_name}
+              </option>
+            ))}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleCustomModal}
+      >
+        <ConsultationView consult={selectedConsult} />
+      </CustomModal>
+      <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+        Patient Consultation
+      </h1>
+      <Header
+        patient={patient}
+        visits={visits}
+        handleVisitChange={handleVisitChange}
+      />
+      <b>Please remember to press the submit button at the end of the form!</b>
+      <hr />
+      <div className="grid grid-cols-2 gap-x-4 mb-4">
+        {/*Left Column*/}
+        <div className="space-y-8">
+          {typeof vitals === 'undefined' ? (
+            <>
+              <label className="label">Vital Signs</label>
+              <h2>Not Done</h2>
+            </>
+          ) : (
+            <VitalsTable
+              vitals={vitals}
+              patient={patient}
+              visit={visits.find(visit => visit.id === selectedVisitID)}
             />
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              onClick={toggleOrderFormModal}
-            >
-              Close
-            </button>
+          )}
+
+          <ConsultationsTable
+            consults={consults}
+            buttonOnClick={selectConsult}
+          />
+
+          <PrescriptionsTable prescriptions={prescriptions} />
+
+          <HeightWeightGraph
+            age={
+              new Date(
+                visits.find(visit => visit.id === selectedVisitID).date
+              ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+            }
+            weight={vitals.weight}
+            height={vitals.height}
+            gender={patient.gender}
+          />
+        </div>
+
+        {/*Right Column*/}
+        <div className="bg-blue-50 p-4 rounded-lg relative space-y-2">
+          <ConsultationForm
+            handleInputChange={handleConsultationFormInputChange}
+            formDetails={consultationFormDetails}
+            handleDiagnosis={handleConsultationFormDiagnosis}
+          />
+          <div className="my-4 p-4 bg-gray-50 rounded-lg shadow-sm">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Orders</h2>
+            <hr className="mb-4" />
+            {orders.length > 0 ? (
+              <OrdersTable />
+            ) : (
+              <p className="text-gray-500 text-sm mb-4">No Orders</p>
+            )}
+            <div className="flex justify-between items-center mt-4">
+              <Button
+                colour="green"
+                text={'Add Orders'}
+                onClick={() => toggleOrderFormModal()}
+                className="mr-2"
+              />
+            </div>
           </div>
-        </Modal>
-        <CustomModal
-          isOpen={consultationModalOpen}
-          onRequestClose={toggleCustomModal}
-        >
-          <ConsultationView content={selectedConsult} />
-        </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Consultation
-        </h1>
-        {renderHeader()}
-        <b>
-          Please remember to press the submit button at the end of the form!
-        </b>
-        <hr />
-        <div className="grid grid-cols-2 gap-x-4 mb-4">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
+          <hr className="my-4" />
+
+          <Button
+            colour="green"
+            text={'Submit'}
+            onClick={() => submitConsultationForm()}
+          />
         </div>
       </div>
-    );
-  }
-
-  return <>{render()}</>;
+    </div>
+  );
 };
 
 export default withAuth(PatientConsultation);
