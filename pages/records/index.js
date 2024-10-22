@@ -7,6 +7,10 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
+import useSWR, { useSWRConfig } from 'swr';
+
+// Fetcher function to use with SWR
+const fetcher = url => axiosInstance.get(url).then(res => res.data);
 
 function VillageDropdown({ handleDropdownChangeWithStyle, PATIENT_CODE_ALL }) {
   return (
@@ -56,7 +60,6 @@ function SearchField({ handleSearchChange }) {
 }
 
 function PatientList() {
-  const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
 
   const PATIENT_CODE_ALL = 'ALL';
@@ -68,24 +71,21 @@ function PatientList() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  const fetchPatients = useWithLoading(async () => {
-    try {
-      const response = await axiosInstance.get('/patients');
-      setPatients(response.data);
-      setPatientsFiltered(response.data);
-    } catch (error) {
-      toast.error(`Error loading patients: ${error.message}`);
-      console.error('Error loading patients:', error);
-    }
+  // Use SWR to fetch patients data
+  const { data: patients, error } = useSWR('/patients', fetcher, {
+    refreshInterval: 300000, // Refresh data every 5 minutes
+    dedupingInterval: 600000, // Cache data for 10 minutes
+    onError: err => {
+      toast.error(`Error loading patients: ${err.message}`);
+      console.error('Error loading patients:', err);
+    },
   });
 
   useEffect(() => {
-    fetchPatients();
-  }, []);
-
-  useEffect(() => {
-    filterPatients();
-  }, [patientSearch, patientCode]);
+    if (patients) {
+      filterPatients();
+    }
+  }, [patients, patientSearch, patientCode]);
 
   function handleSearchChange(e) {
     const searchValue = e.target.value.toLowerCase().trim();
@@ -243,26 +243,6 @@ function PatientList() {
             </div>
           </div>
         </div>
-        <span className="isolate inline-flex rounded-md shadow-sm mt-2">
-          <button
-            type="button"
-            className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={
-              currentPage === Math.ceil(patientsFiltered.length / itemsPerPage)
-            }
-          >
-            Next
-          </button>
-        </span>
       </div>
     );
   }
