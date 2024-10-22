@@ -8,9 +8,14 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
+import useSWR, { useSWRConfig } from 'swr';
+
+// Fetcher function to use with SWR
+const fetcher = url => axiosInstance.get(url).then(res => res.data);
 
 function PatientList() {
-  const [patients, setPatients] = useState([]);
+  const { cache } = useSWRConfig();
+  //const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
 
   const PATIENT_CODE_ALL = 'ALL';
@@ -22,24 +27,40 @@ function PatientList() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  const fetchPatients = useWithLoading(async () => {
-    try {
-      const response = await axiosInstance.get('/patients');
-      setPatients(response.data);
-      setPatientsFiltered(response.data);
-    } catch (error) {
-      toast.error(`Error loading patients: ${error.message}`);
-      console.error('Error loading patients:', error);
-    }
+  // Use SWR to fetch patients data
+  const { data: patients, error } = useSWR('/patients', fetcher, {
+    refreshInterval: 300000, // Refresh data every 5 minutes
+    dedupingInterval: 600000, // Cache data for 10 minutes
+    onError: err => {
+      toast.error(`Error loading patients: ${err.message}`);
+      console.error('Error loading patients:', err);
+    },
   });
 
-  useEffect(() => {
-    fetchPatients();
-  }, []);
+  // const fetchPatients = useWithLoading(async () => {
+  //   try {
+  //     const response = await axiosInstance.get('/patients');
+  //     setPatients(response.data);
+  //     setPatientsFiltered(response.data);
+  //   } catch (error) {
+  //     toast.error(`Error loading patients: ${error.message}`);
+  //     console.error('Error loading patients:', error);
+  //   }
+  // });
+
+  // useEffect(() => {
+  //   fetchPatients();
+  // }, []);
 
   useEffect(() => {
-    filterPatients();
-  }, [patientSearch, patientCode]);
+    console.log('SWR Cache:', cache.get('/patients')); // Log cached data
+  }, [cache, patients]);
+
+  useEffect(() => {
+    if (patients) {
+      filterPatients();
+    }
+  }, [patients, patientSearch, patientCode]);
 
   function handleSearchChange(e) {
     const searchValue = e.target.value.toLowerCase();
@@ -69,6 +90,9 @@ function PatientList() {
     });
     setPatientsFiltered(filteredPatients);
   }
+
+  if (error) return <div>Error loading patients</div>;
+  if (!patients) return <div>Loading...</div>;
 
   function renderTableContent() {
     const patientRows = patientsFiltered
