@@ -9,6 +9,7 @@ import {
   PatientScanForm,
   PatientInfo,
   RegistrationAutoSuggest,
+  RegistrationScanSuggest,
 } from '@/components/registration';
 import { Button } from '@/components/TextComponents/';
 import useWithLoading from '@/utils/loading';
@@ -17,6 +18,7 @@ import { PageTitle } from '@/components/TextComponents';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
+
   const [patient, setPatient] = useState({});
 
   const [patientModalOpen, setPatientModalOpen] = useState(false);
@@ -26,6 +28,8 @@ const Registration = () => {
   const [scanModalOpen, setScanModalOpen] = useState(false);
 
   const [scanImageDetails, setScanImageDetails] = useState(null);
+
+  const [scanSuggestionsList, setScanSuggestionsList] = useState([]);
 
   const [formDetails, setFormDetails] = useState({
     name: '',
@@ -145,7 +149,6 @@ const Registration = () => {
       onRefresh();
 
       setPatientModalOpen(false);
-      console.log(response);
       submitNewVisit(response);
     } catch (error) {
       toast.error(`Error creating new patient: ${error.message}`);
@@ -176,14 +179,11 @@ const Registration = () => {
         toast.error('Patient does not exist!');
         return;
       }
-
-      setPatient(response[0]);
-
-      setScanImageDetails(null);
-
       toast.success('Patient Found!');
 
-      setScanModalOpen(false);
+      setScanSuggestionsList(response);
+
+      setScanImageDetails(null);
     } catch (error) {
       toast.error(`Error scanning face: ${error.meesage}`);
       console.error('Error scanning face:', error);
@@ -228,6 +228,11 @@ const Registration = () => {
         <PatientScanForm
           imageDetails={scanImageDetails}
           setImageDetails={setScanImageDetails}
+        />
+        <RegistrationScanSuggest
+          setPatient={setPatient}
+          setScanModalOpen={setScanModalOpen}
+          suggestionList={scanSuggestionsList}
         />
       </CustomModal>
       <div>
