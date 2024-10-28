@@ -171,6 +171,12 @@ const Registration = () => {
         scanFormData
       );
 
+      console.log(response.length);
+      if (response.length == 0) {
+        toast.error('Patient does not exist!');
+        return;
+      }
+
       setPatient(response[0]);
 
       setScanImageDetails(null);
