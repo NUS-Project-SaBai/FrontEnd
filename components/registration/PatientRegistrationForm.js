@@ -56,6 +56,7 @@ export function PatientRegistrationForm({
   imageDetails,
   handleInputChange,
   setImageDetails,
+  form_control,
 }) {
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [webcam, setWebcam] = useState(null);
@@ -77,21 +78,15 @@ export function PatientRegistrationForm({
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <InputField
-            name="name"
-            label="Name (english + local if possible)"
-            type="text"
-            onChange={handleInputChange}
-            value={formDetails.name}
-            required={true}
-          />
-          {formValidationState.name.hasError && (
-            <p className="text-red-500 text-sm">
-              {formValidationState.name.message}
-            </p>
-          )}
-        </div>
+        <InputField
+          name="name"
+          label="Name (english + local if possible)"
+          type="text"
+          onChange={handleInputChange}
+          value={formDetails.name}
+          control={form_control}
+          rules={{ required: 'Name is required' }}
+        />
 
         <InputField
           name="identification_number"
@@ -99,6 +94,7 @@ export function PatientRegistrationForm({
           type="text"
           onChange={handleInputChange}
           value={formDetails.identification_number}
+          control={form_control}
         />
         <InputField
           name="contact_no"
@@ -107,6 +103,7 @@ export function PatientRegistrationForm({
           type="tel"
           onChange={handleInputChange}
           value={formDetails.contact_no}
+          control={form_control}
         />
         <div>
           <label
@@ -135,12 +132,9 @@ export function PatientRegistrationForm({
           type="date"
           onChange={handleInputChange}
           value={formDetails.date_of_birth}
+          control={form_control}
+          rules={{ required: 'Date of Birth is required' }}
         />
-        {formValidationState.date_of_birth.hasError && (
-          <p className="text-red-500 text-sm">
-            {formValidationState.date_of_birth.message}
-          </p>
-        )}
 
         <div>
           <VenueOptionsDropdown

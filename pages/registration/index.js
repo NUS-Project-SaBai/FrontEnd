@@ -13,7 +13,8 @@ import { Button } from '@/components/TextComponents/';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
-import { useFormValidation } from '@/components/FormValidation';
+import { useCustomFormValidation } from '@/components/CustomFormValidation';
+import { useForm } from 'react-hook-form';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
@@ -36,8 +37,6 @@ const Registration = () => {
   });
 
   const initialValidationState = {
-    name: { hasError: false, message: 'Name is required' },
-    date_of_birth: { hasError: false, message: 'Invalid Date of Birth' },
     village_prefix: { hasError: false, message: 'Village Prefix is required' },
     imageDetails: {
       hasError: false,
@@ -45,12 +44,13 @@ const Registration = () => {
     },
   };
 
+  const { handleSubmit, control, reset } = useForm();
   const {
-    formValidationState,
-    resetFormValidationState,
-    setErrorState,
+    customFormValidationState,
+    resetCustomFormValidationState,
+    setCustomErrorState,
     hasAnyError,
-  } = useFormValidation(initialValidationState);
+  } = useCustomFormValidation(initialValidationState);
 
   useEffect(() => {
     onRefresh();
@@ -69,7 +69,8 @@ const Registration = () => {
   // General functions
 
   function togglePatientModal() {
-    resetFormValidationState();
+    reset();
+    resetCustomFormValidationState();
     setPatientModalOpen(!patientModalOpen);
   }
 
@@ -97,28 +98,15 @@ const Registration = () => {
       'bs2',
     ];
 
-    resetFormValidationState();
+    resetCustomFormValidationState();
     let local_error_state = false;
-    if (formDetails.name == '') {
-      setErrorState('name');
-      local_error_state = true;
-    }
-
-    if (
-      formDetails['date_of_birth'].length !== 10 &&
-      formDetails['date_of_birth'].length !== 0
-    ) {
-      setErrorState('date_of_birth');
-      local_error_state = true;
-    }
-
     if (formDetails.village_prefix == '') {
-      setErrorState('village_prefix');
+      setCustomErrorState('village_prefix');
       local_error_state = true;
     }
 
     if (imageDetails == null) {
-      setErrorState('imageDetails');
+      setCustomErrorState('imageDetails');
       local_error_state = true;
     }
 
@@ -188,14 +176,15 @@ const Registration = () => {
       <CustomModal
         isOpen={patientModalOpen}
         onRequestClose={togglePatientModal}
-        onSubmit={submitNewPatient}
+        onSubmit={handleSubmit(submitNewPatient, submitNewPatient)}
       >
         <PatientRegistrationForm
           formDetails={formDetails}
-          formValidationState={formValidationState}
+          formValidationState={customFormValidationState}
           imageDetails={imageDetails}
           setImageDetails={setImageDetails}
           handleInputChange={handleInputChange}
+          form_control={control}
         />
       </CustomModal>
       <div>
