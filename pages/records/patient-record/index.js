@@ -147,7 +147,7 @@ const PatientRecord = () => {
   }
 
   const handleVisitChange = useCallback(event => {
-    const visitID = event.target.value;
+    const visitID = Number(event.target.value);
     loadVisitDetails(visitID);
   }, []);
 
