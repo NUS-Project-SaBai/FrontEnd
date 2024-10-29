@@ -17,14 +17,20 @@ export function InputField({
 
   // Get the controller methods for this field
   const {
-    field: { field_onChange, onBlur, field_value, ref },
-    fieldState: { error }, // Capture error from the field state
+    field,
+    fieldState, // Capture error from the field state
+    formState,
   } = useController({
     name,
     control,
     rules,
-    defaultValue, // Default value for the field
+    defaultValue, // Default value for the field,
   });
+
+  const combinedOnChange = event => {
+    field.onChange(event.target.value); // data send back to hook form
+    onChange(event); // UI state
+  };
 
   function numberOnChangeInterceptor(e) {
     const data = e.nativeEvent.data;
@@ -34,7 +40,7 @@ export function InputField({
       RegExp(/[0-9]/).test(data) ||
       (allowNegativeNumbers && data === '-' && e.target.value === '-')
     ) {
-      onChange(e);
+      combinedOnChange(e);
     }
   }
 
@@ -54,7 +60,9 @@ export function InputField({
           name={name}
           type={isNumberField ? 'text' : type}
           value={value}
-          onChange={isNumberField ? numberOnChangeInterceptor : onChange}
+          onChange={
+            isNumberField ? numberOnChangeInterceptor : combinedOnChange
+          }
           className="flex-1 block w-full rounded-md border-2 py-1.5 px-1.5 bg-white text-gray-900  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
         />
         {unit && (
@@ -64,7 +72,9 @@ export function InputField({
         )}
       </div>
       {/* Display error message if validation fails */}
-      {error && <p className="text-red-500 text-sm">{error.message}</p>}
+      {fieldState.error && (
+        <p className="text-red-500 text-sm">{fieldState.error.message}</p>
+      )}
     </div>
   );
 }

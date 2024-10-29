@@ -49,6 +49,8 @@ const Registration = () => {
     }
   });
 
+  const { handleSubmit, control } = useForm();
+
   // General functions
 
   function togglePatientModal() {
@@ -158,19 +160,20 @@ const Registration = () => {
       console.error('Error creating new visit:', error);
     }
   });
-  const { handleSubmit, control } = useForm();
+
   return (
     <div className="mx-4">
       <CustomModal
         isOpen={patientModalOpen}
         onRequestClose={togglePatientModal}
-        onSubmit={submitNewPatient}
+        onSubmit={handleSubmit(submitNewPatient)}
       >
         <PatientRegistrationForm
           formDetails={formDetails}
           imageDetails={imageDetails}
           setImageDetails={setImageDetails}
           handleInputChange={handleInputChange}
+          form_control={control}
         />
       </CustomModal>
       <div>
