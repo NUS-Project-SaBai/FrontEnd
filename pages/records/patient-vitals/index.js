@@ -235,6 +235,8 @@ const PatientVitals = () => {
             patient={patient}
             visit={visits.find(visit => visit.id === selectedVisitID)}
             onSubmit={submitVitalsForm}
+            vitals={vitals} //pass vitals as prop
+            setVitalsFormDetails={setVitalsFormDetails} //ensure form details can be updated
           />
         </div>
       </div>

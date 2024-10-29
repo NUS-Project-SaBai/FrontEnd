@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   InputField,
@@ -14,7 +14,16 @@ export function VitalsForm({
   onSubmit,
   patient,
   visit,
+  vitals,
+  setVitalsFormDetails,
 }) {
+  // Prefill formDetails with vitals data if it exists
+  useEffect(() => {
+    if (vitals && Object.keys(vitals).length > 0) {
+      setVitalsFormDetails(vitals); // Directly update formDetails with vitals data
+    }
+  }, [vitals, setVitalsFormDetails]);
+
   const vitalFields = [
     {
       name: 'height',
@@ -91,7 +100,7 @@ export function VitalsForm({
         name={field.name}
         label={field.label}
         type={field.type}
-        value={field.value}
+        value={field.value || ''} //use empty string if value is null or undefined
         onChange={handleOnChange}
         unit={field.unit}
       />
@@ -133,7 +142,7 @@ export function VitalsForm({
         name={field.name}
         label={field.label}
         type={field.type}
-        value={field.value}
+        value={field.value || ''}
         onChange={handleOnChange}
         unit={field.unit}
       />
