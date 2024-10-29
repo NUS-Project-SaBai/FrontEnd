@@ -7,6 +7,7 @@ import {
   VitalsTable,
   PrescriptionsTable,
   Header,
+  HeightWeightGraph,
 } from '@/components/records';
 import withAuth from '@/utils/auth';
 import toast from 'react-hot-toast';
@@ -24,7 +25,7 @@ const PatientVitals = () => {
   const [prescriptions, setPrescriptions] = useState([]);
   const [vitals, setVitals] = useState({});
 
-  const [selectedVisit, setSelectedVisit] = useState(null);
+  const [selectedVisitID, setSelectedVisitID] = useState(null);
   const [selectedConsult, setSelectedConsult] = useState({});
 
   const [vitalsFormDetails, setVitalsFormDetails] = useState({
@@ -44,14 +45,25 @@ const PatientVitals = () => {
     systolic: '',
     diastolic: '',
     diabetes_mellitus: '',
+    // children
+    gross_motor: '',
+    red_reflex: '',
+    scoliosis: '',
+    thelarche: '',
+    thelarche_age: '',
+    pubarche: '',
+    pubarche_age: '',
+    menarche: '',
+    menarche_age: '',
+    pallor: '',
+    oral_cavity: '',
+    heart: '',
+    lungs: '',
+    abdomen: '',
+    hernial_orifices: '',
   });
 
   const [CustomModalOpen, setCustomModalOpen] = useState(false);
-
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
 
   useEffect(() => {
     onRefresh();
@@ -93,7 +105,7 @@ const PatientVitals = () => {
       );
 
       setMounted(true);
-      setSelectedVisit(visitID);
+      setSelectedVisitID(visitID);
       setConsults(consults);
       setPrescriptions(prescriptions);
       setVitals(vitals[0] || {});
@@ -103,18 +115,9 @@ const PatientVitals = () => {
     }
   });
 
-  function toggleCustomModal() {
-    setCustomModalOpen(!CustomModalOpen);
-  }
-
-  function selectConsult(consult) {
-    setSelectedConsult(consult);
-    toggleCustomModal();
-  }
-
   const submitVitalsForm = useWithLoading(async () => {
     const formPayload = {
-      visit: selectedVisit,
+      visit: selectedVisitID,
       ...vitalsFormDetails,
     };
     const filteredFormPayload = Object.fromEntries(
@@ -122,7 +125,7 @@ const PatientVitals = () => {
     );
     try {
       await axiosInstance.patch(
-        `/vitals?visit=${selectedVisit}`,
+        `/vitals?visit=${selectedVisitID}`,
         filteredFormPayload
       );
       toast.success('Vitals completed!');
@@ -147,6 +150,20 @@ const PatientVitals = () => {
     }
   });
 
+  function toggleCustomModal() {
+    setCustomModalOpen(!CustomModalOpen);
+  }
+
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleCustomModal();
+  }
+
+  const handleVisitChange = useCallback(event => {
+    const value = event.target.value;
+    loadVisitDetails(value);
+  }, []);
+
   function handleVitalsFormOnChange(e) {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -158,77 +175,71 @@ const PatientVitals = () => {
     }));
   }
 
-  function renderHeader() {
-    return (
+  if (!mounted) return null;
+
+  return (
+    <div className="mt-7.5 mx-6 overflow-hidden">
+      <CustomModal isOpen={CustomModalOpen} onRequestClose={toggleCustomModal}>
+        <ConsultationView consult={selectedConsult} />
+      </CustomModal>
+      <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
+        Patient Vitals
+      </h1>
       <Header
         patient={patient}
         visits={visits}
         handleVisitChange={handleVisitChange}
       />
-    );
-  }
+      <b>Please remember to press the submit button at the end of the form!</b>
 
-  function renderFirstColumn() {
-    return (
-      <div className="space-y-4">
-        {typeof vitals === 'undefined' ? (
-          <>
-            <label className="label">Vital Signs</label>
-            <h2>Not Done</h2>
-          </>
-        ) : (
-          <VitalsTable vitals={vitals} />
-        )}
+      <hr />
 
-        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
+      <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
+        {/*Left Column*/}
+        <div className="space-y-4">
+          {typeof vitals === 'undefined' ? (
+            <>
+              <label className="label">Vital Signs</label>
+              <h2>Not Done</h2>
+            </>
+          ) : (
+            <VitalsTable
+              vitals={vitals}
+              patient={patient}
+              visit={visits.find(visit => visit.id === selectedVisitID)}
+            />
+          )}
 
-        <PrescriptionsTable prescriptions={prescriptions} />
-      </div>
-    );
-  }
+          <ConsultationsTable
+            consults={consults}
+            buttonOnClick={selectConsult}
+          />
 
-  function renderSecondColumn() {
-    return (
-      <div className="space-y-2">
-        <VitalsForm
-          formDetails={vitalsFormDetails}
-          handleOnChange={handleVitalsFormOnChange}
-          patient={patient}
-          onSubmit={submitVitalsForm}
-        />
-      </div>
-    );
-  }
-
-  function render() {
-    if (!mounted) return null;
-
-    return (
-      <div className="mt-7.5 mx-6 overflow-hidden">
-        <CustomModal
-          isOpen={CustomModalOpen}
-          onRequestClose={toggleCustomModal}
-        >
-          <ConsultationView consult={selectedConsult} />
-        </CustomModal>
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Vitals
-        </h1>
-        {renderHeader()}
-        <b>
-          Please remember to press the submit button at the end of the form!
-        </b>
-
-        <hr />
-
-        <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
+          <PrescriptionsTable prescriptions={prescriptions} />
+          <HeightWeightGraph
+            age={
+              new Date(
+                visits.find(visit => visit.id === selectedVisitID).date
+              ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+            }
+            weight={vitals.weight}
+            height={vitals.height}
+            gender={patient.gender}
+          />
+        </div>
+        {/*Right Column*/}
+        <div className="space-y-2">
+          <VitalsForm
+            formDetails={vitalsFormDetails}
+            handleOnChange={handleVitalsFormOnChange}
+            patient={patient}
+            visit={visits.find(visit => visit.id === selectedVisitID)}
+            onSubmit={submitVitalsForm}
+          />
         </div>
       </div>
-    );
-  }
-  return render();
+    </div>
+  );
 };
 
 export default withAuth(PatientVitals);

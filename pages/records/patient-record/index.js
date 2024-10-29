@@ -6,6 +6,7 @@ import {
   Header,
   PatientView,
   PrescriptionsTable,
+  HeightWeightGraph,
 } from '@/components/records';
 import { PatientRegistrationForm } from '@/components/registration';
 import Router from 'next/router';
@@ -24,9 +25,9 @@ const PatientRecord = () => {
   const [patientEdit, setPatientEdit] = useState({});
   const [visits, setVisits] = useState([]);
   const [vitals, setVitals] = useState({});
-
   const [consults, setConsults] = useState([]);
   const [selectedConsult, setSelectedConsult] = useState(null);
+  const [selectedVisitID, setSelectedVisitID] = useState(null);
 
   const [prescriptions, setPrescriptions] = useState([]);
 
@@ -35,19 +36,6 @@ const PatientRecord = () => {
   const [editPatientModalOpen, setEditPatientModalOpen] = useState(false);
 
   const [imageDetails, setImageDetails] = useState(null);
-
-  const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
-
-  const handlePatientChange = event => {
-    const newPatientDetails = {
-      ...patient,
-      [event.target.name]: event.target.value,
-    };
-    setPatientEdit(newPatientDetails);
-  };
 
   useEffect(() => {
     onRefresh();
@@ -92,29 +80,12 @@ const PatientRecord = () => {
       setConsults(consults);
       setPrescriptions(prescriptions);
       setVitals(vitals[0] || {});
+      setSelectedVisitID(visitID);
     } catch (error) {
       toast.error(`Error loading visit details: ${error.message}`);
       console.error('Error loading visit details:', error);
     }
   });
-
-  function toggleVitalsModal() {
-    setVitalsModalOpen(!vitalsModalOpen);
-  }
-
-  function toggleConsultationModal() {
-    setConsultationModalOpen(!consultationModalOpen);
-  }
-
-  function toggleEditPatientModal() {
-    setPatientEdit(patient);
-    setEditPatientModalOpen(!editPatientModalOpen);
-  }
-
-  function selectConsult(consult) {
-    setSelectedConsult(consult);
-    toggleConsultationModal();
-  }
 
   const submitPatientEdit = useWithLoading(async () => {
     if (!patientEdit.name) {
@@ -157,7 +128,38 @@ const PatientRecord = () => {
     onRefresh();
   });
 
-  function FirstColumn() {
+  function toggleVitalsModal() {
+    setVitalsModalOpen(!vitalsModalOpen);
+  }
+
+  function toggleConsultationModal() {
+    setConsultationModalOpen(!consultationModalOpen);
+  }
+
+  function toggleEditPatientModal() {
+    setPatientEdit(patient);
+    setEditPatientModalOpen(!editPatientModalOpen);
+  }
+
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleConsultationModal();
+  }
+
+  const handleVisitChange = useCallback(event => {
+    const visitID = event.target.value;
+    loadVisitDetails(visitID);
+  }, []);
+
+  const handlePatientChange = event => {
+    const newPatientDetails = {
+      ...patient,
+      [event.target.name]: event.target.value,
+    };
+    setPatientEdit(newPatientDetails);
+  };
+
+  function LeftColumn() {
     if (typeof vitals === 'undefined') {
       return (
         <div className="my-2">
@@ -175,7 +177,7 @@ const PatientRecord = () => {
             colour="indigo"
           />
           <Button
-            text={'Edit Paitent Details'}
+            text={'Edit Patient Details'}
             onClick={() => toggleEditPatientModal()}
             colour="green"
           />
@@ -185,11 +187,21 @@ const PatientRecord = () => {
     );
   }
 
-  function SecondColumn() {
+  function RightColumn() {
     return (
       <div className="space-y-8">
         <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
         <PrescriptionsTable prescriptions={prescriptions} />
+        <HeightWeightGraph
+          age={
+            new Date(
+              visits.find(visit => visit.id === selectedVisitID).date
+            ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+          }
+          weight={vitals.weight}
+          height={vitals.height}
+          gender={patient.gender}
+        />
       </div>
     );
   }
@@ -207,7 +219,11 @@ const PatientRecord = () => {
   return (
     <div className="mx-6 overflow-hidden">
       <CustomModal isOpen={vitalsModalOpen} onRequestClose={toggleVitalsModal}>
-        <VitalsTable vitals={vitals} />
+        <VitalsTable
+          vitals={vitals}
+          patient={patient}
+          visit={visits.find(visit => visit.id === selectedVisitID)}
+        />
       </CustomModal>
 
       <CustomModal
@@ -237,8 +253,8 @@ const PatientRecord = () => {
       />
       <hr className="mt-2" />
       <div className="grid grid-cols-2 gap-x-6">
-        <FirstColumn />
-        <SecondColumn />
+        <LeftColumn />
+        <RightColumn />
       </div>
     </div>
   );

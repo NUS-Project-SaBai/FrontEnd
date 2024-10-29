@@ -47,7 +47,7 @@ export function ConsultationForm({
           name="details"
           label={`Diagnosis ${index + 1}`}
           type="text"
-          value={formDetails.details}
+          value={diagnosis.details}
           onChange={e => handleDiagnosisChange(e, index)}
           placeholder="Type your notes here..."
         />
@@ -56,11 +56,13 @@ export function ConsultationForm({
           className={`border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4 ${
             diagnosis.category === 'Please select...' ? 'bg-red-100' : ''
           }`}
-          name="type"
+          name="category"
           onChange={e => handleDiagnosisChange(e, index)}
           value={diagnosis.category}
         >
-          <option>Please select...</option>
+          <option disabled selected>
+            Please select...
+          </option>
           {diagnosisOptions.map((option, optionIndex) => (
             <option key={optionIndex} value={option}>
               {option}

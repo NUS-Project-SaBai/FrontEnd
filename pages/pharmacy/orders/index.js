@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import { CLOUDINARY_URL } from '@/utils/constants';
 import withAuth from '@/utils/auth';
 import { Button, InputField, PageTitle } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
@@ -61,9 +60,10 @@ const Orders = () => {
 
   const onFilterChange = event => {
     const filteredOrders = orders.filter(order => {
-      return order.visit.patient.filter_string.includes(
-        event.target.value.toUpperCase()
-      );
+      return order.visit.patient.filter_string
+        .toLowerCase()
+        .trim()
+        .includes(event.target.value.toLowerCase().trim());
     });
     setOrdersFiltered(filteredOrders);
   };
@@ -97,7 +97,7 @@ const Orders = () => {
           </td>
           <td className="whitespace-nowrap px-3 py-4">
             <img
-              src={`${CLOUDINARY_URL}/${visit.patient.picture}`}
+              src={visit.patient.picture}
               alt="Patient"
               className="object-cover h-28 w-28 rounded-lg"
             />

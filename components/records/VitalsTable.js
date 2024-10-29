@@ -1,10 +1,14 @@
 import { DisplayField } from '@/components/TextComponents';
 
-export function VitalsTable({ vitals }) {
+export function VitalsTable({ vitals, patient, visit }) {
   const isBloodPressureHigh = vitals.systolic > 140 || vitals.diastolic > 90;
   const isBloodPressureLow = vitals.systolic < 90 || vitals.diastolic < 60;
   const shouldHighlightBloodPressure =
     isBloodPressureHigh || isBloodPressureLow;
+
+  const patientAgeVisit =
+    new Date(visit.date).getFullYear() -
+    new Date(patient.date_of_birth).getFullYear();
 
   const vitalFields = [
     {
@@ -31,20 +35,95 @@ export function VitalsTable({ vitals }) {
   ];
 
   const childrenVitalFields = [
-    { label: 'Gross Motor', value: vitals.gross_motor },
-    { label: 'Red Reflex', value: vitals.red_reflex },
-    { label: 'Scoliosis', value: vitals.scoliosis },
-    { label: 'Thelarche', value: vitals.thelarche },
-    { label: 'Thelarche Age', value: vitals.thelarche_age },
-    { label: 'Pubarche', value: vitals.pubarche },
-    { label: 'Pubarche Age', value: vitals.pubarche_age },
-    { label: 'Menarche', value: vitals.menarche },
-    { label: 'Menarche Age', value: vitals.menarche_age },
-    { label: 'Pallor', value: vitals.pallor },
-    { label: 'Oral Cavity', value: vitals.oral_cavity },
-    { label: 'Heart', value: vitals.heart },
-    { label: 'Lungs', value: vitals.lungs },
-    { label: 'Hernial Orifices', value: vitals.hernial_orifices },
+    {
+      label: 'Gross Motor',
+      value: vitals.gross_motor,
+      ageToTest: [4, 5, 6],
+    },
+    { label: 'Red Reflex', value: vitals.red_reflex, ageToTest: [4, 5, 6] },
+    {
+      label: 'Scoliosis',
+      value: vitals.scoliosis,
+      ageToTest: [13, 14, 15, 16],
+    },
+    { label: 'Pallor', value: vitals.pallor, ageToTest: [4, 5, 7, 8, 11, 12] },
+    {
+      label: 'Oral Cavity',
+      value: vitals.oral_cavity,
+      ageToTest: [4, 5, 7, 8, 11, 12],
+    },
+    { label: 'Heart', value: vitals.heart, ageToTest: [4, 5, 7, 8, 11, 12] },
+    { label: 'Lungs', value: vitals.lungs, ageToTest: [4, 5, 7, 8, 11, 12] },
+    {
+      label: 'Abdomen',
+      value: vitals.abdomen,
+      ageToTest: [4, 5, 7, 8, 11, 12],
+    },
+    {
+      label: 'Hernial Orifices',
+      value: vitals.hernial_orifices,
+      ageToTest: [4, 5, 7, 8],
+    },
+  ];
+  const PubertyFields = [
+    {
+      label: 'Pubarche',
+      value: vitals.pubarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+    },
+    {
+      label: 'Pubarche Age',
+      value: vitals.pubarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+    },
+    {
+      label: 'Thelarche',
+      value: vitals.thelarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Thelarche Age',
+      value: vitals.thelarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Menarche',
+      value: vitals.menarche,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Menarche Age',
+      value: vitals.menarche_age,
+      ageToTest: [13, 14, 15, 16, 17, 18],
+      gender: 'Female',
+    },
+    {
+      label: 'Voice Change',
+      value: vitals.voice_change,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Voice Change Age',
+      value: vitals.voice_change_age,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Testicular Growth >= 4ml',
+      value: vitals.testicular_growth,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
+    {
+      label: 'Testicular Growth Age',
+      value: vitals.testicular_growth_age,
+      ageToTest: [13, 14, 15, 16],
+      gender: 'Male',
+    },
   ];
 
   function renderTableField(field, index) {
@@ -61,6 +140,7 @@ export function VitalsTable({ vitals }) {
       />
     );
   }
+  console.log(patientAgeVisit);
 
   return (
     <form className="">
@@ -83,11 +163,27 @@ export function VitalsTable({ vitals }) {
         <div className="grid gap-6 md:grid-cols-2">
           {vitalFields.map((field, index) => renderTableField(field, index))}
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {childrenVitalFields.map((field, index) =>
-            renderTableField(field, index)
-          )}
-        </div>
+
+        {patientAgeVisit <= 18 && patientAgeVisit >= 4 && (
+          <div>
+            <div className="grid gap-6 md:grid-cols-2">
+              {childrenVitalFields
+                .filter((field, _) => {
+                  return field.ageToTest.includes(patientAgeVisit);
+                })
+                .map((field, index) => renderTableField(field, index))}
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              {PubertyFields.filter((field, _) => {
+                return (
+                  field.ageToTest.includes(patientAgeVisit) &&
+                  (field.gender ? field.gender === patient.gender : true)
+                );
+              }).map((field, index) => renderTableField(field, index))}
+            </div>
+          </div>
+        )}
       </div>
     </form>
   );

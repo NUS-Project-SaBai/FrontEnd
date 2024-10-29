@@ -1,7 +1,5 @@
 // export const API_URL = "https://projectsabai-vza8.onrender.com";
 
-export const CLOUDINARY_URL = 'https://res.cloudinary.com/dlusodadw';
-
 export const defaultAPI_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -29,6 +27,8 @@ export const VENUE_OPTIONS = {
   TK: 'TK',
   SV: 'Smong',
 };
+
+export const OFFLINE = process.env.NEXT_PUBLIC_OFFLINE || false;
 
 export const VILLAGE_COLOR_CLASSES = {
   PC: 'text-red-300 font-bold',
