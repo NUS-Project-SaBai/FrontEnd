@@ -31,6 +31,7 @@ const Registration = () => {
     gender: 'Unspecified',
     poor: 'No',
     bs2: 'No',
+    sabai: 'No',
     village_prefix: '',
   });
 
@@ -76,6 +77,7 @@ const Registration = () => {
       'village_prefix',
       'poor',
       'bs2',
+      'sabai',
     ];
 
     if (formDetails.name == '') {
