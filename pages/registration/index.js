@@ -14,7 +14,7 @@ import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
 import { useCustomFormValidation } from '@/components/CustomFormValidation';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
@@ -44,7 +44,9 @@ const Registration = () => {
     },
   };
 
-  const { handleSubmit, control, reset } = useForm();
+  const methods = useForm();
+  const { control, handleSubmit, reset } = methods;
+
   const {
     customFormValidationState,
     resetCustomFormValidationState,
@@ -100,10 +102,6 @@ const Registration = () => {
 
     resetCustomFormValidationState();
     let local_error_state = false;
-    if (formDetails.village_prefix == '') {
-      setCustomErrorState('village_prefix');
-      local_error_state = true;
-    }
 
     if (imageDetails == null) {
       setCustomErrorState('imageDetails');
@@ -173,44 +171,46 @@ const Registration = () => {
 
   return (
     <div className="mx-4">
-      <CustomModal
-        isOpen={patientModalOpen}
-        onRequestClose={togglePatientModal}
-        onSubmit={handleSubmit(submitNewPatient, submitNewPatient)}
-      >
-        <PatientRegistrationForm
-          formDetails={formDetails}
-          formValidationState={customFormValidationState}
-          imageDetails={imageDetails}
-          setImageDetails={setImageDetails}
-          handleInputChange={handleInputChange}
-          form_control={control}
-        />
-      </CustomModal>
-      <div>
-        <div>
-          <PageTitle title="Registration" desc="" />
-          <div className="flex items-center justify-center mb-2 w-full">
-            <RegistrationAutoSuggest
-              patientsList={patientsList}
-              setPatient={setPatient}
-            />
-          </div>
-          <div className="flex items-center justify-center mb-6 gap-3">
-            <Button
-              colour="green"
-              text="New Patient"
-              onClick={() => {
-                setPatientModalOpen(true);
-              }}
-            />
-          </div>
-          <PatientInfo
-            patient={patient}
-            submitNewVisit={() => submitNewVisit(patient)}
+      <FormProvider {...methods}>
+        <CustomModal
+          isOpen={patientModalOpen}
+          onRequestClose={togglePatientModal}
+          onSubmit={handleSubmit(submitNewPatient, submitNewPatient)}
+        >
+          <PatientRegistrationForm
+            formDetails={formDetails}
+            formValidationState={customFormValidationState}
+            imageDetails={imageDetails}
+            setImageDetails={setImageDetails}
+            handleInputChange={handleInputChange}
+            form_control={control}
           />
+        </CustomModal>
+        <div>
+          <div>
+            <PageTitle title="Registration" desc="" />
+            <div className="flex items-center justify-center mb-2 w-full">
+              <RegistrationAutoSuggest
+                patientsList={patientsList}
+                setPatient={setPatient}
+              />
+            </div>
+            <div className="flex items-center justify-center mb-6 gap-3">
+              <Button
+                colour="green"
+                text="New Patient"
+                onClick={() => {
+                  setPatientModalOpen(true);
+                }}
+              />
+            </div>
+            <PatientInfo
+              patient={patient}
+              submitNewVisit={() => submitNewVisit(patient)}
+            />
+          </div>
         </div>
-      </div>
+      </FormProvider>
     </div>
   );
 };

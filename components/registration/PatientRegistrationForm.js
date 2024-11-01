@@ -1,54 +1,7 @@
 import { Button, InputField, InputBox } from '@/components/TextComponents';
-import { VENUE_OPTIONS, VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 import AppWebcam from '@/components/WebCamera';
 import React, { useState } from 'react';
-
-export const VenueOptionsDropdown = ({
-  handleInputChange,
-  current_selection,
-}) => {
-  const handleDropdownChangeWithStyle = event => {
-    const selectedValue = event.target.value;
-    event.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
-      VILLAGE_COLOR_CLASSES[selectedValue] || 'text-gray-500'
-    }`;
-    handleInputChange(event);
-  };
-
-  return (
-    <div>
-      <label
-        htmlFor="village_prefix"
-        className="block text-sm font-medium leading-6 text-gray-900"
-      >
-        Village
-        <span className="text-red-500">*</span> {/* indicate required */}
-      </label>
-      <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
-        <select
-          name="village_prefix"
-          id="village_prefix"
-          onChange={handleDropdownChangeWithStyle}
-          defaultValue={current_selection}
-          className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-        >
-          <option hidden value="">
-            Please select an option
-          </option>
-          {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
-            <option
-              className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
-              value={key}
-              key={key}
-            >
-              {value}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-};
+import { VenueOptionsDropdown } from './VenueOptionsDropdown';
 
 export function PatientRegistrationForm({
   formDetails,
@@ -137,15 +90,7 @@ export function PatientRegistrationForm({
         />
 
         <div>
-          <VenueOptionsDropdown
-            handleInputChange={handleInputChange}
-            current_selection={formDetails.village_prefix}
-          />
-          {formValidationState.village_prefix.hasError && (
-            <p className="text-red-500 text-sm">
-              {formValidationState.village_prefix.message}
-            </p>
-          )}
+          <VenueOptionsDropdown />
         </div>
 
         <div>
