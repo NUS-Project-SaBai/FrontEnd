@@ -58,7 +58,7 @@ export function ConsultationForm({
           }`}
           name="category"
           onChange={e => handleDiagnosisChange(e, index)}
-          value={diagnosis.category || 'nil'}
+          value={diagnosis.category || 'nil'} // the 'nil' switch is there for a bug where if there are 2 diagnoses, and the first has a selected category and the second doesn't, but you delete the first, the category of the first overrides the empty category of the second: https://github.com/NUS-Project-SaBai/FrontEnd/pull/242
         >
           <option disabled value="nil">
             Please select...
