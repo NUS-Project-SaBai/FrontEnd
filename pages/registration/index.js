@@ -15,6 +15,7 @@ import { Button } from '@/components/TextComponents/';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
+import { REGISTRATION_FORM_FIELDS } from '@/utils/constants';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
@@ -31,17 +32,7 @@ const Registration = () => {
 
   const [scanSuggestionsList, setScanSuggestionsList] = useState([]);
 
-  const [formDetails, setFormDetails] = useState({
-    name: '',
-    identification_number: '',
-    contact_no: '',
-    date_of_birth: '',
-    drug_allergy: '',
-    gender: 'Unspecified',
-    poor: 'No',
-    bs2: 'No',
-    village_prefix: '',
-  });
+  const [formDetails, setFormDetails] = useState(REGISTRATION_FORM_FIELDS);
 
   useEffect(() => {
     onRefresh();
@@ -154,6 +145,7 @@ const Registration = () => {
       toast.error(`Error creating new patient: ${error.message}`);
       console.error('Error creating new patient:', error);
     }
+    setFormDetails(REGISTRATION_FORM_FIELDS);
   });
 
   const submitScan = useWithLoading(async () => {
