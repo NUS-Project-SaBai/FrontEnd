@@ -6,8 +6,10 @@ import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import {
   PatientRegistrationForm,
+  PatientScanForm,
   PatientInfo,
   RegistrationAutoSuggest,
+  RegistrationScanSuggest,
 } from '@/components/registration';
 import { Button } from '@/components/TextComponents/';
 import useWithLoading from '@/utils/loading';
@@ -17,11 +19,18 @@ import { REGISTRATION_FORM_FIELDS } from '@/utils/constants';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
+
   const [patient, setPatient] = useState({});
 
   const [patientModalOpen, setPatientModalOpen] = useState(false);
 
   const [imageDetails, setImageDetails] = useState(null);
+
+  const [scanModalOpen, setScanModalOpen] = useState(false);
+
+  const [scanImageDetails, setScanImageDetails] = useState(null);
+
+  const [scanSuggestionsList, setScanSuggestionsList] = useState([]);
 
   const [formDetails, setFormDetails] = useState(REGISTRATION_FORM_FIELDS);
 
@@ -43,6 +52,10 @@ const Registration = () => {
 
   function togglePatientModal() {
     setPatientModalOpen(!patientModalOpen);
+  }
+
+  function toggleScanModal() {
+    setScanModalOpen(!scanModalOpen);
   }
 
   const handleInputChange = event => {
@@ -136,6 +149,40 @@ const Registration = () => {
     setFormDetails(REGISTRATION_FORM_FIELDS);
   });
 
+  const submitScan = useWithLoading(async () => {
+    if (scanImageDetails == null) {
+      toast.error('Please take a photo before submitting!');
+      return;
+    }
+
+    try {
+      const scanFormData = new FormData();
+      scanFormData.append(
+        'picture',
+        await urltoFile(scanImageDetails, 'patient_screenshot.jpg', 'image/jpg')
+      );
+
+      const { data: response } = await axiosInstance.post(
+        '/patients/search_face',
+        scanFormData
+      );
+
+      console.log(response.length);
+      if (response.length == 0) {
+        toast.error('Patient does not exist!');
+        return;
+      }
+      toast.success('Patient Found!');
+
+      setScanSuggestionsList(response);
+
+      setScanImageDetails(null);
+    } catch (error) {
+      toast.error(`Error scanning face: ${error.meesage}`);
+      console.error('Error scanning face:', error);
+    }
+  });
+
   const submitNewVisit = useWithLoading(async patient => {
     try {
       const payload = {
@@ -165,6 +212,22 @@ const Registration = () => {
           handleInputChange={handleInputChange}
         />
       </CustomModal>
+
+      <CustomModal
+        isOpen={scanModalOpen}
+        onRequestClose={toggleScanModal}
+        onSubmit={submitScan}
+      >
+        <PatientScanForm
+          imageDetails={scanImageDetails}
+          setImageDetails={setScanImageDetails}
+        />
+        <RegistrationScanSuggest
+          setPatient={setPatient}
+          setScanModalOpen={setScanModalOpen}
+          suggestionList={scanSuggestionsList}
+        />
+      </CustomModal>
       <div>
         <div>
           <PageTitle title="Registration" desc="" />
@@ -180,6 +243,13 @@ const Registration = () => {
               text="New Patient"
               onClick={() => {
                 setPatientModalOpen(true);
+              }}
+            />
+            <Button
+              colour="green"
+              text="Scan Face"
+              onClick={() => {
+                setScanModalOpen(true);
               }}
             />
           </div>
