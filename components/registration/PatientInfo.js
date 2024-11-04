@@ -63,6 +63,13 @@ export function PatientInfo({ patient, submitNewVisit }) {
           </div>
         ))}
       </div>
+      <div className="flex justify-center items-center space-x-4 mt-4">
+        <Button
+          text="Create New Visit"
+          onClick={submitNewVisit}
+          colour="green"
+        />
+      </div>
       <br />
       <Button text="Create New Visit" onClick={submitNewVisit} colour="green" />
     </div>
