@@ -67,6 +67,7 @@ const Registration = () => {
       'village_prefix',
       'poor',
       'bs2',
+      'sabai',
     ];
 
     if (formDetails.name == '') {

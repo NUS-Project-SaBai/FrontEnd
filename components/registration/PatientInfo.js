@@ -21,6 +21,7 @@ export function PatientInfo({ patient, submitNewVisit }) {
     { label: 'Village', key: 'village_prefix' },
     { label: 'POOR', key: 'poor' },
     { label: 'BS2', key: 'bs2' },
+    { label: 'Sabai Card', key: 'sabai' },
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 
@@ -69,6 +70,8 @@ export function PatientInfo({ patient, submitNewVisit }) {
           colour="green"
         />
       </div>
+      <br />
+      <Button text="Create New Visit" onClick={submitNewVisit} colour="green" />
     </div>
   );
 }
