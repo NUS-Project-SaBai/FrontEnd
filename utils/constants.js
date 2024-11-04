@@ -47,5 +47,6 @@ export const REGISTRATION_FORM_FIELDS = {
   gender: 'Unspecified',
   poor: 'No',
   bs2: 'No',
+  sabai: 'No',
   village_prefix: '',
 };
