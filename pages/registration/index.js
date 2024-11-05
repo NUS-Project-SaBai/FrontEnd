@@ -15,6 +15,7 @@ import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
 import { useCustomFormValidation } from '@/components/CustomFormValidation';
 import { FormProvider, useForm } from 'react-hook-form';
+import { REGISTRATION_FORM_FIELDS } from '@/utils/constants';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
@@ -24,17 +25,7 @@ const Registration = () => {
 
   const [imageDetails, setImageDetails] = useState(null);
 
-  const [formDetails, setFormDetails] = useState({
-    name: '',
-    identification_number: '',
-    contact_no: '',
-    date_of_birth: '',
-    drug_allergy: '',
-    gender: 'Unspecified',
-    poor: 'No',
-    bs2: 'No',
-    village_prefix: '',
-  });
+  const [formDetails, setFormDetails] = useState(REGISTRATION_FORM_FIELDS);
 
   const initialValidationState = {
     village_prefix: { hasError: false, message: 'Village Prefix is required' },
@@ -152,6 +143,7 @@ const Registration = () => {
       toast.error(`Error creating new patient: ${error.message}`);
       console.error('Error creating new patient:', error);
     }
+    setFormDetails(REGISTRATION_FORM_FIELDS);
   });
 
   const submitNewVisit = useWithLoading(async patient => {

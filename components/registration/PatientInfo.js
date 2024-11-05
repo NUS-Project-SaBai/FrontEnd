@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 
 import { DisplayField, Button } from '@/components/TextComponents/';
-import { CLOUDINARY_URL, OFFLINE, defaultAPI_URL } from '@/utils/constants';
 
 export function PatientInfo({ patient, submitNewVisit }) {
   if (!patient.pk) {
@@ -25,11 +24,7 @@ export function PatientInfo({ patient, submitNewVisit }) {
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 
-  const imageUrl = OFFLINE
-    ? `${defaultAPI_URL}/${patient.offline_picture}`
-    : `${CLOUDINARY_URL}/${patient.picture}`;
-
-  console.log(OFFLINE);
+  const imageUrl = patient.picture;
 
   return (
     <div>
@@ -66,7 +61,8 @@ export function PatientInfo({ patient, submitNewVisit }) {
             />
           </div>
         ))}
-
+      </div>
+      <div className="flex justify-center items-center space-x-4 mt-4">
         <Button
           text="Create New Visit"
           onClick={submitNewVisit}

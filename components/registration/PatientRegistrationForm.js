@@ -3,7 +3,7 @@ import AppWebcam from '@/components/WebCamera';
 import React, { useState } from 'react';
 // import { VenueOptionsDropdown } from './VenueOptionsDropdown';
 
-export const VenueOptionsDropdown = () => {
+export const VenueOptionsDropdown = ({ handleInputChange }) => {
   const {
     field: { value, onChange },
     fieldState: { error },
@@ -12,12 +12,9 @@ export const VenueOptionsDropdown = () => {
     rules: { required: 'Village is required' },
   });
 
-  const handleDropdownChangeWithStyle = event => {
-    const selectedValue = event.target.value;
-    event.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
-      VILLAGE_COLOR_CLASSES[selectedValue] || 'text-gray-500'
-    }`;
-    onChange(event);
+  const combinedOnChange = e => {
+    handleInputChange(e);
+    onChange(e);
   };
 
   return (
@@ -33,9 +30,9 @@ export const VenueOptionsDropdown = () => {
         <select
           name="village_prefix"
           id="village_prefix"
-          onChange={handleDropdownChangeWithStyle}
-          defaultValue={value}
-          className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          onChange={combinedOnChange}
+          value={value}
+          className={`flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${VILLAGE_COLOR_CLASSES[value] || 'text-gray-500'}`}
         >
           <option hidden value="">
             Please select an option
@@ -118,11 +115,11 @@ export function PatientRegistrationForm({
           >
             Gender
           </label>
-          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
+          <div className="flex mt-1 rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
             <select
               name="gender"
               onChange={handleInputChange}
-              defaultValue="Unspecified"
+              value={formDetails.gender}
               className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
             >
               <option value="Male">Male</option>
@@ -142,9 +139,10 @@ export function PatientRegistrationForm({
           rules={{ required: 'Date of Birth is required' }}
         />
 
-        <div>
-          <VenueOptionsDropdown />
-        </div>
+        <VenueOptionsDropdown
+          handleInputChange={handleInputChange}
+          value={formDetails.village_prefix}
+        />
 
         <div>
           <label
@@ -158,7 +156,7 @@ export function PatientRegistrationForm({
               className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
               name="poor"
               onChange={handleInputChange}
-              defaultValue="No"
+              value={formDetails.poor}
             >
               <option value="No">No</option>
               <option value="Yes">Yes</option>
@@ -178,7 +176,7 @@ export function PatientRegistrationForm({
               className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
               name="bs2"
               onChange={handleInputChange}
-              defaultValue="No"
+              value={formDetails.bs2}
             >
               <option value="No">No</option>
               <option value="Yes">Yes</option>

@@ -2,7 +2,7 @@ import { VENUE_OPTIONS, VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 import React from 'react';
 import { useController } from 'react-hook-form';
 
-export const VenueOptionsDropdown = () => {
+export const VenueOptionsDropdown = ({ handleInputChange }) => {
   const {
     field: { value, onChange },
     fieldState: { error },
@@ -11,12 +11,9 @@ export const VenueOptionsDropdown = () => {
     rules: { required: 'Village is required' },
   });
 
-  const handleDropdownChangeWithStyle = event => {
-    const selectedValue = event.target.value;
-    event.target.className = `flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
-      VILLAGE_COLOR_CLASSES[selectedValue] || 'text-gray-500'
-    }`;
-    onChange(event);
+  const combinedOnChange = e => {
+    handleInputChange(e);
+    onChange(e);
   };
 
   return (
@@ -32,9 +29,9 @@ export const VenueOptionsDropdown = () => {
         <select
           name="village_prefix"
           id="village_prefix"
-          onChange={handleDropdownChangeWithStyle}
-          defaultValue={value}
-          className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          onChange={combinedOnChange}
+          value={value}
+          className={`flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${VILLAGE_COLOR_CLASSES[value] || 'text-gray-500'}`}
         >
           <option hidden value="">
             Please select an option
