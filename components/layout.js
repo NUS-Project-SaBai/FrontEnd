@@ -10,7 +10,8 @@ function Layout(props) {
   const [displaySideBar, setDisplaySideBar] = useState(true);
 
   useEffect(() => {
-    const mql = window.matchMedia('(min-width: 800px)');
+    // 768px is tailwind breakpoint for md
+    const mql = window.matchMedia('(min-width: 768px)');
     const mediaQueryChanged = () => {
       setSidebarDocked(mql.matches);
       setSidebarOpen(false);
@@ -39,22 +40,21 @@ function Layout(props) {
         onSetOpen={onSetSidebarOpen}
         transitions={false}
         suppressHydrationWarning={true}
+        sidebarClassName="bg-gray-900"
       >
-        <div className="relative h-full">
+        <div>
           {!sidebarOpen && (
-            <>
-              <div
-                className="absolute top-1/2 left-0 transform -translate-y-1/2 w-2 h-16 bg-gray-700 rounded-r-md cursor-pointer z-10 lg:hidden"
-                onClick={() => onSetSidebarOpen(true)}
-              ></div>
-            </>
+            <div
+              className="fixed top-1/2 left-0 transform -translate-y-1/2 w-2 h-16 bg-gray-700 rounded-r-md cursor-pointer z-10 md:hidden"
+              onClick={() => onSetSidebarOpen(true)}
+            ></div>
           )}
           {props.children}
         </div>
       </Sidebar>
     );
   } else {
-    return <div className="relative h-full">{props.children}</div>;
+    return <div>{props.children}</div>;
   }
 }
 

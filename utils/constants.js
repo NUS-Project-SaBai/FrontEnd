@@ -1,7 +1,5 @@
 // export const API_URL = "https://projectsabai-vza8.onrender.com";
 
-export const CLOUDINARY_URL = 'https://res.cloudinary.com/dlusodadw';
-
 export const defaultAPI_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -38,4 +36,17 @@ export const VILLAGE_COLOR_CLASSES = {
   TT: 'text-green-300 font-bold',
   TK: 'text-yellow-300 font-bold',
   SV: 'text-purple-300 font-bold',
+};
+
+export const REGISTRATION_FORM_FIELDS = {
+  name: '',
+  identification_number: '',
+  contact_no: '',
+  date_of_birth: '',
+  drug_allergy: '',
+  gender: 'Unspecified',
+  poor: 'No',
+  bs2: 'No',
+  sabai: 'No',
+  village_prefix: '',
 };

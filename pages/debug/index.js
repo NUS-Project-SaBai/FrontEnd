@@ -13,29 +13,29 @@ const paths = [
   '/orders',
 ];
 
+const ChangeBaseURLForm = props => {
+  return (
+    <div>
+      <label
+        htmlFor="baseURL"
+        className="block text-sm font-medium text-gray-700"
+      >
+        Set Base URL:
+      </label>
+      <input
+        type="text"
+        id="baseURL"
+        value={props.baseURL}
+        onChange={e => props.setBaseURL(e.target.value)}
+        className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+      />
+    </div>
+  );
+};
+
 export default function DebuggingPage() {
   const [baseURL, setBaseURL] = useState(getAPI_URL());
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-
-  const ChangeBaseURLForm = () => {
-    return (
-      <div>
-        <label
-          htmlFor="baseURL"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Set Base URL:
-        </label>
-        <input
-          type="text"
-          id="baseURL"
-          value={baseURL}
-          onChange={e => setBaseURL(e.target.value)}
-          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
-        />
-      </div>
-    );
-  };
 
   const handleRefresh = () => {
     setRefreshTrigger(prev => prev + 1);
@@ -90,7 +90,7 @@ export default function DebuggingPage() {
       />
 
       <DebugCard>
-        <ChangeBaseURLForm />
+        <ChangeBaseURLForm baseURL={baseURL} setBaseURL={setBaseURL} />
         <RefreshEndpointsButton />
         <ErrorThrowingComponent />
         <SimulateLoadingComponent />
