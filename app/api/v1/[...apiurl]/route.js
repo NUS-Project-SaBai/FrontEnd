@@ -8,7 +8,7 @@ export async function GET(req) {
 
   if (isImageRequest) {
     // Handle image request (e.g., JPG, JPEG, PNG)
-    const file = await getImageFile(req);
+    const file = await getFile(req);
 
     if (!file) {
       return new Response('File not found', { status: 404 });
@@ -21,7 +21,7 @@ export async function GET(req) {
     });
   } else if (isPDFRequest) {
     // Handle PDF request
-    const file = await getPDFFile(req);
+    const file = await getFile(req);
 
     if (!file) {
       return new Response('File not found', { status: 404 });
@@ -39,65 +39,24 @@ export async function GET(req) {
   }
 }
 
-// Helper function to get image files
-async function getImageFile(req) {
+// Helper function to get any file type (image, PDF, etc.)
+async function getFile(req, fileType) {
   let apiurl = req.nextUrl.pathname.slice(8) + req.nextUrl.search; // adjust to extract file path
   const backendUrl = `http://127.0.0.1:8000/${apiurl}`;
 
-  console.log('GET request for image file:', apiurl);
+  console.log(`GET request for ${fileType} file:`, apiurl);
 
   try {
     const res = await fetch(backendUrl, { method: 'GET' });
+
     if (res.ok) {
       // Read the file as binary using arrayBuffer
       const buffer = await res.arrayBuffer();
-      return Buffer.from(buffer); // Return the image file data
+      return Buffer.from(buffer); // Return the file data as a Buffer
     } else {
-      throw new Error('Image not found');
-    }
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-// Helper function to get PDF files
-async function getPDFFile(req) {
-  let apiurl = req.nextUrl.pathname.slice(8) + req.nextUrl.search; // adjust to extract file path
-  const backendUrl = `http://127.0.0.1:8000/${apiurl}`;
-
-  console.log('GET request for PDF file:', apiurl);
-
-  try {
-    const res = await fetch(backendUrl, { method: 'GET' });
-    if (res.ok) {
-      // Read the file as binary using arrayBuffer
-      const buffer = await res.arrayBuffer();
-      return Buffer.from(buffer); // Return the PDF file data
-    } else {
-      throw new Error('PDF not found');
-    }
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-async function getJPGFile(req) {
-  // Extract file path or image identifier from the URL
-  let apiurl = req.nextUrl.pathname.slice(8) + req.nextUrl.search; // adjust to extract file path
-  const backendUrl = `http://127.0.0.1:8000/${apiurl}`;
-
-  console.log('GET request for file:', apiurl);
-
-  try {
-    const res = await fetch(backendUrl, { method: 'GET' });
-    if (res.ok) {
-      // Read the file as binary using arrayBuffer
-      const buffer = await res.arrayBuffer();
-      return Buffer.from(buffer);
-    } else {
-      throw new Error('File not found');
+      throw new Error(
+        `${fileType.charAt(0).toUpperCase() + fileType.slice(1)} not found`
+      );
     }
   } catch (error) {
     console.error(error);
