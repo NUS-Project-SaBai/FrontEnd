@@ -22,6 +22,7 @@ export function VitalsForm({
       value: formDetails.height,
       type: 'number',
       unit: 'cm',
+      allowDecimals: true,
     },
     {
       name: 'weight',
@@ -29,6 +30,7 @@ export function VitalsForm({
       value: formDetails.weight,
       type: 'number',
       unit: 'kg',
+      allowDecimals: true,
     },
     {
       name: 'systolic',
@@ -36,6 +38,7 @@ export function VitalsForm({
       value: formDetails.systolic,
       type: 'number',
       unit: 'mmHg',
+      allowDecimals: true,
     },
     {
       name: 'diastolic',
@@ -43,6 +46,7 @@ export function VitalsForm({
       value: formDetails.diastolic,
       type: 'number',
       unit: 'mmHg',
+      allowDecimals: true,
     },
     {
       name: 'heart_rate',
@@ -50,6 +54,7 @@ export function VitalsForm({
       value: formDetails.heart_rate,
       type: 'number',
       unit: 'BPM',
+      allowDecimals: true,
     },
     {
       name: 'temperature',
@@ -57,6 +62,7 @@ export function VitalsForm({
       value: formDetails.temperature,
       type: 'number',
       unit: '°C',
+      allowDecimals: true,
     },
     {
       name: 'left_eye_degree',
@@ -112,6 +118,7 @@ export function VitalsForm({
       label: 'Hemocue Hb Count (Number)',
       value: formDetails.hemocue_count,
       type: 'number',
+      allowDecimals: true,
     },
     {
       name: 'blood_glucose',
@@ -119,6 +126,7 @@ export function VitalsForm({
       value: formDetails.blood_glucose,
       type: 'number',
       unit: 'mmol/L',
+      allowDecimals: true,
     },
     {
       name: 'others',
