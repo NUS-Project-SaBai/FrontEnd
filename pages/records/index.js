@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Router from 'next/router';
 import toast from 'react-hot-toast';
 import withAuth from '@/utils/auth';
@@ -7,8 +7,13 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
+import { VillageContext } from '@/context/VillageContext';
 
-function VillageDropdown({ handleDropdownChangeWithStyle, PATIENT_CODE_ALL }) {
+function VillageDropdown({
+  value,
+  handleDropdownChangeWithStyle,
+  PATIENT_CODE_ALL,
+}) {
   return (
     <div className="field">
       <div className="control">
@@ -19,10 +24,11 @@ function VillageDropdown({ handleDropdownChangeWithStyle, PATIENT_CODE_ALL }) {
           Search by village code
         </label>
         <select
-          className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          className={`flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white ${VILLAGE_COLOR_CLASSES[value] || 'text-gray-500'} focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6`}
           name="patientDropdown"
           id="patientDropdown"
           onChange={handleDropdownChangeWithStyle}
+          value={value}
         >
           <option value={PATIENT_CODE_ALL}>{`${PATIENT_CODE_ALL}`}</option>
           {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
@@ -64,6 +70,8 @@ function PatientList() {
   const [patientSearch, setPatientSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { village } = useContext(VillageContext);
+
   const itemsPerPage = 10;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -82,6 +90,10 @@ function PatientList() {
   useEffect(() => {
     fetchPatients();
   }, []);
+
+  useEffect(() => {
+    setPatientCode(village);
+  }, [village]);
 
   useEffect(() => {
     filterPatients();
@@ -275,6 +287,7 @@ function PatientList() {
         </h1>
         <div className="flex items-center space-x-4">
           <VillageDropdown
+            value={patientCode}
             handleDropdownChangeWithStyle={handleDropdownChangeWithStyle}
             PATIENT_CODE_ALL={PATIENT_CODE_ALL}
           />
