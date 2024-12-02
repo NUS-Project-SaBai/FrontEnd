@@ -7,6 +7,7 @@ export function InputField({
   unit,
   allowNegativeNumbers = false,
   allowDecimals = false,
+  showRequiredAsterisk = false,
 }) {
   const isNumberField = type === 'number';
 
@@ -31,6 +32,7 @@ export function InputField({
         className="block text-sm font-medium leading-6 text-gray-900"
       >
         {label}
+        {showRequiredAsterisk && <span className="text-red-500"> *</span>}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
         <input
