@@ -169,6 +169,21 @@ const PatientConsultation = () => {
       return;
     }
 
+    if (!consultationFormDetails.past_medical_history) {
+      toast.error('Past Medical History required');
+      return;
+    }
+
+    if (!consultationFormDetails.consultation) {
+      toast.error('Consultation Details required');
+      return;
+    }
+
+    if (!consultationFormDetails.plan) {
+      toast.error('Consultation Plan required');
+      return;
+    }
+
     try {
       const formPayload = {
         ...consultationFormDetails,
