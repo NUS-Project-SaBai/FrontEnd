@@ -62,27 +62,27 @@ export function VitalsForm({
       allowDecimals: true,
     },
     {
-      name: 'left_eye_degree',
-      label: 'Left Eye (Fraction eg. 6/6)',
-      value: formDetails.left_eye_degree,
-      type: 'text',
-    },
-    {
       name: 'right_eye_degree',
       label: 'Right Eye (Fraction eg. 6/6)',
       value: formDetails.right_eye_degree,
       type: 'text',
     },
     {
-      name: 'left_eye_pinhole',
-      label: 'Left Eye Pinhole (Fraction eg. 6/12)',
-      value: formDetails.left_eye_pinhole,
+      name: 'left_eye_degree',
+      label: 'Left Eye (Fraction eg. 6/6)',
+      value: formDetails.left_eye_degree,
       type: 'text',
     },
     {
       name: 'right_eye_pinhole',
       label: 'Right Eye Pinhole (Fraction eg. 6/12)',
       value: formDetails.right_eye_pinhole,
+      type: 'text',
+    },
+    {
+      name: 'left_eye_pinhole',
+      label: 'Left Eye Pinhole (Fraction eg. 6/12)',
+      value: formDetails.left_eye_pinhole,
       type: 'text',
     },
   ];

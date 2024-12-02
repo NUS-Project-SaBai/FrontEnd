@@ -71,7 +71,6 @@ export function PatientInfo({ patient, submitNewVisit }) {
         />
       </div>
       <br />
-      <Button text="Create New Visit" onClick={submitNewVisit} colour="green" />
     </div>
   );
 }

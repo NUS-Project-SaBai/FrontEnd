@@ -45,7 +45,7 @@ function Layout(props) {
         <div>
           {!sidebarOpen && (
             <div
-              className="absolute top-1/2 left-0 transform -translate-y-1/2 w-2 h-16 bg-gray-700 rounded-r-md cursor-pointer z-10 md:hidden"
+              className="fixed top-1/2 left-0 transform -translate-y-1/2 w-2 h-16 bg-gray-700 rounded-r-md cursor-pointer z-10 md:hidden"
               onClick={() => onSetSidebarOpen(true)}
             ></div>
           )}
