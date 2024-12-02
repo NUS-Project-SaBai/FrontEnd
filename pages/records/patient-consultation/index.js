@@ -370,6 +370,11 @@ const PatientConsultation = () => {
           handleInputChange={handleOrderFormChange}
           orderDetails={orderFormDetails}
           medicationOptions={medications
+            .sort((a, b) =>
+              a.medicine_name
+                .toLowerCase()
+                .localeCompare(b.medicine_name.toLowerCase())
+            )
             .filter(
               med =>
                 orders.find(orderMed => orderMed.medicine == med.id) == null
