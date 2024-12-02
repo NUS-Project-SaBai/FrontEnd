@@ -97,7 +97,7 @@ function PatientList() {
 
   useEffect(() => {
     filterPatients();
-  }, [patientSearch, patientCode]);
+  }, [patientSearch, patientCode, patients]);
 
   function handleSearchChange(e) {
     const searchValue = e.target.value.toLowerCase().trim();
@@ -118,6 +118,7 @@ function PatientList() {
   }
 
   function filterPatients() {
+    console.log(patientCode);
     const filteredPatients = patients.filter(patient => {
       return (
         patient.filter_string.toLowerCase().trim().includes(patientSearch) &&
@@ -125,6 +126,7 @@ function PatientList() {
           patient.village_prefix === patientCode)
       );
     });
+    console.dir(filteredPatients);
     setPatientsFiltered(filteredPatients);
   }
 
