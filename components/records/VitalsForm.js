@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Button,
   InputField,
@@ -15,19 +15,12 @@ export function VitalsForm({
   patient,
   visit,
   vitals,
-  setVitalsFormDetails,
 }) {
-  // Prefill formDetails with vitals data if it exists
-  useEffect(() => {
-    if (vitals && Object.keys(vitals).length > 0) {
-      setVitalsFormDetails(vitals); // Directly update formDetails with vitals data
-    }
-  }, [vitals, setVitalsFormDetails]);
-
   const vitalFields = [
     {
       name: 'height',
       label: 'Height / CM',
+      placeholder: vitals.height,
       value: formDetails.height,
       type: 'number',
       unit: 'cm',
@@ -36,6 +29,7 @@ export function VitalsForm({
     {
       name: 'weight',
       label: 'Weight / KG',
+      placeholder: vitals.weight,
       value: formDetails.weight,
       type: 'number',
       unit: 'kg',
@@ -44,6 +38,7 @@ export function VitalsForm({
     {
       name: 'systolic',
       label: 'Systolic / mmHg',
+      placeholder: vitals.systolic,
       value: formDetails.systolic,
       type: 'number',
       unit: 'mmHg',
@@ -51,6 +46,7 @@ export function VitalsForm({
     {
       name: 'diastolic',
       label: 'Diastolic / mmHg',
+      placeholder: vitals.diastolic,
       value: formDetails.diastolic,
       type: 'number',
       unit: 'mmHg',
@@ -58,6 +54,7 @@ export function VitalsForm({
     {
       name: 'heart_rate',
       label: 'Heart Rate / BPM',
+      placeholder: vitals.heart_rate,
       value: formDetails.heart_rate,
       type: 'number',
       unit: 'BPM',
@@ -65,6 +62,7 @@ export function VitalsForm({
     {
       name: 'temperature',
       label: 'Temperature / °C',
+      placeholder: vitals.temperature,
       value: formDetails.temperature,
       type: 'number',
       unit: '°C',
@@ -73,24 +71,28 @@ export function VitalsForm({
     {
       name: 'right_eye_degree',
       label: 'Right Eye (Fraction eg. 6/6)',
+      placeholder: vitals.right_eye_degree,
       value: formDetails.right_eye_degree,
       type: 'text',
     },
     {
       name: 'left_eye_degree',
       label: 'Left Eye (Fraction eg. 6/6)',
+      placeholder: vitals.left_eye_degree,
       value: formDetails.left_eye_degree,
       type: 'text',
     },
     {
       name: 'right_eye_pinhole',
       label: 'Right Eye Pinhole (Fraction eg. 6/12)',
+      placeholder: vitals.right_eye_pinhole,
       value: formDetails.right_eye_pinhole,
       type: 'text',
     },
     {
       name: 'left_eye_pinhole',
       label: 'Left Eye Pinhole (Fraction eg. 6/12)',
+      placeholder: vitals.left_eye_pinhole,
       value: formDetails.left_eye_pinhole,
       type: 'text',
     },
@@ -103,6 +105,7 @@ export function VitalsForm({
         name={field.name}
         label={field.label}
         type={field.type}
+        placeholder={field.placeholder}
         value={field.value || ''} //use empty string if value is null or undefined
         onChange={handleOnChange}
         unit={field.unit}
@@ -116,12 +119,14 @@ export function VitalsForm({
     {
       name: 'urine_test',
       label: 'Urine Dip Test (Text eg. Anyth)',
+      placeholder: vitals.urine_test,
       value: formDetails.urine_test,
       type: 'text',
     },
     {
       name: 'hemocue_count',
       label: 'Hemocue Hb Count (Number)',
+      placeholder: vitals.hemocue_count,
       value: formDetails.hemocue_count,
       type: 'number',
       allowDecimals: true,
@@ -129,6 +134,7 @@ export function VitalsForm({
     {
       name: 'blood_glucose',
       label: 'Capillary Blood Glucose (Decimal eg. 13.2)',
+      placeholder: vitals.blood_glucose,
       value: formDetails.blood_glucose,
       type: 'number',
       unit: 'mmol/L',
@@ -137,6 +143,7 @@ export function VitalsForm({
     {
       name: 'others',
       label: 'Others (Text eg. Anyth)',
+      placeholder: vitals.others,
       value: formDetails.others,
       type: 'text',
     },
@@ -149,6 +156,7 @@ export function VitalsForm({
         name={field.name}
         label={field.label}
         type={field.type}
+        placeholder={field.placeholder}
         value={field.value || ''}
         onChange={handleOnChange}
         unit={field.unit}
