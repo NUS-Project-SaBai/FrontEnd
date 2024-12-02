@@ -268,6 +268,9 @@ export function ChildrenVitalsFields({
 
   return (
     <div>
+      <label className="label text-lg font-semibold">
+        Children Vital Fields
+      </label>
       <div className="grid gap-6 md:grid-cols-2">{StatFieldsComponent}</div>
       <div className="grid gap-6 md:grid-cols-2">{PubertyFieldsComponent}</div>
     </div>

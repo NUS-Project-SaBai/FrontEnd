@@ -237,18 +237,12 @@ export function VitalsForm({
           </div>
         </div>
 
-        <div>
-          <label className="label text-lg font-semibold">
-            Children Vital Fields
-          </label>
-
-          <ChildrenVitalsFields
-            handleOnChange={handleOnChange}
-            formDetails={formDetails}
-            patient={patient}
-            visit={visit}
-          />
-        </div>
+        <ChildrenVitalsFields
+          handleOnChange={handleOnChange}
+          formDetails={formDetails}
+          patient={patient}
+          visit={visit}
+        />
       </div>
 
       <div style={{ height: '50px' }}></div>
