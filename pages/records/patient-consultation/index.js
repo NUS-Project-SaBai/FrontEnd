@@ -114,7 +114,6 @@ const PatientConsultation = () => {
   });
 
   const submitConsultationForm = useWithLoading(async () => {
-    console.log(consultationFormDetails.diagnoses);
     if (consultationFormDetails.diagnoses.length == 0) {
       toast.error('Please include at least one diagnosis');
       return;
