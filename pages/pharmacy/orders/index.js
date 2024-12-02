@@ -112,7 +112,7 @@ const Orders = () => {
             />
             <Button
               colour="red"
-              text="Cancel"
+              text="Reject"
               onClick={() => handleOrderCancel(order)}
             />
           </td>
