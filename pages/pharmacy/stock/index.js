@@ -49,6 +49,7 @@ const Stock = () => {
       toast.error('Medicine name cannot be empty.');
       return;
     }
+
     if (medicationDetails.quantityChange === '') {
       // check explicitly for empty string as the "!medicationDetails.quantityChange" check will catch zeros, which is allowed
       toast.error('Quantity to Add cannot be empty.');
@@ -83,6 +84,10 @@ const Stock = () => {
         });
         toast.success('Medication updated!');
       } else {
+        if (medications.find(a => a.medicine_name == updatedDetails.medicine_name)) {
+          toast.error('Medication ' + updatedDetails.medicine_name + ' already exists.');
+          return;
+        }
         if (quantityChange < 0) {
           toast.error('Invalid Number!');
           return;
