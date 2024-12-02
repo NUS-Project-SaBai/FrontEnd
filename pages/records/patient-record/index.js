@@ -51,6 +51,9 @@ const PatientRecord = () => {
         `/visits?patient=${patientID}`
       );
 
+      // patient.date_of_birth is in ISOstring YYYY-MM-DDTHH:mm:ss.sssZ
+      patient.date_of_birth = patient.date_of_birth.split('T')[0];
+      setImageDetails(patient.picture);
       setPatient(patient);
       setVisits(visits);
 
@@ -110,7 +113,6 @@ const PatientRecord = () => {
       );
       formData.append('picture', pictureFile);
     }
-    console.dir({ updatedPatient });
 
     if (updatedPatient.pk) {
       try {
@@ -147,13 +149,13 @@ const PatientRecord = () => {
   }
 
   const handleVisitChange = useCallback(event => {
-    const visitID = event.target.value;
+    const visitID = Number(event.target.value);
     loadVisitDetails(visitID);
   }, []);
 
   const handlePatientChange = event => {
     const newPatientDetails = {
-      ...patient,
+      ...patientEdit,
       [event.target.name]: event.target.value,
     };
     setPatientEdit(newPatientDetails);

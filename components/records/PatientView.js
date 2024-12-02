@@ -22,6 +22,7 @@ export function PatientView({ patient }) {
     },
     { label: 'POOR Card', key: 'poor' },
     { label: 'BS2 Card', key: 'bs2' },
+    { label: 'Sabai Card', key: 'sabai' },
     { label: 'Allergies', key: 'drug_allergy' },
   ];
 
