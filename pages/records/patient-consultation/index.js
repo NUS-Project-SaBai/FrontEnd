@@ -288,7 +288,6 @@ const PatientConsultation = () => {
         </tr>
       );
     });
-
     return (
       <div className="mt-4 mx-6">
         <div className="px-4 sm:px-6 lg:px-8">
@@ -345,6 +344,11 @@ const PatientConsultation = () => {
           handleInputChange={handleOrderFormChange}
           orderDetails={orderFormDetails}
           medicationOptions={medications
+            .sort((a, b) =>
+              a.medicine_name
+                .toLowerCase()
+                .localeCompare(b.medicine_name.toLowerCase())
+            )
             .filter(
               med =>
                 orders.find(orderMed => orderMed.medicine == med.id) == null
