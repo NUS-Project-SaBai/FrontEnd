@@ -15,6 +15,8 @@ import { Button } from '@/components/TextComponents/';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
+import { useCustomFormValidation } from '@/components/CustomFormValidation';
+import { FormProvider, useForm } from 'react-hook-form';
 import { REGISTRATION_FORM_FIELDS } from '@/utils/constants';
 
 const Registration = () => {
@@ -34,6 +36,24 @@ const Registration = () => {
 
   const [formDetails, setFormDetails] = useState(REGISTRATION_FORM_FIELDS);
 
+  const initialValidationState = {
+    village_prefix: { hasError: false, message: 'Village Prefix is required' },
+    imageDetails: {
+      hasError: false,
+      message: 'Please take a photo before submitting',
+    },
+  };
+
+  const methods = useForm();
+  const { control, handleSubmit, reset } = methods;
+
+  const {
+    customFormValidationState,
+    resetCustomFormValidationState,
+    setCustomErrorState,
+    hasAnyError,
+  } = useCustomFormValidation(initialValidationState);
+
   useEffect(() => {
     onRefresh();
   }, []);
@@ -51,6 +71,8 @@ const Registration = () => {
   // General functions
 
   function togglePatientModal() {
+    reset();
+    resetCustomFormValidationState();
     setPatientModalOpen(!patientModalOpen);
   }
 
@@ -101,8 +123,13 @@ const Registration = () => {
       return;
     }
 
+    let local_error_state = false; //temp fix not sure what the below code is doingl in the future can remove custom validation and use RHF properly
     if (imageDetails == null) {
-      toast.error('Please take a photo before submitting!');
+      setCustomErrorState('imageDetails');
+      local_error_state = true;
+    }
+
+    if (local_error_state) {
       return;
     }
 
@@ -132,6 +159,7 @@ const Registration = () => {
 
       setPatient(response);
       setFormDetails(prevDetails => ({
+        //not sure why this is here
         ...prevDetails,
         gender: 'Male',
         village_prefix: 'SV',
@@ -200,65 +228,67 @@ const Registration = () => {
 
   return (
     <div className="mx-4">
-      <CustomModal
-        isOpen={patientModalOpen}
-        onRequestClose={togglePatientModal}
-        onSubmit={submitNewPatient}
-      >
-        <PatientRegistrationForm
-          formDetails={formDetails}
-          imageDetails={imageDetails}
-          setImageDetails={setImageDetails}
-          handleInputChange={handleInputChange}
-        />
-      </CustomModal>
-
-      <CustomModal
-        isOpen={scanModalOpen}
-        onRequestClose={toggleScanModal}
-        onSubmit={submitScan}
-      >
-        <PatientScanForm
-          imageDetails={scanImageDetails}
-          setImageDetails={setScanImageDetails}
-        />
-        <RegistrationScanSuggest
-          setPatient={setPatient}
-          setScanModalOpen={setScanModalOpen}
-          suggestionList={scanSuggestionsList}
-        />
-      </CustomModal>
-      <div>
-        <div>
-          <PageTitle title="Registration" desc="" />
-          <div className="flex items-center justify-center mb-2 w-full">
-            <RegistrationAutoSuggest
-              patientsList={patientsList}
-              setPatient={setPatient}
-            />
-          </div>
-          <div className="flex items-center justify-center mb-6 gap-3">
-            <Button
-              colour="green"
-              text="New Patient"
-              onClick={() => {
-                setPatientModalOpen(true);
-              }}
-            />
-            <Button
-              colour="green"
-              text="Scan Face"
-              onClick={() => {
-                setScanModalOpen(true);
-              }}
-            />
-          </div>
-          <PatientInfo
-            patient={patient}
-            submitNewVisit={() => submitNewVisit(patient)}
+      <FormProvider {...methods}>
+        <CustomModal
+          isOpen={patientModalOpen}
+          onRequestClose={togglePatientModal}
+          onSubmit={handleSubmit(submitNewPatient, submitNewPatient)}
+        >
+          <PatientRegistrationForm
+            formDetails={formDetails}
+            formValidationState={customFormValidationState}
+            imageDetails={imageDetails}
+            setImageDetails={setImageDetails}
+            handleInputChange={handleInputChange}
+            form_control={control}
           />
+        </CustomModal>
+
+        <CustomModal
+          isOpen={scanModalOpen}
+          onRequestClose={toggleScanModal}
+          onSubmit={submitScan}
+        >
+          <PatientScanForm
+            imageDetails={scanImageDetails}
+            setImageDetails={setScanImageDetails}
+          />
+          <RegistrationScanSuggest
+            setPatient={setPatient}
+            setScanModalOpen={setScanModalOpen}
+            suggestionList={scanSuggestionsList}
+          />
+        </CustomModal>
+        <div>
+          <div>
+            <PageTitle title="Registration" desc="" />
+            <div className="flex items-center justify-center mb-2 w-full">
+              <RegistrationAutoSuggest
+                patientsList={patientsList}
+                setPatient={setPatient}
+              />
+            </div>
+            <div className="flex items-center justify-center mb-6 gap-3">
+              <Button
+                colour="green"
+                text="New Patient"
+                onClick={togglePatientModal}
+              />
+              <Button
+                colour="green"
+                text="Scan Face"
+                onClick={() => {
+                  setScanModalOpen(true);
+                }}
+              />
+            </div>
+            <PatientInfo
+              patient={patient}
+              submitNewVisit={() => submitNewVisit(patient)}
+            />
+          </div>
         </div>
-      </div>
+      </FormProvider>
     </div>
   );
 };

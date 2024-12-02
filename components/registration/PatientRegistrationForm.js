@@ -1,48 +1,15 @@
 import { Button, InputField, InputBox } from '@/components/TextComponents';
-import { VENUE_OPTIONS, VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 import AppWebcam from '@/components/WebCamera';
 import React, { useState } from 'react';
-
-export const VenueOptionsDropdown = ({ handleInputChange, value }) => {
-  return (
-    <div>
-      <label
-        htmlFor="village_prefix"
-        className="block text-sm font-medium leading-6 text-gray-900"
-      >
-        Village
-      </label>
-      <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
-        <select
-          name="village_prefix"
-          id="village_prefix"
-          onChange={handleInputChange}
-          value={value}
-          className={`flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${VILLAGE_COLOR_CLASSES[value] || 'text-gray-500'}`}
-        >
-          <option hidden value="">
-            Please select an option
-          </option>
-          {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
-            <option
-              className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
-              value={key}
-              key={key}
-            >
-              {value}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-};
+import { VenueOptionsDropdown } from './VenueOptionsDropdown';
 
 export function PatientRegistrationForm({
   formDetails,
+  formValidationState,
   imageDetails,
   handleInputChange,
   setImageDetails,
+  form_control,
 }) {
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [webcam, setWebcam] = useState(null);
@@ -70,13 +37,17 @@ export function PatientRegistrationForm({
           type="text"
           onChange={handleInputChange}
           value={formDetails.name}
+          control={form_control}
+          rules={{ required: 'Name is required' }}
         />
+
         <InputField
           name="identification_number"
           label="ID Number"
           type="text"
           onChange={handleInputChange}
           value={formDetails.identification_number}
+          control={form_control}
         />
         <InputField
           name="contact_no"
@@ -85,6 +56,7 @@ export function PatientRegistrationForm({
           type="tel"
           onChange={handleInputChange}
           value={formDetails.contact_no}
+          control={form_control}
         />
         <div>
           <label
@@ -92,17 +64,20 @@ export function PatientRegistrationForm({
             className="block text-sm font-medium leading-6 text-gray-900"
           >
             Gender
+            <span className="text-red-500"> *</span>
           </label>
           <div className="flex mt-1 rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
             <select
               name="gender"
               onChange={handleInputChange}
               value={formDetails.gender}
-              className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+              className={`flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white ${formDetails.gender ? 'text-gray-900' : 'text-gray-500'} focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6`}
             >
+              <option hidden value="">
+                Please select an option
+              </option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
-              <option value="Unspecified">Unspecified</option>
             </select>
           </div>
         </div>
@@ -113,6 +88,8 @@ export function PatientRegistrationForm({
           type="date"
           onChange={handleInputChange}
           value={formDetails.date_of_birth}
+          control={form_control}
+          rules={{ required: 'Date of Birth is required' }}
         />
 
         <VenueOptionsDropdown
@@ -189,32 +166,46 @@ export function PatientRegistrationForm({
           value={formDetails.drug_allergy}
         />
 
-        <div className="flex flex-col items-center">
-          {!cameraIsOpen && (
-            <div className="h-64 w-64 bg-gray-400 flex items-center justify-center">
-              {imageDetails != null && <img src={imageDetails} />}
-            </div>
-          )}
-
-          {cameraIsOpen && (
-            <div>
-              <AppWebcam
-                webcamSetRef={webcamSetRef}
-                webcamCapture={webcamCapture}
-              />
-            </div>
-          )}
-          <div className="flex items-center justify-center mt-2">
-            {cameraIsOpen ? (
-              <Button colour="red" text="Cancel" onClick={toggleCameraOpen} />
-            ) : (
-              <Button
-                colour="green"
-                text="Take Photo"
-                onClick={toggleCameraOpen}
-              />
+        <div>
+          <label
+            htmlFor="village_prefix"
+            className="block text-sm font-medium leading-6 text-gray-900"
+          >
+            Photo
+            <span className="text-red-500">*</span> {/* indicate required */}
+          </label>
+          <div className="flex flex-col items-center">
+            {!cameraIsOpen && (
+              <div className="h-64 w-64 bg-gray-400 flex items-center justify-center">
+                {imageDetails != null && <img src={imageDetails} />}
+              </div>
             )}
+
+            {cameraIsOpen && (
+              <div>
+                <AppWebcam
+                  webcamSetRef={webcamSetRef}
+                  webcamCapture={webcamCapture}
+                />
+              </div>
+            )}
+            <div className="flex items-center justify-center mt-2">
+              {cameraIsOpen ? (
+                <Button colour="red" text="Cancel" onClick={toggleCameraOpen} />
+              ) : (
+                <Button
+                  colour="green"
+                  text="Take Photo"
+                  onClick={toggleCameraOpen}
+                />
+              )}
+            </div>
           </div>
+          {formValidationState.imageDetails.hasError && (
+            <p className="text-red-500 text-sm text-center">
+              {formValidationState.imageDetails.message}
+            </p>
+          )}
         </div>
       </div>
       <hr />
