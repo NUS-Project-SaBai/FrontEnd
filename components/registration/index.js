@@ -1,4 +1,13 @@
-import { PatientModal } from './PatientModal';
-import { ScanModal } from './ScanModal';
+import { PatientRegistrationForm } from './PatientRegistrationForm';
+import { PatientScanForm } from './PatientScanForm';
+import { PatientInfo } from './PatientInfo';
+import { RegistrationAutoSuggest } from './RegistrationAutoSuggest';
+import { RegistrationScanSuggest } from './RegistrationScanSuggest';
 
-export { PatientModal, ScanModal };
+export {
+  PatientRegistrationForm,
+  PatientScanForm,
+  PatientInfo,
+  RegistrationAutoSuggest,
+  RegistrationScanSuggest,
+};

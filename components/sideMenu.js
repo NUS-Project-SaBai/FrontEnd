@@ -8,7 +8,9 @@ import {
   ClipboardDocumentListIcon,
   ArrowLeftStartOnRectangleIcon,
   DeviceTabletIcon,
+  Cog8ToothIcon,
 } from '@heroicons/react/24/outline';
+import { OFFLINE } from '@/utils/constants';
 
 const navigation = [
   {
@@ -18,7 +20,6 @@ const navigation = [
     count: '5',
     current: true,
   },
-
   {
     name: 'Patient Records',
     href: '/records',
@@ -39,18 +40,6 @@ const navigation = [
     icon: BeakerIcon,
     current: false,
   },
-  {
-    name: 'Debugging',
-    href: '/debug',
-    icon: DeviceTabletIcon,
-    current: false,
-  },
-  {
-    name: 'Logout',
-    href: '/api/auth/logout',
-    icon: ArrowLeftStartOnRectangleIcon,
-    current: false,
-  },
 ];
 
 const locations = [
@@ -68,6 +57,26 @@ export default function SideMenu() {
   const [navItems, setNavItems] = useState(navigation);
   const { user, isLoading } = useUser();
 
+  const handleLogout = async () => {
+    if (OFFLINE) {
+      window.localStorage.removeItem('offline_user');
+      router.push('/').then(() => {
+        window.location.reload();
+      });
+      return;
+    } else {
+      router.push('/api/auth/logout');
+    }
+  };
+
+  navigation.push({
+    name: 'Logout',
+    href: '#',
+    onClick: handleLogout,
+    icon: ArrowLeftStartOnRectangleIcon,
+    current: false,
+  });
+
   useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
       ...item,
@@ -79,19 +88,20 @@ export default function SideMenu() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 h-full">
+    <div className="flex flex-col gap-y-5 px-6 h-full">
       <div className="flex h-16 shrink-0 items-center">
         <img className="h-8 w-auto" src="/sabaiLogo.png" alt="Sa'Bai Logo" />
         <h1 className="text-white text-2xl ml-2">Sa&apos;Bai &apos;24</h1>
       </div>
-      <nav className="flex flex-1 flex-col">
-        <ul role="list" className="flex flex-1 flex-col gap-y-7">
+      <nav className="h-full">
+        <ul role="list" className="flex flex-1 flex-col h-full gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
               {navItems.map(item => (
                 <li key={item.name}>
                   <a
                     href={item.href}
+                    onClick={item.onClick}
                     className={classNames(
                       item.current
                         ? 'bg-gray-800 text-white'
@@ -134,6 +144,7 @@ export default function SideMenu() {
               ))}
             </ul>
           </li>
+          <div className="flex" />
           <li className="-mx-6 mt-auto">
             <a
               href="#"

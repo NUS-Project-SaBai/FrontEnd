@@ -1,3 +1,4 @@
-import { MedicationModal } from './MedicationModal';
+import { MedicationForm } from './MedicationForm';
+import { MedicationHistoryForm } from './MedicationHistoryForm';
 
-export { MedicationModal };
+export { MedicationForm, MedicationHistoryForm };

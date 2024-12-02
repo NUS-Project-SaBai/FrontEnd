@@ -47,7 +47,7 @@ export function ConsultationForm({
           name="details"
           label={`Diagnosis ${index + 1}`}
           type="text"
-          value={formDetails.details}
+          value={diagnosis.details}
           onChange={e => handleDiagnosisChange(e, index)}
           placeholder="Type your notes here..."
         />
@@ -56,11 +56,13 @@ export function ConsultationForm({
           className={`border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4 ${
             diagnosis.category === 'Please select...' ? 'bg-red-100' : ''
           }`}
-          name="type"
+          name="category"
           onChange={e => handleDiagnosisChange(e, index)}
-          value={diagnosis.category}
+          value={diagnosis.category || 'nil'} // the 'nil' switch is there for a bug where if there are 2 diagnoses, and the first has a selected category and the second doesn't, but you delete the first, the category of the first overrides the empty category of the second: https://github.com/NUS-Project-SaBai/FrontEnd/pull/242
         >
-          <option>Please select...</option>
+          <option disabled value="nil">
+            Please select...
+          </option>
           {diagnosisOptions.map((option, optionIndex) => (
             <option key={optionIndex} value={option}>
               {option}
@@ -70,7 +72,7 @@ export function ConsultationForm({
 
         <Button
           colour="red"
-          text="Delete Assessment"
+          text="Delete Diagnosis"
           onClick={() => handleDiagnosisDelete(index)}
         />
       </div>
