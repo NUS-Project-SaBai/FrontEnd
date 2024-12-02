@@ -123,6 +123,7 @@ const Registration = () => {
       return;
     }
 
+    let local_error_state = false; //temp fix not sure what the below code is doingl in the future can remove custom validation and use RHF properly
     if (imageDetails == null) {
       setCustomErrorState('imageDetails');
       local_error_state = true;
@@ -158,6 +159,7 @@ const Registration = () => {
 
       setPatient(response);
       setFormDetails(prevDetails => ({
+        //not sure why this is here
         ...prevDetails,
         gender: 'Male',
         village_prefix: 'SV',
@@ -270,9 +272,7 @@ const Registration = () => {
               <Button
                 colour="green"
                 text="New Patient"
-                onClick={() => {
-                  setPatientModalOpen(true);
-                }}
+                onClick={togglePatientModal}
               />
               <Button
                 colour="green"

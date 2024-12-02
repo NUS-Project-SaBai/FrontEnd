@@ -44,7 +44,7 @@ export const REGISTRATION_FORM_FIELDS = {
   contact_no: '',
   date_of_birth: '',
   drug_allergy: '',
-  gender: 'Unspecified',
+  gender: '',
   poor: 'No',
   bs2: 'No',
   sabai: 'No',
