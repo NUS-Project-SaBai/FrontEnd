@@ -140,7 +140,6 @@ export function VitalsTable({ vitals, patient, visit }) {
       />
     );
   }
-  console.log(patientAgeVisit);
 
   return (
     <form className="">
