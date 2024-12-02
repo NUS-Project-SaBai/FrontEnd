@@ -96,10 +96,10 @@ const Registration = () => {
       return;
     }
 
-    if (formDetails.gender == '') {
-      toast.error('Please select a gender');
-      return;
-    }
+    // if (formDetails.gender == '') {
+    //   toast.error('Please select a gender');
+    //   return;
+    // }
 
     if (formDetails.village_prefix == '') {
       toast.error('Please select a village');
@@ -147,11 +147,11 @@ const Registration = () => {
 
       setPatientModalOpen(false);
       submitNewVisit(response);
+      setFormDetails(REGISTRATION_FORM_FIELDS);
     } catch (error) {
       toast.error(`Error creating new patient: ${error.message}`);
       console.error('Error creating new patient:', error);
     }
-    setFormDetails(REGISTRATION_FORM_FIELDS);
   });
 
   const submitScan = useWithLoading(async () => {
