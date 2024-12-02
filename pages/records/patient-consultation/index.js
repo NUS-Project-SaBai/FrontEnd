@@ -288,6 +288,7 @@ const PatientConsultation = () => {
         </tr>
       );
     });
+
     return (
       <div className="mt-4 mx-6">
         <div className="px-4 sm:px-6 lg:px-8">
