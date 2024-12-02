@@ -7,6 +7,7 @@ import Layout from '@/components/layout';
 import '@/styles/globals.css';
 import { useLoading, LoadingProvider } from '@/context/LoadingContext';
 import Loading from '@/components/Loading';
+import { VillageProvider } from '@/context/VillageContext';
 
 Modal.setAppElement('#__next');
 
@@ -28,12 +29,14 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <UserProvider>
       <LoadingProvider>
-        <LoadingComponentWrapper>
-          <Layout>
-            <Component {...pageProps} />
-            <Toaster position="top center" duration={4000} />
-          </Layout>
-        </LoadingComponentWrapper>
+        <VillageProvider>
+          <LoadingComponentWrapper>
+            <Layout>
+              <Component {...pageProps} />
+              <Toaster position="top center" duration={4000} />
+            </Layout>
+          </LoadingComponentWrapper>
+        </VillageProvider>
       </LoadingProvider>
     </UserProvider>
   );
