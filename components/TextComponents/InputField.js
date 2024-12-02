@@ -6,16 +6,19 @@ export function InputField({
   onChange,
   unit,
   allowNegativeNumbers = false,
+  allowDecimals = false,
 }) {
   const isNumberField = type === 'number';
 
   function numberOnChangeInterceptor(e) {
     const data = e.nativeEvent.data;
+    const count = (str, regex) => (str.match(regex) || []).length;
     // allow null for backspace, numbers, or negative sign at the start of the input
     if (
       data === null ||
       RegExp(/[0-9]/).test(data) ||
-      (allowNegativeNumbers && data === '-' && e.target.value === '-')
+      (allowNegativeNumbers && data === '-' && e.target.value === '-') || // only allow entering a dash (minus sign) if it is the first character
+      (allowDecimals && data === '.' && count(e.target.value, /\./g) === 1) // only allow entering a single period
     ) {
       onChange(e);
     }

@@ -19,10 +19,10 @@ export function VitalsTable({ vitals, patient, visit }) {
     { label: 'Heart Rate', value: vitals.heart_rate },
     { label: 'Temperature', value: vitals.temperature },
     { label: '', value: '' },
-    { label: 'Left Eye', value: vitals.left_eye_degree },
     { label: 'Right Eye', value: vitals.right_eye_degree },
-    { label: 'Left Eye Pinhole', value: vitals.left_eye_pinhole },
+    { label: 'Left Eye', value: vitals.left_eye_degree },
     { label: 'Right Eye Pinhole', value: vitals.right_eye_pinhole },
+    { label: 'Left Eye Pinhole', value: vitals.left_eye_pinhole },
     { label: 'Urine Dip Test', value: vitals.urine_test },
     { label: 'Hemocue Hb Count', value: vitals.hemocue_count },
     {

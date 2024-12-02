@@ -31,6 +31,7 @@ export function VitalsForm({
       value: formDetails.height,
       type: 'number',
       unit: 'cm',
+      allowDecimals: true,
     },
     {
       name: 'weight',
@@ -38,6 +39,7 @@ export function VitalsForm({
       value: formDetails.weight,
       type: 'number',
       unit: 'kg',
+      allowDecimals: true,
     },
     {
       name: 'systolic',
@@ -66,12 +68,7 @@ export function VitalsForm({
       value: formDetails.temperature,
       type: 'number',
       unit: '°C',
-    },
-    {
-      name: 'left_eye_degree',
-      label: 'Left Eye (Fraction eg. 6/6)',
-      value: formDetails.left_eye_degree,
-      type: 'text',
+      allowDecimals: true,
     },
     {
       name: 'right_eye_degree',
@@ -80,15 +77,21 @@ export function VitalsForm({
       type: 'text',
     },
     {
-      name: 'left_eye_pinhole',
-      label: 'Left Eye Pinhole (Fraction eg. 6/12)',
-      value: formDetails.left_eye_pinhole,
+      name: 'left_eye_degree',
+      label: 'Left Eye (Fraction eg. 6/6)',
+      value: formDetails.left_eye_degree,
       type: 'text',
     },
     {
       name: 'right_eye_pinhole',
       label: 'Right Eye Pinhole (Fraction eg. 6/12)',
       value: formDetails.right_eye_pinhole,
+      type: 'text',
+    },
+    {
+      name: 'left_eye_pinhole',
+      label: 'Left Eye Pinhole (Fraction eg. 6/12)',
+      value: formDetails.left_eye_pinhole,
       type: 'text',
     },
   ];
@@ -103,6 +106,8 @@ export function VitalsForm({
         value={field.value || ''} //use empty string if value is null or undefined
         onChange={handleOnChange}
         unit={field.unit}
+        allowNegativeNumbers={field.allowNegativeNumbers}
+        allowDecimals={field.allowDecimals}
       />
     );
   });
@@ -119,6 +124,7 @@ export function VitalsForm({
       label: 'Hemocue Hb Count (Number)',
       value: formDetails.hemocue_count,
       type: 'number',
+      allowDecimals: true,
     },
     {
       name: 'blood_glucose',
@@ -126,6 +132,7 @@ export function VitalsForm({
       value: formDetails.blood_glucose,
       type: 'number',
       unit: 'mmol/L',
+      allowDecimals: true,
     },
     {
       name: 'others',
