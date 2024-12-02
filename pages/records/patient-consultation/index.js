@@ -170,7 +170,7 @@ const PatientConsultation = () => {
   }
 
   const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
+    const value = Number(event.target.value);
     loadVisitDetails(value);
   }, []);
 
