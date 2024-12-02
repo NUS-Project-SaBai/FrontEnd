@@ -5,6 +5,7 @@ export function InputField({
   value,
   onChange,
   unit,
+  placeholder = '',
   allowNegativeNumbers = false,
   allowDecimals = false,
   showRequiredAsterisk = false,
@@ -39,6 +40,7 @@ export function InputField({
           id={name}
           name={name}
           type={isNumberField ? 'text' : type}
+          placeholder={placeholder}
           value={value}
           onChange={isNumberField ? numberOnChangeInterceptor : onChange}
           className="flex-1 block w-full rounded-md border-2 py-1.5 px-1.5 bg-white text-gray-900  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
