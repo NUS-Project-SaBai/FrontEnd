@@ -7,16 +7,19 @@ export const VenueOptionsDropdown = ({
   handleInputChange,
   value,
   showRequiredAsterisk,
+  smaller = false,
 }) => {
   return (
     <div>
-      <label
-        htmlFor="village_prefix"
-        className="block text-sm font-medium leading-6 text-gray-900"
-      >
-        Village
-        {showRequiredAsterisk && <span className="text-red-500"> *</span>}
-      </label>
+      {!smaller && (
+        <label
+          htmlFor="village_prefix"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Village
+          {showRequiredAsterisk && <span className="text-red-500"> *</span>}
+        </label>
+      )}
       <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
         <select
           name="village_prefix"
@@ -26,7 +29,7 @@ export const VenueOptionsDropdown = ({
           className={`flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${VILLAGE_COLOR_CLASSES[value] || 'text-gray-500'}`}
         >
           <option hidden value="">
-            Please select an option
+            Please select {smaller ? '' : 'an option'}
           </option>
           {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
             <option

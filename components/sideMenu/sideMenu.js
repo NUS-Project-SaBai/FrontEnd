@@ -11,7 +11,7 @@ import {
   Cog8ToothIcon,
 } from '@heroicons/react/24/outline';
 import { OFFLINE } from '@/utils/constants';
-import { VenueOptionsDropdown } from '../registration/PatientRegistrationForm';
+import SideMenuVillageDropdown from './SideMenuVillageDropdown';
 
 const navigation = [
   {
@@ -70,13 +70,15 @@ export default function SideMenu() {
     }
   };
 
-  navigation.push({
-    name: 'Logout',
-    href: '#',
-    onClick: handleLogout,
-    icon: ArrowLeftStartOnRectangleIcon,
-    current: false,
-  });
+  useEffect(() => {
+    navigation.push({
+      name: 'Logout',
+      href: '#',
+      onClick: handleLogout,
+      icon: ArrowLeftStartOnRectangleIcon,
+      current: false,
+    });
+  }, []);
 
   useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
@@ -124,7 +126,7 @@ export default function SideMenu() {
             <div className="text-xs font-semibold leading-6 text-gray-400">
               Current Village
             </div>
-            <VenueOptionsDropdown />
+            <SideMenuVillageDropdown />
           </li>
           <div className="flex" />
           <li className="-mx-6 mt-auto">
