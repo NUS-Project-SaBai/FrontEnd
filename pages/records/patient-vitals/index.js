@@ -117,8 +117,8 @@ const PatientVitals = () => {
 
   const submitVitalsForm = useWithLoading(async () => {
     const formPayload = {
-      visit: selectedVisitID,
       ...vitalsFormDetails,
+      visit: selectedVisitID,
     };
     const filteredFormPayload = Object.fromEntries(
       Object.entries(formPayload).filter(([value]) => value)

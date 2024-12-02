@@ -116,8 +116,8 @@ const PatientConsultation = () => {
   const submitConsultationForm = useWithLoading(async () => {
     try {
       const formPayload = {
-        visit: selectedVisitID,
         ...consultationFormDetails,
+        visit: selectedVisitID,
       };
 
       const diagnosesPayload = consultationFormDetails.diagnoses.map(
