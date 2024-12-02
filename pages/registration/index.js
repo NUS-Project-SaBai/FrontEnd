@@ -96,10 +96,10 @@ const Registration = () => {
       return;
     }
 
-    // if (formDetails.gender == '') {
-    //   toast.error('Please select a gender');
-    //   return;
-    // }
+    if (formDetails.gender == '') {
+      toast.error('Please select a gender');
+      return;
+    }
 
     if (formDetails.village_prefix == '') {
       toast.error('Please select a village');
