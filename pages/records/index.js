@@ -8,12 +8,12 @@ import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 import { VillageContext } from '@/context/VillageContext';
+import useCachedVillageCode, {
+  VILLAGE_CODE_ALL,
+} from '@/hooks/useCachedVillageCode';
+import SearchField from '@/components/TextComponents/SearchField';
 
-function VillageDropdown({
-  value,
-  handleDropdownChangeWithStyle,
-  PATIENT_CODE_ALL,
-}) {
+export function VillageDropdown({ value, handleDropdownChangeWithStyle }) {
   return (
     <div className="field">
       <div className="control">
@@ -30,7 +30,7 @@ function VillageDropdown({
           onChange={handleDropdownChangeWithStyle}
           value={value}
         >
-          <option value={PATIENT_CODE_ALL}>{`${PATIENT_CODE_ALL}`}</option>
+          <option value={VILLAGE_CODE_ALL}>{`${VILLAGE_CODE_ALL}`}</option>
           {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
             <option
               className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
@@ -46,31 +46,13 @@ function VillageDropdown({
   );
 }
 
-function SearchField({ handleSearchChange }) {
-  return (
-    <div className="field flex-[3]">
-      <div className="control">
-        <InputField
-          type="text"
-          name="Input Patient/ID to Search"
-          label="Input Patient/ID to Search"
-          onChange={handleSearchChange}
-        />
-      </div>
-    </div>
-  );
-}
-
 function PatientList() {
   const [patients, setPatients] = useState([]);
   const [patientsFiltered, setPatientsFiltered] = useState([]);
 
-  const PATIENT_CODE_ALL = 'ALL';
-  const [patientCode, setPatientCode] = useState(PATIENT_CODE_ALL);
+  const [villageCode, setVillageCode] = useCachedVillageCode();
   const [patientSearch, setPatientSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-
-  const { village } = useContext(VillageContext);
 
   const itemsPerPage = 10;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -92,12 +74,8 @@ function PatientList() {
   }, []);
 
   useEffect(() => {
-    setPatientCode(village);
-  }, [village]);
-
-  useEffect(() => {
     filterPatients();
-  }, [patientSearch, patientCode, patients]);
+  }, [patientSearch, villageCode, patients]);
 
   function handleSearchChange(e) {
     const searchValue = e.target.value.toLowerCase().trim();
@@ -106,7 +84,7 @@ function PatientList() {
 
   function handleCodeChange(e) {
     const searchValue = e.target.value;
-    setPatientCode(searchValue);
+    setVillageCode(searchValue);
   }
 
   function handleDropdownChangeWithStyle(e) {
@@ -118,12 +96,12 @@ function PatientList() {
   }
 
   function filterPatients() {
-    console.log(patientCode);
+    console.log(villageCode);
     const filteredPatients = patients.filter(patient => {
       return (
         patient.filter_string.toLowerCase().trim().includes(patientSearch) &&
-        (patientCode === PATIENT_CODE_ALL ||
-          patient.village_prefix === patientCode)
+        (villageCode === VILLAGE_CODE_ALL ||
+          patient.village_prefix === villageCode)
       );
     });
     console.dir(filteredPatients);
@@ -289,9 +267,8 @@ function PatientList() {
         </h1>
         <div className="flex items-center space-x-4">
           <VillageDropdown
-            value={patientCode}
+            value={villageCode}
             handleDropdownChangeWithStyle={handleDropdownChangeWithStyle}
-            PATIENT_CODE_ALL={PATIENT_CODE_ALL}
           />
           <SearchField handleSearchChange={handleSearchChange} />
         </div>
