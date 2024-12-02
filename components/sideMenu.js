@@ -40,18 +40,6 @@ const navigation = [
     icon: BeakerIcon,
     current: false,
   },
-  {
-    name: 'Debugging',
-    href: '/debug',
-    icon: DeviceTabletIcon,
-    current: false,
-  },
-  {
-    name: 'Settings',
-    href: '/settings',
-    icon: Cog8ToothIcon,
-    current: false,
-  },
 ];
 
 const locations = [
