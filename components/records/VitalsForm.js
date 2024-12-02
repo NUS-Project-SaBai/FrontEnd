@@ -38,7 +38,6 @@ export function VitalsForm({
       value: formDetails.systolic,
       type: 'number',
       unit: 'mmHg',
-      allowDecimals: true,
     },
     {
       name: 'diastolic',
@@ -46,7 +45,6 @@ export function VitalsForm({
       value: formDetails.diastolic,
       type: 'number',
       unit: 'mmHg',
-      allowDecimals: true,
     },
     {
       name: 'heart_rate',
@@ -54,7 +52,6 @@ export function VitalsForm({
       value: formDetails.heart_rate,
       type: 'number',
       unit: 'BPM',
-      allowDecimals: true,
     },
     {
       name: 'temperature',
