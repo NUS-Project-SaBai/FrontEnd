@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import axiosInstance from '@/pages/api/_axiosInstance';
@@ -16,6 +16,7 @@ import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
 import { REGISTRATION_FORM_FIELDS } from '@/utils/constants';
+import { VillageContext } from '@/context/VillageContext';
 
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
@@ -33,6 +34,8 @@ const Registration = () => {
   const [scanSuggestionsList, setScanSuggestionsList] = useState([]);
 
   const [formDetails, setFormDetails] = useState(REGISTRATION_FORM_FIELDS);
+
+  const { village } = useContext(VillageContext);
 
   useEffect(() => {
     onRefresh();
@@ -52,6 +55,12 @@ const Registration = () => {
 
   function togglePatientModal() {
     setPatientModalOpen(!patientModalOpen);
+  }
+
+  function presetVillageIfUnset() {
+    if (!formDetails.village_prefix) {
+      setFormDetails({ ...formDetails, village_prefix: village });
+    }
   }
 
   function toggleScanModal() {
@@ -247,6 +256,7 @@ const Registration = () => {
               colour="green"
               text="New Patient"
               onClick={() => {
+                presetVillageIfUnset();
                 setPatientModalOpen(true);
               }}
             />

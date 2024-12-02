@@ -6,14 +6,44 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import toast from 'react-hot-toast';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
+import { VillageDropdown } from '@/pages/records';
+import useCachedVillageCode, {
+  VILLAGE_CODE_ALL,
+} from '@/hooks/useCachedVillageCode';
+import SearchField from '@/components/TextComponents/SearchField';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [ordersFiltered, setOrdersFiltered] = useState([]);
+  const [searchBy, setSearchBy] = useState('');
+  const [villageCode, setVillageCode] = useCachedVillageCode();
 
   useEffect(() => {
     loadPendingOrders();
   }, []);
+
+  function filterByVillage() {
+    console.log(villageCode);
+    if (villageCode === VILLAGE_CODE_ALL) return orders;
+    const filteredOrders = orders.filter(order => {
+      return order.visit.patient.village_prefix === villageCode;
+    });
+    console.dir(filteredOrders);
+    return filteredOrders;
+  }
+
+  function filterById() {
+    if (!searchBy) return ordersFilteredByVillage;
+    const filteredOrders = ordersFilteredByVillage.filter(order => {
+      return order.visit.patient.filter_string
+        .toLowerCase()
+        .trim()
+        .includes(searchBy);
+    });
+    return filteredOrders;
+  }
+
+  const ordersFilteredByVillage = filterByVillage();
+  const ordersFilteredById = filterById();
 
   const loadPendingOrders = useWithLoading(async () => {
     try {
@@ -21,7 +51,6 @@ const Orders = () => {
         '/orders?order_status=PENDING'
       );
       setOrders(orders);
-      setOrdersFiltered(orders);
     } catch (error) {
       toast.error(`Failed to fetch orders: ${error.message}`);
       console.error('Error loading orders:', error);
@@ -58,18 +87,8 @@ const Orders = () => {
     }
   });
 
-  const onFilterChange = event => {
-    const filteredOrders = orders.filter(order => {
-      return order.visit.patient.filter_string
-        .toLowerCase()
-        .trim()
-        .includes(event.target.value.toLowerCase().trim());
-    });
-    setOrdersFiltered(filteredOrders);
-  };
-
   const TableContent = () => {
-    return ordersFiltered.map(order => {
+    return ordersFilteredById.map(order => {
       const visit = order.visit;
       const patientVillagePrefix = visit.patient.village_prefix;
       const prescriptions = (
@@ -187,12 +206,15 @@ const Orders = () => {
     <div className="mx-4 my-2">
       <PageTitle title="Orders" />
       <div className="field mb-4">
-        <div className="control">
-          <InputField
-            type="text"
-            name="search"
-            label="Search for Patient/ID"
-            onChange={onFilterChange}
+        <div className="control flex items-center space-x-4">
+          <VillageDropdown
+            value={villageCode}
+            handleDropdownChangeWithStyle={e => setVillageCode(e.target.value)}
+          />
+          <SearchField
+            handleSearchChange={e =>
+              setSearchBy(e.target.value.toLowerCase().trim())
+            }
           />
         </div>
       </div>
