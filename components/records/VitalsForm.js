@@ -14,25 +14,31 @@ export function VitalsForm({
   onSubmit,
   patient,
   visit,
+  vitals,
 }) {
   const vitalFields = [
     {
       name: 'height',
       label: 'Height / CM',
+      placeholder: vitals.height,
       value: formDetails.height,
       type: 'number',
       unit: 'cm',
+      allowDecimals: true,
     },
     {
       name: 'weight',
       label: 'Weight / KG',
+      placeholder: vitals.weight,
       value: formDetails.weight,
       type: 'number',
       unit: 'kg',
+      allowDecimals: true,
     },
     {
       name: 'systolic',
       label: 'Systolic / mmHg',
+      placeholder: vitals.systolic,
       value: formDetails.systolic,
       type: 'number',
       unit: 'mmHg',
@@ -40,6 +46,7 @@ export function VitalsForm({
     {
       name: 'diastolic',
       label: 'Diastolic / mmHg',
+      placeholder: vitals.diastolic,
       value: formDetails.diastolic,
       type: 'number',
       unit: 'mmHg',
@@ -47,6 +54,7 @@ export function VitalsForm({
     {
       name: 'heart_rate',
       label: 'Heart Rate / BPM',
+      placeholder: vitals.heart_rate,
       value: formDetails.heart_rate,
       type: 'number',
       unit: 'BPM',
@@ -54,32 +62,38 @@ export function VitalsForm({
     {
       name: 'temperature',
       label: 'Temperature / °C',
+      placeholder: vitals.temperature,
       value: formDetails.temperature,
       type: 'number',
       unit: '°C',
-    },
-    {
-      name: 'left_eye_degree',
-      label: 'Left Eye (Fraction eg. 6/6)',
-      value: formDetails.left_eye_degree,
-      type: 'text',
+      allowDecimals: true,
     },
     {
       name: 'right_eye_degree',
       label: 'Right Eye (Fraction eg. 6/6)',
+      placeholder: vitals.right_eye_degree,
       value: formDetails.right_eye_degree,
       type: 'text',
     },
     {
-      name: 'left_eye_pinhole',
-      label: 'Left Eye Pinhole (Fraction eg. 6/12)',
-      value: formDetails.left_eye_pinhole,
+      name: 'left_eye_degree',
+      label: 'Left Eye (Fraction eg. 6/6)',
+      placeholder: vitals.left_eye_degree,
+      value: formDetails.left_eye_degree,
       type: 'text',
     },
     {
       name: 'right_eye_pinhole',
       label: 'Right Eye Pinhole (Fraction eg. 6/12)',
+      placeholder: vitals.right_eye_pinhole,
       value: formDetails.right_eye_pinhole,
+      type: 'text',
+    },
+    {
+      name: 'left_eye_pinhole',
+      label: 'Left Eye Pinhole (Fraction eg. 6/12)',
+      placeholder: vitals.left_eye_pinhole,
+      value: formDetails.left_eye_pinhole,
       type: 'text',
     },
   ];
@@ -91,9 +105,12 @@ export function VitalsForm({
         name={field.name}
         label={field.label}
         type={field.type}
-        value={field.value}
+        placeholder={field.placeholder}
+        value={field.value || ''} //use empty string if value is null or undefined
         onChange={handleOnChange}
         unit={field.unit}
+        allowNegativeNumbers={field.allowNegativeNumbers}
+        allowDecimals={field.allowDecimals}
       />
     );
   });
@@ -102,25 +119,31 @@ export function VitalsForm({
     {
       name: 'urine_test',
       label: 'Urine Dip Test (Text eg. Anyth)',
+      placeholder: vitals.urine_test,
       value: formDetails.urine_test,
       type: 'text',
     },
     {
       name: 'hemocue_count',
       label: 'Hemocue Hb Count (Number)',
+      placeholder: vitals.hemocue_count,
       value: formDetails.hemocue_count,
       type: 'number',
+      allowDecimals: true,
     },
     {
       name: 'blood_glucose',
       label: 'Capillary Blood Glucose (Decimal eg. 13.2)',
+      placeholder: vitals.blood_glucose,
       value: formDetails.blood_glucose,
       type: 'number',
       unit: 'mmol/L',
+      allowDecimals: true,
     },
     {
       name: 'others',
       label: 'Others (Text eg. Anyth)',
+      placeholder: vitals.others,
       value: formDetails.others,
       type: 'text',
     },
@@ -133,7 +156,8 @@ export function VitalsForm({
         name={field.name}
         label={field.label}
         type={field.type}
-        value={field.value}
+        placeholder={field.placeholder}
+        value={field.value || ''}
         onChange={handleOnChange}
         unit={field.unit}
       />
@@ -213,18 +237,12 @@ export function VitalsForm({
           </div>
         </div>
 
-        <div>
-          <label className="label text-lg font-semibold">
-            Children Vital Fields
-          </label>
-
-          <ChildrenVitalsFields
-            handleOnChange={handleOnChange}
-            formDetails={formDetails}
-            patient={patient}
-            visit={visit}
-          />
-        </div>
+        <ChildrenVitalsFields
+          handleOnChange={handleOnChange}
+          formDetails={formDetails}
+          patient={patient}
+          visit={visit}
+        />
       </div>
 
       <div style={{ height: '50px' }}></div>

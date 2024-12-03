@@ -11,6 +11,7 @@ import {
   Cog8ToothIcon,
 } from '@heroicons/react/24/outline';
 import { OFFLINE } from '@/utils/constants';
+import SideMenuVillageDropdown from './SideMenuVillageDropdown';
 
 const navigation = [
   {
@@ -38,18 +39,6 @@ const navigation = [
     name: 'Pharmacy Stock',
     href: '/pharmacy/stock',
     icon: BeakerIcon,
-    current: false,
-  },
-  {
-    name: 'Debugging',
-    href: '/debug',
-    icon: DeviceTabletIcon,
-    current: false,
-  },
-  {
-    name: 'Settings',
-    href: '/settings',
-    icon: Cog8ToothIcon,
     current: false,
   },
 ];
@@ -81,13 +70,15 @@ export default function SideMenu() {
     }
   };
 
-  navigation.push({
-    name: 'Logout',
-    href: '#',
-    onClick: handleLogout,
-    icon: ArrowLeftStartOnRectangleIcon,
-    current: false,
-  });
+  useEffect(() => {
+    navigation.push({
+      name: 'Logout',
+      href: '#',
+      onClick: handleLogout,
+      icon: ArrowLeftStartOnRectangleIcon,
+      current: false,
+    });
+  }, []);
 
   useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
@@ -133,28 +124,9 @@ export default function SideMenu() {
           </li>
           <li>
             <div className="text-xs font-semibold leading-6 text-gray-400">
-              Locations (Not Functional Yet)
+              Current Village
             </div>
-            <ul role="list" className="-mx-2 mt-2 space-y-1">
-              {locations.map(location => (
-                <li key={location.id}>
-                  <a
-                    href={location.href}
-                    className={classNames(
-                      locations.current
-                        ? 'bg-gray-800 text-white'
-                        : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                    )}
-                  >
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-                      {location.initial}
-                    </span>
-                    <span className="truncate">{location.id}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <SideMenuVillageDropdown />
           </li>
           <div className="flex" />
           <li className="-mx-6 mt-auto">

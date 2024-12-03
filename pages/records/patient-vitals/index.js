@@ -117,8 +117,8 @@ const PatientVitals = () => {
 
   const submitVitalsForm = useWithLoading(async () => {
     const formPayload = {
-      visit: selectedVisitID,
       ...vitalsFormDetails,
+      visit: selectedVisitID,
     };
     const filteredFormPayload = Object.fromEntries(
       Object.entries(formPayload).filter(([value]) => value)
@@ -160,7 +160,7 @@ const PatientVitals = () => {
   }
 
   const handleVisitChange = useCallback(event => {
-    const value = event.target.value;
+    const value = Number(event.target.value);
     loadVisitDetails(value);
   }, []);
 
@@ -235,6 +235,7 @@ const PatientVitals = () => {
             patient={patient}
             visit={visits.find(visit => visit.id === selectedVisitID)}
             onSubmit={submitVitalsForm}
+            vitals={vitals} //pass vitals as prop
           />
         </div>
       </div>
