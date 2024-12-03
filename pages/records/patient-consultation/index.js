@@ -221,7 +221,7 @@ const PatientConsultation = () => {
     }
   }
 
-  function submitNewOrder() {
+  async function submitNewOrder() {
     // Non-existent medication check: check if orderFormDetails.medicine (which is the id) is === 0 (which is the default value in the state obj)
     if (orderFormDetails.medicine === 0) {
       toast.error(
@@ -247,6 +247,26 @@ const PatientConsultation = () => {
     if (orderFormDetails.quantity > quantityStockMedication) {
       toast.error('Not enough medication in stock.');
       return;
+    }
+
+    // get pending quantity of medicine requested
+    const pendingQuantity = await axiosInstance
+      .get(`/medications/${orderFormDetails.medicine}?order_status=PENDING`)
+      .then(res => res.data.pending_quantity);
+
+    // Alert when (pending order + current_order) > stock
+    if (
+      -pendingQuantity + Number(orderFormDetails.quantity) >
+      quantityStockMedication
+    ) {
+      let alertResult = confirm(`Insufficient Stock!
+        Pending: ${-pendingQuantity}
+        Requesting: ${orderFormDetails.quantity}
+        Current Stock: ${quantityStockMedication} - ${-pendingQuantity} = ${quantityStockMedication + pendingQuantity}
+        `);
+      if (!alertResult) {
+        return;
+      }
     }
 
     const index = orders.findIndex(
