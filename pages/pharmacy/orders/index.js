@@ -108,7 +108,7 @@ const Orders = () => {
           {order.medication_review.medicine.medicine_name || ''}:{' '}
           {Math.abs(order.medication_review.quantity_changed)}
           <br />
-          {order.medication_review.medicine.notes && (
+          {order.notes && (
             <div className="truncate">Dosage Instructions: {order.notes}</div>
           )}
         </li>

@@ -295,6 +295,12 @@ const PatientConsultation = () => {
       return;
     }
 
+    // Ensure Dosage Instructions is non-empty
+    if (!orderFormDetails.notes || orderFormDetails.notes === '') {
+      toast.error('Please enter Dosage Instructions.');
+      return;
+    }
+
     const index = orders.findIndex(
       order => order.medicine === orderFormDetails.medicine
     );
