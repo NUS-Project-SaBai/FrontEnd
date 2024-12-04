@@ -2,12 +2,14 @@ import { Button, InputField, InputBox } from '@/components/TextComponents';
 import { VENUE_OPTIONS, VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 import AppWebcam from '@/components/WebCamera';
 import React, { useState } from 'react';
+import { VILLAGE_CODE_ALL } from '@/hooks/useCachedVillageCode';
 
 export const VenueOptionsDropdown = ({
   handleInputChange,
   value,
   showRequiredAsterisk,
   smaller = false,
+  showAllOption = false,
 }) => {
   return (
     <div>
@@ -31,6 +33,9 @@ export const VenueOptionsDropdown = ({
           <option hidden value="">
             Please select {smaller ? '' : 'an option'}
           </option>
+          {showAllOption && (
+            <option value={VILLAGE_CODE_ALL}>{`${VILLAGE_CODE_ALL}`}</option>
+          )}
           {Object.entries(VENUE_OPTIONS).map(([key, value]) => (
             <option
               className={`${VILLAGE_COLOR_CLASSES[key] || 'text-gray-500'}`}
