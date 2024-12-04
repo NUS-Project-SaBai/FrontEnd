@@ -254,15 +254,18 @@ const PatientConsultation = () => {
       .get(`/medications/${orderFormDetails.medicine}?order_status=PENDING`)
       .then(res => res.data.pending_quantity);
 
+    console.log(pendingQuantity, quantityStockMedication);
     // Alert when (pending order + current_order) > stock
     if (
       -pendingQuantity + Number(orderFormDetails.quantity) >
       quantityStockMedication
     ) {
-      let alertResult = confirm(`Insufficient Stock!
-        Pending: ${-pendingQuantity}
-        Requesting: ${orderFormDetails.quantity}
-        Current Stock: ${quantityStockMedication} - ${-pendingQuantity} = ${quantityStockMedication + pendingQuantity}
+      const alertResult = confirm(`
+        Warning (can ignore if ok)
+        Potentially Insufficient Stock!
+        Currently Requesting: ${orderFormDetails.quantity}
+        Total Potential Pending: ${-pendingQuantity}
+        Potentially Remaining: ${quantityStockMedication} - ${-pendingQuantity} = ${quantityStockMedication + pendingQuantity}
         `);
       if (!alertResult) {
         return;
