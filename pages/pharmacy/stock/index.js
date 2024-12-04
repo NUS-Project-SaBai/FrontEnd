@@ -45,11 +45,29 @@ const Stock = () => {
   });
 
   const onSubmitForm = useWithLoading(async () => {
+    // Medicine name validation
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
       return;
     }
 
+    const nameEnriched = medicationDetails.medicine_name.trim();
+    const medicine_name_search = nameEnriched.toUpperCase();
+    
+    const matching_medicine = medications
+        .find(m => m.medicine_name.toUpperCase() == medicine_name_search);
+
+    if (matching_medicine) {
+      toast.error('Medication ' + matching_medicine.medicine_name + ' already exists.');
+      return;
+    }
+
+    const updatedDetails = {
+      ...medicationDetails,
+      medicine_name: nameEnriched,
+    };
+
+    // Medicine quantity validation
     if (medicationDetails.quantityChange === '') {
       // check explicitly for empty string as the "!medicationDetails.quantityChange" check will catch zeros, which is allowed
       toast.error('Quantity to Add cannot be empty.');
@@ -57,14 +75,6 @@ const Stock = () => {
     }
 
     const quantityChange = medicationDetails.quantityChange;
-
-    const nameEnriched =
-      medicationDetails.medicine_name.trim();
-
-    const updatedDetails = {
-      ...medicationDetails,
-      medicine_name: nameEnriched,
-    };
 
     try {
       if (updatedDetails.pk) {
@@ -84,19 +94,6 @@ const Stock = () => {
         toast.success('Medication updated!');
 
       } else {
-
-        const medicine_name_search = updatedDetails.medicine_name
-            .trim()
-            .toUpperCase();
-        
-        const matching_medicine = medications
-            .find(m => m.medicine_name.toUpperCase() == medicine_name_search);
-
-        if (matching_medicine) {
-          toast.error('Medication ' + matching_medicine.medicine_name + ' already exists.');
-          return;
-        }
-
         if (quantityChange < 0) {
           toast.error('Invalid Number!');
           return;
