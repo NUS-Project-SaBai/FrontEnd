@@ -19,14 +19,13 @@ const Stock = () => {
   };
   const [medications, setMedications] = useState([]);
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
-  const [medicationDetails, setMedicationDetails] = useState(
-    blankMedicationDetails
-  );
+  const [medicationDetails, setMedicationDetails] = useState(blankMedicationDetails);
 
   const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
-  const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
-    useState(false);
+  const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] = useState(false);
   const [medication, setMedication] = useState(null);
+
+  const [modalHeader, setModalHeader] = useState("");
 
   useEffect(() => {
     loadMedicine();
@@ -180,7 +179,10 @@ const Stock = () => {
             <Button
               colour="green"
               text="Edit"
-              onClick={() => toggleModal(medicationDetails)}
+              onClick={() => {
+                setModalHeader("Edit Medication");
+                toggleModal(medicationDetails);
+                }}
             />
             <Button
               colour="red"
@@ -251,7 +253,14 @@ const Stock = () => {
           onChange={onFilterChange}
           className="mb-2"
         />
-        <Button colour="green" text="Add New Medicine" onClick={toggleModal} />
+        <Button 
+          colour="green" 
+          text="Add New Medicine" 
+          onClick={() => {
+            setModalHeader("Add Medication");
+            toggleModal();
+          }} 
+        />
       </div>
       <Table />
       <CustomModal
@@ -262,6 +271,7 @@ const Stock = () => {
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
+          header={modalHeader}
         />
       </CustomModal>
 
