@@ -8,7 +8,7 @@ export async function GET(req) {
 
   if (isImageRequest) {
     // Handle image request (e.g., JPG, JPEG, PNG)
-    const file = await getFile(req);
+    const file = await getFile(req, 'image');
 
     if (!file) {
       return new Response('File not found', { status: 404 });
@@ -21,7 +21,7 @@ export async function GET(req) {
     });
   } else if (isPDFRequest) {
     // Handle PDF request
-    const file = await getFile(req);
+    const file = await getFile(req, 'document');
 
     if (!file) {
       return new Response('File not found', { status: 404 });
