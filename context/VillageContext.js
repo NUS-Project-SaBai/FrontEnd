@@ -6,11 +6,10 @@ export const VillageContext = createContext();
 export const useLoading = () => useContext(LoadingContext);
 
 export const VillageProvider = ({ children }) => {
-  const [village, setVillageState] = useState('ALL');
+  const [village, setVillageState] = useState(undefined);
 
   useEffect(() => {
-    const cachedVillage = localStorage.getItem('village');
-    cachedVillage && setVillageState(cachedVillage);
+    setVillageState(localStorage.getItem('village'));
   }, []);
 
   function setVillage(village) {

@@ -6,11 +6,11 @@ import {
   DisplayField,
 } from '@/components/TextComponents/';
 
-export function MedicationForm({ handleInputChange, formDetails, header }) {
+export function MedicationForm({ handleInputChange, formDetails }) {
   return (
     <div className="space-y-2">
       <label className="flex items-center justify-center text-3xl font-bold text-sky-800 mb-2">
-        {header}
+        Edit Medication
       </label>
 
       <InputField

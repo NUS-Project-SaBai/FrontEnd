@@ -19,13 +19,14 @@ const Stock = () => {
   };
   const [medications, setMedications] = useState([]);
   const [medicationsFiltered, setMedicationsFiltered] = useState([]);
-  const [medicationDetails, setMedicationDetails] = useState(blankMedicationDetails);
+  const [medicationDetails, setMedicationDetails] = useState(
+    blankMedicationDetails
+  );
 
   const [medicationModalIsOpen, setMedicationModalIsOpen] = useState(false);
-  const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] = useState(false);
+  const [medicationHistoryModalIsOpen, setmedicationHistoryModalIsOpen] =
+    useState(false);
   const [medication, setMedication] = useState(null);
-
-  const [modalHeader, setModalHeader] = useState("");
 
   useEffect(() => {
     loadMedicine();
@@ -44,29 +45,10 @@ const Stock = () => {
   });
 
   const onSubmitForm = useWithLoading(async () => {
-    // Medicine name validation
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
       return;
     }
-
-    const nameEnriched = medicationDetails.medicine_name.trim();
-    const medicine_name_search = nameEnriched.toUpperCase();
-    
-    const matching_medicine = medications
-        .find(m => m.medicine_name.toUpperCase() == medicine_name_search);
-
-    if (matching_medicine) {
-      toast.error('Medication ' + matching_medicine.medicine_name + ' already exists.');
-      return;
-    }
-
-    const updatedDetails = {
-      ...medicationDetails,
-      medicine_name: nameEnriched,
-    };
-
-    // Medicine quantity validation
     if (medicationDetails.quantityChange === '') {
       // check explicitly for empty string as the "!medicationDetails.quantityChange" check will catch zeros, which is allowed
       toast.error('Quantity to Add cannot be empty.');
@@ -74,6 +56,15 @@ const Stock = () => {
     }
 
     const quantityChange = medicationDetails.quantityChange;
+
+    const nameEnriched =
+      medicationDetails.medicine_name.charAt(0).toUpperCase() +
+      medicationDetails.medicine_name.slice(1);
+
+    const updatedDetails = {
+      ...medicationDetails,
+      medicine_name: nameEnriched,
+    };
 
     try {
       if (updatedDetails.pk) {
@@ -91,7 +82,6 @@ const Stock = () => {
           notes: updatedDetails.notes,
         });
         toast.success('Medication updated!');
-
       } else {
         if (quantityChange < 0) {
           toast.error('Invalid Number!');
@@ -179,10 +169,7 @@ const Stock = () => {
             <Button
               colour="green"
               text="Edit"
-              onClick={() => {
-                setModalHeader("Edit Medication");
-                toggleModal(medicationDetails);
-                }}
+              onClick={() => toggleModal(medicationDetails)}
             />
             <Button
               colour="red"
@@ -253,14 +240,7 @@ const Stock = () => {
           onChange={onFilterChange}
           className="mb-2"
         />
-        <Button 
-          colour="green" 
-          text="Add New Medicine" 
-          onClick={() => {
-            setModalHeader("Add Medication");
-            toggleModal();
-          }} 
-        />
+        <Button colour="green" text="Add New Medicine" onClick={toggleModal} />
       </div>
       <Table />
       <CustomModal
@@ -271,7 +251,6 @@ const Stock = () => {
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
-          header={modalHeader}
         />
       </CustomModal>
 
