@@ -91,16 +91,13 @@ const Registration = () => {
       'bs2',
       'sabai',
     ];
-
+    console.log(formDetails);
     if (formDetails.name == '') {
       toast.error('Name cannot be empty.');
       return;
     }
 
-    if (
-      formDetails['date_of_birth'].length !== 10 &&
-      formDetails['date_of_birth'].length !== 0
-    ) {
+    if (formDetails['date_of_birth'].length !== 10) {
       toast.error('Please enter a valid date of birth!');
       return;
     }
