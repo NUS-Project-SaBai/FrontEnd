@@ -295,6 +295,12 @@ const PatientConsultation = () => {
       return;
     }
 
+    // Ensure Dosage Instructions is non-empty
+    if (!orderFormDetails.notes || orderFormDetails.notes === '') {
+      toast.error('Please enter Dosage Instructions.');
+      return;
+    }
+
     // get pending quantity of medicine requested
     const pendingQuantity = await axiosInstance
       .get(`/medications/${orderFormDetails.medicine}?order_status=PENDING`)
