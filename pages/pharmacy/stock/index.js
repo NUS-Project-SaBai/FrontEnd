@@ -59,8 +59,7 @@ const Stock = () => {
     const quantityChange = medicationDetails.quantityChange;
 
     const nameEnriched =
-      medicationDetails.medicine_name.charAt(0).toUpperCase() +
-      medicationDetails.medicine_name.slice(1);
+      medicationDetails.medicine_name.trim();
 
     const updatedDetails = {
       ...medicationDetails,
@@ -83,11 +82,21 @@ const Stock = () => {
           notes: updatedDetails.notes,
         });
         toast.success('Medication updated!');
+
       } else {
-        if (medications.find(a => a.medicine_name == updatedDetails.medicine_name)) {
-          toast.error('Medication ' + updatedDetails.medicine_name + ' already exists.');
+
+        const medicine_name_search = updatedDetails.medicine_name
+            .trim()
+            .toUpperCase();
+        
+        const matching_medicine = medications
+            .find(m => m.medicine_name.toUpperCase() == medicine_name_search);
+
+        if (matching_medicine) {
+          toast.error('Medication ' + matching_medicine.medicine_name + ' already exists.');
           return;
         }
+
         if (quantityChange < 0) {
           toast.error('Invalid Number!');
           return;
