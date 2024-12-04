@@ -56,6 +56,36 @@ const PatientConsultation = () => {
     onRefresh();
   }, []);
 
+  // Load saved data from localStorage when the component mounts
+  useEffect(() => {
+    const savedData = localStorage.getItem(
+      `consultationFormDetails_visit${selectedVisitID}`
+    );
+    if (savedData) {
+      setConsultationFormDetails(JSON.parse(savedData));
+    }
+  }, [selectedVisitID]);
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      localStorage.setItem(
+        `consultationFormDetails_visit${selectedVisitID}`,
+        JSON.stringify(consultationFormDetails)
+      );
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [selectedVisitID, consultationFormDetails]);
+
+  // Purge data from localStorage on successful submit
+  const clearLocalStorageData = () => {
+    localStorage.removeItem(`consultationFormDetails_visit${selectedVisitID}`);
+    setConsultationFormDetails({
+      diagnoses: [],
+    });
+  };
+
   const onRefresh = useWithLoading(async () => {
     const patientID = Router.query.id;
     try {
@@ -139,6 +169,21 @@ const PatientConsultation = () => {
       return;
     }
 
+    if (!consultationFormDetails.past_medical_history) {
+      toast.error('Past Medical History required');
+      return;
+    }
+
+    if (!consultationFormDetails.consultation) {
+      toast.error('Consultation Details required');
+      return;
+    }
+
+    if (!consultationFormDetails.plan) {
+      toast.error('Consultation Plan required');
+      return;
+    }
+
     try {
       const formPayload = {
         ...consultationFormDetails,
@@ -164,6 +209,7 @@ const PatientConsultation = () => {
       };
 
       await axiosInstance.post('/consults', combinedPayload);
+      clearLocalStorageData();
 
       toast.success('Medical Consult Completed!');
       Router.push('/records');
