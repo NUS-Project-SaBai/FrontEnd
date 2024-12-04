@@ -114,6 +114,31 @@ const PatientConsultation = () => {
   });
 
   const submitConsultationForm = useWithLoading(async () => {
+    if (consultationFormDetails.diagnoses.length == 0) {
+      toast.error('Please include at least one diagnosis');
+      return;
+    }
+    const validDiagnosesCategory = consultationFormDetails.diagnoses.every(
+      diagnosis =>
+        diagnosis.category !== undefined && diagnosis.category !== null
+    );
+
+    const validDiagnosesDetails = consultationFormDetails.diagnoses.every(
+      diagnosis => diagnosis.details !== '' && diagnosis.details !== null
+    );
+
+    if (!validDiagnosesCategory) {
+      toast.error('All diagnoses must have a defined category');
+    }
+
+    if (!validDiagnosesDetails) {
+      toast.error('All diagnoses must have accompanying details');
+    }
+
+    if (!validDiagnosesCategory || !validDiagnosesDetails) {
+      return;
+    }
+
     try {
       const formPayload = {
         ...consultationFormDetails,
@@ -345,6 +370,11 @@ const PatientConsultation = () => {
           handleInputChange={handleOrderFormChange}
           orderDetails={orderFormDetails}
           medicationOptions={medications
+            .sort((a, b) =>
+              a.medicine_name
+                .toLowerCase()
+                .localeCompare(b.medicine_name.toLowerCase())
+            )
             .filter(
               med =>
                 orders.find(orderMed => orderMed.medicine == med.id) == null

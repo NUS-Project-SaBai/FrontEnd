@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from 'react-sidebar';
-import SideMenu from './sideMenu';
+import SideMenu from './sideMenu/sideMenu';
 import withAuth from '../utils/auth';
 import { OFFLINE } from '@/utils/constants';
 

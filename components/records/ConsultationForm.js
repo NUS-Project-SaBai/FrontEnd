@@ -126,7 +126,10 @@ export function ConsultationForm({
 
       <hr className="mt-2" />
 
-      <label className="label">* Referred for (within clinic)</label>
+      <label className="label">
+        Referral for
+        <span className="block text-sm text-gray-500">(This is optional)</span>
+      </label>
       <select
         className="bg-blue-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-4  "
         name="referred_for"
@@ -137,6 +140,8 @@ export function ConsultationForm({
         <option value="Diagnostic">Diagnostic</option>
         <option value="Acute">Acute</option>
         <option value="Chronic">Chronic</option>
+        <option value="Acute">Advanced Vision [Within clinic]</option>
+        <option value="Chronic">Glasses Fitting [Within clinic]</option>
       </select>
 
       <InputBox
