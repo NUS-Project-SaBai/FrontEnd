@@ -2,7 +2,11 @@
 node_modules/
 package-lock.json
 .next
+.eslintcache
 
 .env
 .env.local
 user.json
+.vercel
+.vscode
+certificates

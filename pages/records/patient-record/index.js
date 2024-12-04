@@ -1,295 +1,265 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
-import _ from "lodash";
-import Modal from "react-modal";
-import moment from "moment";
-import { ConsultationsView } from "@/pages/records/Consultations/ConsultationsView";
-import { VitalsTable } from "@/pages/records/VitalsTable";
-import { ConsultationsTable } from "@/pages/records/Consultations/ConsultationsTable";
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  ConsultationView,
+  ConsultationsTable,
+  VitalsTable,
+  Header,
+  PatientView,
+  PrescriptionsTable,
+  HeightWeightGraph,
+} from '@/components/records';
+import { PatientRegistrationForm } from '@/components/registration';
+import Router from 'next/router';
+import { Button, PageTitle } from '@/components/TextComponents/';
+import axiosInstance from '@/pages/api/_axiosInstance';
+import CustomModal from '@/components/CustomModal';
+import toast from 'react-hot-toast';
+import { urltoFile } from '@/utils/helpers';
+import withAuth from '@/utils/auth';
+import useWithLoading from '@/utils/loading';
 
-import { VisitPrescriptionsTable } from "@/pages/records/VisitPrescriptionsTable";
-import { PatientView } from "./PatientView";
-import { API_URL, CLOUDINARY_URL } from "@/utils/constants";
-import withAuth from "@/utils/auth";
-import Router from "next/router";
+const PatientRecord = () => {
+  const [noRecords, setNoRecords] = useState(true);
 
-import { Button } from "@/components/TextComponents/Button";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+  const [patient, setPatient] = useState({});
+  const [patientEdit, setPatientEdit] = useState({});
+  const [visits, setVisits] = useState([]);
+  const [vitals, setVitals] = useState({});
+  const [consults, setConsults] = useState([]);
+  const [selectedConsult, setSelectedConsult] = useState(null);
+  const [selectedVisitID, setSelectedVisitID] = useState(null);
 
-Modal.setAppElement("#__next");
+  const [prescriptions, setPrescriptions] = useState([]);
 
-const Record = () => {
-  const [state, setState] = useState({
-    mounted: false,
-    patient: {},
-    medications: [],
-    visits: [],
-    visitID: null,
-    consults: [],
-    orders: [],
-    referredFor: [],
-    vitals: {},
-    formDetails: {},
-    medicationDetails: {},
-    formModalOpen: false,
-    isEditing: false,
-    viewModalOpen: false,
-    modalContent: {},
-  });
+  const [vitalsModalOpen, setVitalsModalOpen] = useState(false);
+  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [editPatientModalOpen, setEditPatientModalOpen] = useState(false);
 
-  const handleVisitChange = useCallback((event) => {
-    const value = event.target.value;
-    loadVisitDetails(value);
-  }, []);
+  const [imageDetails, setImageDetails] = useState(null);
 
   useEffect(() => {
     onRefresh();
   }, []);
 
-  async function onRefresh() {
-    const router = Router;
-    const { query } = router;
-    const { id: patientId } = query;
-    const { data: patient } = await axios.get(
-      `${API_URL}/patients/${patientId}`,
-    );
-    const { data: visits } = await axios.get(
-      `${API_URL}/visits?patient=${patientId}`,
-    );
-    const visitsSorted = visits.sort((a, b) => b.id - a.id);
-    setState((prevState) => ({
-      ...prevState,
-      patient: patient,
-      visits: visitsSorted,
-    }));
-    if (visitsSorted.length > 0) {
-      const visitID = visitsSorted[0].id;
-      loadVisitDetails(visitID);
-      loadMedicationStock();
-    }
-  }
-
-  function toggleViewModal(viewType = null, consult = {}) {
-    setState((prevState) => ({
-      ...prevState,
-      viewModalOpen: !state.viewModalOpen,
-      viewType,
-      consult,
-    }));
-  }
-
-  function renderViewModal() {
-    const { vitals, viewModalOpen, consult, viewType } = state;
-    const modalContent =
-      viewType == "vitals" ? (
-        <VitalsTable content={vitals} />
-      ) : (
-        <ConsultationsView content={consult} />
+  const onRefresh = useWithLoading(async () => {
+    const patientID = Router.query.id;
+    try {
+      const { data: patient } = await axiosInstance.get(
+        `/patients/${patientID}`
       );
-    return (
-      <Modal
-        isOpen={viewModalOpen}
-        onRequestClose={() => toggleViewModal()}
-        style={viewModalStyles}
-      >
-        {modalContent}
-      </Modal>
-    );
-  }
+      const { data: visits } = await axiosInstance.get(
+        `/visits?patient=${patientID}`
+      );
 
-  async function loadMedicationStock() {
-    const { data: medications } = await axios.get(`${API_URL}/medications`);
-    const { data: orders } = await axios.get(
-      `${API_URL}/orders?order_status=PENDING`,
-    );
-    const reservedMedications = {};
-    orders.forEach((order) => {
-      const medicationID = order.medicine;
-      const quantityReserved = order.quantity;
-      if (typeof reservedMedications[medicationID] === "undefined") {
-        reservedMedications[medicationID] = quantityReserved;
-      } else {
-        reservedMedications[medicationID] =
-          reservedMedications[medicationID] + quantityReserved;
+      // patient.date_of_birth is in ISOstring YYYY-MM-DDTHH:mm:ss.sssZ
+      patient.date_of_birth = patient.date_of_birth.split('T')[0];
+      setImageDetails(patient.picture);
+      setPatient(patient);
+      setVisits(visits);
+
+      if (visits.length > 0) {
+        const visitID = visits[0].id;
+        loadVisitDetails(visitID);
       }
-    });
-    setState((prevState) => ({
-      ...prevState,
-      medications,
-      reservedMedications,
-    }));
-  }
+    } catch (error) {
+      toast.error(`Error loading patient data: ${error.message}`);
+      console.error('Error loading patient data:', error);
+    }
+  });
 
-  async function loadVisitDetails(visitID) {
-    const { data: consults } = await axios.get(
-      `${API_URL}/consults?visit=${visitID}`,
-    );
-    const { data: prescriptions } = await axios.get(
-      `${API_URL}/orders?visit=${visitID}`,
-    );
-    const consultsEnriched = consults.map((consult) => {
-      const consultPrescriptions = prescriptions.filter(
-        (prescription) => prescription.consult.id === consult.id,
+  const loadVisitDetails = useWithLoading(async visitID => {
+    try {
+      const { data: consults } = await axiosInstance.get(
+        `/consults?visit=${visitID}`
       );
-      return {
-        ...consult,
-        prescriptions: consultPrescriptions,
-      };
-    });
-    const { data: vitals } = await axios.get(
-      `${API_URL}/vitals?visit=${visitID}`,
+      const prescriptions = consults
+        .flatMap(consult => consult.prescriptions)
+        .filter(prescription => prescription != null);
+      const { data: vitals } = await axiosInstance.get(
+        `/vitals?visit=${visitID}`
+      );
+
+      setNoRecords(false);
+      setConsults(consults);
+      setPrescriptions(prescriptions);
+      setVitals(vitals[0] || {});
+      setSelectedVisitID(visitID);
+    } catch (error) {
+      toast.error(`Error loading visit details: ${error.message}`);
+      console.error('Error loading visit details:', error);
+    }
+  });
+
+  const submitPatientEdit = useWithLoading(async () => {
+    if (!patientEdit.name) {
+      toast.error('Name cannot be empty.');
+      return;
+    }
+
+    const updatedPatient = {
+      ...patientEdit,
+    };
+
+    const formData = new FormData();
+    Object.keys(updatedPatient).forEach(key =>
+      formData.append(key, updatedPatient[key])
     );
-    setState((prevState) => ({
-      ...prevState,
-      consults: consultsEnriched,
-      vitals: vitals[0] || {},
-      visitPrescriptions: consultsEnriched.flatMap((x) => x.prescriptions),
-      mounted: true,
-      visitID,
-    }));
+
+    if (imageDetails) {
+      const pictureFile = await urltoFile(
+        imageDetails,
+        'patient_screenshot.jpg',
+        'image/jpg'
+      );
+      formData.append('picture', pictureFile);
+    }
+
+    if (updatedPatient.pk) {
+      try {
+        await axiosInstance.patch(`/patients/${Router.query.id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        toast.success('Patient Details updated!');
+      } catch (error) {
+        toast.error(`Encountered an error when update! ${error.message}`);
+      }
+    }
+    toggleEditPatientModal();
+    onRefresh();
+  });
+
+  function toggleVitalsModal() {
+    setVitalsModalOpen(!vitalsModalOpen);
   }
 
-  function renderHeader() {
-    const { patient, visits } = state;
-    console.log("Render: ", state);
-    const visitOptions = visits.map((visit) => {
-      const date = moment(visit.date).format("DD MMMM YYYY");
+  function toggleConsultationModal() {
+    setConsultationModalOpen(!consultationModalOpen);
+  }
+
+  function toggleEditPatientModal() {
+    setPatientEdit(patient);
+    setEditPatientModalOpen(!editPatientModalOpen);
+  }
+
+  function selectConsult(consult) {
+    setSelectedConsult(consult);
+    toggleConsultationModal();
+  }
+
+  const handleVisitChange = useCallback(event => {
+    const visitID = Number(event.target.value);
+    loadVisitDetails(visitID);
+  }, []);
+
+  const handlePatientChange = event => {
+    const newPatientDetails = {
+      ...patientEdit,
+      [event.target.name]: event.target.value,
+    };
+    setPatientEdit(newPatientDetails);
+  };
+
+  function LeftColumn() {
+    if (typeof vitals === 'undefined') {
       return (
-        <option key={visit.id} value={visit.id}>
-          {date}
-        </option>
+        <div className="my-2">
+          <h2>Not Done</h2>
+        </div>
       );
-    });
-
-    return (
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 md:col-span-2">
-          <img
-            src={`${CLOUDINARY_URL}/${patient.picture}`}
-            alt="Placeholder image"
-            className="h-48 w-48 object-cover rounded-md"
-          />
-        </div>
-        <div className="col-span-12 md:col-span-3">
-          <div>
-            <label className="block text-gray-700">Village ID</label>
-            <p className="text-lg font-medium">{`${
-              patient.village_prefix
-            }${patient.pk.toString().padStart(3, "0")}`}</p>
-          </div>
-          <div className="mt-4">
-            <label className="block text-gray-700">Visit on</label>
-            <div className="relative">
-              <select
-                name="medication"
-                onChange={handleVisitChange}
-                className="block w-full bg-white border border-gray-300 rounded-md py-2 px-4 appearance-none focus:outline-none focus:border-blue-500"
-              >
-                {visitOptions}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <ChevronDownIcon className="h-5 w-5" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-span-12 md:col-span-3">
-          <div>
-            <label className="block text-gray-700">Name</label>
-            <p className="text-lg font-medium">{patient.name}</p>
-          </div>
-        </div>
-        <div className="col-span-12 md:col-span-4"></div>
-      </div>
-    );
-  }
-
-  function renderFirstColumn() {
-    const { vitals, patient } = state;
+    }
 
     return (
       <div className="my-2">
-        {typeof vitals === "undefined" ? (
-          <h2>Not Done</h2>
-        ) : (
+        <div className="grid grid-cols-2 gap-4">
           <Button
-            text={"View Vitals"}
-            onClick={() => toggleViewModal("vitals")}
+            text={'View Vitals'}
+            onClick={() => toggleVitalsModal()}
             colour="indigo"
           />
-        )}
-        <PatientView content={patient} />
+          <Button
+            text={'Edit Patient Details'}
+            onClick={() => toggleEditPatientModal()}
+            colour="green"
+          />
+        </div>
+        <PatientView patient={patient} />
       </div>
     );
   }
 
-  function renderSecondColumn() {
-    const { vitals, consults, visitPrescriptions } = state;
+  function RightColumn() {
     return (
       <div className="space-y-8">
-        <ConsultationsTable
-          content={consults}
-          buttonFunction={toggleViewModal}
+        <ConsultationsTable consults={consults} buttonOnClick={selectConsult} />
+        <PrescriptionsTable prescriptions={prescriptions} />
+        <HeightWeightGraph
+          age={
+            new Date(
+              visits.find(visit => visit.id === selectedVisitID).date
+            ).getFullYear() - new Date(patient.date_of_birth).getFullYear()
+          }
+          weight={vitals.weight}
+          height={vitals.height}
+          gender={patient.gender}
         />
-        <VisitPrescriptionsTable content={visitPrescriptions} />
       </div>
     );
   }
 
-  function render() {
-    if (!state.mounted)
-      return (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <h2 style={{ color: "black", fontSize: "1.5em" }}>
-            This patient has no records currently
-          </h2>
-        </div>
-      );
-
+  if (noRecords) {
     return (
-      <div
-        style={{
-          marginTop: 27.5,
-          marginLeft: 25,
-          marginRight: 25,
-        }}
-      >
-        {renderViewModal()}
-        <h1 className="text-3xl font-bold text-center text-sky-800 mb-6">
-          Patient Records
-        </h1>
-        {renderHeader()}
-
-        <hr className="mt-2" />
-
-        <div className="grid grid-cols-2 gap-x-6">
-          <div>{renderFirstColumn()}</div>
-          <div>{renderSecondColumn()}</div>
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <h2 className="text-black text-xl">
+          This patient has no records currently
+        </h2>
       </div>
     );
   }
 
-  return <>{render()}</>;
+  return (
+    <div className="mx-6 overflow-hidden">
+      <CustomModal isOpen={vitalsModalOpen} onRequestClose={toggleVitalsModal}>
+        <VitalsTable
+          vitals={vitals}
+          patient={patient}
+          visit={visits.find(visit => visit.id === selectedVisitID)}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={editPatientModalOpen}
+        onRequestClose={toggleEditPatientModal}
+        onSubmit={submitPatientEdit}
+      >
+        <PatientRegistrationForm
+          formDetails={patientEdit}
+          imageDetails={imageDetails}
+          setImageDetails={setImageDetails}
+          handleInputChange={handlePatientChange}
+        />
+      </CustomModal>
+
+      <CustomModal
+        isOpen={consultationModalOpen}
+        onRequestClose={toggleConsultationModal}
+      >
+        <ConsultationView consult={selectedConsult} />
+      </CustomModal>
+      <PageTitle title="Patient Records" desc="" />
+      <Header
+        patient={patient}
+        visits={visits}
+        handleVisitChange={handleVisitChange}
+      />
+      <hr className="mt-2" />
+      <div className="grid grid-cols-2 gap-x-6">
+        <LeftColumn />
+        <RightColumn />
+      </div>
+    </div>
+  );
 };
 
-const viewModalStyles = {
-  content: {
-    left: "30%",
-    right: "12.5%",
-    top: "12.5%",
-    bottom: "12.5%",
-  },
-  overlay: {
-    zIndex: 4,
-  },
-};
-
-export default withAuth(Record);
+export default withAuth(PatientRecord);
