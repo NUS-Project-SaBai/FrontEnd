@@ -64,46 +64,6 @@ export function HeightWeightGraph({ age, weight, height, gender }) {
       context.moveTo(xPixel + crossHeight, heightPixel - crossHeight); // Starting point
       context.lineTo(xPixel - crossHeight, heightPixel + crossHeight); // Ending point
       context.stroke(); // Draw the line
-
-      // Function to draw rounded rectangle as blurred background
-      const drawRoundedRect = (x, y, width, height, radius) => {
-        context.beginPath();
-        context.moveTo(x + radius, y);
-        context.lineTo(x + width - radius, y);
-        context.quadraticCurveTo(x + width, y, x + width, y + radius);
-        context.lineTo(x + width, y + height - radius);
-        context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-        context.lineTo(x + radius, y + height);
-        context.quadraticCurveTo(x, y + height, x, y + height - radius);
-        context.lineTo(x, y + radius);
-        context.quadraticCurveTo(x, y, x + radius, y);
-        context.closePath();
-        context.fill();
-      };
-
-      // Set rounded rectangle properties
-      const rectWidth = 75;
-      const rectHeight = 25;
-      const radius = 5;
-
-      // Draw background for weight text
-      context.fillStyle = 'rgba(255, 255, 255, 0.75)'; // White with 70% opacity
-      drawRoundedRect(xPixel + crossHeight, weightPixel - crossHeight - rectHeight / 2, rectWidth, rectHeight, radius);
-
-      // Display the weight text next to the weight cross
-      context.fillStyle = 'red';
-      context.font = '14px Arial';
-      context.fillText(`${weight} kg`, xPixel + crossHeight + 5, weightPixel - crossHeight);
-
-      // Draw background for height text
-      context.fillStyle = 'rgba(255, 255, 255, 0.75)';
-      drawRoundedRect(xPixel + crossHeight, heightPixel - crossHeight - rectHeight / 2, rectWidth, rectHeight, radius);
-
-      // Display the height text next to the height cross
-      context.fillStyle = 'blue';
-      context.font = '14px Arial';
-      context.fillText(`${height} cm`, xPixel + crossHeight + 5, heightPixel - crossHeight);
-    
     };
   }, [age, weight, height]);
 

@@ -58,7 +58,7 @@ const Registration = () => {
   }
 
   function presetVillageIfUnset() {
-    if (!formDetails.village_prefix && village !== 'ALL') {
+    if (!formDetails.village_prefix) {
       setFormDetails({ ...formDetails, village_prefix: village });
     }
   }

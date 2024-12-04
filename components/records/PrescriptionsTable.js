@@ -28,9 +28,6 @@ export function PrescriptionsTable({ prescriptions }) {
             {quantity}
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            {prescription.notes}
-          </td>
-          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             {status}
           </td>
         </tr>
@@ -62,12 +59,6 @@ export function PrescriptionsTable({ prescriptions }) {
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
                       Quantity
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Dosage Instructions
                     </th>
                     <th
                       scope="col"
