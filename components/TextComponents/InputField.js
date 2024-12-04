@@ -23,7 +23,7 @@ export function InputField({
       (allowNegativeNumbers &&
         data === '-' &&
         RegExp(/^-[0-9]*$/).test(value)) || // only allow entering a dash (minus sign) if it is the first character
-      (allowDecimals && data === '.' && count(value, /\./g) === 1) // only allow entering a single period
+      (allowDecimals && data && RegExp(/^[0-9]*.[0-9]*$/).test(value)) // only allow entering a single period
     ) {
       onChange(e);
     }
