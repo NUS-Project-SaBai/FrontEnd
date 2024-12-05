@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import {
   IdentificationIcon,
@@ -7,11 +7,10 @@ import {
   BeakerIcon,
   ClipboardDocumentListIcon,
   ArrowLeftStartOnRectangleIcon,
-  DeviceTabletIcon,
-  Cog8ToothIcon,
 } from '@heroicons/react/24/outline';
 import { OFFLINE } from '@/utils/constants';
-import SideMenuVillageDropdown from './SideMenuVillageDropdown';
+import VenueOptionsDropdown from '@/components/VenueOptionsDropdown';
+import { VillageContext } from '@/context/VillageContext';
 
 const navigation = [
   {
@@ -43,14 +42,21 @@ const navigation = [
   },
 ];
 
-const locations = [
-  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
+}
+
+function SideMenuVillageDropdown() {
+  const { village, setVillage } = useContext(VillageContext);
+  return (
+    <VenueOptionsDropdown
+      value={village}
+      key={'sideMenu'}
+      smaller
+      handleInputChange={e => setVillage(e.target.value)}
+      showAllOption
+    />
+  );
 }
 
 export default function SideMenu() {

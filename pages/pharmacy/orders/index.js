@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import withAuth from '@/utils/auth';
-import { Button, InputField, PageTitle } from '@/components/TextComponents';
+import { Button, SearchField, PageTitle } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import toast from 'react-hot-toast';
 import useWithLoading from '@/utils/loading';
@@ -10,7 +10,6 @@ import { VillageDropdown } from '@/pages/records';
 import useCachedVillageCode, {
   VILLAGE_CODE_ALL,
 } from '@/hooks/useCachedVillageCode';
-import SearchField from '@/components/TextComponents/SearchField';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -248,6 +247,8 @@ const Orders = () => {
             handleDropdownChangeWithStyle={e => setVillageCode(e.target.value)}
           />
           <SearchField
+            name={'Input Patient Name/ID to Search'}
+            label={'Input Patient Name/ID to Search'}
             handleSearchChange={e =>
               setSearchBy(e.target.value.toLowerCase().trim())
             }
