@@ -20,7 +20,7 @@
 # `git push --delete origin master`
 
 
-protected_branch='add-pre-commit-check'
+protected_branch='add-pre-commit-'
 
 policy="\n\n[Policy] Never push code directly to the "$protected_branch" branch! (Prevented with pre-push hook.)\n\n"
 
