@@ -9,8 +9,6 @@ function Layout(props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [displaySideBar, setDisplaySideBar] = useState(true);
 
-  // tets
-
   useEffect(() => {
     // 768px is tailwind breakpoint for md
     const mql = window.matchMedia('(min-width: 768px)');
