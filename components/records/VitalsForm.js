@@ -160,8 +160,6 @@ export function VitalsForm({
         value={field.value || ''}
         onChange={handleOnChange}
         unit={field.unit}
-        allowDecimals={field.allowDecimals}
-        allowNegativeNumbers={field.allowNegativeNumbers}
       />
     );
   });

@@ -13,13 +13,11 @@ import useCachedVillageCode, {
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [diagnoses, setDiagnoses] = useState([]);
   const [searchBy, setSearchBy] = useState('');
   const [villageCode, setVillageCode] = useCachedVillageCode();
 
   useEffect(() => {
     loadPendingOrders();
-    loadDiagnoses();
   }, []);
 
   function filterByVillage() {
@@ -45,16 +43,6 @@ const Orders = () => {
 
   const ordersFilteredByVillage = filterByVillage();
   const ordersFilteredById = filterById();
-
-  const loadDiagnoses = useWithLoading(async () => {
-    try {
-      const { data: diagnoses } = await axiosInstance.get('/diagnosis');
-      setDiagnoses(diagnoses);
-    } catch (error) {
-      toast.error(`Failed to fetch diagnoses: ${error.message}`);
-      console.error('Error loading diagnoses:', error);
-    }
-  });
 
   const loadPendingOrders = useWithLoading(async () => {
     try {
@@ -210,13 +198,7 @@ const Orders = () => {
                       scope="col"
                       className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                     >
-                      Dosage
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
-                    >
-                      Diagnoses
+                      Record
                     </th>
                     <th
                       scope="col"
