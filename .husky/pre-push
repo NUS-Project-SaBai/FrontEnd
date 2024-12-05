@@ -6,10 +6,6 @@ echo -e "===\nPre-push Hook: Checking branch name"
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 PROTECTED_BRANCHES="^(add-pre-commit-check)"
 
-if [[ $1 != *"$BRANCH"* ]]
-then
-  echo -e "\n🚫 You must use (git push origin $BRANCH)\n" && exit 1
-fi
 
 if [[ "$BRANCH" =~ $PROTECTED_BRANCHES ]]
 then
