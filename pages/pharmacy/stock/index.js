@@ -5,7 +5,12 @@ import {
   MedicationHistoryForm,
 } from '@/components/pharmacy/stock/';
 import withAuth from '@/utils/auth';
-import { Button, InputField, PageTitle } from '@/components/TextComponents';
+import {
+  Button,
+  InputField,
+  PageTitle,
+  SearchField,
+} from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import useWithLoading from '@/utils/loading';
 import CustomModal from '@/components/CustomModal';
@@ -246,12 +251,10 @@ const Stock = () => {
       <PageTitle title="Medication Stock" />
 
       <div className="space-y-2">
-        <InputField
-          label="Search for Medicine"
-          type="text"
-          name="search"
-          onChange={onFilterChange}
-          className="mb-2"
+        <SearchField
+          label={'Search for Medicine'}
+          name={'search'}
+          handleSearchChange={onFilterChange}
         />
         <Button
           colour="green"

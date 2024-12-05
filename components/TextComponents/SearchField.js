@@ -1,13 +1,13 @@
 import { InputField } from './InputField';
 
-export default function SearchField({ handleSearchChange }) {
+export function SearchField({ name, label, handleSearchChange }) {
   return (
     <div className="field flex-[3]">
       <div className="control">
         <InputField
           type="text"
-          name="Input Patient Name/ID to Search"
-          label="Input Patient Name/ID to Search"
+          name={name}
+          label={label}
           onChange={handleSearchChange}
         />
       </div>
