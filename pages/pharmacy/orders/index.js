@@ -16,10 +16,16 @@ const Orders = () => {
   const [diagnoses, setDiagnoses] = useState([]);
   const [searchBy, setSearchBy] = useState('');
   const [villageCode, setVillageCode] = useCachedVillageCode();
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 10;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
     loadPendingOrders();
     loadDiagnoses();
+    setCurrentPage(1);
   }, []);
 
   function filterByVillage() {
@@ -99,7 +105,7 @@ const Orders = () => {
   });
 
   const TableContent = () => {
-    return ordersFilteredById.map(order => {
+    return ordersFilteredById.slice(startIndex, endIndex).map(order => {
       const visit = order.visit;
       const patientVillagePrefix = visit.patient.village_prefix;
       const prescriptions = (
@@ -233,6 +239,27 @@ const Orders = () => {
             </div>
           </div>
         </div>
+        <span className="isolate inline-flex rounded-md shadow-sm mt-2">
+          <button
+            type="button"
+            className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={
+              currentPage ===
+              Math.ceil(ordersFilteredById.length / itemsPerPage)
+            }
+          >
+            Next
+          </button>
+        </span>
       </div>
     );
   };
