@@ -105,11 +105,13 @@ const Orders = () => {
       const patientVillagePrefix = visit.patient.village_prefix;
       const prescriptions = (
         <li key={order.medication_review.id}>
-          {order.medication_review.medicine.medicine_name || ''}:{' '}
+          <b>{order.medication_review.medicine.medicine_name || ''}:</b>{' '}
           {Math.abs(order.medication_review.quantity_changed)}
           <br />
           {order.notes && (
-            <div className="truncate">Dosage Instructions: {order.notes}</div>
+            <div className="w-50 text-wrap">
+              <b>Dosage Instructions:</b> {order.notes}
+            </div>
           )}
         </li>
       );
@@ -150,7 +152,7 @@ const Orders = () => {
                   <li key={diagnosis.id}>
                     <b>Diagnosis {index + 1}</b>
                     <p>Category: {diagnosis.category}</p>
-                    <p>Notes: {diagnosis.details}</p>
+                    <p className="w-50 text-wrap">Notes: {diagnosis.details}</p>
                   </li>
                 ))}
             </ul>
