@@ -10,7 +10,6 @@ export default function SideMenuVillageDropdown() {
       key={'sideMenu'}
       smaller
       handleInputChange={e => setVillage(e.target.value)}
-      showAllOption
     />
   );
 }

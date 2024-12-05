@@ -75,7 +75,6 @@ function PatientList() {
 
   useEffect(() => {
     filterPatients();
-    setCurrentPage(1);
   }, [patientSearch, villageCode, patients]);
 
   function handleSearchChange(e) {

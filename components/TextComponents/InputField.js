@@ -13,15 +13,14 @@ export function InputField({
   const isNumberField = type === 'number';
 
   function numberOnChangeInterceptor(e) {
-    const value = e.target.value; // the result of the field after adding the character
-
-    // 3 capturing group: 1.'-';2.'.';3.<INVALID CHAR>
-    const regexResult = value.match(/^(-)?[0-9]?[1-9]*(\.)?[0-9]*(.)*$/);
-    // write to input when valid
+    const data = e.nativeEvent.data;
+    const count = (str, regex) => (str.match(regex) || []).length;
+    // allow null for backspace, numbers, or negative sign at the start of the input
     if (
-      regexResult[3] === undefined &&
-      (allowDecimals || regexResult[2] === undefined) &&
-      (allowNegativeNumbers || regexResult[1] === undefined)
+      data === null ||
+      RegExp(/[0-9]/).test(data) ||
+      (allowNegativeNumbers && data === '-' && e.target.value === '-') || // only allow entering a dash (minus sign) if it is the first character
+      (allowDecimals && data === '.' && count(e.target.value, /\./g) === 1) // only allow entering a single period
     ) {
       onChange(e);
     }
