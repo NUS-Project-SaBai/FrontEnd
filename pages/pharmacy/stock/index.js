@@ -47,6 +47,7 @@ const Stock = () => {
   });
 
   const onSubmitForm = useWithLoading(async () => {
+    // Medicine name validation
     if (!medicationDetails.medicine_name) {
       toast.error('Medicine name cannot be empty.');
       return;
@@ -270,6 +271,7 @@ const Stock = () => {
         <MedicationForm
           formDetails={medicationDetails}
           handleInputChange={handleMedicationChange}
+          header={modalHeader}
         />
       </CustomModal>
 
