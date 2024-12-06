@@ -50,6 +50,22 @@
 
    Log into localhost with the credentials in the "Key Credentials" document.
 
+5. Offline Setup
+   Change .env.local for the following variables (note that IP Address should be your static IP):
+
+   ```
+   NEXT_PUBLIC_OFFLINE='OFFLINE'
+   NEXT_PUBLIC_API_URL='https://192.168.1.100:3000/api/v1'
+   ```
+
+   Run the following command to start offline
+
+   ```
+   pnpm offline
+   ```
+
+   Refer to BackEnd offline Setup
+
 ## Technology used
 
 1. Node Version Manager [https://github.com/nvm-sh/nvm]
