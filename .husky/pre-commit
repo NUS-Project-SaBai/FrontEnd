@@ -1,4 +1,11 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+branch_name=$(git symbolic-ref --short HEAD)
+
+if [ "$branch_name" = "main" ]; then
+  echo "Error: Direct commits to the 'main' branch are not allowed."
+  exit 1
+fi
+
 npx lint-staged

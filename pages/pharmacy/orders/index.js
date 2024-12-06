@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import withAuth from '@/utils/auth';
-import { Button, InputField, PageTitle } from '@/components/TextComponents';
+import { Button, SearchField, PageTitle } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import toast from 'react-hot-toast';
 import useWithLoading from '@/utils/loading';
@@ -10,15 +10,16 @@ import { VillageDropdown } from '@/pages/records';
 import useCachedVillageCode, {
   VILLAGE_CODE_ALL,
 } from '@/hooks/useCachedVillageCode';
-import SearchField from '@/components/TextComponents/SearchField';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [diagnoses, setDiagnoses] = useState([]);
   const [searchBy, setSearchBy] = useState('');
   const [villageCode, setVillageCode] = useCachedVillageCode();
 
   useEffect(() => {
     loadPendingOrders();
+    loadDiagnoses();
   }, []);
 
   function filterByVillage() {
@@ -44,6 +45,16 @@ const Orders = () => {
 
   const ordersFilteredByVillage = filterByVillage();
   const ordersFilteredById = filterById();
+
+  const loadDiagnoses = useWithLoading(async () => {
+    try {
+      const { data: diagnoses } = await axiosInstance.get('/diagnosis');
+      setDiagnoses(diagnoses);
+    } catch (error) {
+      toast.error(`Failed to fetch diagnoses: ${error.message}`);
+      console.error('Error loading diagnoses:', error);
+    }
+  });
 
   const loadPendingOrders = useWithLoading(async () => {
     try {
@@ -93,12 +104,12 @@ const Orders = () => {
       const patientVillagePrefix = visit.patient.village_prefix;
       const prescriptions = (
         <li key={order.medication_review.id}>
-          {order.medication_review.medicine.medicine_name || ''}:{' '}
+          <b>{order.medication_review.medicine.medicine_name || ''}:</b>{' '}
           {Math.abs(order.medication_review.quantity_changed)}
           <br />
-          {order.medication_review.medicine.notes && (
-            <div className="truncate">
-              Notes: {order.medication_review.medicine.notes}
+          {order.notes && (
+            <div className="w-50 text-wrap">
+              <b>Dosage Instructions:</b> {order.notes}
             </div>
           )}
         </li>
@@ -126,6 +137,24 @@ const Orders = () => {
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             <ul>{prescriptions}</ul>
+          </td>
+          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            <ul>
+              {diagnoses
+                .filter(
+                  // Filter by consult
+                  diagnosis => {
+                    return diagnosis.consult.id === order.consult;
+                  }
+                )
+                .map((diagnosis, index) => (
+                  <li key={diagnosis.id}>
+                    <b>Diagnosis {index + 1}</b>
+                    <p>Category: {diagnosis.category}</p>
+                    <p className="w-50 text-wrap">Notes: {diagnosis.details}</p>
+                  </li>
+                ))}
+            </ul>
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
             <Button
@@ -181,7 +210,13 @@ const Orders = () => {
                       scope="col"
                       className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
                     >
-                      Record
+                      Dosage
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-base font-semibold text-gray-900"
+                    >
+                      Diagnoses
                     </th>
                     <th
                       scope="col"
@@ -212,6 +247,8 @@ const Orders = () => {
             handleDropdownChangeWithStyle={e => setVillageCode(e.target.value)}
           />
           <SearchField
+            name={'Input Patient Name/ID to Search'}
+            label={'Input Patient Name/ID to Search'}
             handleSearchChange={e =>
               setSearchBy(e.target.value.toLowerCase().trim())
             }

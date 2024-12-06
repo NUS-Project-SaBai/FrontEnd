@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import Router from 'next/router';
 import toast from 'react-hot-toast';
 import withAuth from '@/utils/auth';
-import { Button, InputField } from '@/components/TextComponents';
+import { Button, SearchField } from '@/components/TextComponents';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
@@ -11,7 +11,6 @@ import { VillageContext } from '@/context/VillageContext';
 import useCachedVillageCode, {
   VILLAGE_CODE_ALL,
 } from '@/hooks/useCachedVillageCode';
-import SearchField from '@/components/TextComponents/SearchField';
 
 export function VillageDropdown({ value, handleDropdownChangeWithStyle }) {
   return (
@@ -75,6 +74,7 @@ function PatientList() {
 
   useEffect(() => {
     filterPatients();
+    setCurrentPage(1);
   }, [patientSearch, villageCode, patients]);
 
   function handleSearchChange(e) {
@@ -270,7 +270,11 @@ function PatientList() {
             value={villageCode}
             handleDropdownChangeWithStyle={handleDropdownChangeWithStyle}
           />
-          <SearchField handleSearchChange={handleSearchChange} />
+          <SearchField
+            name={'Input Patient Name/ID to Search'}
+            label={'Input Patient Name/ID to Search'}
+            handleSearchChange={handleSearchChange}
+          />
         </div>
       </div>
 
