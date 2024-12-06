@@ -64,7 +64,7 @@
    pnpm offline
    ```
 
-   Refer to BackEnd offline Setup
+   Refer to BackEnd offline Setup.
 
 ## Technology used
 
