@@ -14,7 +14,7 @@ export function VitalsTable({ vitals, patient, visit }) {
     {
       label: 'Blood Pressure (Systolic / Diastolic) / mmHg',
       value: `${vitals.systolic} / ${vitals.diastolic}`,
-      highlight: shouldHighlightBloodPressure,
+      highlight: shouldHighlightBloodPressure && 'red' 
     },
     { label: 'Heart Rate', value: vitals.heart_rate },
     { label: 'Temperature', value: vitals.temperature },
