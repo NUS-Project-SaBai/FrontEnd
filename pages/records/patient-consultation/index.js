@@ -452,7 +452,7 @@ const PatientConsultation = () => {
                 key={medication.id}
                 value={`${medication.id} ${medication.medicine_name}`}
               >
-                {medication.medicine_name}
+                {medication.medicine_name} (QTY: {medication.quantity})
               </option>
             ))}
         />

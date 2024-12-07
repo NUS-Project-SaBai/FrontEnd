@@ -14,7 +14,7 @@ export function VitalsTable({ vitals, patient, visit }) {
     {
       label: 'Blood Pressure (Systolic / Diastolic) / mmHg',
       value: `${vitals.systolic} / ${vitals.diastolic}`,
-      highlight: shouldHighlightBloodPressure,
+      highlight: shouldHighlightBloodPressure && 'red' 
     },
     { label: 'Heart Rate', value: vitals.heart_rate },
     { label: 'Temperature', value: vitals.temperature },
@@ -26,9 +26,24 @@ export function VitalsTable({ vitals, patient, visit }) {
     { label: 'Urine Dip Test', value: vitals.urine_test },
     { label: 'Hemocue Hb Count', value: vitals.hemocue_count },
     {
-      label: 'Blood Glucose',
-      value: vitals.blood_glucose,
-      highlight: vitals.blood_glucose > 6.1,
+      label: 'Non-Fasting Blood Glucose',
+      value: vitals.blood_glucose_non_fasting,
+      highlight:
+        vitals.blood_glucose_non_fasting >= 11.1
+          ? 'red'
+          : vitals.blood_glucose_non_fasting >= 7.8
+            ? 'yellow'
+            : undefined,
+    },
+    {
+      label: 'Fasting Blood Glucose',
+      value: vitals.blood_glucose_fasting,
+      highlight:
+        vitals.blood_glucose_fasting >= 7.0
+          ? 'red'
+          : vitals.blood_glucose_fasting >= 6.0
+            ? 'yellow'
+            : undefined,
     },
     { label: 'Diabetes Mellitus?', value: vitals.diabetes_mellitus },
     { label: 'Others', value: vitals.others },
