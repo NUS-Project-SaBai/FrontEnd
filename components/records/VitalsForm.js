@@ -141,7 +141,7 @@ export function VitalsForm({
       allowDecimals: true,
     },
     {
-      name: 'blood_glucose',
+      name: 'blood_glucose_fasting',
       label: 'Fasting Capillary Blood Glucose (Decimal eg. 13.2)',
       placeholder: vitals.blood_glucose_fasting,
       value: formDetails.blood_glucose_fasting,
