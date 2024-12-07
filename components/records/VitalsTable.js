@@ -26,9 +26,14 @@ export function VitalsTable({ vitals, patient, visit }) {
     { label: 'Urine Dip Test', value: vitals.urine_test },
     { label: 'Hemocue Hb Count', value: vitals.hemocue_count },
     {
-      label: 'Blood Glucose',
-      value: vitals.blood_glucose,
-      highlight: vitals.blood_glucose > 6.1,
+      label: 'Non-Fasting Blood Glucose',
+      value: vitals.blood_glucose_non_fasting,
+      highlight: vitals.blood_glucose_non_fasting > 6.1,
+    },
+    {
+      label: 'Fasting Blood Glucose',
+      value: vitals.blood_glucose_fasting,
+      highlight: vitals.blood_glucose_fasting > 6.1,
     },
     { label: 'Diabetes Mellitus?', value: vitals.diabetes_mellitus },
     { label: 'Others', value: vitals.others },
