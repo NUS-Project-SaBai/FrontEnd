@@ -96,7 +96,6 @@ function PatientList() {
   }
 
   function filterPatients() {
-    console.log(villageCode);
     const filteredPatients = patients.filter(patient => {
       return (
         patient.filter_string.toLowerCase().trim().includes(patientSearch) &&

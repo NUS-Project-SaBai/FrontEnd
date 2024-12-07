@@ -91,7 +91,6 @@ const Registration = () => {
       'bs2',
       'sabai',
     ];
-    console.log(formDetails);
     if (formDetails.name == '') {
       toast.error('Name cannot be empty.');
       return;
@@ -178,7 +177,6 @@ const Registration = () => {
         scanFormData
       );
 
-      console.log(response.length);
       if (response.length == 0) {
         toast.error('Patient does not exist!');
         return;
