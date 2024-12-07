@@ -23,7 +23,6 @@ const Orders = () => {
   }, []);
 
   function filterByVillage() {
-    console.log(villageCode);
     if (villageCode === VILLAGE_CODE_ALL) return orders;
     const filteredOrders = orders.filter(order => {
       return order.visit.patient.village_prefix === villageCode;
