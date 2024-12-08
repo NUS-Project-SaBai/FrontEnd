@@ -10,32 +10,6 @@ export function APIComponent({ baseURL, path }) {
 
   useEffect(() => {
     setUrl(baseURL + path);
-    // Run initial GET request to check API and set payload
-    const fetchData = async () => {
-      try {
-        const res = await axiosInstance.get(baseURL + path, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        setResponse(res.data);
-
-        let templateData = res.data;
-
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          templateData = res.data[0];
-        }
-
-        if (typeof templateData === 'object') {
-          setPayload(JSON.stringify(templateData, null, 2));
-        }
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    fetchData();
   }, [baseURL, path]);
 
   const handleSubmit = async e => {
