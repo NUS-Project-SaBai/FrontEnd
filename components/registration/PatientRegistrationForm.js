@@ -186,7 +186,7 @@ export function PatientRegistrationForm({
               <div className="flex gap-x-4">
                 <Button
                   colour="green"
-                  text="Take Photo"
+                  text={`${imageDetails ? 'Retake' : 'Take'} photo`}
                   onClick={toggleCameraOpen}
                 />
                 <Button

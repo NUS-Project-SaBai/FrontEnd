@@ -3,7 +3,7 @@ import AppWebcam from '@/components/WebCamera';
 import React, { useState } from 'react';
 
 export function PatientScanForm({ imageDetails, setImageDetails }) {
-  const [cameraIsOpen, setCameraIsOpen] = useState(false);
+  const [cameraIsOpen, setCameraIsOpen] = useState(true);
   const [webcam, setWebcam] = useState(null);
 
   const webcamSetRef = webcam => {
@@ -40,7 +40,11 @@ export function PatientScanForm({ imageDetails, setImageDetails }) {
         {cameraIsOpen ? (
           <Button colour="red" text="Cancel" onClick={toggleCameraOpen} />
         ) : (
-          <Button colour="green" text="Take Photo" onClick={toggleCameraOpen} />
+          <Button
+            colour="green"
+            text="Retake photo"
+            onClick={toggleCameraOpen}
+          />
         )}
       </div>
     </div>

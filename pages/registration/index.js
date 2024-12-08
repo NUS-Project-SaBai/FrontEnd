@@ -269,7 +269,6 @@ const Registration = () => {
               onClick={() => {
                 presetVillageIfUnset();
                 setPatientModalOpen(true);
-                syncNewPatientPhoto();
               }}
             />
             <Button
