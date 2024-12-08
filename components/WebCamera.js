@@ -5,7 +5,7 @@ import { Button } from '@/components/TextComponents/Button';
 const videoConstraints = {
   width: 720,
   height: 720,
-  facingMode: 'user',
+  facingMode: 'environment',
 };
 
 const AppWebcam = ({ webcamSetRef, webcamCapture }) => (
