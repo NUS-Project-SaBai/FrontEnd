@@ -266,7 +266,6 @@ const Registration = () => {
               onClick={() => {
                 presetVillageIfUnset();
                 setPatientModalOpen(true);
-                console.log('get cached picture');
                 axiosInstance.get('/patients/search_face').then(picture => {
                   console.log('alsidugflaksudhjb', picture);
                   setImageDetails('data:image/png;base64,' + picture.data);

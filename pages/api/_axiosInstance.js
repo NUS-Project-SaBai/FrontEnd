@@ -13,6 +13,10 @@ axiosInstance.interceptors.request.use(async config => {
     config.headers['doctor'] = offline_user;
     return config;
   }
+  if (process.env.NODE_ENV === 'development') {
+    config.headers.set('ngrok-skip-browser-warning', 1);
+  }
+
   try {
     const token = await fetch('/api/token').then(res => {
       if (!res.ok) {
