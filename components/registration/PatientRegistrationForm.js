@@ -11,6 +11,7 @@ export function PatientRegistrationForm({
 }) {
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [webcam, setWebcam] = useState(null);
+  console.log(imageDetails);
 
   const webcamSetRef = webcam => {
     setWebcam(webcam);

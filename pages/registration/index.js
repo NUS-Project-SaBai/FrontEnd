@@ -35,6 +35,8 @@ const Registration = () => {
 
   const [formDetails, setFormDetails] = useState(REGISTRATION_FORM_FIELDS);
 
+  const [patientNotFound, setPatientNotFound] = useState(false);
+
   const { village } = useContext(VillageContext);
 
   useEffect(() => {
@@ -183,6 +185,7 @@ const Registration = () => {
 
       console.log(response.length);
       if (response.length == 0) {
+        setPatientNotFound(true);
         toast.error('Patient does not exist!');
         return;
       }
@@ -241,6 +244,11 @@ const Registration = () => {
           setScanModalOpen={setScanModalOpen}
           suggestionList={scanSuggestionsList}
         />
+        {/* {patientNotFound && (
+          <div className="flex w-full justify-center mt-4">
+            <Button text="Upload photo" colour="green" onClick={uploadPhoto} />
+          </div>
+        )} */}
       </CustomModal>
       <div>
         <div>
@@ -258,6 +266,11 @@ const Registration = () => {
               onClick={() => {
                 presetVillageIfUnset();
                 setPatientModalOpen(true);
+                console.log('get cached picture');
+                axiosInstance.get('/patients/search_face').then(picture => {
+                  console.log('alsidugflaksudhjb', picture);
+                  setImageDetails('data:image/png;base64,' + picture.data);
+                });
               }}
             />
             <Button
@@ -265,6 +278,7 @@ const Registration = () => {
               text="Scan Face"
               onClick={() => {
                 setScanModalOpen(true);
+                setPatientNotFound(false);
               }}
             />
           </div>
