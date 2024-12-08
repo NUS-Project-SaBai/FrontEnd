@@ -215,6 +215,13 @@ const Registration = () => {
     }
   });
 
+  function syncNewPatientPhoto() {
+    axiosInstance.get('/patients/search_face').then(picture => {
+      console.log('alsidugflaksudhjb', picture);
+      setImageDetails('data:image/png;base64,' + picture.data);
+    });
+  }
+
   return (
     <div className="mx-4">
       <CustomModal
@@ -227,6 +234,7 @@ const Registration = () => {
           imageDetails={imageDetails}
           setImageDetails={setImageDetails}
           handleInputChange={handleInputChange}
+          syncNewPatientPhoto={syncNewPatientPhoto}
         />
       </CustomModal>
 
@@ -244,11 +252,6 @@ const Registration = () => {
           setScanModalOpen={setScanModalOpen}
           suggestionList={scanSuggestionsList}
         />
-        {/* {patientNotFound && (
-          <div className="flex w-full justify-center mt-4">
-            <Button text="Upload photo" colour="green" onClick={uploadPhoto} />
-          </div>
-        )} */}
       </CustomModal>
       <div>
         <div>
@@ -266,10 +269,7 @@ const Registration = () => {
               onClick={() => {
                 presetVillageIfUnset();
                 setPatientModalOpen(true);
-                axiosInstance.get('/patients/search_face').then(picture => {
-                  console.log('alsidugflaksudhjb', picture);
-                  setImageDetails('data:image/png;base64,' + picture.data);
-                });
+                syncNewPatientPhoto();
               }}
             />
             <Button

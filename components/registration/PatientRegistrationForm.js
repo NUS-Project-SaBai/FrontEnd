@@ -8,6 +8,7 @@ export function PatientRegistrationForm({
   imageDetails,
   handleInputChange,
   setImageDetails,
+  syncNewPatientPhoto,
 }) {
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [webcam, setWebcam] = useState(null);
@@ -182,11 +183,18 @@ export function PatientRegistrationForm({
             {cameraIsOpen ? (
               <Button colour="red" text="Cancel" onClick={toggleCameraOpen} />
             ) : (
-              <Button
-                colour="green"
-                text="Take Photo"
-                onClick={toggleCameraOpen}
-              />
+              <div className="flex gap-x-4">
+                <Button
+                  colour="green"
+                  text="Take Photo"
+                  onClick={toggleCameraOpen}
+                />
+                <Button
+                  colour="green"
+                  text="Sync photo"
+                  onClick={syncNewPatientPhoto}
+                />
+              </div>
             )}
           </div>
         </div>
