@@ -19,7 +19,6 @@ const Orders = () => {
 
   useEffect(() => {
     loadPendingOrders();
-    loadDiagnoses();
   }, []);
 
   function filterByVillage() {
@@ -46,22 +45,13 @@ const Orders = () => {
   const ordersFilteredByVillage = filterByVillage();
   const ordersFilteredById = filterById();
 
-  const loadDiagnoses = useWithLoading(async () => {
-    try {
-      const { data: diagnoses } = await axiosInstance.get('/diagnosis');
-      setDiagnoses(diagnoses);
-    } catch (error) {
-      toast.error(`Failed to fetch diagnoses: ${error.message}`);
-      console.error('Error loading diagnoses:', error);
-    }
-  });
-
   const loadPendingOrders = useWithLoading(async () => {
     try {
-      const { data: orders } = await axiosInstance.get(
+      const { data: orders_diagnoses_bundle } = await axiosInstance.get(
         '/orders?order_status=PENDING'
       );
-      setOrders(orders);
+      setOrders(orders_diagnoses_bundle['orders']);
+      setDiagnoses(orders_diagnoses_bundle['diagnoses']);
     } catch (error) {
       toast.error(`Failed to fetch orders: ${error.message}`);
       console.error('Error loading orders:', error);
