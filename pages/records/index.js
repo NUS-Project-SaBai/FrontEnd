@@ -59,7 +59,9 @@ function PatientList() {
 
   const fetchPatients = useWithLoading(async () => {
     try {
-      const response = await axiosInstance.get('/patients');
+      const response = await axiosInstance.get(
+        `/patients${villageCode === VILLAGE_CODE_ALL ? '' : '?village_code=' + villageCode.toLowerCase()}`
+      );
       setPatients(response.data);
       setPatientsFiltered(response.data);
     } catch (error) {
@@ -70,7 +72,7 @@ function PatientList() {
 
   useEffect(() => {
     fetchPatients();
-  }, []);
+  }, [villageCode]);
 
   useEffect(() => {
     filterPatients();
@@ -96,13 +98,8 @@ function PatientList() {
   }
 
   function filterPatients() {
-    console.log(villageCode);
     const filteredPatients = patients.filter(patient => {
-      return (
-        patient.filter_string.toLowerCase().trim().includes(patientSearch) &&
-        (villageCode === VILLAGE_CODE_ALL ||
-          patient.village_prefix === villageCode)
-      );
+      return patient.filter_string.toLowerCase().trim().includes(patientSearch);
     });
     console.dir(filteredPatients);
     setPatientsFiltered(filteredPatients);
