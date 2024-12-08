@@ -15,7 +15,7 @@ export function InputField({
   function numberOnChangeInterceptor(e) {
     const value = e.target.value; // the result of the field after adding the character
     // 3 capturing group: 1.'-';2.'.';3.<INVALID CHAR>
-    const regexResult = value.match(/^(-)?[0-9]?[1-9]*(\.)?[0-9]*(.)*$/);
+    const regexResult = value.match(/^(-)?[1-9]?[0-9]*(\.)?[0-9]*(.)*$/);
     // write to input when valid
     if (
       regexResult[3] === undefined &&
