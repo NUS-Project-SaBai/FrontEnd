@@ -198,7 +198,6 @@ const Registration = () => {
   });
 
   const submitNewVisit = useWithLoading(async patient => {
-    let timeDiffInMin = 0;
     try {
       const { data: patient_visits } = await axiosInstance.get(
         `/visits?patient=${patient.pk}`
@@ -209,26 +208,26 @@ const Registration = () => {
 
       const currentDate = new Date();
       const mostRecentVisitDate = new Date(mostRecentVisit.date);
-      timeDiffInMin =
+      const timeDiffInMin =
         Math.abs(currentDate.getTime() - mostRecentVisitDate.getTime()) /
         (1000 * 60);
-    } catch (error) {
-      toast.error(`Error fetching patient visits: ${error.message}`);
-      console.error('Error fetching patient vists:', error);
-    }
 
-    if (timeDiffInMin < 60) {
-      const isNotDuplicateVisit = confirm(
-        `It's only been ${Math.floor(timeDiffInMin)} min since a visit for this patient was created.
+      if (timeDiffInMin < 60) {
+        const isNotDuplicateVisit = confirm(
+          `It's only been ${Math.floor(timeDiffInMin)} min since a visit for this patient was created.
         Are you sure you want to create a new visit?
         (Note: duplicate visits will cause unnecessary complications)
         Press CANCEL to NOT CREATE a new visit.
         Press OK to CREATE a new visit.`
-      );
+        );
 
-      if (!isNotDuplicateVisit) {
-        return;
+        if (!isNotDuplicateVisit) {
+          return;
+        }
       }
+    } catch (error) {
+      toast.error(`Error fetching patient visits: ${error.message}`);
+      console.error('Error fetching patient vists:', error);
     }
 
     try {
