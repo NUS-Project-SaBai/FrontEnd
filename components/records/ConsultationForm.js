@@ -140,8 +140,8 @@ export function ConsultationForm({
         <option value="Diagnostic">Diagnostic</option>
         <option value="Acute">Acute</option>
         <option value="Chronic">Chronic</option>
-        <option value="Acute">Advanced Vision [Within clinic]</option>
-        <option value="Chronic">Glasses Fitting [Within clinic]</option>
+        <option value="AdvancedVision">Advanced Vision [Within clinic]</option>
+        <option value="GlassesFitting">Glasses Fitting [Within clinic]</option>
       </select>
 
       <InputBox
