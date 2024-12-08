@@ -4,8 +4,8 @@ import { useContext, useEffect, useState } from 'react';
 export const VILLAGE_CODE_ALL = 'ALL';
 
 export default function useCachedVillageCode() {
-  const [villageCode, setVillageCode] = useState(VILLAGE_CODE_ALL);
   const { village } = useContext(VillageContext);
+  const [villageCode, setVillageCode] = useState(village);
   useEffect(() => {
     setVillageCode(village);
   }, [village]);
