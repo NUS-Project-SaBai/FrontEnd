@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import useWithLoading from '@/utils/loading';
+import NoVisitPlaceholder from '@/components/records/NoVisitPlaceholder';
 
 const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);
@@ -177,6 +178,9 @@ const PatientVitals = () => {
   }
 
   if (!mounted) return null;
+
+  if (!vitals)
+    return <NoVisitPlaceholder patient={patient} onRefresh={onRefresh} />;
 
   return (
     <div className="mt-7.5 mx-6 overflow-hidden">

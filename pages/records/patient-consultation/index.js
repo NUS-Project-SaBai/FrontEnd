@@ -16,6 +16,7 @@ import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import useWithLoading from '@/utils/loading';
+import NoVisitPlaceholder from '@/components/records/NoVisitPlaceholder';
 
 const PatientConsultation = () => {
   const [mounted, setMounted] = useState(false);
@@ -424,6 +425,9 @@ const PatientConsultation = () => {
   }
 
   if (!mounted) return null;
+
+  if (!visits)
+    return <NoVisitPlaceholder patient={patient} onRefresh={onRefresh} />;
 
   return (
     <div className="mt-7 mx-6 overflow-hidden">
