@@ -16,6 +16,7 @@ import { Button } from '@/components/TextComponents/';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import useWithLoading from '@/utils/loading';
+import NoVisitPlaceholder from '@/components/records/NoVisitPlaceholder';
 
 const PatientConsultation = () => {
   const [mounted, setMounted] = useState(false);
@@ -422,6 +423,9 @@ const PatientConsultation = () => {
       </div>
     );
   }
+
+  if (Object.entries(visits).length === 0)
+    return <NoVisitPlaceholder patient={patient} onRefresh={onRefresh} />;
 
   if (!mounted) return null;
 
