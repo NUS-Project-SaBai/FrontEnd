@@ -13,7 +13,7 @@ import { OFFLINE } from '@/utils/constants';
 import VenueOptionsDropdown from '@/components/VenueOptionsDropdown';
 import { VillageContext } from '@/context/VillageContext';
 
-const SHORTENED_PROD_URL = process.env.NEXT_PUBLIC_SHORTENED_PROD_URL;
+// const SHORTENED_PROD_URL = process.env.NEXT_PUBLIC_SHORTENED_PROD_URL;
 const navigation = [
   {
     name: 'Registration',
@@ -129,7 +129,7 @@ export default function SideMenu() {
           <div className="flex" />
           <li className="-mx-6 mt-auto">
             <a
-              href={SHORTENED_PROD_URL}
+              href={'https://dub.sh/sabai'}
               className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 w-full"
             >
               <ArrowPathIcon className="h-7 w-7" />
