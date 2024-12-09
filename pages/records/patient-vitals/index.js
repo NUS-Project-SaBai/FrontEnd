@@ -177,7 +177,7 @@ const PatientVitals = () => {
     }));
   }
 
-  if (!vitals)
+  if (Object.entries(vitals).length === 0)
     return <NoVisitPlaceholder patient={patient} onRefresh={onRefresh} />;
 
   if (!mounted) return null;

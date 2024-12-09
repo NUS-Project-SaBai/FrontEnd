@@ -424,7 +424,7 @@ const PatientConsultation = () => {
     );
   }
 
-  if (!visits)
+  if (Object.entries(visits).length === 0)
     return <NoVisitPlaceholder patient={patient} onRefresh={onRefresh} />;
 
   if (!mounted) return null;
