@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import { urltoFile } from '@/utils/helpers';
 import withAuth from '@/utils/auth';
 import useWithLoading from '@/utils/loading';
+import { submitNewVisit } from '@/pages/registration';
 
 const PatientRecord = () => {
   const [noRecords, setNoRecords] = useState(true);
@@ -161,6 +162,10 @@ const PatientRecord = () => {
     setPatientEdit(newPatientDetails);
   };
 
+  const handleNewVisit = useWithLoading(async () =>
+    submitNewVisit(patient).then(r => onRefresh())
+  );
+
   function LeftColumn() {
     if (typeof vitals === 'undefined') {
       return (
@@ -210,10 +215,17 @@ const PatientRecord = () => {
 
   if (noRecords) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex flex-col justify-center items-center h-screen gap-4">
         <h2 className="text-black text-xl">
           This patient has no records currently
         </h2>
+        <p>
+          <Button
+            text="Create New Visit"
+            onClick={handleNewVisit}
+            colour="green"
+          />
+        </p>
       </div>
     );
   }
