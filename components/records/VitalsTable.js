@@ -1,4 +1,5 @@
 import { DisplayField } from '@/components/TextComponents';
+import { ALL_CHILD_AGES } from '@/utils/constants';
 
 export function VitalsTable({ vitals, patient, visit }) {
   const isBloodPressureHigh = vitals.systolic > 140 || vitals.diastolic > 90;
@@ -53,47 +54,47 @@ export function VitalsTable({ vitals, patient, visit }) {
     {
       label: 'Gross Motor',
       value: vitals.gross_motor,
-      ageToTest: [2, 3, 4, 5, 6],
+      ageToTest: ALL_CHILD_AGES,
     },
     {
       label: 'Red Reflex',
       value: vitals.red_reflex,
-      ageToTest: [2, 3, 4, 5, 6],
+      ageToTest: ALL_CHILD_AGES,
     },
     {
       label: 'Scoliosis',
       value: vitals.scoliosis,
-      ageToTest: [13, 14, 15, 16],
+      ageToTest: ALL_CHILD_AGES,
     },
     {
       label: 'Pallor',
       value: vitals.pallor,
-      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
+      ageToTest: ALL_CHILD_AGES,
     },
     {
       label: 'Oral Cavity',
       value: vitals.oral_cavity,
-      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
+      ageToTest: ALL_CHILD_AGES,
     },
     {
       label: 'Heart',
       value: vitals.heart,
-      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
+      ageToTest: ALL_CHILD_AGES,
     },
     {
       label: 'Lungs',
       value: vitals.lungs,
-      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
+      ageToTest: ALL_CHILD_AGES,
     },
     {
       label: 'Abdomen',
       value: vitals.abdomen,
-      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
+      ageToTest: ALL_CHILD_AGES,
     },
     {
       label: 'Hernial Orifices',
       value: vitals.hernial_orifices,
-      ageToTest: [2, 3, 4, 5, 7, 8],
+      ageToTest: ALL_CHILD_AGES,
     },
   ];
   const PubertyFields = [
