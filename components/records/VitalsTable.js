@@ -194,7 +194,7 @@ export function VitalsTable({ vitals, patient, visit }) {
           {vitalFields.map((field, index) => renderTableField(field, index))}
         </div>
 
-        {patientAgeVisit <= 18 && patientAgeVisit >= 4 && (
+        {patientAgeVisit <= 18 && patientAgeVisit >= 2 && (
           <div>
             <div className="grid gap-6 md:grid-cols-2">
               {childrenVitalFields
