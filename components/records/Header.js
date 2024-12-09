@@ -18,7 +18,7 @@ export function Header({ patient, visits, handleVisitChange }) {
 
   const uploadFile = useWithLoading(async file => {
     const currentDate = moment().format('YYYY-MM-DD');
-    const patientIdentifier = `${patient.village_prefix}${patient.pk.toString().padStart(3, '0')}`;
+    const patientIdentifier = `${patient.village_prefix}${patient.pk.toString().padStart(4, '0')}`;
     const documentName = file.name;
 
     const labeledDocumentName = `${patientIdentifier}-${currentDate}-${documentName}`;
@@ -117,7 +117,7 @@ export function Header({ patient, visits, handleVisitChange }) {
       </div>
       <div className="col-span-12 md:col-span-3">
         <label className="text-gray-700 block">Village ID</label>
-        <p className="text-lg font-medium">{`${patient.village_prefix}${patient.pk.toString().padStart(3, '0')}`}</p>
+        <p className="text-lg font-medium">{`${patient.village_prefix}${patient.pk.toString().padStart(4, '0')}`}</p>
 
         <div className="mt-4">
           <label className="text-gray-700 block">Visit on</label>
