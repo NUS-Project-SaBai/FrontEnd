@@ -78,12 +78,6 @@ export default function SideMenu() {
     }
   };
 
-  const handleGoToNewestSite = async () => {
-    const response = await axiosInstance.get('https://dub.sh/sabai');
-    const responseUrl = response.request.responseUrl;
-    console.log(responseUrl);
-  };
-
   useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
       ...item,
@@ -134,13 +128,13 @@ export default function SideMenu() {
           </li>
           <div className="flex" />
           <li className="-mx-6 mt-auto">
-            <button
+            <a
+              href={'https://dub.sh/sabai'}
               className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 w-full"
-              onClick={handleGoToNewestSite}
             >
               <ArrowPathIcon className="h-7 w-7" />
               <span aria-hidden="true">Go to newest site</span>
-            </button>
+            </a>
             <button
               className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 w-full"
               onClick={handleLogout}
