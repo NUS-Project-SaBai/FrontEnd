@@ -43,7 +43,7 @@ export function PatientInfo({ patient, submitNewVisit }) {
             label={'ID'}
             content={
               patient.pk
-                ? `${patient.village_prefix}${patient.pk.toString().padStart(3, '0')}`
+                ? `${patient.village_prefix}${patient.pk.toString().padStart(4, '0')}`
                 : 'NOT FILLED'
             }
           />

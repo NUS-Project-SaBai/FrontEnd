@@ -9,7 +9,7 @@ export function RegistrationAutoSuggest({ setPatient, patientsList }) {
     const name = suggestion.name;
     const id = `${suggestion.village_prefix} ${suggestion.pk
       .toString()
-      .padStart(3, '0')}`;
+      .padStart(4, '0')}`;
     const imageUrl = suggestion.picture;
 
     return (
