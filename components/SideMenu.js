@@ -13,7 +13,6 @@ import { OFFLINE } from '@/utils/constants';
 import VenueOptionsDropdown from '@/components/VenueOptionsDropdown';
 import { VillageContext } from '@/context/VillageContext';
 
-// const SHORTENED_PROD_URL = process.env.NEXT_PUBLIC_SHORTENED_PROD_URL;
 const navigation = [
   {
     name: 'Registration',
