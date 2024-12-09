@@ -14,7 +14,7 @@ export function VitalsTable({ vitals, patient, visit }) {
     {
       label: 'Blood Pressure (Systolic / Diastolic) / mmHg',
       value: `${vitals.systolic} / ${vitals.diastolic}`,
-      highlight: shouldHighlightBloodPressure && 'red' 
+      highlight: shouldHighlightBloodPressure && 'red',
     },
     { label: 'Heart Rate', value: vitals.heart_rate },
     { label: 'Temperature', value: vitals.temperature },
@@ -53,31 +53,47 @@ export function VitalsTable({ vitals, patient, visit }) {
     {
       label: 'Gross Motor',
       value: vitals.gross_motor,
-      ageToTest: [4, 5, 6],
+      ageToTest: [2, 3, 4, 5, 6],
     },
-    { label: 'Red Reflex', value: vitals.red_reflex, ageToTest: [4, 5, 6] },
+    {
+      label: 'Red Reflex',
+      value: vitals.red_reflex,
+      ageToTest: [2, 3, 4, 5, 6],
+    },
     {
       label: 'Scoliosis',
       value: vitals.scoliosis,
       ageToTest: [13, 14, 15, 16],
     },
-    { label: 'Pallor', value: vitals.pallor, ageToTest: [4, 5, 7, 8, 11, 12] },
+    {
+      label: 'Pallor',
+      value: vitals.pallor,
+      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
+    },
     {
       label: 'Oral Cavity',
       value: vitals.oral_cavity,
-      ageToTest: [4, 5, 7, 8, 11, 12],
+      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
     },
-    { label: 'Heart', value: vitals.heart, ageToTest: [4, 5, 7, 8, 11, 12] },
-    { label: 'Lungs', value: vitals.lungs, ageToTest: [4, 5, 7, 8, 11, 12] },
+    {
+      label: 'Heart',
+      value: vitals.heart,
+      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
+    },
+    {
+      label: 'Lungs',
+      value: vitals.lungs,
+      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
+    },
     {
       label: 'Abdomen',
       value: vitals.abdomen,
-      ageToTest: [4, 5, 7, 8, 11, 12],
+      ageToTest: [2, 3, 4, 5, 7, 8, 11, 12],
     },
     {
       label: 'Hernial Orifices',
       value: vitals.hernial_orifices,
-      ageToTest: [4, 5, 7, 8],
+      ageToTest: [2, 3, 4, 5, 7, 8],
     },
   ];
   const PubertyFields = [
