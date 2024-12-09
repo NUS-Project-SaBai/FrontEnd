@@ -18,6 +18,21 @@ import { PageTitle } from '@/components/TextComponents';
 import { REGISTRATION_FORM_FIELDS } from '@/utils/constants';
 import { VillageContext } from '@/context/VillageContext';
 
+export const submitNewVisit = async patient => {
+  try {
+    const payload = {
+      patient: patient.pk,
+      status: 'started',
+      visit_date: moment().format('DD MMMM YYYY HH:mm'),
+    };
+    await axiosInstance.post('/visits', payload);
+    toast.success('New visit created for patient!');
+  } catch (error) {
+    toast.error(`Error creating new visit: ${error.message}`);
+    console.error('Error creating new visit:', error);
+  }
+};
+
 const Registration = () => {
   const [patientsList, setPatientsList] = useState([]);
 
@@ -155,7 +170,7 @@ const Registration = () => {
       onRefresh();
 
       setPatientModalOpen(false);
-      submitNewVisit(response);
+      handleNewVisit(response);
       setFormDetails(REGISTRATION_FORM_FIELDS);
     } catch (error) {
       toast.error(`Error creating new patient: ${error.message}`);
@@ -197,7 +212,7 @@ const Registration = () => {
     }
   });
 
-  const submitNewVisit = useWithLoading(async patient => {
+  const handleNewVisit = useWithLoading(async patient => {
     try {
       const { data: patient_visits } = await axiosInstance.get(
         `/visits?patient=${patient.pk}`
@@ -232,18 +247,7 @@ const Registration = () => {
       console.error('Error fetching patient vists:', error);
     }
 
-    try {
-      const payload = {
-        patient: patient.pk,
-        status: 'started',
-        visit_date: moment().format('DD MMMM YYYY HH:mm'),
-      };
-      await axiosInstance.post('/visits', payload);
-      toast.success('New visit created for patient!');
-    } catch (error) {
-      toast.error(`Error creating new visit: ${error.message}`);
-      console.error('Error creating new visit:', error);
-    }
+    submitNewVisit(patient);
   });
 
   return (
@@ -304,7 +308,7 @@ const Registration = () => {
           </div>
           <PatientInfo
             patient={patient}
-            submitNewVisit={() => submitNewVisit(patient)}
+            submitNewVisit={() => handleNewVisit(patient)}
           />
         </div>
       </div>
