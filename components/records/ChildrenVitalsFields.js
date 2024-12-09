@@ -1,6 +1,6 @@
 import React from 'react';
 import { InputField, DropDown } from '@/components/TextComponents';
-import { ChildAges } from '@/utils/childAges';
+import { ALL_CHILD_AGES } from '@/utils/constants';
 
 export function ChildrenVitalsFields({
   handleOnChange,
@@ -20,7 +20,7 @@ export function ChildrenVitalsFields({
       value: formDetails.gross_motor,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'dropdown',
@@ -29,7 +29,7 @@ export function ChildrenVitalsFields({
       value: formDetails.gross_motor,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -37,7 +37,7 @@ export function ChildrenVitalsFields({
       label: 'Red Reflex',
       value: formDetails.red_reflex,
       type: 'text',
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -45,7 +45,7 @@ export function ChildrenVitalsFields({
       label: 'Scoliosis',
       value: formDetails.scoliosis,
       type: 'text',
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -53,7 +53,7 @@ export function ChildrenVitalsFields({
       label: 'Pallor',
       value: formDetails.pallor,
       type: 'text',
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -61,7 +61,7 @@ export function ChildrenVitalsFields({
       label: 'Oral Cavity',
       value: formDetails.oral_cavity,
       type: 'text',
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -69,7 +69,7 @@ export function ChildrenVitalsFields({
       label: 'Heart',
       value: formDetails.heart,
       type: 'text',
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -77,7 +77,7 @@ export function ChildrenVitalsFields({
       label: 'Abdomen',
       value: formDetails.abdomen,
       type: 'text',
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -85,7 +85,7 @@ export function ChildrenVitalsFields({
       label: 'Lungs',
       value: formDetails.lungs,
       type: 'text',
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -93,7 +93,7 @@ export function ChildrenVitalsFields({
       label: 'Hernial Orifices',
       value: formDetails.hernial_orifices,
       type: 'text',
-      age: new ChildAges().ageList,
+      age: ALL_CHILD_AGES,
     },
   ];
 
