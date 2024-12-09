@@ -424,10 +424,10 @@ const PatientConsultation = () => {
     );
   }
 
-  if (!mounted) return null;
-
   if (!visits)
     return <NoVisitPlaceholder patient={patient} onRefresh={onRefresh} />;
+
+  if (!mounted) return null;
 
   return (
     <div className="mt-7 mx-6 overflow-hidden">

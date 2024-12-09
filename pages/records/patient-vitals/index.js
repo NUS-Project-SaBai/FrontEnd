@@ -177,10 +177,10 @@ const PatientVitals = () => {
     }));
   }
 
-  if (!mounted) return null;
-
   if (!vitals)
     return <NoVisitPlaceholder patient={patient} onRefresh={onRefresh} />;
+
+  if (!mounted) return null;
 
   return (
     <div className="mt-7.5 mx-6 overflow-hidden">
