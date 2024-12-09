@@ -59,7 +59,7 @@ const PatientRecord = () => {
 
       if (visits.length > 0) {
         const visitID = visits[0].id;
-        loadVisitDetails(visitID);
+        await loadVisitDetails(visitID);
       }
     } catch (error) {
       toast.error(`Error loading patient data: ${error.message}`);
