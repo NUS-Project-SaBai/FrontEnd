@@ -19,7 +19,7 @@ export function ChildrenVitalsFields({
       value: formDetails.gross_motor,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: [4, 5],
+      age: [2, 3, 4, 5],
     },
     {
       component: 'dropdown',
@@ -36,7 +36,7 @@ export function ChildrenVitalsFields({
       label: 'Red Reflex',
       value: formDetails.red_reflex,
       type: 'text',
-      age: [4, 5, 6],
+      age: [2, 3, 4, 5, 6],
     },
     {
       component: 'input',
@@ -52,7 +52,7 @@ export function ChildrenVitalsFields({
       label: 'Pallor',
       value: formDetails.pallor,
       type: 'text',
-      age: [4, 5, 7, 8, 11, 12],
+      age: [2, 3, 4, 5, 7, 8, 11, 12],
     },
     {
       component: 'input',
@@ -60,7 +60,7 @@ export function ChildrenVitalsFields({
       label: 'Oral Cavity',
       value: formDetails.oral_cavity,
       type: 'text',
-      age: [4, 5, 7, 8, 11, 12],
+      age: [2, 3, 4, 5, 7, 8, 11, 12],
     },
     {
       component: 'input',
@@ -68,7 +68,7 @@ export function ChildrenVitalsFields({
       label: 'Heart',
       value: formDetails.heart,
       type: 'text',
-      age: [4, 5, 7, 8, 11, 12],
+      age: [2, 3, 4, 5, 7, 8, 11, 12],
     },
     {
       component: 'input',
@@ -76,7 +76,7 @@ export function ChildrenVitalsFields({
       label: 'Abdomen',
       value: formDetails.abdomen,
       type: 'text',
-      age: [4, 5, 7, 8, 11, 12],
+      age: [2, 3, 4, 5, 7, 8, 11, 12],
     },
     {
       component: 'input',
@@ -84,7 +84,7 @@ export function ChildrenVitalsFields({
       label: 'Lungs',
       value: formDetails.lungs,
       type: 'text',
-      age: [4, 5, 7, 8, 11, 12],
+      age: [2, 3, 4, 5, 7, 8, 11, 12],
     },
     {
       component: 'input',
@@ -92,7 +92,7 @@ export function ChildrenVitalsFields({
       label: 'Hernial Orifices',
       value: formDetails.hernial_orifices,
       type: 'text',
-      age: [4, 5, 7, 8],
+      age: [2, 3, 4, 5, 7, 8],
     },
   ];
 
