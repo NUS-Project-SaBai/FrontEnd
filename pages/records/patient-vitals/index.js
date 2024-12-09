@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import useWithLoading from '@/utils/loading';
+import NoVisitPlaceholder from '@/components/records/NoVisitPlaceholder';
 
 const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);
@@ -175,6 +176,9 @@ const PatientVitals = () => {
       [name]: value,
     }));
   }
+
+  if (Object.entries(vitals).length === 0)
+    return <NoVisitPlaceholder patient={patient} onRefresh={onRefresh} />;
 
   if (!mounted) return null;
 

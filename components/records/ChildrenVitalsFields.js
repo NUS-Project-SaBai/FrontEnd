@@ -194,11 +194,6 @@ export function ChildrenVitalsFields({
   ];
 
   const StatFieldsComponent = StatFields.filter(field => {
-    console.log(
-      field.name,
-      field.age.includes(age),
-      field.gender ? field.gender === patient.gender : true
-    );
     return (
       field.age.includes(age) &&
       (field.gender ? field.gender === patient.gender : true)
@@ -233,8 +228,6 @@ export function ChildrenVitalsFields({
         return <div></div>;
     }
   });
-
-  console.dir(StatFieldsComponent);
 
   const PubertyFieldsComponent = PubertyFields.filter(
     field =>
