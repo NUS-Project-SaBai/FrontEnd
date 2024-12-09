@@ -12,6 +12,7 @@ import {
 import { OFFLINE } from '@/utils/constants';
 import VenueOptionsDropdown from '@/components/VenueOptionsDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import axiosInstance from '@/pages/api/_axiosInstance';
 
 const navigation = [
   {
@@ -77,6 +78,12 @@ export default function SideMenu() {
     }
   };
 
+  const handleGoToNewestSite = async () => {
+    const response = await axiosInstance.get('https://dub.sh/sabai');
+    const responseUrl = response.request.responseUrl;
+    console.log(responseUrl);
+  };
+
   useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
       ...item,
@@ -127,13 +134,13 @@ export default function SideMenu() {
           </li>
           <div className="flex" />
           <li className="-mx-6 mt-auto">
-            <a
-              href={'https://dub.sh/sabai'}
+            <button
               className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 w-full"
+              onClick={handleGoToNewestSite}
             >
               <ArrowPathIcon className="h-7 w-7" />
               <span aria-hidden="true">Go to newest site</span>
-            </a>
+            </button>
             <button
               className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 w-full"
               onClick={handleLogout}
