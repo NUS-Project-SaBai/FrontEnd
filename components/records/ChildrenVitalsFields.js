@@ -20,7 +20,7 @@ export function ChildrenVitalsFields({
       value: formDetails.gross_motor,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: new ChildAges().excludeK3().excludeGs().ageList,
+      age: new ChildAges().ageList,
     },
     {
       component: 'dropdown',
@@ -29,7 +29,7 @@ export function ChildrenVitalsFields({
       value: formDetails.gross_motor,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: ChildAges.gradeMap.K3,
+      age: new ChildAges().ageList,
     },
     {
       component: 'input',
@@ -37,7 +37,7 @@ export function ChildrenVitalsFields({
       label: 'Red Reflex',
       value: formDetails.red_reflex,
       type: 'text',
-      age: new ChildAges().excludeGs().ageList,
+      age: new ChildAges().ageList,
     },
     {
       component: 'input',
@@ -45,7 +45,7 @@ export function ChildrenVitalsFields({
       label: 'Scoliosis',
       value: formDetails.scoliosis,
       type: 'text',
-      age: new ChildAges().excludeKs().excludeG56().excludeG1112().ageList,
+      age: new ChildAges().ageList,
     },
     {
       component: 'input',
@@ -53,7 +53,7 @@ export function ChildrenVitalsFields({
       label: 'Pallor',
       value: formDetails.pallor,
       type: 'text',
-      age: new ChildAges().excludeK3().ageList,
+      age: new ChildAges().ageList,
     },
     {
       component: 'input',
@@ -61,7 +61,7 @@ export function ChildrenVitalsFields({
       label: 'Oral Cavity',
       value: formDetails.oral_cavity,
       type: 'text',
-      age: new ChildAges().excludeK3().excludeG7to10().ageList,
+      age: new ChildAges().ageList,
     },
     {
       component: 'input',
@@ -69,7 +69,7 @@ export function ChildrenVitalsFields({
       label: 'Heart',
       value: formDetails.heart,
       type: 'text',
-      age: new ChildAges().excludeK3().excludeG7to10().ageList,
+      age: new ChildAges().ageList,
     },
     {
       component: 'input',
@@ -77,7 +77,7 @@ export function ChildrenVitalsFields({
       label: 'Abdomen',
       value: formDetails.abdomen,
       type: 'text',
-      age: new ChildAges().excludeK3().excludeG7to10().ageList,
+      age: new ChildAges().ageList,
     },
     {
       component: 'input',
@@ -85,7 +85,7 @@ export function ChildrenVitalsFields({
       label: 'Lungs',
       value: formDetails.lungs,
       type: 'text',
-      age: new ChildAges().excludeK3().excludeG7to10().ageList,
+      age: new ChildAges().ageList,
     },
     {
       component: 'input',
@@ -93,10 +93,7 @@ export function ChildrenVitalsFields({
       label: 'Hernial Orifices',
       value: formDetails.hernial_orifices,
       type: 'text',
-      age: new ChildAges()
-        .excludeK3()
-        .excludeGs()
-        .include(ChildAges.gradeMap.G12).ageList,
+      age: new ChildAges().ageList,
     },
   ];
 

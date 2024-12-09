@@ -54,51 +54,47 @@ export function VitalsTable({ vitals, patient, visit }) {
     {
       label: 'Gross Motor',
       value: vitals.gross_motor,
-      ageToTest: new ChildAges().excludeGs().ageList,
+      ageToTest: new ChildAges().ageList,
     },
     {
       label: 'Red Reflex',
       value: vitals.red_reflex,
-      ageToTest: new ChildAges().excludeGs().ageList,
+      ageToTest: new ChildAges().ageList,
     },
     {
       label: 'Scoliosis',
       value: vitals.scoliosis,
-      ageToTest: new ChildAges().excludeKs().excludeG56().excludeG1112()
-        .ageList,
+      ageToTest: new ChildAges().ageList,
     },
     {
       label: 'Pallor',
       value: vitals.pallor,
-      ageToTest: new ChildAges().excludeK3().ageList,
+      ageToTest: new ChildAges().ageList,
     },
     {
       label: 'Oral Cavity',
       value: vitals.oral_cavity,
-      ageToTest: new ChildAges().excludeK3().excludeG7to10().ageList,
+      ageToTest: new ChildAges().ageList,
     },
     {
       label: 'Heart',
       value: vitals.heart,
-      ageToTest: new ChildAges().excludeK3().excludeG7to10().ageList,
+      ageToTest: new ChildAges().ageList,
     },
     {
       label: 'Lungs',
       value: vitals.lungs,
-      ageToTest: new ChildAges().excludeK3().excludeG7to10().ageList,
+      ageToTest: new ChildAges().ageList,
     },
     {
       label: 'Abdomen',
       value: vitals.abdomen,
-      ageToTest: new ChildAges().excludeK3().excludeG7to10().ageList,
+      ageToTest: new ChildAges().ageList,
     },
     {
       label: 'Hernial Orifices',
       value: vitals.hernial_orifices,
-      ageToTest: new ChildAges()
-        .excludeK3()
-        .excludeGs()
-        .include(ChildAges.gradeMap.G12).ageList,
+      ageToTest: new ChildAges().ageList,
     },
   ];
   const PubertyFields = [
