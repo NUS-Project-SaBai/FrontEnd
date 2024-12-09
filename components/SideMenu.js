@@ -7,11 +7,13 @@ import {
   BeakerIcon,
   ClipboardDocumentListIcon,
   ArrowLeftStartOnRectangleIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 import { OFFLINE } from '@/utils/constants';
 import VenueOptionsDropdown from '@/components/VenueOptionsDropdown';
 import { VillageContext } from '@/context/VillageContext';
 
+const SHORTENED_PROD_URL = process.env.SHORTENED_PROD_URL;
 const navigation = [
   {
     name: 'Registration',
@@ -77,16 +79,6 @@ export default function SideMenu() {
   };
 
   useEffect(() => {
-    navigation.push({
-      name: 'Logout',
-      href: '#',
-      onClick: handleLogout,
-      icon: ArrowLeftStartOnRectangleIcon,
-      current: false,
-    });
-  }, []);
-
-  useEffect(() => {
     const updatedNavItems = navItems.map(item => ({
       ...item,
       current: router.pathname === item.href,
@@ -136,6 +128,20 @@ export default function SideMenu() {
           </li>
           <div className="flex" />
           <li className="-mx-6 mt-auto">
+            <a
+              href={SHORTENED_PROD_URL}
+              className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 w-full"
+            >
+              <ArrowPathIcon className="h-7 w-7" />
+              <span aria-hidden="true">Go to newest site</span>
+            </a>
+            <button
+              className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 w-full"
+              onClick={handleLogout}
+            >
+              <ArrowLeftStartOnRectangleIcon className="h-7 w-7" />
+              <span aria-hidden="true">Logout</span>
+            </button>
             <a
               href="#"
               className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
