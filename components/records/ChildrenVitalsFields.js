@@ -11,6 +11,8 @@ export function ChildrenVitalsFields({
     new Date(visit.date).getFullYear() -
     new Date(patient.date_of_birth).getFullYear();
 
+  console.log(age);
+
   const StatFields = [
     {
       component: 'dropdown',
@@ -192,11 +194,17 @@ export function ChildrenVitalsFields({
     },
   ];
 
-  const StatFieldsComponent = StatFields.filter(
-    field =>
+  const StatFieldsComponent = StatFields.filter(field => {
+    console.log(
+      field.name,
+      field.age.includes(age),
+      field.gender ? field.gender === patient.gender : true
+    );
+    return (
       field.age.includes(age) &&
       (field.gender ? field.gender === patient.gender : true)
-  ).map(field => {
+    );
+  }).map(field => {
     switch (field.component) {
       case 'input':
         return (
@@ -226,6 +234,8 @@ export function ChildrenVitalsFields({
         return <div></div>;
     }
   });
+
+  console.dir(StatFieldsComponent);
 
   const PubertyFieldsComponent = PubertyFields.filter(
     field =>
@@ -262,7 +272,7 @@ export function ChildrenVitalsFields({
     }
   });
 
-  if (age > 18 || age < 4) {
+  if (age > 18 || age < 2) {
     return <div></div>;
   }
 
