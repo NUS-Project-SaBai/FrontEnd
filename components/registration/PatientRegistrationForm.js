@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, InputField, InputBox } from '@/components/TextComponents';
 import VenueOptionsDropdown from '@/components/VenueOptionsDropdown';
 import AppWebcam from '@/components/WebCamera';
+import OptionButtons from '../TextComponents/OptionButtons';
 
 export function PatientRegistrationForm({
   formDetails,
@@ -35,7 +36,7 @@ export function PatientRegistrationForm({
           type="text"
           onChange={handleInputChange}
           value={formDetails.name}
-          showRequiredAsterisk
+          isRequired
         />
         <InputField
           name="identification_number"
@@ -52,28 +53,14 @@ export function PatientRegistrationForm({
           onChange={handleInputChange}
           value={formDetails.contact_no}
         />
-        <div>
-          <label
-            htmlFor="gender"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Gender<span className="text-red-500"> *</span>
-          </label>
-          <div className="flex mt-1 rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
-            <select
-              name="gender"
-              onChange={handleInputChange}
-              value={formDetails.gender}
-              className={`flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white ${formDetails.gender ? 'text-gray-900' : 'text-gray-500'} focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6`}
-            >
-              <option hidden value="">
-                Please select an option
-              </option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </div>
-        </div>
+        <OptionButtons
+          label="Gender"
+          name={'gender'}
+          options={['Male', 'Female']}
+          onChange={handleInputChange}
+          value={formDetails.gender}
+          isRequired
+        />
         <InputField
           label="Date of Birth"
           name="date_of_birth"
@@ -81,74 +68,41 @@ export function PatientRegistrationForm({
           type="date"
           onChange={handleInputChange}
           value={formDetails.date_of_birth}
-          showRequiredAsterisk
+          isRequired
         />
 
         <VenueOptionsDropdown
           handleInputChange={handleInputChange}
           value={formDetails.village_prefix}
-          showRequiredAsterisk
+          isRequired
         />
 
-        <div>
-          <label
-            htmlFor="Poor"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            POOR Card
-          </label>
-          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
-            <select
-              className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-              name="poor"
-              onChange={handleInputChange}
-              value={formDetails.poor}
-            >
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          </div>
-        </div>
+        <OptionButtons
+          label="POOR Card"
+          name={'poor'}
+          options={['Yes', 'No']}
+          onChange={handleInputChange}
+          value={formDetails.poor}
+          isRequired
+        />
 
-        <div>
-          <label
-            htmlFor="BS2"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            BS2 Card
-          </label>
-          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
-            <select
-              className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-              name="bs2"
-              onChange={handleInputChange}
-              value={formDetails.bs2}
-            >
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          </div>
-        </div>
+        <OptionButtons
+          label="BS2 Card"
+          name={'bs2'}
+          options={['Yes', 'No']}
+          onChange={handleInputChange}
+          value={formDetails.bs2}
+          isRequired
+        />
 
-        <div>
-          <label
-            htmlFor="Sabai"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Sabai Card
-          </label>
-          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400">
-            <select
-              className="flex-1 block w-full rounded-md border-2 py-2 px-1.5 bg-white text-gray-900 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-              name="sabai"
-              onChange={handleInputChange}
-              defaultValue="No"
-            >
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          </div>
-        </div>
+        <OptionButtons
+          label="Sabai Card"
+          name={'sabai'}
+          options={['Yes', 'No']}
+          onChange={handleInputChange}
+          value={formDetails.sabai}
+          isRequired
+        />
 
         <InputBox
           label="Drug Allergies"
