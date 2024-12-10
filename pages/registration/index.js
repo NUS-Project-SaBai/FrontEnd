@@ -83,6 +83,7 @@ const Registration = () => {
   }
 
   const handleInputChange = event => {
+    console.dir(event);
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const inputName = target.name;
