@@ -6,13 +6,12 @@ export default function OptionButtons({
   value,
   onChange,
   options,
-  showRequiredAsterisk = false,
+  isRequired = false,
 }) {
   function handleClickOption(newValue) {
-    if (value === newValue) {
+    if (value === newValue && !isRequired) {
       newValue = '';
     }
-    console.log(newValue);
     onChange({ target: { value: newValue, type: 'dropdown', name } });
   }
 
@@ -23,14 +22,16 @@ export default function OptionButtons({
         className="block text-sm font-medium leading-6 text-gray-900"
       >
         {label}
-        {showRequiredAsterisk && <span className="text-red-500"> *</span>}
+        {isRequired && <span className="text-red-500"> *</span>}
       </label>
       <div className="mt-1 flex gap-3">
         {options.map(option => (
           <Button
             text={option}
             key={option}
-            colour={value === option ? 'green' : 'gray'}
+            colour={value === option ? 'green' : 'white'}
+            textColour={value === option ? undefined : 'gray-400'}
+            outlineColour={value === option ? undefined : 'gray-400'}
             onClick={() => handleClickOption(option)}
           />
         ))}
