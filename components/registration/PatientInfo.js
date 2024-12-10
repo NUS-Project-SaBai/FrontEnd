@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 import { DisplayField, Button } from '@/components/TextComponents/';
+import Router from 'next/router';
 
 export function PatientInfo({ patient, submitNewVisit }) {
   if (!patient.pk) {
@@ -67,6 +68,27 @@ export function PatientInfo({ patient, submitNewVisit }) {
         <Button
           text="Create New Visit"
           onClick={submitNewVisit}
+          colour="green"
+        />
+        <Button
+          text={'View records'}
+          onClick={() =>
+            Router.push(`/records/patient-record?id=${patient.pk}`)
+          }
+          colour="indigo"
+        />
+        <Button
+          text={'Create vitals'}
+          onClick={() =>
+            Router.push(`/records/patient-vitals?id=${patient.pk}`)
+          }
+          colour="green"
+        />
+        <Button
+          text={'Create consult'}
+          onClick={() =>
+            Router.push(`/records/patient-consultation?id=${patient.pk}`)
+          }
           colour="green"
         />
       </div>
