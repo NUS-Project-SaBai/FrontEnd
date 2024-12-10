@@ -1,5 +1,6 @@
 import { DisplayField } from '@/components/TextComponents';
 import { ALL_CHILD_AGES } from '@/utils/constants';
+import { patientAge } from '@/utils/helpers';
 
 export function VitalsTable({ vitals, patient, visit }) {
   const isBloodPressureHigh = vitals.systolic > 140 || vitals.diastolic > 90;
@@ -7,9 +8,7 @@ export function VitalsTable({ vitals, patient, visit }) {
   const shouldHighlightBloodPressure =
     isBloodPressureHigh || isBloodPressureLow;
 
-  const patientAgeVisit =
-    new Date(visit.date).getFullYear() -
-    new Date(patient.date_of_birth).getFullYear();
+  const patientAgeVisit = patientAge(patient.date_of_birth).year;
 
   const vitalFields = [
     {
@@ -97,7 +96,8 @@ export function VitalsTable({ vitals, patient, visit }) {
       ageToTest: ALL_CHILD_AGES,
     },
   ];
-  const PubertyFields = [
+
+  const pubertyFields = [
     {
       label: 'Pubarche',
       value: vitals.pubarche,
@@ -163,6 +163,15 @@ export function VitalsTable({ vitals, patient, visit }) {
       return <div key={index}></div>;
     }
 
+    const a = (
+      <DisplayField
+        key={field.label + index} // Ensure each key is unique
+        label={field.label}
+        content={field.value}
+        highlight={field.highlight}
+      />
+    );
+
     return (
       <DisplayField
         key={field.label + index} // Ensure each key is unique
@@ -206,12 +215,16 @@ export function VitalsTable({ vitals, patient, visit }) {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              {PubertyFields.filter((field, _) => {
-                return (
-                  field.ageToTest.includes(patientAgeVisit) &&
-                  (field.gender ? field.gender === patient.gender : true)
-                );
-              }).map((field, index) => renderTableField(field, index))}
+              {pubertyFields
+                .filter((field, _) => {
+                  return (
+                    field.ageToTest.includes(patientAgeVisit) &&
+                    (field.gender ? field.gender === patient.gender : true)
+                  );
+                })
+                .map((field, index) => {
+                  return renderTableField(field, index);
+                })}
             </div>
           </div>
         )}
