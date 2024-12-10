@@ -129,7 +129,7 @@ export function ChildrenVitalsFields({
       component: 'input',
       name: 'thelarche_age',
       label: 'Thelarche Age',
-      value: formDetails.scoliosis_age,
+      value: formDetails.thelarche_age,
       type: 'number',
       age: [13, 14, 15, 16, 17, 18],
       gender: 'Female',
@@ -264,7 +264,7 @@ export function ChildrenVitalsFields({
     }
   });
 
-  if (age > 18 || age < 2) {
+  if (age > 19 || age < 2) {
     return <div></div>;
   }
 
