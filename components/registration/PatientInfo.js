@@ -2,6 +2,9 @@ import React from 'react';
 import moment from 'moment';
 
 import { DisplayField, Button } from '@/components/TextComponents/';
+import Router from 'next/router';
+import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
+import PatientAge from '../PatientAge';
 
 export function PatientInfo({ patient, submitNewVisit }) {
   if (!patient.pk) {
@@ -29,12 +32,25 @@ export function PatientInfo({ patient, submitNewVisit }) {
 
   return (
     <div>
-      <div>
+      <div className="flex flex-row gap-4">
         <img
           src={imageUrl}
           alt="Placeholder image"
           className="has-ratio h-48 w-48 object-cover"
         />
+
+        <div className="text-3xl">
+          <p>ID</p>
+          <p className={VILLAGE_COLOR_CLASSES[patient.village_prefix]}>
+            {patient.pk
+              ? `${patient.village_prefix}${patient.pk.toString().padStart(4, '0')}`
+              : 'NOT FILLED'}
+          </p>
+        </div>
+        <div className="text-3xl">
+          <p>Age</p>
+          <PatientAge dob={patient.date_of_birth} />
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
         <div className="grid-cols-1" key={'ID'}>
@@ -67,6 +83,27 @@ export function PatientInfo({ patient, submitNewVisit }) {
         <Button
           text="Create New Visit"
           onClick={submitNewVisit}
+          colour="green"
+        />
+        <Button
+          text={'View records'}
+          onClick={() =>
+            Router.push(`/records/patient-record?id=${patient.pk}`)
+          }
+          colour="indigo"
+        />
+        <Button
+          text={'Create vitals'}
+          onClick={() =>
+            Router.push(`/records/patient-vitals?id=${patient.pk}`)
+          }
+          colour="green"
+        />
+        <Button
+          text={'Create consult'}
+          onClick={() =>
+            Router.push(`/records/patient-consultation?id=${patient.pk}`)
+          }
           colour="green"
         />
       </div>
