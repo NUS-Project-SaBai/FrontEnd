@@ -1,6 +1,7 @@
 import React from 'react';
 import { InputField, DropDown } from '@/components/TextComponents';
 import { ALL_CHILD_AGES } from '@/utils/constants';
+import { patientAge } from '@/utils/helpers';
 
 export function ChildrenVitalsFields({
   handleOnChange,
@@ -8,14 +9,12 @@ export function ChildrenVitalsFields({
   patient,
   visit,
 }) {
-  const age =
-    new Date(visit.date).getFullYear() -
-    new Date(patient.date_of_birth).getFullYear();
+  const age = patientAge(patient.date_of_birth).year;
 
   const StatFields = [
     {
       component: 'dropdown',
-      name: 'gross_motor',
+      name: 'gross_motor_3',
       label: 'Gross Motor: Stand on 1 foot for 3s',
       value: formDetails.gross_motor,
       defaultValue: 'Please select...',
@@ -24,7 +23,7 @@ export function ChildrenVitalsFields({
     },
     {
       component: 'dropdown',
-      name: 'gross_motor',
+      name: 'gross_motor_10',
       label: 'Gross Motor: Stand on 1 foot for 10s',
       value: formDetails.gross_motor,
       defaultValue: 'Please select...',
