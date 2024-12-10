@@ -105,7 +105,7 @@ export function ChildrenVitalsFields({
       value: formDetails.pubarche,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: [13, 14, 15, 16, 17, 18],
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'input',
@@ -113,7 +113,7 @@ export function ChildrenVitalsFields({
       label: 'Pubarche Age',
       value: formDetails.pubarche_age,
       type: 'number',
-      age: [13, 14, 15, 16, 17, 18],
+      age: ALL_CHILD_AGES,
     },
     {
       component: 'dropdown',
@@ -122,7 +122,7 @@ export function ChildrenVitalsFields({
       value: formDetails.thelarche,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: [13, 14, 15, 16, 17, 18],
+      age: ALL_CHILD_AGES,
       gender: 'Female',
     },
     {
@@ -131,7 +131,7 @@ export function ChildrenVitalsFields({
       label: 'Thelarche Age',
       value: formDetails.scoliosis_age,
       type: 'number',
-      age: [13, 14, 15, 16, 17, 18],
+      age: ALL_CHILD_AGES,
       gender: 'Female',
     },
     {
@@ -141,7 +141,7 @@ export function ChildrenVitalsFields({
       value: formDetails.menarche,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: [13, 14, 15, 16, 17, 18],
+      age: ALL_CHILD_AGES,
       gender: 'Female',
     },
     {
@@ -150,7 +150,7 @@ export function ChildrenVitalsFields({
       label: 'Menarche Age',
       value: formDetails.menarche_age,
       type: 'number',
-      age: [13, 14, 15, 16, 17, 18],
+      age: ALL_CHILD_AGES,
       gender: 'Female',
     },
     {
@@ -160,7 +160,7 @@ export function ChildrenVitalsFields({
       value: formDetails.voice_change,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: [13, 14, 15, 16],
+      age: ALL_CHILD_AGES,
       gender: 'Male',
     },
     {
@@ -169,7 +169,7 @@ export function ChildrenVitalsFields({
       label: 'Voice Change Age',
       value: formDetails.voice_change_age,
       type: 'number',
-      age: [13, 14, 15, 16],
+      age: ALL_CHILD_AGES,
       gender: 'Male',
     },
     {
@@ -179,7 +179,7 @@ export function ChildrenVitalsFields({
       value: formDetails.testicular_growth,
       defaultValue: 'Please select...',
       options: ['Please select...', 'Yes', 'No'],
-      age: [13, 14, 15, 16],
+      age: ALL_CHILD_AGES,
       gender: 'Male',
     },
     {
@@ -188,7 +188,7 @@ export function ChildrenVitalsFields({
       label: 'Testicular Growth Age',
       value: formDetails.testicular_growth_age,
       type: 'number',
-      age: [13, 14, 15, 16],
+      age: ALL_CHILD_AGES,
       gender: 'Male',
     },
   ];
@@ -229,11 +229,12 @@ export function ChildrenVitalsFields({
     }
   });
 
-  const PubertyFieldsComponent = PubertyFields.filter(
-    field =>
+  const PubertyFieldsComponent = PubertyFields.filter(field => {
+    return (
       field.age.includes(age) &&
       (field.gender ? field.gender === patient.gender : true)
-  ).map(field => {
+    );
+  }).map(field => {
     switch (field.component) {
       case 'input':
         return (
