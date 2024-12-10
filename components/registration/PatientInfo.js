@@ -3,6 +3,7 @@ import moment from 'moment';
 
 import { DisplayField, Button } from '@/components/TextComponents/';
 import Router from 'next/router';
+import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
 
 export function PatientInfo({ patient, submitNewVisit }) {
   if (!patient.pk) {
@@ -30,11 +31,22 @@ export function PatientInfo({ patient, submitNewVisit }) {
 
   return (
     <div>
-      <div>
+      <div className="flex flex-row gap-4">
         <img
           src={imageUrl}
           alt="Placeholder image"
           className="has-ratio h-48 w-48 object-cover"
+        />
+        <DisplayField
+          key={'ID'}
+          label={'ID'}
+          content={
+            patient.pk
+              ? `${patient.village_prefix}${patient.pk.toString().padStart(4, '0')}`
+              : 'NOT FILLED'
+          }
+          size="3xl"
+          textColour={VILLAGE_COLOR_CLASSES[patient.village_prefix]}
         />
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 mt-2">
