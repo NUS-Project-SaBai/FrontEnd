@@ -7,7 +7,6 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import { VENUE_OPTIONS } from '@/utils/constants';
 import useWithLoading from '@/utils/loading';
 import { VILLAGE_COLOR_CLASSES } from '@/utils/constants';
-import { VillageContext } from '@/context/VillageContext';
 import useCachedVillageCode, {
   VILLAGE_CODE_ALL,
 } from '@/hooks/useCachedVillageCode';
