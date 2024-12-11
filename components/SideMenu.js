@@ -15,7 +15,7 @@ import { VillageContext } from '@/context/VillageContext';
 import axiosInstance from '@/pages/api/_axiosInstance';
 
 // Version number here
-const version = "v2024.12.12 fresh";
+const version = "v2024.12.12 1AM fresh";
 
 const navigation = [
   {
@@ -97,8 +97,8 @@ export default function SideMenu() {
         <img className="h-8 w-auto" src="/sabaiLogo.png" alt="Sa'Bai Logo" />
         <h1 className="text-white text-2xl ml-2">Sa&apos;Bai &apos;24</h1>
       </div>
-      <div>
-        <p className="text-white text-s ml-2">{version}</p>
+      <div className="mt-[-20px]">
+        <p className="text-white text-s">{version}</p>
       </div>
       <nav className="h-full">
         <ul role="list" className="flex flex-1 flex-col h-full gap-y-7">
