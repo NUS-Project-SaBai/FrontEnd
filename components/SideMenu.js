@@ -122,7 +122,7 @@ export default function SideMenu() {
           </li>
           <li>
             <div className="text-xs font-semibold leading-6 text-gray-400">
-              Current Village
+              Current clinic site
             </div>
             <SideMenuVillageDropdown />
           </li>
