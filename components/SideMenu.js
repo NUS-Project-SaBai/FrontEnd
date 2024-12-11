@@ -98,7 +98,7 @@ export default function SideMenu() {
         <h1 className="text-white text-2xl ml-2">Sa&apos;Bai &apos;24</h1>
       </div>
       <div className="mt-[-20px]">
-        <p className="text-white text-s">{version}</p>
+        <p className="text-gray-400 text-s">{version}</p>
       </div>
       <nav className="h-full">
         <ul role="list" className="flex flex-1 flex-col h-full gap-y-7">
