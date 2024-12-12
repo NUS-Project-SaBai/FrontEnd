@@ -15,7 +15,6 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import useWithLoading from '@/utils/loading';
 import NoVisitPlaceholder from '@/components/records/NoVisitPlaceholder';
-import { checkRecency } from '@/utils/check';
 
 const PatientVitals = () => {
   const [mounted, setMounted] = useState(false);
@@ -119,19 +118,6 @@ const PatientVitals = () => {
   });
 
   const submitVitalsForm = useWithLoading(async () => {
-    const THREE_DAY_IN_MIN = 4320; // 3 * 60 * 24
-
-    const toSubmit = await checkRecency(
-      patient.pk,
-      THREE_DAY_IN_MIN,
-      false,
-      `Are you sure you want to edit this vital?
-       Press OK to SUBMIT.
-       Press CANCEL to NOT SUBMIT.`
-    );
-    if (!toSubmit) {
-      return;
-    }
     const formPayload = {
       ...vitalsFormDetails,
       visit: selectedVisitID,
