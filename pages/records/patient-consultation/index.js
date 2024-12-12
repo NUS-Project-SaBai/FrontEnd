@@ -59,14 +59,20 @@ const PatientConsultation = () => {
 
   // Load saved data from localStorage when the component mounts
   useEffect(() => {
-    const savedData = localStorage.getItem(
+    const savedConsultData = localStorage.getItem(
       `consultationFormDetails_visit${selectedVisitID}`
     );
-    if (savedData) {
-      setConsultationFormDetails(JSON.parse(savedData));
+    if (savedConsultData) {
+      setConsultationFormDetails(JSON.parse(savedConsultData));
+    }
+    const savedOrderData = localStorage.getItem(
+      `orders_visit${selectedVisitID}`
+    );
+    if (savedOrderData) {
+      setOrders(JSON.parse(savedOrderData));
     }
   }, [selectedVisitID]);
-  // Save form data to localStorage whenever it changes
+  // Save consultation form data to localStorage whenever it changes
   useEffect(() => {
     const timeout = setTimeout(() => {
       localStorage.setItem(
@@ -76,12 +82,24 @@ const PatientConsultation = () => {
     }, 500);
     return () => clearTimeout(timeout);
   }, [selectedVisitID, consultationFormDetails]);
+  // Save orders form data to localStorage whenever it changes
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      localStorage.setItem(
+        `orders_visit${selectedVisitID}`,
+        JSON.stringify(orders)
+      );
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [selectedVisitID, orders]);
   // Purge data from localStorage on successful submit
   const clearLocalStorageData = () => {
     localStorage.removeItem(`consultationFormDetails_visit${selectedVisitID}`);
+    localStorage.removeItem(`orders_visit${selectedVisitID}`);
     setConsultationFormDetails({
       diagnoses: [],
     });
+    setOrders([]);
   };
 
   const onRefresh = useWithLoading(async () => {
@@ -449,7 +467,8 @@ const PatientConsultation = () => {
             )
             .filter(
               med =>
-                orders.find(orderMed => orderMed.medicine == med.id) == null
+                orders.find(orderMed => orderMed.medicine == med.id) == null ||
+                orderFormDetails.medicine == med.id
             )
             .map(medication => (
               <option
@@ -532,7 +551,10 @@ const PatientConsultation = () => {
               <Button
                 colour="green"
                 text={'Add Orders'}
-                onClick={() => toggleOrderFormModal()}
+                onClick={() => {
+                  setOrderFormDetails(blankOrderFormDetails);
+                  toggleOrderFormModal();
+                }}
                 className="mr-2"
               />
             </div>
