@@ -44,8 +44,6 @@ const Registration = () => {
 
   const [scanModalOpen, setScanModalOpen] = useState(false);
 
-  const [scanImageDetails, setScanImageDetails] = useState(null);
-
   const [scanSuggestionsList, setScanSuggestionsList] = useState([]);
 
   const [formDetails, setFormDetails] = useState(REGISTRATION_FORM_FIELDS);
@@ -176,7 +174,7 @@ const Registration = () => {
   });
 
   const submitScan = useWithLoading(async () => {
-    if (scanImageDetails == null) {
+    if (imageDetails == null) {
       toast.error('Please take a photo before submitting!');
       return;
     }
@@ -185,7 +183,7 @@ const Registration = () => {
       const scanFormData = new FormData();
       scanFormData.append(
         'picture',
-        await urltoFile(scanImageDetails, 'patient_screenshot.jpg', 'image/jpg')
+        await urltoFile(imageDetails, 'patient_screenshot.jpg', 'image/jpg')
       );
 
       const { data: response } = await axiosInstance.post(
@@ -201,7 +199,7 @@ const Registration = () => {
 
       setScanSuggestionsList(response);
 
-      setScanImageDetails(null);
+      setImageDetails(null);
     } catch (error) {
       toast.error(`Error scanning face: ${error.meesage}`);
       console.error('Error scanning face:', error);
@@ -267,8 +265,8 @@ const Registration = () => {
         onSubmit={submitScan}
       >
         <PatientScanForm
-          imageDetails={scanImageDetails}
-          setImageDetails={setScanImageDetails}
+          imageDetails={imageDetails}
+          setImageDetails={setImageDetails}
         />
         <RegistrationScanSuggest
           setPatient={setPatient}
