@@ -130,7 +130,7 @@ const PatientVitals = () => {
       const timeDiffInDays = (curDate - curVisitDate) / 86400000; // (1000 * 60 * 60 * 24);
       if (timeDiffInDays > 2) { // if more than 2 days
         const proceedOnOldVisit = confirm(
-          `It's days since a visit for this patient was created.
+          `It has been more than 2 days since a visit for this patient was created.
       Are you sure you want to edit the vitals?
       Press CANCEL to NOT EDIT the vitals.
       Press OK to EDIT the vitals.`
