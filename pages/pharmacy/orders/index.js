@@ -13,7 +13,6 @@ import useCachedVillageCode, {
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [diagnoses, setDiagnoses] = useState([]);
   const [searchBy, setSearchBy] = useState('');
   const [villageCode, setVillageCode] = useCachedVillageCode();
 
@@ -46,11 +45,10 @@ const Orders = () => {
 
   const loadPendingOrders = useWithLoading(async () => {
     try {
-      const { data: orders_diagnoses_bundle } = await axiosInstance.get(
+      const { data: orders } = await axiosInstance.get(
         '/orders?order_status=PENDING'
       );
-      setOrders(orders_diagnoses_bundle['orders']);
-      setDiagnoses(orders_diagnoses_bundle['diagnoses']);
+      setOrders(orders);
     } catch (error) {
       toast.error(`Failed to fetch orders: ${error.message}`);
       console.error('Error loading orders:', error);
@@ -104,6 +102,14 @@ const Orders = () => {
         </li>
       );
 
+      const diagnoses = order.diagnoses.map((diagnosis, index) => (
+        <li key={diagnosis.id}>
+          <b>Diagnosis {index + 1}</b>
+          <p>Category: {diagnosis.category}</p>
+          <p className="w-50 text-wrap">Notes: {diagnosis.details}</p>
+        </li>
+      ));
+
       return (
         <tr key={order.id}>
           <td
@@ -128,22 +134,7 @@ const Orders = () => {
             <ul>{prescriptions}</ul>
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            <ul>
-              {diagnoses
-                .filter(
-                  // Filter by consult
-                  diagnosis => {
-                    return diagnosis.consult.id === order.consult;
-                  }
-                )
-                .map((diagnosis, index) => (
-                  <li key={diagnosis.id}>
-                    <b>Diagnosis {index + 1}</b>
-                    <p>Category: {diagnosis.category}</p>
-                    <p className="w-50 text-wrap">Notes: {diagnosis.details}</p>
-                  </li>
-                ))}
-            </ul>
+            <ul>{diagnoses}</ul>
           </td>
           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 space-x-2">
             <Button
