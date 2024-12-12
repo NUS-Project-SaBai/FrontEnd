@@ -68,7 +68,6 @@ const PatientConsultation = () => {
     const savedOrderData = localStorage.getItem(
       `orders_visit${selectedVisitID}`
     );
-    console.log(savedOrderData);
     if (savedOrderData) {
       setOrders(JSON.parse(savedOrderData));
     }
@@ -468,7 +467,8 @@ const PatientConsultation = () => {
             )
             .filter(
               med =>
-                orders.find(orderMed => orderMed.medicine == med.id) == null
+                orders.find(orderMed => orderMed.medicine == med.id) == null ||
+                orderFormDetails.medicine == med.id
             )
             .map(medication => (
               <option
@@ -551,7 +551,10 @@ const PatientConsultation = () => {
               <Button
                 colour="green"
                 text={'Add Orders'}
-                onClick={() => toggleOrderFormModal()}
+                onClick={() => {
+                  setOrderFormDetails(blankOrderFormDetails);
+                  toggleOrderFormModal();
+                }}
                 className="mr-2"
               />
             </div>
