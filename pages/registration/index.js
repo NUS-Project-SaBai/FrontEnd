@@ -198,8 +198,6 @@ const Registration = () => {
       toast.success('Patient Found!');
 
       setScanSuggestionsList(response);
-
-      setImageDetails(null);
     } catch (error) {
       toast.error(`Error scanning face: ${error.meesage}`);
       console.error('Error scanning face:', error);
