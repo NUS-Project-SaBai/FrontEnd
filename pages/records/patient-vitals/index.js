@@ -125,8 +125,10 @@ const PatientVitals = () => {
 
       const curVisitDate = new Date(visitInfo.date);
       const curDate = new Date();
+
+      // calculate the time difference since last visit in days
       const timeDiffInDays = (curDate - curVisitDate) / 86400000; // (1000 * 60 * 60 * 24);
-      if (timeDiffInDays > 2) {
+      if (timeDiffInDays > 2) { // if more than 2 days
         const proceedOnOldVisit = confirm(
           `It's days since a visit for this patient was created.
       Are you sure you want to edit the vitals?
