@@ -118,6 +118,30 @@ const PatientVitals = () => {
   });
 
   const submitVitalsForm = useWithLoading(async () => {
+    try {
+      const { data: visitInfo } = await axiosInstance.get(
+        `/visits/${selectedVisitID}`
+      );
+
+      const curVisitDate = new Date(visitInfo.date);
+      const curDate = new Date();
+      const timeDiffInDays = (curDate - curVisitDate) / 86400000; // (1000 * 60 * 60 * 24);
+      if (timeDiffInDays > 2) {
+        const proceedOnOldVisit = confirm(
+          `It's days since a visit for this patient was created.
+      Are you sure you want to edit the vitals?
+      Press CANCEL to NOT EDIT the vitals.
+      Press OK to EDIT the vitals.`
+        );
+
+        if (!proceedOnOldVisit) {
+          return;
+        }
+      }
+    } catch (error) {
+      toast.error(`Error fetching patient visits: ${error.message}`);
+      console.error('Error fetching patient vists:', error);
+    }
     const formPayload = {
       ...vitalsFormDetails,
       visit: selectedVisitID,
