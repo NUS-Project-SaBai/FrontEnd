@@ -17,6 +17,7 @@ import CustomModal from '@/components/CustomModal';
 import { PageTitle } from '@/components/TextComponents';
 import { REGISTRATION_FORM_FIELDS } from '@/utils/constants';
 import { VillageContext } from '@/context/VillageContext';
+import useSaveOnWrite from '@/hooks/useSaveOnWrite';
 
 export const submitNewVisit = async patient => {
   try {
@@ -46,7 +47,10 @@ const Registration = () => {
 
   const [scanSuggestionsList, setScanSuggestionsList] = useState([]);
 
-  const [formDetails, setFormDetails] = useState(REGISTRATION_FORM_FIELDS);
+  const [formDetails, setFormDetails, clearFormDetails] = useSaveOnWrite(
+    'registration',
+    REGISTRATION_FORM_FIELDS
+  );
 
   const { village } = useContext(VillageContext);
 
@@ -161,6 +165,7 @@ const Registration = () => {
         village_prefix: 'SV',
       }));
       setImageDetails(null);
+      clearFormDetails();
       toast.success('New patient created!');
       onRefresh();
 
