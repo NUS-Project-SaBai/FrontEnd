@@ -49,6 +49,7 @@ export function VitalsTable({ vitals, patient, visit }) {
     { label: 'Others', value: vitals.others },
   ];
 
+  //Note: The UI display for scoliosis instances are labelled spine
   const childrenVitalFields = [
     {
       label: 'Gross Motor',
@@ -61,7 +62,7 @@ export function VitalsTable({ vitals, patient, visit }) {
       ageToTest: ALL_CHILD_AGES,
     },
     {
-      label: 'Scoliosis',
+      label: 'Spine',
       value: vitals.scoliosis,
       ageToTest: ALL_CHILD_AGES,
     },

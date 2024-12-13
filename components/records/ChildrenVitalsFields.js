@@ -11,6 +11,7 @@ export function ChildrenVitalsFields({
 }) {
   const age = patientAge(patient.date_of_birth).year;
 
+  //Note: The UI display for scoliosis instances are labelled spine
   const StatFields = [
     {
       component: 'dropdown',
@@ -41,7 +42,7 @@ export function ChildrenVitalsFields({
     {
       component: 'input',
       name: 'scoliosis',
-      label: 'Scoliosis',
+      label: 'Spine',
       value: formDetails.scoliosis,
       type: 'text',
       age: ALL_CHILD_AGES,
