@@ -41,16 +41,15 @@ const Registration = () => {
 
   const [patientModalOpen, setPatientModalOpen] = useState(false);
 
-  const [imageDetails, setImageDetails] = useState(null);
+  const [imageDetails, setImageDetails, clearImageDetailsLocalStorage] =
+    useSaveOnWrite('image', null);
 
   const [scanModalOpen, setScanModalOpen] = useState(false);
 
   const [scanSuggestionsList, setScanSuggestionsList] = useState([]);
 
-  const [formDetails, setFormDetails, clearFormDetails] = useSaveOnWrite(
-    'registration',
-    REGISTRATION_FORM_FIELDS
-  );
+  const [formDetails, setFormDetails, clearFormDetailsLocalStorage] =
+    useSaveOnWrite('registration', REGISTRATION_FORM_FIELDS);
 
   const { village } = useContext(VillageContext);
 
@@ -165,7 +164,7 @@ const Registration = () => {
         village_prefix: 'SV',
       }));
       setImageDetails(null);
-      clearFormDetails();
+      clearFormDetailsLocalStorage();
       toast.success('New patient created!');
       onRefresh();
 
