@@ -17,6 +17,7 @@ import axiosInstance from '@/pages/api/_axiosInstance';
 import CustomModal from '@/components/CustomModal';
 import useWithLoading from '@/utils/loading';
 import NoVisitPlaceholder from '@/components/records/NoVisitPlaceholder';
+import useSaveOnWrite from '@/hooks/useSaveOnWrite';
 
 const PatientConsultation = () => {
   const [mounted, setMounted] = useState(false);
@@ -37,7 +38,11 @@ const PatientConsultation = () => {
   const [consultationModalOpen, setConsultationModalOpen] = useState(false);
 
   // Order Form Modal hooks
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders, clearOrdersStorageData] = useSaveOnWrite(
+    'orders',
+    [],
+    [selectedVisitID]
+  );
   const blankOrderFormDetails = {
     quantity: '',
     medicine: 0, // refers to the medcine id
@@ -49,58 +54,15 @@ const PatientConsultation = () => {
   const [orderFormModalOpen, setOrderFormModalOpen] = useState(false);
 
   // Consultation Form hooks
-  const [consultationFormDetails, setConsultationFormDetails] = useState({
-    diagnoses: [],
-  });
+  const [
+    consultationFormDetails,
+    setConsultationFormDetails,
+    clearConsultStorageData,
+  ] = useSaveOnWrite('consult', { diagnoses: [] }, [selectedVisitID]);
 
   useEffect(() => {
     onRefresh();
   }, []);
-
-  // Load saved data from localStorage when the component mounts
-  useEffect(() => {
-    const savedConsultData = localStorage.getItem(
-      `consultationFormDetails_visit${selectedVisitID}`
-    );
-    if (savedConsultData) {
-      setConsultationFormDetails(JSON.parse(savedConsultData));
-    }
-    const savedOrderData = localStorage.getItem(
-      `orders_visit${selectedVisitID}`
-    );
-    if (savedOrderData) {
-      setOrders(JSON.parse(savedOrderData));
-    }
-  }, [selectedVisitID]);
-  // Save consultation form data to localStorage whenever it changes
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      localStorage.setItem(
-        `consultationFormDetails_visit${selectedVisitID}`,
-        JSON.stringify(consultationFormDetails)
-      );
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [selectedVisitID, consultationFormDetails]);
-  // Save orders form data to localStorage whenever it changes
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      localStorage.setItem(
-        `orders_visit${selectedVisitID}`,
-        JSON.stringify(orders)
-      );
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [selectedVisitID, orders]);
-  // Purge data from localStorage on successful submit
-  const clearLocalStorageData = () => {
-    localStorage.removeItem(`consultationFormDetails_visit${selectedVisitID}`);
-    localStorage.removeItem(`orders_visit${selectedVisitID}`);
-    setConsultationFormDetails({
-      diagnoses: [],
-    });
-    setOrders([]);
-  };
 
   const onRefresh = useWithLoading(async () => {
     const patientID = Router.query.id;
@@ -223,7 +185,8 @@ const PatientConsultation = () => {
       };
 
       await axiosInstance.post('/consults', combinedPayload);
-      clearLocalStorageData();
+      clearOrdersStorageData();
+      clearConsultStorageData();
 
       toast.success('Medical Consult Completed!');
       Router.push('/records');

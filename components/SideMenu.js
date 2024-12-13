@@ -15,7 +15,7 @@ import { VillageContext } from '@/context/VillageContext';
 import axiosInstance from '@/pages/api/_axiosInstance';
 
 // Version number here
-const version = 'v2024.12.12 11AM';
+const version = 'v2024.12.13 1PM';
 
 const navigation = [
   {
