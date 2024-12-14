@@ -1,9 +1,11 @@
+import useCachedVillageCode from '@/hooks/useCachedVillageCode';
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 
 export function RegistrationAutoSuggest({ setPatient, patientsList }) {
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [villageCode] = useCachedVillageCode();
 
   const renderSuggestion = suggestion => {
     const name = suggestion.name;
@@ -42,8 +44,10 @@ export function RegistrationAutoSuggest({ setPatient, patientsList }) {
     const query =
       inputValue.length === 0
         ? []
-        : patientsList.filter(patient =>
-            patient.filter_string.toLowerCase().includes(inputValue)
+        : patientsList.filter(
+            patient =>
+              patient.filter_string.toLowerCase().includes(inputValue) &&
+              patient.village_prefix === villageCode
           );
 
     setSuggestions(query);

@@ -128,12 +128,15 @@ export default function SideMenu() {
           </li>
           <li>
             <div className="text-xs font-semibold leading-6 text-gray-400">
-              Current Village
+              Current clinic site
             </div>
             <SideMenuVillageDropdown />
           </li>
           <div className="flex" />
           <li className="-mx-6 mt-auto">
+            <p className="px-6 text-sm font-semibold leading-6 text-gray-400">
+              v1.0.27
+            </p>
             <a
               href={'https://dub.sh/sabai'}
               className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 w-full"
