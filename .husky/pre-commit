@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 branch_name=$(git symbolic-ref --short HEAD)
 
 if [ "$branch_name" = "main" ]; then
@@ -8,4 +5,4 @@ if [ "$branch_name" = "main" ]; then
   exit 1
 fi
 
-npx lint-staged
+pnpm exec lint-staged
