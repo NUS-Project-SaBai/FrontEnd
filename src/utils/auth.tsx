@@ -3,8 +3,11 @@ import { OFFLINE } from './constants';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
+// TODO: convert to middleware, and remove code when completed
 const withAuth = Component => {
   const AuthComponent = props => {
+    console.warn("DEPRECATED: Should use middleware to replace withAuth")
+    return <Component {...props} />;
     const router = useRouter();
     const { user, isLoading } = useUser();
 

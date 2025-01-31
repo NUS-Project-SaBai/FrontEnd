@@ -33,7 +33,7 @@ const MyApp = ({ Component, pageProps }) => {
           <LoadingComponentWrapper>
             <Layout>
               <Component {...pageProps} />
-              <Toaster position="top center" duration={4000} />
+              <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
             </Layout>
           </LoadingComponentWrapper>
         </VillageProvider>

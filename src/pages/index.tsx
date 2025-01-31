@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import withAuth from '@/utils/auth';
 
-const Index = () => {
+export default function IndexPage() {
   const router = useRouter();
 
   useEffect(() => {
@@ -12,5 +11,3 @@ const Index = () => {
 
   return null;
 };
-
-export default withAuth(Index);
