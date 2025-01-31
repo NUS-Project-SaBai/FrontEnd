@@ -140,7 +140,6 @@ const PatientVitals = () => {
           for (const [field, messages] of Object.entries(errorResponse)) {
             errorMessage += ` ${field.charAt(0).toUpperCase() + field.slice(1)} - ${messages.join(', ')}.`;
           }
-          // eslint-disable-next-line no-unused-vars
         } catch (parseError) {
           errorMessage += ` ${error.request.response}`;
         }
