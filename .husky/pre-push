@@ -1,0 +1,15 @@
+#!/bin/bash
+# Prevents force-pushing to master
+
+printf "===\nPre-push Hook: Checking branch name\n"
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+PROTECTED_BRANCHES="^\(main\)"
+
+if expr $BRANCH : $PROTECTED_BRANCHES >/dev/null; then
+  printf "🚫 Cannot push to remote %s branch, please create your own branch and use PR.\n" $BRANCH && exit 1
+fi
+
+printf ">> Finish checking branch name\n==="
+
+exit 0
