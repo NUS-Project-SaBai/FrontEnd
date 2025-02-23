@@ -1,11 +1,12 @@
 'use client';
 import { Button } from '@/components/Button';
+import { createPatient } from '@/data/patient/createPatient';
+import { createVisit } from '@/data/visit/createVisit';
 import useToggle from '@/hooks/useToggle';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
 import { PatientRegistrationForm } from './PatientRegistrationForm';
-import { createPatient } from './createPatient';
 
 export default function RegistrationPage() {
   const useFormReturn = useForm({ resetOptions: { keepDirtyValues: true } });
@@ -22,11 +23,18 @@ export default function RegistrationPage() {
 
               useFormReturn.handleSubmit(
                 //onValid
-                fieldValues => {
+                async fieldValues => {
                   formData.append('picture', fieldValues.picture);
-                  createPatient(formData);
+                  const patient = await createPatient(formData);
+                  if (patient == null) {
+                    toast.error('Unknown error creating patient');
+                    return;
+                  }
                   useFormReturn.reset();
                   toast.success('Patient Created!');
+                  // TODO: implement check for recent visit
+                  createVisit(patient);
+                  toast.success('New Visit Created!');
                   togglePatientFormOpen();
                 },
                 // onInvalid

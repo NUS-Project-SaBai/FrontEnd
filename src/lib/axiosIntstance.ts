@@ -1,3 +1,4 @@
+'use server';
 import { APP_CONFIG } from '@/config';
 import axios from 'axios';
 import { auth0 } from './auth0';
