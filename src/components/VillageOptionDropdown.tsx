@@ -5,15 +5,20 @@ export default function VillageOptionDropdown({
   village,
   handleVillageChange,
   label = 'Village:',
+  required = false,
+  dropdownClassName = '',
 }: {
   village: VillagePrefix;
   handleVillageChange: (villagePrefix: VillagePrefix) => void;
   label?: string;
+  required?: boolean;
+  dropdownClassName?: string;
 }) {
   return (
-    <div className="font-semibold">
+    <div className="text-sm font-semibold">
       <label htmlFor="village_prefix" className="block">
         {label}
+        {required && <span className="text-red-500">*</span>}
       </label>
       <select
         name="village_prefix"
@@ -21,9 +26,11 @@ export default function VillageOptionDropdown({
         value={village}
         onChange={e => handleVillageChange(e.target.value as VillagePrefix)}
         className={
-          'mt-2 w-full rounded border-2 shadow-sm ' +
+          'w-full rounded border-2 p-1 ' +
           (VILLAGES.find(value => value.key == village)?.color ||
-            'text-gray-800')
+            'text-gray-800') +
+          ' ' +
+          dropdownClassName
         }
       >
         <option value="ALL" className="text-gray-800">

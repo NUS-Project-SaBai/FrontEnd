@@ -37,7 +37,7 @@ export function RHFDropdown({
         name={name}
         defaultValue={defaultValue}
         className={
-          'block w-full rounded-md border-2 p-1 sm:text-sm ' +
+          'block w-full rounded-md border-2 p-1 text-sm ' +
           (formState?.errors[name] != undefined && formState?.isSubmitted
             ? 'border-l-8 border-red-400'
             : '')

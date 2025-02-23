@@ -3,8 +3,9 @@ import { Button } from '@/components/Button';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { WebcamInput } from '@/components/inputs/WebcamInput';
-import { VILLAGES } from '@/constants';
-import { FormEventHandler } from 'react';
+import VillageOptionDropdown from '@/components/VillageOptionDropdown';
+import { VillageContext } from '@/context/VillageContext';
+import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 export function PatientRegistrationForm({
@@ -12,15 +13,12 @@ export function PatientRegistrationForm({
 }: {
   onSubmit: FormEventHandler<HTMLFormElement>;
 }) {
+  const { village } = useContext(VillageContext);
   const { register, control, formState } = useFormContext();
   const genderDropdownOptions = [
     { label: 'Male', value: 'male' },
     { label: 'Female', value: 'female' },
   ];
-  const villageDropdownOptions = VILLAGES.map(({ key }) => ({
-    label: key,
-    value: key,
-  }));
   const yesNoOptions = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
@@ -67,13 +65,25 @@ export function PatientRegistrationForm({
             type="date"
             isRequired={true}
           />
-          <RHFDropdown
-            register={register}
-            formState={formState}
-            label="Village"
+          <Controller
             name="village_prefix"
-            options={villageDropdownOptions}
-            isRequired={true}
+            defaultValue={village}
+            rules={{
+              validate: {
+                required: value => value != 'ALL',
+              },
+            }}
+            render={({ field, fieldState }) => (
+              <VillageOptionDropdown
+                label="Village"
+                village={field.value}
+                handleVillageChange={field.onChange}
+                required={true}
+                dropdownClassName={
+                  fieldState.error && 'border-l-8 border-red-400'
+                }
+              />
+            )}
           />
           <RHFDropdown
             register={register}
