@@ -13,7 +13,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
-import VillageOptionDropdown from './VillageOptionDropdown';
+import { VillageOptionDropdown } from './VillageOptionDropdown';
+
 type HeroIconType = React.ComponentType<React.ComponentProps<'svg'>>;
 type NavItemData = {
   name: string;
@@ -43,14 +44,14 @@ const navItems: NavItemData[] = [
   },
 ];
 
-export default function SideMenu() {
+export function SideMenu() {
   const { user } = useUser();
   const { village, setVillage } = useContext(VillageContext);
   return (
-    <div className="flex h-screen flex-col bg-gray-900 text-gray-400">
-      <div className="flex p-4">
+    <div className="flex h-full flex-col bg-gray-900 text-gray-400">
+      <div className="flex items-center p-4">
         <Image alt="Sa'bai Logo" src="/sabaiLogo.png" width={32} height={32} />
-        <h1 className="ml-2 text-2xl">Sa&apos;Bai &apos;24</h1>
+        <h1 className="ml-2 text-2xl text-gray-500">Sa&apos;Bai &apos;24</h1>
       </div>
 
       <nav className="py-4">

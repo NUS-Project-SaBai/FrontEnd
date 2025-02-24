@@ -1,7 +1,7 @@
 import { VILLAGES } from '@/constants';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 
-export default function VillageOptionDropdown({
+export function VillageOptionDropdown({
   village,
   handleVillageChange,
   label = 'Village:',
@@ -27,8 +27,9 @@ export default function VillageOptionDropdown({
         onChange={e => handleVillageChange(e.target.value as VillagePrefix)}
         className={
           'w-full rounded border-2 p-1 ' +
-          (VILLAGES.find(value => value.key == village)?.color ||
-            'text-gray-800') +
+          (village == VillagePrefix.ALL
+            ? 'text-gray-800'
+            : VILLAGES[village].color) +
           ' ' +
           dropdownClassName
         }
@@ -36,7 +37,7 @@ export default function VillageOptionDropdown({
         <option value="ALL" className="text-gray-800">
           ALL
         </option>
-        {VILLAGES.map(({ key, label, color }) => (
+        {Object.values(VILLAGES).map(({ key, label, color }) => (
           <option key={key} value={key} className={'font-semibold ' + color}>
             {label}
           </option>

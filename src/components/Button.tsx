@@ -23,7 +23,7 @@ export function Button({
 
   return (
     <button
-      className={`rounded-md border p-2 shadow-sm`}
+      className={`rounded-md border-2 p-2 shadow-sm hover:bg-slate-100 hover:shadow`}
       type={type}
       onClick={handleClick}
       disabled={isLoading}

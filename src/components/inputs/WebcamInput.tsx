@@ -1,5 +1,5 @@
 'use client';
-import useToggle from '@/hooks/useToggle';
+import { useToggle } from '@/hooks/useToggle';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useCallback, useRef } from 'react';
 import Webcam from 'react-webcam';

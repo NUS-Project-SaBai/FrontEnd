@@ -9,7 +9,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
  * 2. toggleVal - nullary function that toggles the state
  * 3. setVal - set the state to the value.
  */
-export default function useToggle(
+export function useToggle(
   initialState: boolean
 ): [boolean, () => void, Dispatch<SetStateAction<boolean>>] {
   const [val, setVal] = useState(initialState);

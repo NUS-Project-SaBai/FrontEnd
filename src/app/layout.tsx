@@ -1,4 +1,4 @@
-import SideMenu from '@/components/SideMenu';
+import { SideMenu } from '@/components/SideMenu';
 import { VillageProvider } from '@/context/VillageContext';
 import { Auth0Provider } from '@auth0/nextjs-auth0';
 import { Metadata } from 'next';
@@ -17,13 +17,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Auth0Provider>
-        <body className="flex">
-          <VillageProvider>
+        <VillageProvider>
+          <body className="flex h-screen">
             <SideMenu />
             <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
-            <div>{children}</div>
-          </VillageProvider>
-        </body>
+            <div className="flex-auto overflow-auto">{children}</div>
+          </body>
+        </VillageProvider>
       </Auth0Provider>
     </html>
   );

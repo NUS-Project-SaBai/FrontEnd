@@ -3,7 +3,7 @@ import { YesNoOption } from './YesNoOption';
 
 export type Patient = {
   pk: number;
-  village_prefix: VillagePrefix;
+  village_prefix: Exclude<VillagePrefix, VillagePrefix.ALL>;
   name: string;
   identification_number: string;
   contact_no: string;
@@ -19,6 +19,39 @@ export type Patient = {
   patient_id: string;
   confidence: string;
 };
+
+export function getPatientAge(patient: Patient) {
+  const dob = new Date(patient.date_of_birth);
+  const today = new Date();
+
+  // calculate the difference in year, month, days
+  let ageYears = today.getFullYear() - dob.getFullYear();
+  let ageMonths = today.getMonth() - dob.getMonth();
+  let ageDays = today.getDate() - dob.getDate();
+
+  // Adjust for the case when the birthday hasn't occurred yet this year
+  if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+    ageYears--;
+    ageMonths += 12; // Add 12 months if the birthday hasn't occurred yet this year
+  }
+
+  // Adjust days if the day difference is negative
+  if (ageDays < 0) {
+    const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0); // Get the last day of the previous month
+    ageDays += lastMonth.getDate(); // Add the number of days in the last month
+    ageMonths--; // Subtract one month
+    if (ageMonths < 0) {
+      ageMonths = 11; // If months go negative, set it to 11 and subtract one year
+      ageYears--;
+    }
+  }
+  return {
+    year: ageYears,
+    month: ageMonths,
+    day: ageDays,
+  };
+}
+
 export function fromJson(jsonObj: object): Patient | null {
   return jsonObj as Patient;
 }

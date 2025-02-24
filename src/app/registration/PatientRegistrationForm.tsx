@@ -3,7 +3,7 @@ import { Button } from '@/components/Button';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { WebcamInput } from '@/components/inputs/WebcamInput';
-import VillageOptionDropdown from '@/components/VillageOptionDropdown';
+import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
