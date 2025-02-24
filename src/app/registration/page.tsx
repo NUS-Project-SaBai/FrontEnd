@@ -3,6 +3,7 @@ import { Button } from '@/components/Button';
 import { createPatient } from '@/data/patient/createPatient';
 import { createVisit } from '@/data/visit/createVisit';
 import useToggle from '@/hooks/useToggle';
+import { urlToFile } from '@/utils/urlToFile';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
@@ -24,7 +25,14 @@ export default function RegistrationPage() {
               useFormReturn.handleSubmit(
                 //onValid
                 async fieldValues => {
-                  formData.append('picture', fieldValues.picture);
+                  formData.append(
+                    'picture',
+                    await urlToFile(
+                      fieldValues.picture,
+                      'patient_screenshot.jpg',
+                      'image/jpg'
+                    )
+                  );
                   const patient = await createPatient(formData);
                   if (patient == null) {
                     toast.error('Unknown error creating patient');
