@@ -3,11 +3,11 @@ import { useState } from 'react';
 
 export function Button({
   text,
-  onClick,
+  onClick = () => {},
   type = 'button',
 }: {
   text: string;
-  onClick: () => void;
+  onClick?: () => void;
   type?: 'submit' | 'button' | 'reset';
 }) {
   const [isLoading, setIsLoading] = useState(false);

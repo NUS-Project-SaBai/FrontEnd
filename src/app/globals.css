@@ -14,3 +14,16 @@ input[type='search']::-webkit-search-cancel-button {
   width: 1rem;
   cursor: pointer;
 }
+
+input {
+  @apply block rounded-md border-2 p-1 sm:text-sm;
+}
+
+label {
+  @apply text-sm font-medium;
+}
+
+td,
+th {
+  @apply p-2;
+}

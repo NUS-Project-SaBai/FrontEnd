@@ -22,8 +22,7 @@ export function RHFInputField({
 }: RHFInputFieldProps) {
   const curFormErrorState = formState?.errors[name];
   const inputClassStyle =
-    'block p-1 border-2 rounded-md sm:text-sm ' +
-    (curFormErrorState != undefined ? 'border-l-8 border-red-400' : '');
+    curFormErrorState != undefined ? 'border-l-8 border-red-400' : '';
   return (
     <div className="flex flex-col">
       <label htmlFor={name} className="text-sm font-medium">

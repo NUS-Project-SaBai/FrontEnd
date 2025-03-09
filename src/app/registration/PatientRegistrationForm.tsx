@@ -135,7 +135,7 @@ export function PatientRegistrationForm({
             );
           }}
         />
-        <Button onClick={() => {}} text="Submit" type="submit" />
+        <Button text="Submit" type="submit" />
       </form>
     </>
   );
