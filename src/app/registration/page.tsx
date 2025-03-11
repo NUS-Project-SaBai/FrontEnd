@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
-import { PatientInfo } from '@/components/PatientInfo';
+import { PatientInfo } from '@/components/records/PatientInfo';
 import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
