@@ -3,7 +3,6 @@ import { PatientInfoDetailSection } from '@/components/records/PatientInfoDetail
 import { PatientInfoHeaderSection } from '@/components/records/PatientInfoHeaderSection';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
-import { getVisitByPatientId } from '@/data/visit/getVisit';
 import { Consult } from '@/types/Consult';
 
 export default async function PatientRecordPage({
@@ -15,7 +14,6 @@ export default async function PatientRecordPage({
   const visitId: string = (await searchParams).visit || '';
 
   const patient = await getPatientById(patientId);
-  const visits = await getVisitByPatientId(patientId);
   const consults = await getConsultByVisitId(visitId);
 
   if (!patient) {
@@ -31,7 +29,7 @@ export default async function PatientRecordPage({
     <div className="p-2">
       <h1>Patient Records</h1>
 
-      <PatientInfoHeaderSection patient={patient} visits={visits} />
+      <PatientInfoHeaderSection patient={patient} />
       <hr className="my-2 w-full border-t-2" />
       <div className="grid grid-cols-2">
         <div>

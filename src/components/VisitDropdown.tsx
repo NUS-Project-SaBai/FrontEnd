@@ -1,8 +1,8 @@
 'use client';
-
 import { Visit } from '@/types/Visit';
 import moment from 'moment';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
 type DropdownProps = {
   name: string;
@@ -11,19 +11,29 @@ type DropdownProps = {
 export function VisitDropdown({ name, visits }: DropdownProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const params = new URLSearchParams(useSearchParams());
+  const searchParams = useSearchParams();
+  const params = useMemo(
+    () => new URLSearchParams(searchParams),
+    [searchParams]
+  );
+  const [visitId, setVisitId] = useState(params.get('visit') || '');
 
-  const setVisitId = (visitId: string) => {
-    if (visitId == null) {
+  useEffect(() => {
+    if (visitId) {
+      params.set('visit', visitId);
+    } else {
       params.delete('visit');
     }
-    params.set('visit', visitId);
     router.replace(`${pathname}?${params.toString()}`);
-  };
+  }, [params, pathname, router, visitId]);
 
-  const visitId = params.get('visit');
-  if (visitId == null) {
-    setVisitId(visits[0].id);
+  useEffect(() => {
+    if (visits && !visitId) {
+      setVisitId(visits[0].id);
+    }
+  }, [visitId, visits]);
+
+  if (!visits && !visitId) {
     return <div>No visits found</div>;
   }
 

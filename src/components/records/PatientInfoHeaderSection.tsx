@@ -1,17 +1,17 @@
+'use server';
 import { VILLAGES } from '@/constants';
+import { getVisitByPatientId } from '@/data/visit/getVisit';
 import { Patient, getPatientAge } from '@/types/Patient';
-import { Visit } from '@/types/Visit';
 import Image from 'next/image';
 import { VisitDropdown } from '../VisitDropdown';
 
-export function PatientInfoHeaderSection({
+export async function PatientInfoHeaderSection({
   patient,
-  visits,
 }: {
   patient: Patient;
-  visits?: Visit[];
 }) {
   const age = getPatientAge(patient);
+  const visits = await getVisitByPatientId(patient.pk.toString());
 
   return (
     <div className="flex">
