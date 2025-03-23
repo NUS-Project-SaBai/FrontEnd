@@ -32,6 +32,7 @@ export function RHFInputField({
       {type == 'textarea' ? (
         <textarea
           className={inputClassStyle}
+          rows={4}
           {...register(name, {
             required: { message: `Empty Field: ${label}`, value: isRequired },
           })}

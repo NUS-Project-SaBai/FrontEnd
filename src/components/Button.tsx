@@ -5,10 +5,12 @@ export function Button({
   text,
   onClick = () => {},
   type = 'button',
+  colour = 'white',
 }: {
   text: string;
   onClick?: () => void;
   type?: 'submit' | 'button' | 'reset';
+  colour?: 'green' | 'red' | 'white';
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -23,7 +25,10 @@ export function Button({
 
   return (
     <button
-      className={`rounded-md border-2 p-2 shadow-sm hover:bg-slate-100 hover:shadow`}
+      className={
+        `text m-0.5 rounded-md border-2 p-2 shadow-sm hover:shadow hover:outline hover:outline-black ` +
+        (colour == 'white' ? 'bg-white' : `bg-${colour}-500 text-white`)
+      }
       type={type}
       onClick={handleClick}
       disabled={isLoading}

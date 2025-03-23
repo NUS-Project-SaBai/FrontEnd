@@ -18,6 +18,9 @@ export default {
     {
       pattern: /^text-(red|blue|green|yellow|purple)-400$/,
     },
+    {
+      pattern: /^bg-(red|green)-?.+$/,
+    },
   ],
   plugins: [],
 } satisfies Config;

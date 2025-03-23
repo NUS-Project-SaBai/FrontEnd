@@ -52,6 +52,6 @@ export function getPatientAge(patient: Patient) {
   };
 }
 
-export function fromJson(jsonObj: object): Patient | null {
+export function patientFromJson(jsonObj: object): Patient | null {
   return jsonObj as Patient;
 }

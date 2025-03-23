@@ -1,6 +1,6 @@
 'use server';
 import { axiosInstance } from '@/lib/axiosIntstance';
-import { fromJson, Patient } from '@/types/Patient';
+import { Patient, patientFromJson } from '@/types/Patient';
 
 export async function createPatient(
   formData: FormData
@@ -8,7 +8,7 @@ export async function createPatient(
   try {
     return await axiosInstance
       .post('/patients', formData)
-      .then(val => fromJson(val.data))
+      .then(val => patientFromJson(val.data))
       .catch(err => {
         console.log(err);
         return null;

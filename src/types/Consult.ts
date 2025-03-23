@@ -18,3 +18,7 @@ export type Consult = {
   referral_notes?: string;
   remarks?: string;
 };
+
+export function consultFromJson(jsonObj: object): Consult | null {
+  return jsonObj as Consult;
+}
