@@ -69,14 +69,18 @@ export default function RegistrationPage() {
         setPatient={setSelectedPatient}
       />
       <div className="my-2">
-        <Button onClick={togglePatientFormOpen} text={'New Patient'} />
+        <Button
+          colour="green"
+          onClick={togglePatientFormOpen}
+          text={'New Patient'}
+        />
         <ReactModal isOpen={isPatientFormOpen} ariaHideApp={false}>
           <FormProvider {...useFormReturn}>
             <PatientRegistrationForm
               onSubmit={onPatientRegistrationFormSubmit}
             />
           </FormProvider>
-          <Button onClick={togglePatientFormOpen} text="Close" />
+          <Button colour="red" onClick={togglePatientFormOpen} text="Close" />
         </ReactModal>
       </div>
       <PatientInfo patient={selectedPatient} />

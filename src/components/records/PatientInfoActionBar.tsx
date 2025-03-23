@@ -32,6 +32,7 @@ export function PatientInfoActionBar({ patient }: { patient: Patient }) {
   return (
     <div className="mt-6 flex justify-center space-x-2">
       {actions.map(({ text, onClick }) => (
+        // TODO: implement colour/icon?
         <Button key={text} text={text} onClick={onClick} />
       ))}
     </div>

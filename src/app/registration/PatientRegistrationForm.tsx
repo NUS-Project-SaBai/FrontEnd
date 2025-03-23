@@ -135,7 +135,7 @@ export function PatientRegistrationForm({
             );
           }}
         />
-        <Button text="Submit" type="submit" />
+        <Button colour="green" text="Submit" type="submit" />
       </form>
     </>
   );
