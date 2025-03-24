@@ -1,13 +1,7 @@
 'use client';
 
-import { Dispatch, SetStateAction } from 'react';
+import { Diagnosis } from '@/types/Diagnosis';
 import { Button } from '../Button';
-
-type DiagnosisFormData = {
-  details: string;
-  category: string;
-};
-
 const diagnosisOptions = [
   'Cardiovascular',
   'Dermatology',
@@ -29,8 +23,8 @@ export function DiagnosisField({
   diagnosis,
   setDiagnosis,
 }: {
-  diagnosis: DiagnosisFormData[];
-  setDiagnosis: Dispatch<SetStateAction<DiagnosisFormData[]>>;
+  diagnosis: Diagnosis[];
+  setDiagnosis: (diagnoses: Diagnosis[]) => void;
 }) {
   const EMPTY_DIAGNOSIS = { details: '', category: '' };
   return (
@@ -45,20 +39,16 @@ export function DiagnosisField({
             setDiagnosis(diagnosis.filter((_, i) => i !== index));
           }}
           onDiagnosisEdit={curDiagnosis => {
-            setDiagnosis(diagnosis => {
-              const newDiagnosis = [...diagnosis];
-              newDiagnosis[index] = curDiagnosis;
-              return newDiagnosis;
-            });
+            const newDiagnosis = [...diagnosis];
+            newDiagnosis[index] = curDiagnosis;
+            setDiagnosis(newDiagnosis);
           }}
         />
       ))}
       <Button
         colour="green"
         text="Add Diagnosis"
-        onClick={() =>
-          setDiagnosis(diagnosis => [...diagnosis, EMPTY_DIAGNOSIS])
-        }
+        onClick={() => setDiagnosis([...diagnosis, EMPTY_DIAGNOSIS])}
       />
     </div>
   );
@@ -71,9 +61,9 @@ function DiagnosisInputRow({
   onDiagnosisEdit,
 }: {
   diagnosisNumber: number;
-  diagnosis: DiagnosisFormData;
+  diagnosis: Diagnosis;
   onDiagnosisDelete: () => void;
-  onDiagnosisEdit: (curDiagnosis: DiagnosisFormData) => void;
+  onDiagnosisEdit: (curDiagnosis: Diagnosis) => void;
 }) {
   return (
     <div className="flex flex-col gap-1">

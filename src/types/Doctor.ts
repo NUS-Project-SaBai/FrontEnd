@@ -3,4 +3,5 @@ export type Doctor = {
   username: string;
   email: string;
   name: string;
+  nickname: string;
 };

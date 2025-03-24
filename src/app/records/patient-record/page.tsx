@@ -3,7 +3,7 @@ import { PatientInfoDetailSection } from '@/components/records/PatientInfoDetail
 import { PatientInfoHeaderSection } from '@/components/records/PatientInfoHeaderSection';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
-import { Consult } from '@/types/Consult';
+import { RecordConsultationTable } from './RecordConsultationTable';
 
 export default async function PatientRecordPage({
   searchParams,
@@ -39,63 +39,18 @@ export default async function PatientRecordPage({
         </div>
 
         <div>
-          <RecordConsultationTable
-            consults={consults}
-            openConsultModal={() => {
-              // TODO: implement proper consultation opening.
-              throw new Error('Not Implemented');
-            }}
-          />
-          <p>prescriptions</p>
+          <p className="font-bold">Consults</p>
+          {consults.length == 0 ? (
+            <p>No Consults Available</p>
+          ) : (
+            <RecordConsultationTable consults={consults} />
+          )}
+
+          <div>
+            <p className="font-bold">Prescriptions</p>
+          </div>
         </div>
       </div>
     </div>
-  );
-}
-
-function RecordConsultationTable({
-  consults,
-  openConsultModal,
-}: {
-  consults: Consult[];
-  openConsultModal: (consult: Consult) => void;
-}) {
-  return (
-    <table className="w-full rounded border border-gray-300 shadow">
-      <thead className="bg-gray-50">
-        <tr>
-          <th>Doctor</th>
-          <th>Referral Type</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {consults.map(consult => (
-          <RecordConsultationTableRow
-            key={consult.id}
-            consult={consult}
-            openConsultModal={openConsultModal}
-          />
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-function RecordConsultationTableRow({
-  consult,
-  openConsultModal,
-}: {
-  consult: Consult;
-  openConsultModal: (consult: Consult) => void;
-}) {
-  return (
-    <tr>
-      <td>{consult.doctor.name}</td>
-      <td>{consult.referred_for || 'Not Referred'}</td>
-      <td>
-        <Button text="View" onClick={() => openConsultModal(consult)} />
-      </td>
-    </tr>
   );
 }

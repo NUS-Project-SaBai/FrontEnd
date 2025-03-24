@@ -5,7 +5,7 @@ import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { DiagnosisField } from '@/components/records/DiagnosisField';
 import { Consult } from '@/types/Consult';
 import { FormEvent } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 export function ConsultationForm({
@@ -20,7 +20,6 @@ export function ConsultationForm({
   const submitConsultationFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const oldFormData = new FormData(event.target as HTMLFormElement);
     // TODO: simplify backend to not require nesting of consult fields?
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const jsonPayload: { [key: string]: any } = {
@@ -28,15 +27,16 @@ export function ConsultationForm({
         visit: visitId,
       },
     };
-    oldFormData.entries().forEach(([k, v]) => {
-      if (k === 'diagnoses' || k === 'order') {
-        jsonPayload[k] = v;
-      } else {
-        jsonPayload['consult'][k] = v;
-      }
-    });
     handleSubmit(
-      async () => {
+      async (data: FieldValues) => {
+        Object.entries(data).forEach(([k, v]) => {
+          if (k === 'diagnoses') {
+            jsonPayload[k] = v;
+          } else {
+            jsonPayload['consult'][k] = v;
+          }
+        });
+
         try {
           const result = await submitConsultation(jsonPayload);
           if (result == null) {
@@ -50,6 +50,7 @@ export function ConsultationForm({
           toast.error('Unknown Error');
         }
       },
+
       () => {
         toast.error('Missing Input');
       }
@@ -95,6 +96,7 @@ export function ConsultationForm({
           name="referred_for"
           label="Referral for (optional)"
           options={[
+            { value: '', label: 'Not Referred' },
             { value: 'Diagnositic', label: 'Diagnositic' },
             { value: 'Acute', label: 'Acute' },
             { value: 'Chronic', label: 'Chronic' },
