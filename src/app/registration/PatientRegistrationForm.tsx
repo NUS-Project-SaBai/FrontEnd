@@ -16,8 +16,8 @@ export function PatientRegistrationForm({
   const { village } = useContext(VillageContext);
   const { register, control, formState } = useFormContext();
   const genderDropdownOptions = [
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' },
   ];
   const yesNoOptions = [
     { label: 'Yes', value: 'Yes' },
