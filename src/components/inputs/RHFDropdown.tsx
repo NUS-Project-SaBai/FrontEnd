@@ -1,26 +1,25 @@
-import { FieldValues, FormState, UseFormRegister } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 export type OptionData = { value: string; label: string };
 
 type RHFDropdownProps = {
-  register: UseFormRegister<FieldValues>;
   name: string;
   label: string;
   options: OptionData[];
   defaultValue?: string;
   isRequired?: boolean;
-  formState?: FormState<FieldValues>;
 };
 
 export function RHFDropdown({
-  register,
-  formState = undefined,
   name,
   label,
   options,
   defaultValue = '',
   isRequired = false,
 }: RHFDropdownProps) {
+  const { register, formState, setValue } = useFormContext();
+  if (formState.isSubmitSuccessful || formState.submitCount === 0)
+    setValue(name, defaultValue);
   return (
     <div>
       <label htmlFor={name} className="text-sm font-medium">

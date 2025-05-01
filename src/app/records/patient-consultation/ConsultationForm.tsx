@@ -5,7 +5,12 @@ import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { DiagnosisField } from '@/components/records/DiagnosisField';
 import { Consult } from '@/types/Consult';
 import { FormEvent } from 'react';
-import { Controller, FieldValues, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FieldValues,
+  FormProvider,
+  useForm,
+} from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 export function ConsultationForm({
@@ -15,7 +20,8 @@ export function ConsultationForm({
   visitId: string;
   submitConsultation: (formData: object) => Promise<Consult | null>;
 }) {
-  const { register, control, handleSubmit, reset } = useForm();
+  const useFormReturn = useForm();
+  const { control, handleSubmit, reset } = useFormReturn;
 
   const submitConsultationFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -59,76 +65,72 @@ export function ConsultationForm({
   return (
     <div className="h-full rounded-lg bg-blue-100 p-2 shadow-sm">
       <h3>Doctor&apos;s Consult Form</h3>
-      <form onSubmit={submitConsultationFormHandler}>
-        {/* TODO: Check that the required field is filled up. */}
-        <RHFInputField
-          register={register}
-          name="past_medical_history"
-          label="Past Medical History"
-          type="textarea"
-          placeholder="Type your problems here..."
-        />
-        <RHFInputField
-          register={register}
-          name="consultation"
-          label="Consultation"
-          type="textarea"
-          placeholder="Type your consultation here..."
-        />
-        <Controller
-          name="diagnoses"
-          control={control}
-          defaultValue={[]}
-          render={({ field: { value, onChange } }) => (
-            <DiagnosisField diagnosis={value} setDiagnosis={onChange} />
-          )}
-        />
+      <FormProvider {...useFormReturn}>
+        <form onSubmit={submitConsultationFormHandler}>
+          {/* TODO: Check that the required field is filled up. */}
+          <RHFInputField
+            name="past_medical_history"
+            label="Past Medical History"
+            type="textarea"
+            placeholder="Type your problems here..."
+          />
+          <RHFInputField
+            name="consultation"
+            label="Consultation"
+            type="textarea"
+            placeholder="Type your consultation here..."
+          />
+          <Controller
+            name="diagnoses"
+            control={control}
+            defaultValue={[]}
+            render={({ field: { value, onChange } }) => (
+              <DiagnosisField diagnosis={value} setDiagnosis={onChange} />
+            )}
+          />
 
-        <RHFInputField
-          register={register}
-          name="plan"
-          label="Plan"
-          type="textarea"
-          placeholder="Type your plan here..."
-        />
-        <RHFDropdown
-          register={register}
-          name="referred_for"
-          label="Referral for (optional)"
-          options={[
-            { value: '', label: 'Not Referred' },
-            { value: 'Diagnositic', label: 'Diagnositic' },
-            { value: 'Acute', label: 'Acute' },
-            { value: 'Chronic', label: 'Chronic' },
-            {
-              value: 'AdvancedVision',
-              label: 'AdvancedVision [Within clinic]',
-            },
-            {
-              value: 'GlassessFitting',
-              label: 'GlassessFitting [Within clinic]',
-            },
-          ]}
-        />
-        <RHFInputField
-          register={register}
-          name="referral_notes"
-          label="Referral Notes"
-          type="textarea"
-          placeholder="Type your referral notes here..."
-        />
+          <RHFInputField
+            name="plan"
+            label="Plan"
+            type="textarea"
+            placeholder="Type your plan here..."
+          />
+          <RHFDropdown
+            name="referred_for"
+            label="Referral for (optional)"
+            options={[
+              { value: '', label: 'Not Referred' },
+              { value: 'Diagnositic', label: 'Diagnositic' },
+              { value: 'Acute', label: 'Acute' },
+              { value: 'Chronic', label: 'Chronic' },
+              {
+                value: 'AdvancedVision',
+                label: 'AdvancedVision [Within clinic]',
+              },
+              {
+                value: 'GlassessFitting',
+                label: 'GlassessFitting [Within clinic]',
+              },
+            ]}
+          />
+          <RHFInputField
+            name="referral_notes"
+            label="Referral Notes"
+            type="textarea"
+            placeholder="Type your referral notes here..."
+          />
 
-        <RHFInputField
-          register={register}
-          name="remarks"
-          label="Remarks"
-          type="textarea"
-          placeholder="Type your remarks here..."
-        />
-        {/* TODO: Implement add medicine order functionality */}
-        <p>medicine orders</p>
-        <Button colour="green" text="Submit" type="submit" />
-      </form>
+          <RHFInputField
+            name="remarks"
+            label="Remarks"
+            type="textarea"
+            placeholder="Type your remarks here..."
+          />
+          {/* TODO: Implement add medicine order functionality */}
+          <p>medicine orders</p>
+          <Button colour="green" text="Submit" type="submit" />
+        </form>
+      </FormProvider>
     </div>
   );
 }

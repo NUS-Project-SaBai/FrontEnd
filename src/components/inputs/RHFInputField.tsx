@@ -1,25 +1,22 @@
 import { HTMLInputTypeAttribute } from 'react';
-import { FieldValues, FormState, UseFormRegister } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 type RHFInputFieldProps = {
-  register: UseFormRegister<FieldValues>;
   name: string;
   label: string;
   type: HTMLInputTypeAttribute | 'textarea';
   placeholder?: string;
   isRequired?: boolean;
-  formState?: FormState<FieldValues>;
 };
 
 export function RHFInputField({
-  register,
-  formState = undefined,
   name,
   label,
   type,
   placeholder = '',
   isRequired = false,
 }: RHFInputFieldProps) {
+  const { register, formState } = useFormContext();
   const curFormErrorState = formState?.errors[name];
   const inputClassStyle =
     curFormErrorState != undefined ? 'border-l-8 border-red-400' : '';

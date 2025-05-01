@@ -1,23 +1,20 @@
-import { FieldValues, FormState, UseFormRegister } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 type RHFUnitInputFieldProps = {
-  register: UseFormRegister<FieldValues>;
   name: string;
   label: string;
   unit: string;
   type: 'integer' | 'number';
   placeholder?: string;
-  formState?: FormState<FieldValues>;
 };
 export function RHFUnitInputField({
-  register,
-  formState = undefined,
   name,
   label,
   unit,
   type,
   placeholder,
 }: RHFUnitInputFieldProps) {
+  const { register, formState } = useFormContext();
   const curFormErrorState = formState?.errors[name];
   const typeValidation = {
     // number is any valid positive decimal number

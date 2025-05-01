@@ -1,10 +1,9 @@
+import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
 import { OptionData, RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
-import { RHFYesNoOption } from '@/components/inputs/RHFYesNoOption';
 import { getPatientAge, Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
 import { useMemo } from 'react';
-import { FieldValues, FormState, UseFormRegister } from 'react-hook-form';
 
 export const ALL_CHILD_AGES = [
   2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
@@ -20,7 +19,7 @@ type InputFieldData =
       gender?: 'Female' | 'Male';
     }
   | {
-      type: 'text' | 'yesNoOption';
+      type: 'text' | 'yesNoOption' | 'number';
       name: keyof Omit<Vital, 'id' | 'visit'>;
       label: string;
       age: number[];
@@ -96,10 +95,9 @@ const allPubertyFields: InputFieldData[] = [
     age: [13, 14, 15, 16, 17, 18],
   },
   {
-    type: 'text',
+    type: 'number',
     name: 'pubarche_age',
     label: 'Pubarche Age',
-    //   type: 'number',
     age: [13, 14, 15, 16, 17, 18],
   },
   {
@@ -110,10 +108,9 @@ const allPubertyFields: InputFieldData[] = [
     gender: 'Female',
   },
   {
-    type: 'text',
+    type: 'number',
     name: 'thelarche_age',
     label: 'Thelarche Age',
-    //   type: 'number',
     age: [13, 14, 15, 16, 17, 18],
     gender: 'Female',
   },
@@ -139,10 +136,9 @@ const allPubertyFields: InputFieldData[] = [
     gender: 'Male',
   },
   {
-    type: 'text',
+    type: 'number',
     name: 'voice_change_age',
     label: 'Voice Change Age',
-    //   type: 'number',
     age: [13, 14, 15, 16],
     gender: 'Male',
   },
@@ -154,22 +150,17 @@ const allPubertyFields: InputFieldData[] = [
     gender: 'Male',
   },
   {
-    type: 'text',
+    type: 'number',
     name: 'testicular_growth_age',
     label: 'Testicular Growth Age',
-    //   type: 'number',
     age: [13, 14, 15, 16],
     gender: 'Male',
   },
 ];
 export function ChildVitalsFields({
-  register,
-  formState,
   patient,
   curVital,
 }: {
-  register: UseFormRegister<FieldValues>;
-  formState: FormState<FieldValues>;
   patient: Patient;
   curVital: Vital;
 }) {
@@ -198,8 +189,6 @@ export function ChildVitalsFields({
     <div>
       {childVitalsFields.length == 0 || (
         <ChildVitalsSection
-          register={register}
-          formState={formState}
           childVitalsFields={childVitalsFields}
           curVital={curVital}
         />
@@ -207,8 +196,6 @@ export function ChildVitalsFields({
 
       {pubertyFields.length == 0 || (
         <ChildPubertySection
-          register={register}
-          formState={formState}
           pubertyFields={pubertyFields}
           curVital={curVital}
         />
@@ -218,13 +205,9 @@ export function ChildVitalsFields({
 }
 
 function ChildVitalsSection({
-  register,
-  formState,
   childVitalsFields,
   curVital,
 }: {
-  register: UseFormRegister<FieldValues>;
-  formState: FormState<FieldValues>;
   childVitalsFields: InputFieldData[];
   curVital: Vital;
 }) {
@@ -235,8 +218,6 @@ function ChildVitalsSection({
         {childVitalsFields.map(field => (
           <VitalFieldRenderer
             key={field.name}
-            register={register}
-            formState={formState}
             field={field}
             curVital={curVital}
           />
@@ -247,13 +228,9 @@ function ChildVitalsSection({
 }
 
 function ChildPubertySection({
-  register,
-  formState,
   pubertyFields,
   curVital,
 }: {
-  register: UseFormRegister<FieldValues>;
-  formState: FormState<FieldValues>;
   pubertyFields: InputFieldData[];
   curVital: Vital;
 }) {
@@ -264,8 +241,6 @@ function ChildPubertySection({
         {pubertyFields.map(field => (
           <VitalFieldRenderer
             key={field.name}
-            register={register}
-            formState={formState}
             field={field}
             curVital={curVital}
           />
@@ -277,42 +252,19 @@ function ChildPubertySection({
 
 function VitalFieldRenderer({
   field,
-  register,
-  formState,
   curVital,
 }: {
   field: InputFieldData;
-  register: UseFormRegister<FieldValues>;
-  formState: FormState<FieldValues>;
   curVital: Vital;
 }) {
   switch (field.type) {
     case 'dropdown':
-      return (
-        <RHFDropdown
-          register={register}
-          formState={formState}
-          defaultValue={curVital[field.name]}
-          {...field}
-        />
-      );
+      return <RHFDropdown defaultValue={curVital[field.name]} {...field} />;
     case 'text':
-      return (
-        <RHFInputField
-          register={register}
-          formState={formState}
-          placeholder={curVital[field.name]}
-          {...field}
-        />
-      );
+      return <RHFInputField placeholder={curVital[field.name]} {...field} />;
+    case 'number':
+      return <RHFInputField placeholder={curVital[field.name]} {...field} />;
     case 'yesNoOption':
-      return (
-        <RHFYesNoOption
-          register={register}
-          formState={formState}
-          defaultValue={curVital[field.name]}
-          {...field}
-        />
-      );
+      return <RHFBinaryOption defaultValue={curVital[field.name]} {...field} />;
   }
 }

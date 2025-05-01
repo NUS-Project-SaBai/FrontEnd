@@ -1,5 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
+import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { WebcamInput } from '@/components/inputs/WebcamInput';
@@ -14,53 +15,34 @@ export function PatientRegistrationForm({
   onSubmit: FormEventHandler<HTMLFormElement>;
 }) {
   const { village } = useContext(VillageContext);
-  const { register, control, formState } = useFormContext();
+  const { control, formState } = useFormContext();
   const genderDropdownOptions = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
-  ];
-  // TODO: replace all yesNoOption with the specialised RHFYesNoOption
-  const yesNoOptions = [
-    { label: 'Yes', value: 'Yes' },
-    { label: 'No', value: 'No' },
   ];
   return (
     <>
       <form onSubmit={onSubmit}>
         <div className="grid grid-cols-2 gap-4">
           <RHFInputField
-            register={register}
-            formState={formState}
             name="name"
             label="Name (english + local if possible)"
             type="text"
             isRequired={true}
           />
           <RHFInputField
-            register={register}
-            formState={formState}
             name="identification_number"
             label="ID Number"
             type="text"
           />
-          <RHFInputField
-            register={register}
-            formState={formState}
-            name="contact_no"
-            label="Contact Number"
-            type="tel"
-          />
+          <RHFInputField name="contact_no" label="Contact Number" type="tel" />
           <RHFDropdown
-            register={register}
-            formState={formState}
             label="Gender"
             name="gender"
             options={genderDropdownOptions}
             isRequired={true}
           />
           <RHFInputField
-            register={register}
-            formState={formState}
             name="date_of_birth"
             label="Date of Birth"
             type="date"
@@ -86,33 +68,10 @@ export function PatientRegistrationForm({
               />
             )}
           />
-          <RHFDropdown
-            register={register}
-            formState={formState}
-            label="POOR Card"
-            name="poor"
-            options={yesNoOptions}
-            defaultValue="No"
-          />
-          <RHFDropdown
-            register={register}
-            formState={formState}
-            label="BS2 Card"
-            name="bs2"
-            options={yesNoOptions}
-            defaultValue="No"
-          />
-          <RHFDropdown
-            register={register}
-            formState={formState}
-            label="Sabai Card"
-            name="sabai"
-            options={yesNoOptions}
-            defaultValue="No"
-          />
+          <RHFBinaryOption label="POOR Card" name="poor" defaultValue="No" />
+          <RHFBinaryOption label="BS2 Card" name="bs2" defaultValue="No" />
+          <RHFBinaryOption label="Sabai Card" name="sabai" defaultValue="No" />
           <RHFInputField
-            register={register}
-            formState={formState}
             name="drug_allergy"
             label="Drug Allergies"
             type="textarea"
