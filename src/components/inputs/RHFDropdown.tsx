@@ -1,6 +1,6 @@
 import { FieldValues, FormState, UseFormRegister } from 'react-hook-form';
 
-type OptionData = { value: string; label: string };
+export type OptionData = { value: string; label: string };
 
 type RHFDropdownProps = {
   register: UseFormRegister<FieldValues>;

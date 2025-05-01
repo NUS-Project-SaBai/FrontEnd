@@ -24,7 +24,7 @@ export function RHFInputField({
   const inputClassStyle =
     curFormErrorState != undefined ? 'border-l-8 border-red-400' : '';
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col justify-end">
       <label htmlFor={name} className="text-sm font-medium">
         {label}
         {isRequired && <span className="text-red-500">*</span>}

@@ -19,6 +19,7 @@ export function PatientRegistrationForm({
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
   ];
+  // TODO: replace all yesNoOption with the specialised RHFYesNoOption
   const yesNoOptions = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },

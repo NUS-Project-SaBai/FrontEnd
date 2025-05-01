@@ -5,6 +5,9 @@
 h1 {
   @apply p-2 text-center text-2xl font-bold text-gray-800 md:text-3xl;
 }
+h2 {
+  @apply pt-2 text-lg font-semibold text-gray-900 md:text-xl;
+}
 
 input[type='search']::-webkit-search-cancel-button {
   -webkit-appearance: none;
