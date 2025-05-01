@@ -8,9 +8,15 @@ export async function patchVital(vital: Vital) {
   const jsonPayload = Object.fromEntries(
     Object.entries(vital).filter(([, v]) => v != undefined)
   );
-  const data = (
-    await axiosInstance.patch(`/vitals?visit=${vital.visit}`, jsonPayload)
-  ).data;
+  let data;
+  try {
+    data = (
+      await axiosInstance.patch(`/vitals?visit=${vital.visit}`, jsonPayload)
+    ).data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 
   data.visit = data.visit.id;
   return vitalFromJson(data);
