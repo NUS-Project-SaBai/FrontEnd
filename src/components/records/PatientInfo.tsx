@@ -11,7 +11,7 @@ export function PatientInfo({ patient }: { patient: Patient | null }) {
   return (
     <div>
       <PatientInfoHeaderSection patient={patient} />
-      <PatientInfoDetailSection patient={patient} displayType="grid" />
+      <PatientInfoDetailSection patient={patient} />
       <PatientInfoActionBar patient={patient} />
     </div>
   );

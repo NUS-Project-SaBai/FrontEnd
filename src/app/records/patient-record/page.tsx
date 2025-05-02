@@ -31,7 +31,7 @@ export default async function PatientRecordPage({
 
       <PatientInfoHeaderSection patient={patient} />
       <hr className="my-2 w-full border-t-2" />
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-2 gap-1 md:gap-4">
         <div>
           <Button text="View Vitals" />
           <Button text="Edit Patient Details" />

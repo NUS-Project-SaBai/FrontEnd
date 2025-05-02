@@ -28,9 +28,6 @@ export function RecordConsultationTable({ consults }: { consults: Consult[] }) {
         ) : (
           <>
             <div>
-              {/* Object.entries(consult).map(([k, v]) => (
-                  <DisplayField key={k} label={k} content={v.toString()} />
-                )) */}
               <DisplayField
                 label="Consultation done by"
                 content={consult.doctor.nickname || ''}

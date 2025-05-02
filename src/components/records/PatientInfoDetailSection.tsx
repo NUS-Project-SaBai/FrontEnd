@@ -2,18 +2,12 @@ import { Patient } from '@/types/Patient';
 import moment from 'moment';
 import { DisplayField } from '../DisplayField';
 
-export function PatientInfoDetailSection({
-  patient,
-  displayType = 'flex',
-}: {
-  patient: Patient;
-  displayType?: 'flex' | 'grid';
-}) {
+export function PatientInfoDetailSection({ patient }: { patient: Patient }) {
   const fieldArray = [
     { label: 'Name', value: patient.name },
     { label: 'ID Number', value: patient.identification_number },
     { label: 'Contact', value: patient.contact_no },
-    { label: 'Gender', value: patient.gender == 'male' ? 'Male' : 'Female' },
+    { label: 'Gender', value: patient.gender },
     {
       label: 'Date of Birth',
       value: moment(patient.date_of_birth).format('DD-MMMM-YYYY'),
@@ -25,7 +19,7 @@ export function PatientInfoDetailSection({
     { label: 'Allergies', value: patient.drug_allergy },
   ];
   return (
-    <div className={displayType + ' grid-cols-2 flex-col gap-2 sm:grid-cols-3'}>
+    <div className={'grid gap-2 md:grid-cols-3'}>
       {fieldArray.map(({ label, value }) => (
         <DisplayField
           key={label}

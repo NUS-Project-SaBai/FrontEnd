@@ -1,17 +1,19 @@
-'use server';
+'use client';
 import { VILLAGES } from '@/constants';
 import { getVisitByPatientId } from '@/data/visit/getVisit';
 import { Patient, getPatientAge } from '@/types/Patient';
+import { Visit } from '@/types/Visit';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { VisitDropdown } from '../VisitDropdown';
 
-export async function PatientInfoHeaderSection({
-  patient,
-}: {
-  patient: Patient;
-}) {
+export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
+  const [visits, setVisits] = useState<Visit[]>([]);
+  useEffect(() => {
+    getVisitByPatientId(patient.pk.toString()).then(vs => setVisits(vs));
+  }, [patient.pk]);
+
   const age = getPatientAge(patient);
-  const visits = await getVisitByPatientId(patient.pk.toString());
 
   return (
     <div className="flex">
@@ -34,7 +36,7 @@ export async function PatientInfoHeaderSection({
           <p>{patient.name}</p>
         </div>
 
-        {visits && (
+        {visits.length != 0 && (
           <div>
             <p>Visited On:</p>
             <VisitDropdown name="visit_date" visits={visits} />
