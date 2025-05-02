@@ -1,10 +1,12 @@
 import { HeightWeightGraph } from '@/components/records/HeightWeightGraph';
 import { PatientInfoHeaderSection } from '@/components/records/PatientInfoHeaderSection';
+import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitById } from '@/data/visit/getVisit';
 import { getVitalByVisit } from '@/data/vital/getVital';
 import { calculateDobDifference } from '@/types/Patient';
 import { EMPTY_VITAL } from '@/types/Vital';
+import { RecordConsultationTable } from '../patient-record/RecordConsultationTable';
 import { PastVitalTable } from './PastVitalTable';
 import { VitalsForm } from './VitalsForm';
 
@@ -15,7 +17,7 @@ export default async function PatientVitalPage({
 }) {
   const patientId = (await searchParams).id;
   const visitId = (await searchParams).visit;
-  const [patient, curVital, visitDate] = await Promise.all([
+  const [patient, curVital, visitDate, consults] = await Promise.all([
     getPatientById(patientId),
     visitId == undefined
       ? EMPTY_VITAL
@@ -25,6 +27,7 @@ export default async function PatientVitalPage({
       : getVisitById(visitId).then(visit =>
           visit == null ? new Date() : new Date(visit.date)
         ),
+    getConsultByVisitId(visitId),
   ]);
 
   const patientVisitAge = calculateDobDifference(
@@ -45,6 +48,12 @@ export default async function PatientVitalPage({
             gender={patient.gender}
           />
           <p>consults</p>
+          <h2>Consultations</h2>
+          {consults == null ? (
+            <p>loading</p>
+          ) : (
+            <RecordConsultationTable consults={consults} />
+          )}
           <p>prescription</p>
           <h2>HeightWeightGraph</h2>
           <HeightWeightGraph

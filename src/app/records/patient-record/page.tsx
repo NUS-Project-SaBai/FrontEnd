@@ -40,12 +40,7 @@ export default async function PatientRecordPage({
 
         <div>
           <p className="font-bold">Consults</p>
-          {consults.length == 0 ? (
-            <p>No Consults Available</p>
-          ) : (
-            <RecordConsultationTable consults={consults} />
-          )}
-
+          <RecordConsultationTable consults={consults} />
           <div>
             <p className="font-bold">Prescriptions</p>
           </div>

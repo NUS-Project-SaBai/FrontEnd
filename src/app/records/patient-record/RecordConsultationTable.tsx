@@ -9,7 +9,11 @@ import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 import { RecordConsultationTableRow } from './RecordConsultationTableRow';
 
-export function RecordConsultationTable({ consults }: { consults: Consult[] }) {
+export function RecordConsultationTable({
+  consults,
+}: {
+  consults: Consult[] | null;
+}) {
   const [consult, setConsult] = useState<Consult | null>(null);
 
   // TODO: refactor api call such that diagnosis is part of the consult
@@ -20,6 +24,11 @@ export function RecordConsultationTable({ consults }: { consults: Consult[] }) {
     getDiagnosisByConsult(consult.id).then(setDiagnosisArray);
   }, [consult]);
 
+  if (consults == null) {
+    return <p>Loading...</p>;
+  } else if (consults.length === 0) {
+    return <p>No Consultations Found</p>;
+  }
   return (
     <>
       <ReactModal isOpen={consult != null} ariaHideApp={false}>
