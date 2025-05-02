@@ -1,3 +1,4 @@
+import { HeightWeightGraph } from '@/components/records/HeightWeightGraph';
 import { PatientInfoHeaderSection } from '@/components/records/PatientInfoHeaderSection';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitById } from '@/data/visit/getVisit';
@@ -26,6 +27,10 @@ export default async function PatientVitalPage({
         ),
   ]);
 
+  const patientVisitAge = calculateDobDifference(
+    new Date(patient.date_of_birth),
+    visitDate
+  );
   return (
     <div className="p-2">
       <h1>Patient Vitals</h1>
@@ -36,15 +41,18 @@ export default async function PatientVitalPage({
         <div>
           <PastVitalTable
             vital={curVital}
-            age={calculateDobDifference(
-              new Date(patient.date_of_birth),
-              visitDate
-            )}
+            age={patientVisitAge}
             gender={patient.gender}
           />
           <p>consults</p>
           <p>prescription</p>
-          <p>HeightWeightGraph</p>
+          <h2>HeightWeightGraph</h2>
+          <HeightWeightGraph
+            age={patientVisitAge.year}
+            weight={parseFloat(curVital.weight)}
+            height={parseFloat(curVital.height)}
+            gender={patient.gender}
+          />
         </div>
         <div>
           <VitalsForm patient={patient} visitId={visitId} curVital={curVital} />
