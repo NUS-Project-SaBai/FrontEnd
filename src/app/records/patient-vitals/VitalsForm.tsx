@@ -7,7 +7,7 @@ import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { patchVital } from '@/data/vital/patchVital';
 import { Patient } from '@/types/Patient';
-import { EMPTY_VITAL, Vital } from '@/types/Vital';
+import { displayBMI, Vital } from '@/types/Vital';
 import { FormEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -20,13 +20,13 @@ export function VitalsForm({
 }: {
   patient: Patient;
   visitId: string;
-  curVital: Vital | null;
+  curVital: Vital; // can be EMPTY_VITAL
 }) {
   const useFormReturn = useForm();
   const { handleSubmit, reset, watch } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
 
-  curVital = curVital || EMPTY_VITAL;
+  curVital = curVital;
   const submitVitalsFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -68,16 +68,7 @@ export function VitalsForm({
           />
           <DisplayField
             label="BMI"
-            content={
-              formHeight == null ||
-              isNaN(parseFloat(formHeight)) ||
-              formWeight == null ||
-              isNaN(parseFloat(formWeight))
-                ? 'Invalid/Missing Height or Weight'
-                : (parseFloat(formWeight) / (parseFloat(formHeight) / 100) ** 2)
-                    .toFixed(2)
-                    .toString()
-            }
+            content={displayBMI(formHeight, formWeight)}
           />
         </div>
         <h2>Blood Pressure</h2>
@@ -87,21 +78,21 @@ export function VitalsForm({
             label="Systolic"
             unit="mmHg"
             type="integer"
-            placeholder={curVital.systolic}
+            placeholder={curVital.systolic?.toString()}
           />
           <RHFUnitInputField
             name="diastolic"
             label="Diastolic"
             unit="mmHg"
             type="integer"
-            placeholder={curVital.diastolic}
+            placeholder={curVital.diastolic?.toString()}
           />
           <RHFUnitInputField
             name="heart_rate"
             label="Heart Rate"
             unit="BPM"
             type="integer"
-            placeholder={curVital.heart_rate}
+            placeholder={curVital.heart_rate?.toString()}
           />
         </div>
         <h2>Temperature</h2>
@@ -159,25 +150,25 @@ export function VitalsForm({
             label="Non-Fasting Capillary Blood Glucose (Decimal eg. 13.2)"
             unit="mmol/L"
             type="number"
-            placeholder={curVital.blood_glucose_non_fasting}
+            placeholder={curVital.blood_glucose_non_fasting?.toString()}
           />
           <RHFUnitInputField
             name="blood_glucose_fasting"
             label="Fasting Capillary Blood Glucose (Decimal eg. 13.2)"
             unit="mmol/L"
             type="number"
-            placeholder={curVital.blood_glucose_fasting}
+            placeholder={curVital.blood_glucose_fasting?.toString()}
+          />
+          <RHFBinaryOption
+            name="diabetes_mellitus"
+            label="Diabetes?"
+            defaultValue={curVital.diabetes_mellitus}
           />
           <RHFInputField
             name="others"
             label="Others"
             placeholder={curVital.others}
             type="text"
-          />
-          <RHFBinaryOption
-            name="diabetes_mellitus"
-            label="Diabetes?"
-            defaultValue={curVital.diabetes_mellitus}
           />
         </div>
         <ChildVitalsFields patient={patient} curVital={curVital} />

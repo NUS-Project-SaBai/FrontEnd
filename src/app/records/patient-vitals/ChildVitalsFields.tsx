@@ -1,6 +1,7 @@
 import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
 import { OptionData, RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { GenderType } from '@/types/Gender';
 import { getPatientAge, Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
 import { useMemo } from 'react';
@@ -16,14 +17,14 @@ type InputFieldData =
       defaultValue?: string;
       options: OptionData[];
       age: number[];
-      gender?: 'Female' | 'Male';
+      gender?: GenderType;
     }
   | {
       type: 'text' | 'yesNoOption' | 'number';
       name: keyof Omit<Vital, 'id' | 'visit'>;
       label: string;
       age: number[];
-      gender?: 'Female' | 'Male';
+      gender?: GenderType;
     };
 const allChildVitalsFields: InputFieldData[] = [
   {
@@ -259,12 +260,32 @@ function VitalFieldRenderer({
 }) {
   switch (field.type) {
     case 'dropdown':
-      return <RHFDropdown defaultValue={curVital[field.name]} {...field} />;
+      return (
+        <RHFDropdown
+          defaultValue={curVital[field.name]?.toString()}
+          {...field}
+        />
+      );
     case 'text':
-      return <RHFInputField placeholder={curVital[field.name]} {...field} />;
+      return (
+        <RHFInputField
+          placeholder={curVital[field.name]?.toString()}
+          {...field}
+        />
+      );
     case 'number':
-      return <RHFInputField placeholder={curVital[field.name]} {...field} />;
+      return (
+        <RHFInputField
+          placeholder={curVital[field.name]?.toString()}
+          {...field}
+        />
+      );
     case 'yesNoOption':
-      return <RHFBinaryOption defaultValue={curVital[field.name]} {...field} />;
+      return (
+        <RHFBinaryOption
+          defaultValue={curVital[field.name]?.toString()}
+          {...field}
+        />
+      );
   }
 }

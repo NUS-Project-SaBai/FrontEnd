@@ -1,3 +1,4 @@
+import { GenderType } from './Gender';
 import { VillagePrefix } from './VillagePrefixEnum';
 import { YesNoOption } from './YesNoOption';
 
@@ -7,7 +8,7 @@ export type Patient = {
   name: string;
   identification_number: string;
   contact_no: string;
-  gender: string;
+  gender: GenderType;
   date_of_birth: string;
   poor: YesNoOption;
   bs2: YesNoOption;
@@ -20,10 +21,36 @@ export type Patient = {
   confidence: string;
 };
 
-export function getPatientAge(patient: Patient) {
+/**
+ * Get the age of a patient based on their date of birth.
+ * @param patient - The patient object containing the date of birth
+ * @param today - The date to calculate the age against (default is current date)
+ */
+export function getPatientAge(
+  patient: Patient,
+  today: Date = new Date()
+): {
+  year: number;
+  month: number;
+  day: number;
+} {
   const dob = new Date(patient.date_of_birth);
-  const today = new Date();
+  return calculateDobDifference(dob, today);
+}
 
+/**
+ * Get the age of a patient based on their date of birth.
+ * @param dob - The date of birth
+ * @param today - The date to calculate the age against (default is current date)
+ */
+export function calculateDobDifference(
+  dob: Date,
+  today: Date = new Date()
+): {
+  year: number;
+  month: number;
+  day: number;
+} {
   // calculate the difference in year, month, days
   let ageYears = today.getFullYear() - dob.getFullYear();
   let ageMonths = today.getMonth() - dob.getMonth();

@@ -1,3 +1,4 @@
+'use client';
 import { HTMLInputTypeAttribute } from 'react';
 import { useFormContext } from 'react-hook-form';
 
