@@ -1,10 +1,10 @@
 import { Doctor } from './Doctor';
-import { Medicine } from './Medicine';
+import { Medication } from './Medication';
 
 export type MedicationReview = {
   id: number;
   approval: Doctor;
-  medicine: Medicine;
+  medicine: Medication;
   quantity_changed: number;
   quantity_remaining: number;
   date: string;
