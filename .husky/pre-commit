@@ -1,4 +1,5 @@
-branch_name=$(git symbolic-ref --short HEAD)
+branch_name=$(git branch --show-current)
+
 
 if [ "$branch_name" = "main" ]; then
   echo "Error: Direct commits to the 'main' branch are not allowed."
