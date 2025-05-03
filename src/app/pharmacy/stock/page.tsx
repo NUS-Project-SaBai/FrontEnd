@@ -1,29 +1,34 @@
 'use client';
 import { Button } from '@/components/Button';
-import { MedicationForm } from '@/components/pharmacy/MedicationForm';
 import { MedicationTable } from '@/components/pharmacy/MedicationTable';
 import { getMedication } from '@/data/medication/getMedications';
 import { useToggle } from '@/hooks/useToggle';
 import { Medication } from '@/types/Medication';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import ReactModal from 'react-modal';
+import { AddMedicationModal } from './AddMedicationModal';
+import { EditMedicationModal } from './EditMedicationModal';
 
 export default function PharmacyStockPage() {
   const [isMedicineFormOpen, toggleMedicineFormOpen, setMedicineFormOpen] =
     useToggle(false);
-  const useFormReturn = useForm();
   const [medications, setMedications] = useState<Medication[]>([]);
   const [searchStr, setSearchStr] = useState('');
   const [filteredMedications, setFilteredMedications] = useState<Medication[]>(
     []
   );
+  const searchParams = useSearchParams();
+
+  const editMedicineId = searchParams.get('edit');
+  const viewMedicineId = searchParams.get('view');
+  const editMedication =
+    medications.find(med => med.id.toString() === editMedicineId) || null;
 
   useEffect(() => {
     getMedication().then(medications => {
       setMedications(medications);
     });
-  }, [isMedicineFormOpen]);
+  }, [isMedicineFormOpen, editMedicineId, viewMedicineId]);
 
   useEffect(() => {
     if (searchStr === '') {
@@ -54,11 +59,11 @@ export default function PharmacyStockPage() {
         colour="green"
         onClick={toggleMedicineFormOpen}
       />
-      <ReactModal isOpen={isMedicineFormOpen} ariaHideApp={false}>
-        <FormProvider {...useFormReturn}>
-          <MedicationForm closeForm={() => setMedicineFormOpen(false)} />
-        </FormProvider>
-      </ReactModal>
+      <AddMedicationModal
+        isOpen={isMedicineFormOpen}
+        closeForm={() => setMedicineFormOpen(false)}
+      />
+      <EditMedicationModal editMedication={editMedication} />
       <MedicationTable medications={filteredMedications} />
     </div>
   );
