@@ -12,8 +12,10 @@ import { RHFInputField } from '../inputs/RHFInputField';
 export function MedicationForm({ closeForm }: { closeForm: () => void }) {
   const { handleSubmit, reset } = useFormContext();
   const [medications, setMedications] = useState<Medication[]>([]);
-  useEffect(() => {
+  const reloadMedication = () =>
     getMedication().then(medications => setMedications(medications));
+  useEffect(() => {
+    reloadMedication();
   }, []);
   const submitMedicationFromHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,6 +43,7 @@ export function MedicationForm({ closeForm }: { closeForm: () => void }) {
         createMedicine(jsonPayload).then(med => {
           toast.success(`Added Medicine: ${med.medicine_name}`);
           reset();
+          reloadMedication();
         });
       },
       () => {
