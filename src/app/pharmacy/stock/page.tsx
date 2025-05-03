@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AddMedicationModal } from './AddMedicationModal';
 import { EditMedicationModal } from './EditMedicationModal';
+import { HistoryMedicationModal } from './HistoryMedicationModal';
 
 export default function PharmacyStockPage() {
   const [isMedicineFormOpen, toggleMedicineFormOpen, setMedicineFormOpen] =
@@ -19,16 +20,16 @@ export default function PharmacyStockPage() {
   );
   const searchParams = useSearchParams();
 
-  const editMedicineId = searchParams.get('edit');
-  const viewMedicineId = searchParams.get('view');
+  const editMedicationId = searchParams.get('edit');
+  const viewMedicationId = searchParams.get('view');
   const editMedication =
-    medications.find(med => med.id.toString() === editMedicineId) || null;
+    medications.find(med => med.id.toString() === editMedicationId) || null;
 
   useEffect(() => {
     getMedication().then(medications => {
       setMedications(medications);
     });
-  }, [isMedicineFormOpen, editMedicineId, viewMedicineId]);
+  }, [isMedicineFormOpen, editMedicationId, viewMedicationId]);
 
   useEffect(() => {
     if (searchStr === '') {
@@ -64,6 +65,7 @@ export default function PharmacyStockPage() {
         closeForm={() => setMedicineFormOpen(false)}
       />
       <EditMedicationModal editMedication={editMedication} />
+      <HistoryMedicationModal viewMedicationId={viewMedicationId} />
       <MedicationTable medications={filteredMedications} />
     </div>
   );

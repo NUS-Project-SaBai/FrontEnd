@@ -1,5 +1,6 @@
 import { Doctor } from './Doctor';
 import { Medication } from './Medication';
+import { Order } from './Order';
 
 export type MedicationReview = {
   id: number;
@@ -9,4 +10,5 @@ export type MedicationReview = {
   quantity_remaining: number;
   date: string;
   order_status: string;
+  order?: Order;
 };
