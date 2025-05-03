@@ -41,7 +41,6 @@ export function MedicationForm({ closeForm }: { closeForm: () => void }) {
         createMedicine(jsonPayload).then(med => {
           toast.success(`Added Medicine: ${med.medicine_name}`);
           reset();
-          closeForm();
         });
       },
       () => {
