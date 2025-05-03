@@ -48,6 +48,16 @@ export function RHFInputField({
           name={name}
           type={type}
           placeholder={placeholder}
+          onWheel={e => {
+            // don't modify behaviour when the input is not focused
+            if (e.target != document.activeElement) return;
+            // Prevent scrolling when using the mouse wheel on the input field
+            const target = e.target as HTMLInputElement;
+            target.blur();
+            setTimeout(() => {
+              target.focus();
+            }, 0);
+          }}
         />
       )}
       <p className="text-sm font-medium text-red-500">

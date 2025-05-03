@@ -10,7 +10,7 @@ export function Button({
   text: string;
   onClick?: () => void;
   type?: 'submit' | 'button' | 'reset';
-  colour?: 'green' | 'red' | 'white';
+  colour?: 'green' | 'red' | 'blue' | 'white';
 }) {
   const [isLoading, setIsLoading] = useState(false);
 

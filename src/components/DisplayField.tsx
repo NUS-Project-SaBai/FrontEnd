@@ -8,7 +8,7 @@ export function DisplayField({
   highlight?: 'bg-red-200' | 'bg-amber-200' | 'bg-green-200' | '';
 }) {
   return (
-    <div className="self-end">
+    <div className="w-full self-end">
       <label htmlFor={label} className="text-sm font-medium">
         {label}
       </label>
