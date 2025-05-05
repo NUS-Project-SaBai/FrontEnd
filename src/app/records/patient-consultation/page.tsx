@@ -1,5 +1,4 @@
 import { PatientInfoHeaderSection } from '@/components/records/PatientInfoHeaderSection';
-import { createConsult } from '@/data/consult/createConsult';
 import { getPatientById } from '@/data/patient/getPatient';
 import { ConsultationForm } from './ConsultationForm';
 
@@ -26,7 +25,7 @@ export default async function PatientConsultationPage({
         <div className="mb-2">
           <ConsultationForm
             visitId={(await searchParams).visit}
-            submitConsultation={createConsult}
+            patient={patient}
           />
         </div>
       </div>

@@ -3,7 +3,9 @@ import { Button } from '@/components/Button';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { DiagnosisField } from '@/components/records/DiagnosisField';
-import { Consult } from '@/types/Consult';
+import { createConsult } from '@/data/consult/createConsult';
+import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
+import { Patient } from '@/types/Patient';
 import { FormEvent } from 'react';
 import {
   Controller,
@@ -12,13 +14,14 @@ import {
   useForm,
 } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { MedicationOrderSection } from './MedicationOrderSection';
 
 export function ConsultationForm({
   visitId,
-  submitConsultation,
+  patient,
 }: {
   visitId: string;
-  submitConsultation: (formData: object) => Promise<Consult | null>;
+  patient: Patient | null;
 }) {
   const useFormReturn = useForm();
   const { control, handleSubmit, reset } = useFormReturn;
@@ -36,15 +39,25 @@ export function ConsultationForm({
     handleSubmit(
       async (data: FieldValues) => {
         Object.entries(data).forEach(([k, v]) => {
-          if (k === 'diagnoses') {
-            jsonPayload[k] = v;
-          } else {
-            jsonPayload['consult'][k] = v;
+          switch (k) {
+            case 'diagnoses':
+              jsonPayload[k] = v;
+              break;
+            case 'orders':
+              jsonPayload[k] = v.map((order: ConsultMedicationOrder) => ({
+                medicine: order.medication.split(' ', 1)[0],
+                quantity: order.quantity,
+                notes: order.notes,
+              }));
+              break;
+            default:
+              jsonPayload['consult'][k] = v;
+              break;
           }
         });
 
         try {
-          const result = await submitConsultation(jsonPayload);
+          const result = await createConsult(jsonPayload);
           if (result == null) {
             toast.error('Error submitting conusultation form');
           } else {
@@ -66,7 +79,10 @@ export function ConsultationForm({
     <div className="h-full rounded-lg bg-blue-100 p-2 shadow-sm">
       <h3>Doctor&apos;s Consult Form</h3>
       <FormProvider {...useFormReturn}>
-        <form onSubmit={submitConsultationFormHandler}>
+        <form
+          onSubmit={submitConsultationFormHandler}
+          className="flex flex-col gap-y-2"
+        >
           {/* TODO: Check that the required field is filled up. */}
           <RHFInputField
             name="past_medical_history"
@@ -126,8 +142,8 @@ export function ConsultationForm({
             type="textarea"
             placeholder="Type your remarks here..."
           />
-          {/* TODO: Implement add medicine order functionality */}
-          <p>medicine orders</p>
+          {/* TODO: try to remove prop drilling of patient */}
+          <MedicationOrderSection patient={patient} />
           <Button colour="green" text="Submit" type="submit" />
         </form>
       </FormProvider>
