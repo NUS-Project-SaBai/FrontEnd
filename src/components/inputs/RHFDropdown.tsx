@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export type OptionData = { value: string; label: string };
@@ -19,8 +20,13 @@ export function RHFDropdown({
   isRequired = false,
 }: RHFDropdownProps) {
   const { register, formState, setValue } = useFormContext();
-  if (formState.isSubmitSuccessful || formState.submitCount === 0)
-    setValue(name, defaultValue);
+  // Update the form value whenever defaultValue changes
+  useEffect(() => {
+    if (defaultValue) {
+      setValue(name, defaultValue);
+    }
+  }, [defaultValue, name, setValue]);
+
   return (
     <div>
       <label htmlFor={name} className="text-sm font-medium">
