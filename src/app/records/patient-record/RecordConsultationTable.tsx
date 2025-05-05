@@ -76,7 +76,7 @@ export function RecordConsultationTable({
         )}
       </ReactModal>
 
-      <table className="w-full rounded border border-gray-300 shadow">
+      <table className="rounded-table text-left">
         <thead className="bg-gray-50">
           <tr>
             <th>Doctor</th>
