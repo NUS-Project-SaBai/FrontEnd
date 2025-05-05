@@ -3,6 +3,7 @@ import { PatientInfoDetailSection } from '@/components/records/PatientInfoDetail
 import { PatientInfoHeaderSection } from '@/components/records/PatientInfoHeaderSection';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
+import { PrescriptionTable } from './PrescriptionTable';
 import { RecordConsultationTable } from './RecordConsultationTable';
 
 export default async function PatientRecordPage({
@@ -43,6 +44,11 @@ export default async function PatientRecordPage({
           <RecordConsultationTable consults={consults} />
           <div>
             <p className="font-bold">Prescriptions</p>
+            <PrescriptionTable
+              prescriptions={
+                consults?.flatMap(consult => consult.prescriptions) || []
+              }
+            />
           </div>
         </div>
       </div>
