@@ -81,11 +81,6 @@ export default function OrdersPage() {
                 key={x.patient?.identification_number || index}
                 {...x}
                 removeNonPendingOrder={id => {
-                  console.log(
-                    'Removing Order',
-                    id,
-                    orders[x.patient.patient_id]
-                  );
                   if (orders[x.patient.patient_id] == undefined) return;
                   const newOrders = orders[x.patient.patient_id].filter(
                     o => o.id != id
