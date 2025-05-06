@@ -11,7 +11,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
-import { PatientRegistrationForm } from './PatientRegistrationForm';
+import { PatientForm } from '../../components/records/PatientForm';
 import { RegistrationAutosuggest } from './RegistrationAutosuggest';
 
 export default function RegistrationPage() {
@@ -76,9 +76,7 @@ export default function RegistrationPage() {
         />
         <ReactModal isOpen={isPatientFormOpen} ariaHideApp={false}>
           <FormProvider {...useFormReturn}>
-            <PatientRegistrationForm
-              onSubmit={onPatientRegistrationFormSubmit}
-            />
+            <PatientForm onSubmit={onPatientRegistrationFormSubmit} />
           </FormProvider>
           <Button colour="red" onClick={togglePatientFormOpen} text="Close" />
         </ReactModal>

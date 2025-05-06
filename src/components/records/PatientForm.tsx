@@ -9,13 +9,15 @@ import { VillageContext } from '@/context/VillageContext';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-export function PatientRegistrationForm({
+export function PatientForm({
   onSubmit,
+  closeForm = undefined,
 }: {
   onSubmit: FormEventHandler<HTMLFormElement>;
+  closeForm?: () => void;
 }) {
   const { village } = useContext(VillageContext);
-  const { control, formState } = useFormContext();
+  const { control, formState, getValues } = useFormContext();
   const genderDropdownOptions = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
@@ -68,9 +70,21 @@ export function PatientRegistrationForm({
               />
             )}
           />
-          <RHFBinaryOption label="POOR Card" name="poor" defaultValue="No" />
-          <RHFBinaryOption label="BS2 Card" name="bs2" defaultValue="No" />
-          <RHFBinaryOption label="Sabai Card" name="sabai" defaultValue="No" />
+          <RHFBinaryOption
+            label="POOR Card"
+            name="poor"
+            defaultValue={getValues('poor') || 'No'}
+          />
+          <RHFBinaryOption
+            label="BS2 Card"
+            name="bs2"
+            defaultValue={getValues('bs2') || 'No'}
+          />
+          <RHFBinaryOption
+            label="Sabai Card"
+            name="sabai"
+            defaultValue={getValues('sabai') || 'No'}
+          />
           <RHFInputField
             name="drug_allergy"
             label="Drug Allergies"
@@ -96,6 +110,14 @@ export function PatientRegistrationForm({
           }}
         />
         <Button colour="green" text="Submit" type="submit" />
+        {closeForm && (
+          <Button
+            colour="red"
+            text="Cancel"
+            type="button"
+            onClick={closeForm}
+          />
+        )}
       </form>
     </>
   );
