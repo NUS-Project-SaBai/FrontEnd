@@ -3,8 +3,11 @@ import { PatientInfoDetailSection } from '@/components/records/PatientInfoDetail
 import { PatientInfoHeaderSection } from '@/components/records/PatientInfoHeaderSection';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
+import { getVitalByVisit } from '@/data/vital/getVital';
+import { EMPTY_VITAL } from '@/types/Vital';
 import { PrescriptionTable } from './PrescriptionTable';
 import { RecordConsultationTable } from './RecordConsultationTable';
+import { ViewVital } from './ViewVital';
 
 export default async function PatientRecordPage({
   searchParams,
@@ -16,6 +19,7 @@ export default async function PatientRecordPage({
 
   const patient = await getPatientById(patientId);
   const consults = await getConsultByVisitId(visitId);
+  const vitals = await getVitalByVisit(visitId);
 
   if (!patient) {
     return (
@@ -34,7 +38,11 @@ export default async function PatientRecordPage({
       <hr className="my-2 w-full border-t-2" />
       <div className="grid grid-cols-2 gap-1 md:gap-4">
         <div>
-          <Button text="View Vitals" />
+          <ViewVital
+            consults={consults || []}
+            patient={patient}
+            vitals={vitals || EMPTY_VITAL}
+          />
           <Button text="Edit Patient Details" />
           <PatientInfoDetailSection patient={patient} />
         </div>
