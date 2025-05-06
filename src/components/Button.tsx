@@ -1,16 +1,18 @@
 'use client';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 export function Button({
   text,
   onClick = () => {},
   type = 'button',
   colour = 'white',
+  Icon = <></>,
 }: {
   text: string;
   onClick?: () => void;
   type?: 'submit' | 'button' | 'reset';
   colour?: 'green' | 'red' | 'blue' | 'white';
+  Icon?: ReactNode;
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,6 +35,7 @@ export function Button({
       onClick={handleClick}
       disabled={isLoading}
     >
+      {Icon}
       {text}
     </button>
   );
