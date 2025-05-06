@@ -23,7 +23,7 @@ export type Consult = {
 export function consultFromJson(
   jsonObj: Record<string, Consult[keyof Consult] | Visit>
 ): Consult {
-  if (jsonObj.visit != undefined) {
+  if (jsonObj && jsonObj.visit != undefined) {
     jsonObj = { ...jsonObj, patient: (jsonObj.visit as Visit).patient };
     delete jsonObj['visit'];
   }

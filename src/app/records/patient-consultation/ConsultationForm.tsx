@@ -44,11 +44,14 @@ export function ConsultationForm({
               jsonPayload[k] = v;
               break;
             case 'orders':
-              jsonPayload[k] = v.map((order: ConsultMedicationOrder) => ({
-                medicine: order.medication.split(' ', 1)[0],
-                quantity: order.quantity,
-                notes: order.notes,
-              }));
+              jsonPayload[k] =
+                v == undefined
+                  ? []
+                  : v.map((order: ConsultMedicationOrder) => ({
+                      medicine: order.medication.split(' ', 1)[0],
+                      quantity: order.quantity,
+                      notes: order.notes,
+                    }));
               break;
             default:
               jsonPayload['consult'][k] = v;

@@ -59,8 +59,20 @@ function MedicationHistoryRow({ history }: { history: MedicationReview }) {
   return (
     <tr>
       <td>{history.approval.nickname}</td>
-      <td>{history.order?.consult?.doctor?.nickname || 'NA'}</td>
-      <td>{history.order?.consult?.patient?.name || 'NA'}</td>
+      <td>
+        {history.order == undefined ||
+        history.order.consult == undefined ||
+        typeof history.order.consult == 'number'
+          ? '-'
+          : history.order.consult.doctor.nickname}
+      </td>
+      <td>
+        {history.order == undefined ||
+        history.order.consult == undefined ||
+        typeof history.order.consult == 'number'
+          ? '-'
+          : history.order.consult.patient.name}
+      </td>
       <td className={`${qty_changed >= 0 ? 'text-green-500' : 'text-red-500'}`}>
         {qty_changed >= 0 ? `+${qty_changed}` : qty_changed}
       </td>
