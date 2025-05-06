@@ -6,6 +6,9 @@ export function PrescriptionTable({
 }: {
   prescriptions: Prescription[];
 }) {
+  if (prescriptions.length === 0) {
+    return <p>No Prescriptions Found</p>;
+  }
   return (
     <div className="overflow-x-auto">
       <table className="rounded-table text-left">
