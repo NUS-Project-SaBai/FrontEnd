@@ -44,11 +44,15 @@ export default async function PatientRecordPage({
           <RecordConsultationTable consults={consults} />
           <div>
             <p className="font-bold">Prescriptions</p>
-            <PrescriptionTable
-              prescriptions={
-                consults?.flatMap(consult => consult.prescriptions) || []
-              }
-            />
+            {consults == null ? (
+              <p>Loading...</p>
+            ) : (
+              <PrescriptionTable
+                prescriptions={
+                  consults?.flatMap(consult => consult.prescriptions) || []
+                }
+              />
+            )}
           </div>
         </div>
       </div>

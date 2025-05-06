@@ -6,6 +6,7 @@ import { getVisitById } from '@/data/visit/getVisit';
 import { getVitalByVisit } from '@/data/vital/getVital';
 import { calculateDobDifference } from '@/types/Patient';
 import { EMPTY_VITAL } from '@/types/Vital';
+import { PrescriptionTable } from '../patient-record/PrescriptionTable';
 import { RecordConsultationTable } from '../patient-record/RecordConsultationTable';
 import { PastVitalTable } from './PastVitalTable';
 import { VitalsForm } from './VitalsForm';
@@ -42,19 +43,28 @@ export default async function PatientVitalPage({
       </div>
       <div className="mb-4 mt-2 grid grid-cols-2 gap-4">
         <div>
+          <h2>Past Vitals</h2>
           <PastVitalTable
             vital={curVital}
             age={patientVisitAge}
             gender={patient.gender}
           />
-          <p>consults</p>
           <h2>Consultations</h2>
           {consults == null ? (
             <p>loading</p>
           ) : (
             <RecordConsultationTable consults={consults} />
           )}
-          <p>prescription</p>
+          <h2>Prescriptions</h2>
+          {consults == null ? (
+            <p>loading</p>
+          ) : (
+            <PrescriptionTable
+              prescriptions={
+                consults?.flatMap(consult => consult.prescriptions) || []
+              }
+            />
+          )}
           <h2>HeightWeightGraph</h2>
           <HeightWeightGraph
             age={patientVisitAge.year}

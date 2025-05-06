@@ -4,9 +4,11 @@ import { axiosInstance } from '@/lib/axiosIntstance';
 import { Vital, vitalFromJson } from '@/types/Vital';
 
 export async function getVitalByVisit(visitId: string): Promise<Vital | null> {
-  const data = (await axiosInstance.get(`/vitals?visit=${visitId}`)).data[0];
+  if (!visitId) return null;
+  let data = (await axiosInstance.get(`/vitals?visit=${visitId}`)).data;
 
-  if (!data) return null;
+  if (!data || data.length == 0) return null;
+  data = data[0];
   data.visit = data.visit.id;
   return vitalFromJson(data);
 }

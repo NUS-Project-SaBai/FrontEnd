@@ -7,6 +7,7 @@ import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
+import { PrescriptionTable } from './PrescriptionTable';
 import { RecordConsultationTableRow } from './RecordConsultationTableRow';
 
 export function RecordConsultationTable({
@@ -65,6 +66,9 @@ export function RecordConsultationTable({
               </div>
               <div className="py-2">
                 <p className="font-bold">Prescriptions</p>
+                <PrescriptionTable
+                  prescriptions={consult?.prescriptions || []}
+                />
               </div>
             </div>
             <Button

@@ -188,7 +188,6 @@ export function PastVitalTable({
 
   return (
     <>
-      <h2>Past Vital</h2>
       <div className="grid gap-4 md:grid-cols-3">
         <DisplayField label="Height" content={vital.height || '-'} />
         <DisplayField label="Weight" content={vital.weight || '-'} />
