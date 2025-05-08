@@ -37,7 +37,3 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         id: deploy
         run: echo "DEPLOY_URL=$(pnpm vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> $GITHUB_OUTPUT
-      - name: Print Vercel URL
-        env:
-          DEPLOY_URL: ${{ steps.deploy.outputs.DEPLOY_URL }}
-        run: echo "Vercel Preview URL':' [$STEP_DEPLOY_URL]($STEP_DEPLOY_URL)" >> $GITHUB_STEP_SUMMARY
