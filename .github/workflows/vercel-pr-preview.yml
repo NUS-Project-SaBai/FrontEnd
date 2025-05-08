@@ -34,5 +34,6 @@ jobs:
         run: pnpm vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Vercel Project
         run: pnpm vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - id: deploy
-        run: echo "$(pnpm vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})"
+      - name: Deploy Project Artifacts to Vercel
+        id: deploy
+        run: echo "url=$(pnpm vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> $GITHUB_OUTPUT
