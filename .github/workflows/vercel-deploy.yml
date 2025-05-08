@@ -17,6 +17,8 @@ jobs:
           node-version: '20'
       - run: npm install -g pnpm
       - run: pnpm install
+      - name: Install Vercel CLI
+        run: pnpm add --global vercel@latest
       - run: pnpm vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - run: pnpm vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - run: pnpm vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
