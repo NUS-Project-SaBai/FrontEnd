@@ -1,6 +1,9 @@
 name: preview
 on:
   pull_request:
+  # the following line will build everytime a commit is made, 
+  # remove if there is not enough build time.
+  push:
   workflow_dispatch:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
