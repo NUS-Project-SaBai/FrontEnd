@@ -6,4 +6,5 @@ if [ "$branch_name" = "main" ]; then
   exit 1
 fi
 
+pnpm exec tsc --noEmit
 pnpm exec lint-staged
