@@ -4,8 +4,7 @@ import { MedicationTable } from '@/components/pharmacy/MedicationTable';
 import { getMedication } from '@/data/medication/getMedications';
 import { useToggle } from '@/hooks/useToggle';
 import { Medication } from '@/types/Medication';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { AddMedicationModal } from './AddMedicationModal';
 import { EditMedicationModal } from './EditMedicationModal';
 import { HistoryMedicationModal } from './HistoryMedicationModal';
@@ -18,18 +17,12 @@ export default function PharmacyStockPage() {
   const [filteredMedications, setFilteredMedications] = useState<Medication[]>(
     []
   );
-  const searchParams = useSearchParams();
-
-  const editMedicationId = searchParams.get('edit');
-  const viewMedicationId = searchParams.get('view');
-  const editMedication =
-    medications.find(med => med.id.toString() === editMedicationId) || null;
 
   useEffect(() => {
     getMedication().then(medications => {
       setMedications(medications);
     });
-  }, [isMedicineFormOpen, editMedicationId, viewMedicationId]);
+  }, []);
 
   useEffect(() => {
     if (searchStr === '') {
@@ -64,8 +57,12 @@ export default function PharmacyStockPage() {
         isOpen={isMedicineFormOpen}
         closeForm={() => setMedicineFormOpen(false)}
       />
-      <EditMedicationModal editMedication={editMedication} />
-      <HistoryMedicationModal viewMedicationId={viewMedicationId} />
+      <Suspense>
+        <EditMedicationModal />
+      </Suspense>
+      <Suspense>
+        <HistoryMedicationModal />
+      </Suspense>
       <MedicationTable medications={filteredMedications} />
     </div>
   );

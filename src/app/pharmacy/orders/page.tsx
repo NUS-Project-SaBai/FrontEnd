@@ -9,7 +9,7 @@ import { Order } from '@/types/Order';
 import { Patient } from '@/types/Patient';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 export default function OrdersPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -60,7 +60,9 @@ export default function OrdersPage() {
   return (
     <div className="p-2">
       <h1>Orders</h1>
-      <PatientSearchInput setPatients={setPatients} />
+      <Suspense>
+        <PatientSearchInput setPatients={setPatients} />
+      </Suspense>
       <div>
         <table className="w-full text-left">
           <thead className="border-b-2">
@@ -72,7 +74,6 @@ export default function OrdersPage() {
               </th>
               <th>Diagnoses</th>
               <th>Prescriptions</th>
-              {/* <th>Actions</th> */}
             </tr>
           </thead>
           <tbody className="divide-y">

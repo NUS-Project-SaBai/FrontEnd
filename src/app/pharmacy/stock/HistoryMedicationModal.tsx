@@ -1,19 +1,18 @@
 import { Button } from '@/components/Button';
 import { getMedicationReviewById } from '@/data/medicationReview/getMedicationReview';
 import { MedicationReview } from '@/types/MedicationReview';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 
-export function HistoryMedicationModal({
-  viewMedicationId,
-}: {
-  viewMedicationId: string | null;
-}) {
+export function HistoryMedicationModal() {
   const [medicationHistory, setMedicationHistory] = useState<
     MedicationReview[]
   >([]);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const viewMedicationId = searchParams.get('view');
+
   useEffect(() => {
     if (viewMedicationId !== null) {
       getMedicationReviewById(viewMedicationId)
@@ -21,6 +20,7 @@ export function HistoryMedicationModal({
         .catch(error => console.error('Error loading page:\n', error));
     }
   }, [viewMedicationId]);
+
   return (
     <ReactModal isOpen={viewMedicationId != null} ariaHideApp={false}>
       <h2>

@@ -2,16 +2,25 @@ import { MedicationForm } from '@/components/pharmacy/MedicationForm';
 import { getMedication } from '@/data/medication/getMedications';
 import { patchMedicine } from '@/data/medication/patchMedication';
 import { Medication } from '@/types/Medication';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
 
-export function EditMedicationModal({
-  editMedication,
-}: {
-  editMedication: Medication | null;
-}) {
+export function EditMedicationModal() {
+  const [medications, setMedications] = useState<Medication[]>([]);
+  useEffect(() => {
+    getMedication().then(medications => {
+      setMedications(medications);
+    });
+  }, []);
+
+  const searchParams = useSearchParams();
+
+  const editMedicationId = searchParams.get('edit');
+  const editMedication =
+    medications.find(med => med.id.toString() === editMedicationId) || null;
   const router = useRouter();
   const closeModal = () => router.back();
   const useFormReturn = useForm({
