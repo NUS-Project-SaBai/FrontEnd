@@ -1,7 +1,7 @@
 import { Consult } from './Consult';
 
 export type Diagnosis = {
-  consult: Consult;
+  consult?: Consult;
   details: string;
   category: string;
 };

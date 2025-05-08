@@ -10,6 +10,6 @@ export async function getDiagnosisByConsult(
   const r = (await axiosInstance.get(`/diagnosis?consult=${consult}`)).data;
   return r.map((val: Diagnosis) => ({
     ...val,
-    consult: consultFromJson(val.consult),
+    consult: val.consult && consultFromJson(val.consult),
   }));
 }

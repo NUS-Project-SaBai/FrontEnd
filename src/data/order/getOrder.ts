@@ -16,7 +16,7 @@ export async function getPendingOrder(): Promise<{
     })),
     diagnoses: result.diagnoses.map((val: Diagnosis) => ({
       ...val,
-      consult: consultFromJson(val.consult),
+      consult: val.consult && consultFromJson(val.consult),
     })),
   };
 }

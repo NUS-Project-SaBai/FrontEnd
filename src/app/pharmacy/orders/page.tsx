@@ -31,7 +31,7 @@ export default function OrdersPage() {
 
       const tmpDiagnosis: Record<string, Diagnosis[]> = {};
       data.diagnoses.forEach(diagnosis => {
-        const patientId = diagnosis.consult.patient?.patient_id;
+        const patientId = diagnosis.consult?.patient?.patient_id;
         if (!patientId) {
           return;
         }
