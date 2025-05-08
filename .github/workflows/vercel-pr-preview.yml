@@ -16,8 +16,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install -g pnpm
-      - run: pnpm setup
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
       - run: pnpm install
       - name: Install Vercel CLI
         run: pnpm add --global vercel@latest
