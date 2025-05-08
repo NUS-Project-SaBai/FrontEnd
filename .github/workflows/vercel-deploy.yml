@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: '20'
       - run: npm install -g pnpm
+      - run: pnpm setup
       - run: pnpm install
       - name: Install Vercel CLI
         run: pnpm add --global vercel@latest
