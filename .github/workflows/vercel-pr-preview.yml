@@ -1,7 +1,7 @@
 name: preview
 on:
   pull_request:
-  # the following line will build everytime a commit is made, 
+  # the following line will build everytime a commit is made,
   # remove if there is not enough build time.
   push:
     branches-ignore:
@@ -34,6 +34,5 @@ jobs:
         run: pnpm vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Vercel Project
         run: pnpm vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy Project Artifacts to Vercel
-        id: deploy
-        run: echo "DEPLOY_URL=$(pnpm vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})" >> $GITHUB_OUTPUT
+      - id: deploy
+        run: echo "$(pnpm vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})"
