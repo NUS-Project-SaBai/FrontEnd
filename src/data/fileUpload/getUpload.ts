@@ -1,0 +1,9 @@
+'use server';
+import { axiosInstance } from '@/lib/axiosIntstance';
+import { Upload } from '@/types/Upload';
+
+export async function getUploadByPatientId(
+  patient_pk: number
+): Promise<Upload[]> {
+  return (await axiosInstance.get(`/upload?patient_pk=${patient_pk}`)).data;
+}
