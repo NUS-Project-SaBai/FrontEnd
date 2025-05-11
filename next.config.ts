@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   },
   env: {
     APP_BASE_URL:
-      process.env.VERCEL && process.env.VERCEL_URL != undefined
+      process.env.VERCEL && process.env.VERCEL_URL != ''
         ? `https://${process.env.VERCEL_URL}`
         : process.env.APP_BASE_URL,
   },
