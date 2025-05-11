@@ -15,7 +15,7 @@ export function WebcamInput({
   imageDetails,
   setImageDetails,
 }: {
-  imageDetails: string;
+  imageDetails: string | null;
   setImageDetails: Dispatch<SetStateAction<string | null>>;
 }) {
   const [cameraIsOpen, toggleCameraOpen, setCameraIsOpen] = useToggle(false);

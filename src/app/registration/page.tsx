@@ -12,6 +12,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
 import { PatientForm } from '../../components/records/PatientForm';
+import { PatientScanForm } from './PatientScanForm';
 import { RegistrationAutosuggest } from './RegistrationAutosuggest';
 
 export default function RegistrationPage() {
@@ -69,11 +70,14 @@ export default function RegistrationPage() {
         setPatient={setSelectedPatient}
       />
       <div className="my-2">
-        <Button
-          colour="green"
-          onClick={togglePatientFormOpen}
-          text={'New Patient'}
-        />
+        <div className="flex justify-center">
+          <Button
+            colour="green"
+            onClick={togglePatientFormOpen}
+            text={'New Patient'}
+          />
+          <PatientScanForm setSelectedPatient={setSelectedPatient} />
+        </div>
         <ReactModal isOpen={isPatientFormOpen} ariaHideApp={false}>
           <FormProvider {...useFormReturn}>
             <PatientForm onSubmit={onPatientRegistrationFormSubmit} />

@@ -1,0 +1,81 @@
+import { Button } from '@/components/Button';
+import { WebcamInput } from '@/components/inputs/WebcamInput';
+import { searchFace } from '@/data/patient/searchFace';
+import { Patient } from '@/types/Patient';
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import Image from 'next/image';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import ReactModal from 'react-modal';
+
+export function PatientScanForm({
+  setSelectedPatient,
+}: {
+  setSelectedPatient: (patient: Patient) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [imgDetails, setImgDetails] = useState<string | null>(null);
+  const [scanSuggestionsList, setScanSuggestionsList] = useState<Patient[]>([]);
+  return (
+    <>
+      <Button text="Scan Face" onClick={() => setIsOpen(true)} colour="green" />
+
+      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+        <WebcamInput
+          imageDetails={imgDetails}
+          setImageDetails={setImgDetails}
+        />
+        <div className="flex justify-center space-x-2">
+          <Button
+            text="Search"
+            colour="green"
+            Icon={<MagnifyingGlassIcon className="inline h-5 w-5" />}
+            onClick={() => {
+              if (imgDetails == null) {
+                toast.error('Please take a photo first!');
+                return;
+              }
+              try {
+                searchFace(imgDetails).then(data => {
+                  if (data.length == 0) {
+                    toast.error('Patient does not exist!');
+                    return;
+                  }
+                  setScanSuggestionsList(data);
+                });
+              } catch (error) {
+                toast.error(`Error scanning face: ${error}`);
+                console.error('Error scanning face:', error);
+              }
+            }}
+          />
+          <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
+        </div>
+        <div className="flex w-full flex-col divide-y-2">
+          {scanSuggestionsList.map((patient, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                setSelectedPatient(patient);
+                setIsOpen(false);
+              }}
+              className="flex py-2 hover:cursor-pointer hover:bg-gray-300"
+            >
+              <Image
+                src={patient.picture}
+                alt={'Patient Image'}
+                width={120}
+                height={120}
+              />
+              <div className="w-full items-center p-2">
+                <p>{patient.patient_id}</p>
+                <p>{patient.name}</p>
+                <p>{patient.confidence}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </ReactModal>
+    </>
+  );
+}
