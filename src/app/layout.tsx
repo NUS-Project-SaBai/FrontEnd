@@ -14,7 +14,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  process.env.APP_BASE_URL = process.env.APP_BASE_URL || process.env.VERCEL_URL;
   return (
     <html lang="en">
       <Auth0Provider>
