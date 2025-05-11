@@ -11,6 +11,7 @@ export function PatientInfoActionBar({ patient }: { patient: Patient }) {
       text: 'Create New Visit',
       onClick: () => {
         createVisit(patient);
+        window.location.reload();
         toast.success('Visit Created');
       },
     },
