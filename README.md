@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project SaBai Front-End
 
-## Getting Started
+## Installation
 
-First, run the development server:
+1. Installation of Node Version Manager
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   - For Mac/Linux: Refer to the GitHub on how to install [node version manager (GitHub)](https://github.com/nvm-sh/nvm)
+   - For Windows: Refer to the Github [nvm-windows (Github)](https://github.com/coreybutler/nvm-windows/releases) and download nvm-setup.exe under "Assets"
+   - `nvm install node` to install the latest version of node.js
+   - Verify that you have installed node correctly `node -v`
+   - Verify that you have `npm` by typing in `npm -v`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Installation of pnpm <https://pnpm.io/installation>
+   Next, install PNPM by following the following instructions:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   # Installing pnpm
+   npm install -g pnpm
+   # Verify installation
+   pnpm --version
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   Note: If you are converting from yarn to pnpm, then you will need to do the following
 
-## Learn More
+   1. Delete the current `node_modules`
+   2. Run `pnpm i`
 
-To learn more about Next.js, take a look at the following resources:
+3. Installation of project libraries
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   git clone https://github.com/NUS-Project-SaBai/FrontEnd
+   # Change Directory into the FrontEnd folder
+   cd FrontEnd
+   # Install the necessary libraries for the project
+   pnpm i
+   # Run the development server
+   pnpm dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Environmental Setup
 
-## Deploy on Vercel
+   Create a new `.env` and fill it with relevant details under the "FRONTEND" heading in the "Key Credentials" document.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   # Run the following command to start the server:
+   pnpm dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   \*Make sure you set up both the Frontend AND Backend before logging into localhost.
+
+   Log into localhost with the credentials in the "Key Credentials" document.
+
+## Technology used
+
+1. Node Version Manager [https://github.com/nvm-sh/nvm]
+2. Node.js [https://nodejs.org/en]
+3. Node Package Manager [https://www.npmjs.com/]
+4. pnpm [https://pnpm.io/]
+5. React.js [https://react.dev/]
+6. Next.js [https://nextjs.org/]
+7. Axios [https://axios-http.com/docs/intro]
+8. Auth0 [https://auth0.com/]
