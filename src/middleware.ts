@@ -3,12 +3,6 @@ import { APP_CONFIG } from './config';
 import { auth0 } from './lib/auth0';
 
 export async function middleware(req: NextRequest) {
-  console.log(
-    'app base url ',
-    process.env.APP_BASE_URL,
-    ',',
-    process.env.VERCEL_URL
-  );
   const authRes = await auth0.middleware(req);
   // authentication routes — let the middleware handle it
   if (req.nextUrl.pathname.startsWith('/auth')) {

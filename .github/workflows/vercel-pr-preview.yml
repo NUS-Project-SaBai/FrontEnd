@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Preview
-      url: ${{ steps.deploy.outputs.url }}
+      url: sabai-csprojectsabai-gmailcom-projectsabais-projects.vercel.app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
