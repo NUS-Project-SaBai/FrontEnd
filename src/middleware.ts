@@ -3,8 +3,6 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { APP_CONFIG } from './config';
 
 export async function middleware(req: NextRequest) {
-  console.log('env', process.env);
-  console.log('app_base_url', APP_CONFIG.APP_BASE_URL);
   const auth0 = new Auth0Client({
     authorizationParameters: { audience: 'https://sabai.jp.auth0.com/api/v2/' },
     appBaseUrl: APP_CONFIG.APP_BASE_URL,
