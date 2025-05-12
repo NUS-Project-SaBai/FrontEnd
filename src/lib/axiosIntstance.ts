@@ -19,7 +19,8 @@ axiosInstance.interceptors.request.use(async config => {
       },
       appBaseUrl: APP_CONFIG.APP_BASE_URL,
     });
-    const { token } = await auth0.getAccessToken();
+    const ses = await auth0.getSession();
+    const token = ses?.tokenSet.accessToken || '';
     config.headers['Authorization'] = `Bearer ${token}`;
   } catch (e) {
     console.error(e);
