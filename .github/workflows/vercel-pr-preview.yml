@@ -16,7 +16,6 @@ jobs:
     environment:
       name: Preview
       url: ${{ steps.deploy.outputs.url }}
-
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
