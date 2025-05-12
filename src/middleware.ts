@@ -6,6 +6,7 @@ export async function middleware(req: NextRequest) {
   console.log('env', process.env);
   const auth0 = new Auth0Client({
     authorizationParameters: { audience: 'https://sabai.jp.auth0.com/api/v2/' },
+    appBaseUrl: APP_CONFIG.APP_BASE_URL,
   });
   const authRes = await auth0.middleware(req);
   // authentication routes — let the middleware handle it

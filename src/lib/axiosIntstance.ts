@@ -17,6 +17,7 @@ axiosInstance.interceptors.request.use(async config => {
       authorizationParameters: {
         audience: 'https://sabai.jp.auth0.com/api/v2/',
       },
+      appBaseUrl: APP_CONFIG.APP_BASE_URL,
     });
     const { token } = await auth0.getAccessToken();
     config.headers['Authorization'] = `Bearer ${token}`;
