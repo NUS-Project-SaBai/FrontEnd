@@ -1,8 +1,12 @@
+import { Auth0Client } from '@auth0/nextjs-auth0/server';
 import { NextResponse, type NextRequest } from 'next/server';
 import { APP_CONFIG } from './config';
-import { auth0 } from './lib/auth0';
 
 export async function middleware(req: NextRequest) {
+  console.log('env', process.env);
+  const auth0 = new Auth0Client({
+    authorizationParameters: { audience: 'https://sabai.jp.auth0.com/api/v2/' },
+  });
   const authRes = await auth0.middleware(req);
   // authentication routes — let the middleware handle it
   if (req.nextUrl.pathname.startsWith('/auth')) {
