@@ -3,6 +3,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { APP_CONFIG } from './config';
 
 export async function middleware(req: NextRequest) {
+  if (!APP_CONFIG.IS_PROD && !APP_CONFIG.APP_BASE_URL)
+    throw new Error('Missing APP_BASE_URL in .env');
   const auth0 = new Auth0Client({
     authorizationParameters: { audience: 'https://sabai.jp.auth0.com/api/v2/' },
     appBaseUrl: APP_CONFIG.APP_BASE_URL,
