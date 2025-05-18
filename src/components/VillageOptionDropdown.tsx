@@ -34,9 +34,9 @@ export function VillageOptionDropdown({
           dropdownClassName
         }
       >
-        <option value="ALL" className="text-gray-800">
+        {/* <option value="ALL" className="text-gray-800">
           ALL
-        </option>
+        </option> */}
         {Object.values(VILLAGES).map(({ key, label, color }) => (
           <option key={key} value={key} className={'font-semibold ' + color}>
             {label}
