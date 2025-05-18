@@ -1,9 +1,11 @@
 'use client';
 import { Button } from '@/components/Button';
+import { LoadingUI } from '@/components/LoadingUI';
 import { PatientSearchInput } from '@/components/PatientSearchbar';
 import { VILLAGES } from '@/constants';
 import { getPendingOrder } from '@/data/order/getOrder';
 import { patchOrder } from '@/data/order/patchOrder';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Diagnosis } from '@/types/Diagnosis';
 import { Order } from '@/types/Order';
 import { Patient } from '@/types/Patient';
@@ -16,9 +18,12 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Record<string, Order[]>>({});
   const [diagnoses, setDiagnoses] = useState<Record<string, Diagnosis[]>>({});
   const [orderRowData, setOrderRowData] = useState<OrderRowData[]>([]);
+  const { isLoading, withLoading } = useLoadingState(true);
 
   useEffect(() => {
-    getPendingOrder().then(data => {
+    const fetchPendingOrders = withLoading(async () => {
+      const data = await getPendingOrder();
+
       const tmpOrder: Record<string, Order[]> = {};
       data.orders.forEach(order => {
         const patientId = order.visit.patient.patient_id;
@@ -42,6 +47,9 @@ export default function OrdersPage() {
       });
       setDiagnoses(tmpDiagnosis);
     });
+
+    fetchPendingOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -57,13 +65,17 @@ export default function OrdersPage() {
     setOrderRowData(tmpOrderRowData.filter(x => x.orders.length > 0));
   }, [patients, orders, diagnoses]);
 
-  return (
+  return isLoading ? (
+    <div className="flex h-full w-full items-center justify-center">
+      <LoadingUI message="Loading pending orders..." />
+    </div>
+  ) : (
     <div className="p-2">
       <h1>Orders</h1>
       <Suspense>
         <PatientSearchInput setPatients={setPatients} />
       </Suspense>
-      <div>
+      <div className="pt-4">
         <table className="w-full text-left">
           <thead className="border-b-2">
             <tr>
@@ -165,32 +177,55 @@ function OrderRow({
                   {o.notes}
                 </p>
               </div>
-              <div>
-                <Button
-                  text=""
-                  colour="green"
-                  Icon={<CheckIcon className="h-5 w-5" />}
-                  onClick={() =>
-                    patchOrder(o.id.toString(), 'APPROVED').then(() =>
-                      removeNonPendingOrder(o.id)
-                    )
-                  }
-                />
-                <Button
-                  text=""
-                  colour="red"
-                  Icon={<XMarkIcon className="h-5 w-5" />}
-                  onClick={() =>
-                    patchOrder(o.id.toString(), 'CANCELLED').then(() =>
-                      removeNonPendingOrder(o.id)
-                    )
-                  }
-                />
-              </div>
+              <ApproveRejectOrderButton
+                handleApproveOrder={async () => {
+                  await patchOrder(o.id.toString(), 'APPROVED');
+                  removeNonPendingOrder(o.id);
+                }}
+                handleCancelOrder={async () => {
+                  await patchOrder(o.id.toString(), 'CANCELLED');
+                  removeNonPendingOrder(o.id);
+                }}
+              />
             </div>
           ))}
         </div>
       </td>
     </tr>
+  );
+}
+
+function ApproveRejectOrderButton({
+  handleApproveOrder,
+  handleCancelOrder,
+}: {
+  handleApproveOrder: () => void;
+  handleCancelOrder: () => void;
+}) {
+  const { isLoading: isUpdating, withLoading } = useLoadingState(false);
+  const [actionStr, setActionStr] = useState('');
+  return isUpdating ? (
+    <LoadingUI message={actionStr} />
+  ) : (
+    <div>
+      <Button
+        text=""
+        colour="green"
+        Icon={<CheckIcon className="h-5 w-5" />}
+        onClick={withLoading(async () => {
+          setActionStr('Approving Order...');
+          await handleApproveOrder();
+        })}
+      />
+      <Button
+        text=""
+        colour="red"
+        Icon={<XMarkIcon className="h-5 w-5" />}
+        onClick={withLoading(async () => {
+          setActionStr('Cancelling Order...');
+          await handleCancelOrder();
+        })}
+      />
+    </div>
   );
 }
