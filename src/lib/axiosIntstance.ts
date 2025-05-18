@@ -1,7 +1,8 @@
 'use server';
 import { APP_CONFIG } from '@/config';
-import axios from 'axios';
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
+import axios from 'axios';
+import { redirect, RedirectType } from 'next/navigation';
 
 export const axiosInstance = axios.create({
   baseURL: APP_CONFIG.BACKEND_API_URL,
@@ -21,6 +22,9 @@ axiosInstance.interceptors.request.use(async config => {
     });
     const ses = await auth0.getSession();
     const token = ses?.tokenSet.accessToken || '';
+    if (!token) {
+      redirect('/auth/login', RedirectType.push);
+    }
     config.headers['Authorization'] = `Bearer ${token}`;
   } catch (e) {
     console.error(e);
