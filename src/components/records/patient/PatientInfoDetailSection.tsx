@@ -1,6 +1,6 @@
 import { Patient } from '@/types/Patient';
 import moment from 'moment';
-import { DisplayField } from '../DisplayField';
+import { DisplayField } from '../../DisplayField';
 
 export function PatientInfoDetailSection({ patient }: { patient: Patient }) {
   const fieldArray = [

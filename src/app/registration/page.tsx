@@ -1,6 +1,7 @@
 'use client';
 import { Button } from '@/components/Button';
-import { PatientInfo } from '@/components/records/PatientInfo';
+import { PatientForm } from '@/components/records/patient/PatientForm';
+import { PatientInfo } from '@/components/records/patient/PatientInfo';
 import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
@@ -11,7 +12,6 @@ import { FormEvent, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
-import { PatientForm } from '../../components/records/PatientForm';
 import { PatientScanForm } from './PatientScanForm';
 import { RegistrationAutosuggest } from './RegistrationAutosuggest';
 

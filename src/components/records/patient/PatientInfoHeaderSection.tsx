@@ -5,9 +5,9 @@ import { Patient, getPatientAge } from '@/types/Patient';
 import { Visit } from '@/types/Visit';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { VisitDropdown } from '../VisitDropdown';
-import { UploadDocument } from './UploadDocument';
-import { ViewDocument } from './ViewDocument';
+import { VisitDropdown } from '../../VisitDropdown';
+import { UploadDocument } from '../UploadDocument';
+import { ViewDocument } from '../ViewDocument';
 
 export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
   const [visits, setVisits] = useState<Visit[]>([]);

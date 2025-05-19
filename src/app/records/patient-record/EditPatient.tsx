@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
-import { PatientForm } from '@/components/records/PatientForm';
+import { PatientForm } from '@/components/records/patient/PatientForm';
 import { patchPatient } from '@/data/patient/patchPatient';
 import { Patient } from '@/types/Patient';
 import { urlToFile } from '@/utils/urlToFile';

@@ -5,13 +5,13 @@ import { DisplayField } from '@/components/DisplayField';
 import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
+import { ChildVitalsFields } from '@/components/records/vital/ChildVitalsFields';
 import { patchVital } from '@/data/vital/patchVital';
 import { Patient } from '@/types/Patient';
 import { displayBMI, Vital } from '@/types/Vital';
 import { FormEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { ChildVitalsFields } from './ChildVitalsFields';
 
 export function VitalsForm({
   patient,

@@ -1,13 +1,13 @@
 'use client';
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
-import { DiagnosesTable } from '@/components/records/DiagnosesTable';
+import { DiagnosesTable } from '@/components/records/consultation/DiagnosesTable';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-import { PrescriptionTable } from './PrescriptionTable';
+import { PrescriptionTable } from '../prescription/PrescriptionTable';
 import { RecordConsultationTableRow } from './RecordConsultationTableRow';
 
 export function RecordConsultationTable({

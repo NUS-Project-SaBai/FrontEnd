@@ -1,14 +1,14 @@
-import { HeightWeightGraph } from '@/components/records/HeightWeightGraph';
-import { PatientInfoHeaderSection } from '@/components/records/PatientInfoHeaderSection';
+import { RecordConsultationTable } from '@/components/records/consultation/RecordConsultationTable';
+import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
+import { PrescriptionTable } from '@/components/records/prescription/PrescriptionTable';
+import { HeightWeightGraph } from '@/components/records/vital/HeightWeightGraph';
+import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitById } from '@/data/visit/getVisit';
 import { getVitalByVisit } from '@/data/vital/getVital';
 import { calculateDobDifference } from '@/types/Patient';
 import { EMPTY_VITAL } from '@/types/Vital';
-import { PrescriptionTable } from '../patient-record/PrescriptionTable';
-import { RecordConsultationTable } from '../patient-record/RecordConsultationTable';
-import { PastVitalTable } from './PastVitalTable';
 import { VitalsForm } from './VitalsForm';
 
 export default async function PatientVitalPage({

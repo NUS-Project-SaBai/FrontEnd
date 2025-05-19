@@ -1,11 +1,11 @@
 'use client';
 import { Button } from '@/components/Button';
+import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
 import { Consult } from '@/types/Consult';
 import { calculateDobDifference, Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
 import { useState } from 'react';
 import ReactModal from 'react-modal';
-import { PastVitalTable } from '../patient-vitals/PastVitalTable';
 
 export function ViewVital({
   patient,
