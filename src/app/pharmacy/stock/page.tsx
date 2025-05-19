@@ -1,5 +1,5 @@
 'use client';
-import { LoadingUI } from '@/components/LoadingUI';
+import { LoadingPage } from '@/components/LoadingPage';
 import { MedicationTable } from '@/components/pharmacy/MedicationTable';
 import { getMedication } from '@/data/medication/getMedications';
 import { useLoadingState } from '@/hooks/useLoadingState';
@@ -33,12 +33,8 @@ export default function PharmacyStockPage() {
     );
   }, [searchStr, medications]);
 
-  return isLoading ? (
-    <div className="flex h-full w-full items-center justify-center">
-      <LoadingUI />
-    </div>
-  ) : (
-    <>
+  return (
+    <LoadingPage isLoading={isLoading} message="Loading Medications...">
       <div className="p-2">
         <h2>Medication Stock</h2>
         <div>
@@ -60,6 +56,6 @@ export default function PharmacyStockPage() {
         <HistoryMedicationModal />
         <MedicationTable medications={filteredMedications} />
       </div>
-    </>
+    </LoadingPage>
   );
 }

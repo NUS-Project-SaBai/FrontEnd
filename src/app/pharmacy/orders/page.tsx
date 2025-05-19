@@ -1,5 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
+import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientSearchInput } from '@/components/PatientSearchbar';
 import { VILLAGES } from '@/constants';
@@ -65,56 +66,54 @@ export default function OrdersPage() {
     setOrderRowData(tmpOrderRowData.filter(x => x.orders.length > 0));
   }, [patients, orders, diagnoses]);
 
-  return isLoading ? (
-    <div className="flex h-full w-full items-center justify-center">
-      <LoadingUI message="Loading pending orders..." />
-    </div>
-  ) : (
-    <div className="p-2">
-      <h1>Orders</h1>
-      <Suspense>
-        <PatientSearchInput setPatients={setPatients} />
-      </Suspense>
-      <div className="pt-4">
-        <table className="w-full text-left">
-          <thead className="border-b-2">
-            <tr>
-              <th>Photo</th>
-              <th>
-                <p>ID / Full Name</p>
-                <p>Visit On</p>
-              </th>
-              <th>Diagnoses</th>
-              <th>Prescriptions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {orderRowData.map((x, index) => (
-              <OrderRow
-                key={x.patient?.identification_number || index}
-                {...x}
-                removeNonPendingOrder={id => {
-                  if (orders[x.patient.patient_id] == undefined) return;
-                  const newOrders = orders[x.patient.patient_id].filter(
-                    o => o.id != id
-                  );
-                  if (newOrders.length == 0) {
-                    const tmp = { ...orders };
-                    delete tmp[x.patient.patient_id];
-                    setOrders(tmp);
-                  } else {
-                    setOrders(prev => ({
-                      ...prev,
-                      [x.patient.patient_id]: newOrders,
-                    }));
-                  }
-                }}
-              />
-            ))}
-          </tbody>
-        </table>
+  return (
+    <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
+      <div className="p-2">
+        <h1>Orders</h1>
+        <Suspense>
+          <PatientSearchInput setPatients={setPatients} />
+        </Suspense>
+        <div className="pt-4">
+          <table className="w-full text-left">
+            <thead className="border-b-2">
+              <tr>
+                <th>Photo</th>
+                <th>
+                  <p>ID / Full Name</p>
+                  <p>Visit On</p>
+                </th>
+                <th>Diagnoses</th>
+                <th>Prescriptions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {orderRowData.map((x, index) => (
+                <OrderRow
+                  key={x.patient?.identification_number || index}
+                  {...x}
+                  removeNonPendingOrder={id => {
+                    if (orders[x.patient.patient_id] == undefined) return;
+                    const newOrders = orders[x.patient.patient_id].filter(
+                      o => o.id != id
+                    );
+                    if (newOrders.length == 0) {
+                      const tmp = { ...orders };
+                      delete tmp[x.patient.patient_id];
+                      setOrders(tmp);
+                    } else {
+                      setOrders(prev => ({
+                        ...prev,
+                        [x.patient.patient_id]: newOrders,
+                      }));
+                    }
+                  }}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </LoadingPage>
   );
 }
 
