@@ -18,15 +18,25 @@ export function MedicationTable({
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {medications.map(medicine => (
-            <MedicationItemRow key={medicine.id} medicine={medicine} />
-          ))}
+          {medications.length === 0 ? (
+            <tr>
+              <td
+                colSpan={3}
+                className="py-4 text-center text-xl text-gray-600"
+              >
+                No medications found
+              </td>
+            </tr>
+          ) : (
+            medications.map(medicine => (
+              <MedicationItemRow key={medicine.id} medicine={medicine} />
+            ))
+          )}
         </tbody>
       </table>
     </div>
   );
 }
-
 function MedicationItemRow({ medicine }: { medicine: Medication }) {
   return (
     <tr>
@@ -36,7 +46,11 @@ function MedicationItemRow({ medicine }: { medicine: Medication }) {
         <Link href={'/pharmacy/stock?edit=' + medicine.id} prefetch={false}>
           <Button text="Edit" colour="green" />
         </Link>
-        <Link href={'/pharmacy/stock?view=' + medicine.id} prefetch={false}>
+        <Link
+          href={'/pharmacy/stock?view=' + medicine.id}
+          prefetch={false}
+          shallow={true}
+        >
           <Button text="History" colour="blue" />
         </Link>
       </td>

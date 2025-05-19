@@ -4,14 +4,17 @@ import { FormEventHandler } from 'react';
 import { Button } from '../Button';
 import { DisplayField } from '../DisplayField';
 import { RHFInputField } from '../inputs/RHFInputField';
+import { LoadingUI } from '../LoadingUI';
 
 export function MedicationForm({
   closeForm,
   onSubmit,
+  isSubmitting = false,
   editMedication = null,
 }: {
   closeForm: () => void;
   onSubmit: FormEventHandler;
+  isSubmitting?: boolean;
   editMedication?: Medication | null;
 }) {
   return (
@@ -41,9 +44,13 @@ export function MedicationForm({
           isRequired={true}
         />
         <RHFInputField label="Notes" name="notes" type="text" />
-        <div>
+        <div className="flex">
           <Button text="Close" colour="red" type="button" onClick={closeForm} />
-          <Button text="Submit" colour="green" type="submit" />
+          {isSubmitting ? (
+            <LoadingUI message="Submitting medication..." />
+          ) : (
+            <Button text="Submit" colour="green" type="submit" />
+          )}
         </div>
       </form>
     </div>
