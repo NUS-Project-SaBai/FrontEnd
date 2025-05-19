@@ -20,8 +20,7 @@ axiosInstance.interceptors.request.use(async config => {
       },
       appBaseUrl: APP_CONFIG.APP_BASE_URL,
     });
-    const ses = await auth0.getSession();
-    const token = ses?.tokenSet.accessToken || '';
+    const { token } = await auth0.getAccessToken();
     if (!token) {
       redirect('/auth/login', RedirectType.push);
     }
