@@ -1,8 +1,8 @@
-import { RecordConsultationTable } from '@/components/records/consultation/RecordConsultationTable';
+import { LoadingUI } from '@/components/LoadingUI';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
-import { PrescriptionTable } from '@/components/records/prescription/PrescriptionTable';
 import { HeightWeightGraph } from '@/components/records/vital/HeightWeightGraph';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
+import { PrescriptionConsultCol } from '@/components/records/VitalPresConsultCol';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitById } from '@/data/visit/getVisit';
@@ -16,18 +16,27 @@ export default async function PatientVitalPage({
 }: {
   searchParams: Promise<{ id: string; visit: string }>;
 }) {
-  const patientId = (await searchParams).id;
-  const visitId = (await searchParams).visit;
+  const { id: patientId, visit: visitId } = await searchParams;
+  if (visitId == undefined) {
+    return (
+      <div className="p-2">
+        <h1>Patient Vitals</h1>
+        <div className="border-b-2 py-2">
+          <PatientInfoHeaderSection patient={await getPatientById(patientId)} />
+        </div>
+        <div>
+          <LoadingUI message="Loading data..." />
+        </div>
+      </div>
+    );
+  }
+
   const [patient, curVital, visitDate, consults] = await Promise.all([
     getPatientById(patientId),
-    visitId == undefined
-      ? EMPTY_VITAL
-      : getVitalByVisit(visitId).then(vital => vital || EMPTY_VITAL),
-    visitId == undefined
-      ? new Date()
-      : getVisitById(visitId).then(visit =>
-          visit == null ? new Date() : new Date(visit.date)
-        ),
+    getVitalByVisit(visitId).then(vital => vital || EMPTY_VITAL),
+    getVisitById(visitId).then(visit =>
+      visit == null ? new Date() : new Date(visit.date)
+    ),
     getConsultByVisitId(visitId),
   ]);
 
@@ -49,22 +58,7 @@ export default async function PatientVitalPage({
             age={patientVisitAge}
             gender={patient.gender}
           />
-          <h2>Consultations</h2>
-          {consults == null ? (
-            <p>loading</p>
-          ) : (
-            <RecordConsultationTable consults={consults} />
-          )}
-          <h2>Prescriptions</h2>
-          {consults == null ? (
-            <p>loading</p>
-          ) : (
-            <PrescriptionTable
-              prescriptions={
-                consults?.flatMap(consult => consult.prescriptions) || []
-              }
-            />
-          )}
+          <PrescriptionConsultCol consults={consults} />
           <h2>HeightWeightGraph</h2>
           <HeightWeightGraph
             age={patientVisitAge.year}

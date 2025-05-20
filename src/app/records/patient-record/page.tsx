@@ -1,11 +1,10 @@
-import { RecordConsultationTable } from '@/components/records/consultation/RecordConsultationTable';
+'use server';
 import { PatientInfoDetailSection } from '@/components/records/patient/PatientInfoDetailSection';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
-import { PrescriptionTable } from '@/components/records/prescription/PrescriptionTable';
+import { PrescriptionConsultCol } from '@/components/records/VitalPresConsultCol';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVitalByVisit } from '@/data/vital/getVital';
-import { EMPTY_VITAL } from '@/types/Vital';
 import { EditPatient } from './EditPatient';
 import { ViewVital } from './ViewVital';
 
@@ -43,29 +42,13 @@ export default async function PatientRecordPage({
             <ViewVital
               consults={consults || []}
               patient={patient}
-              vitals={vitals || EMPTY_VITAL}
+              vitals={vitals}
             />
             <EditPatient patient={patient} />
           </div>
           <PatientInfoDetailSection patient={patient} />
         </div>
-
-        <div>
-          <p className="font-bold">Consults</p>
-          <RecordConsultationTable consults={consults} />
-          <div>
-            <p className="font-bold">Prescriptions</p>
-            {consults == null ? (
-              <p>Loading...</p>
-            ) : (
-              <PrescriptionTable
-                prescriptions={
-                  consults?.flatMap(consult => consult.prescriptions) || []
-                }
-              />
-            )}
-          </div>
-        </div>
+        <PrescriptionConsultCol consults={consults} />
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export function ViewVital({
 }: {
   patient: Patient;
   consults: Consult[];
-  vitals: Vital;
+  vitals: Vital | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -26,14 +26,18 @@ export function ViewVital({
       />
       <ReactModal isOpen={isOpen} ariaHideApp={false}>
         <h2>Vitals</h2>
-        <PastVitalTable
-          vital={vitals}
-          age={calculateDobDifference(
-            new Date(patient.date_of_birth),
-            consults.length == 0 ? new Date() : new Date(consults[0].date)
-          )}
-          gender={patient.gender}
-        />
+        {vitals == null ? (
+          <p>No vitals found for current visit</p>
+        ) : (
+          <PastVitalTable
+            vital={vitals}
+            age={calculateDobDifference(
+              new Date(patient.date_of_birth),
+              consults.length == 0 ? new Date() : new Date(consults[0].date)
+            )}
+            gender={patient.gender}
+          />
+        )}
         <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
       </ReactModal>
     </>
