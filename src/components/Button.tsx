@@ -1,5 +1,6 @@
 'use client';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { LoadingUI } from './LoadingUI';
 
 export function Button({
   text,
@@ -14,7 +15,11 @@ export function Button({
   colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';
   Icon?: ReactNode;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  // makes the button interactive only when it is hydrated
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   const handleClick = async () => {
     try {
@@ -25,7 +30,11 @@ export function Button({
     }
   };
 
-  return (
+  return isLoading ? (
+    <div className="m-0.5 inline-block rounded-md border-2 bg-gray-300 opacity-50 shadow-sm">
+      <LoadingUI />
+    </div>
+  ) : (
     <button
       className={
         `m-0.5 rounded-md border-2 p-2 shadow-sm hover:shadow hover:outline hover:outline-black ` +
