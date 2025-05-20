@@ -1,5 +1,5 @@
 'use server';
-import { axiosInstance } from '@/lib/axiosIntstance';
+import { axiosInstance } from '@/lib/axiosInstance';
 import { Medication } from '@/types/Medication';
 
 export async function createMedicine(

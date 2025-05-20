@@ -1,6 +1,6 @@
 'use server';
 
-import { axiosInstance } from '@/lib/axiosIntstance';
+import { axiosInstance } from '@/lib/axiosInstance';
 import { Consult, consultFromJson } from '@/types/Consult';
 import { MedicationReview } from '@/types/MedicationReview';
 

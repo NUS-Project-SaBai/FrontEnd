@@ -1,6 +1,6 @@
 'use server';
 
-import { axiosInstance } from '@/lib/axiosIntstance';
+import { axiosInstance } from '@/lib/axiosInstance';
 import { Vital, vitalFromJson } from '@/types/Vital';
 
 export async function getVitalByVisit(visitId: string): Promise<Vital | null> {

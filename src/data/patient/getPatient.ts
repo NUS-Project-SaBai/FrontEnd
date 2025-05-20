@@ -1,5 +1,5 @@
 'use server';
-import { axiosInstance } from '@/lib/axiosIntstance';
+import { axiosInstance } from '@/lib/axiosInstance';
 import { Patient } from '@/types/Patient';
 
 export async function getPatient(): Promise<Patient[]> {

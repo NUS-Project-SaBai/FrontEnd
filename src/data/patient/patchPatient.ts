@@ -1,5 +1,5 @@
 'use server';
-import { axiosInstance } from '@/lib/axiosIntstance';
+import { axiosInstance } from '@/lib/axiosInstance';
 import { revalidatePath } from 'next/cache';
 
 export async function patchPatient(patientId: number, formData: FormData) {
