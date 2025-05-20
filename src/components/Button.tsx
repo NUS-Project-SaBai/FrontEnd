@@ -30,24 +30,28 @@ export function Button({
     }
   };
 
-  return isLoading ? (
-    <div className="m-0.5 inline-block rounded-md border-2 bg-gray-300 opacity-50 shadow-sm">
-      <LoadingUI />
-    </div>
-  ) : (
+  return (
     <button
       className={
-        `m-0.5 rounded-md border-2 p-2 shadow-sm hover:shadow hover:outline hover:outline-black ` +
-        (colour == 'white'
-          ? 'bg-white'
-          : `bg-${colour}-500 border-0 text-white`)
+        isLoading
+          ? 'm-0.5 rounded-md bg-gray-300 opacity-50 hover:cursor-default'
+          : `m-0.5 rounded-md border-2 p-2 shadow-sm hover:shadow hover:outline hover:outline-black ` +
+            (colour == 'white'
+              ? 'bg-white'
+              : `bg-${colour}-500 border-0 text-white`)
       }
       type={type}
       onClick={handleClick}
       disabled={isLoading}
     >
-      {Icon}
-      {text}
+      {isLoading ? (
+        <LoadingUI />
+      ) : (
+        <div>
+          {Icon}
+          {text}
+        </div>
+      )}
     </button>
   );
 }

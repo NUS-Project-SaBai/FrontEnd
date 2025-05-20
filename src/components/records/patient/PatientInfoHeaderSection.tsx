@@ -50,7 +50,7 @@ export function PatientInfoHeaderSection({
         </div>
 
         {visits == null ? (
-          <div>
+          <div className="w-fit text-nowrap text-lg">
             <LoadingUI message="Loading Visits..." />
           </div>
         ) : visits.length == 0 ? (
