@@ -1,31 +1,33 @@
 'use client';
-import { Button } from '@/components/Button';
-import { PatientForm } from '@/components/records/patient/PatientForm';
+import { LoadingPage } from '@/components/LoadingPage';
 import { PatientInfo } from '@/components/records/patient/PatientInfo';
 import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
-import { useToggle } from '@/hooks/useToggle';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { urlToFile } from '@/utils/urlToFile';
 import { FormEvent, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
+import { NewPatientModal } from './NewPatientModal';
 import { PatientScanForm } from './PatientScanForm';
 import { RegistrationAutosuggest } from './RegistrationAutosuggest';
 
 export default function RegistrationPage() {
   const useFormReturn = useForm({ resetOptions: { keepDirtyValues: true } });
-  const [isPatientFormOpen, togglePatientFormOpen] = useToggle(false);
   const [patientList, setPatientList] = useState<Patient[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const { isLoading, withLoading } = useLoadingState(true);
+  const { isLoading: isSubmitting, withLoading: withLoadingSubmit } =
+    useLoadingState(false);
   useEffect(() => {
     refreshPatientList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  function refreshPatientList() {
-    getPatient().then(setPatientList);
-  }
+  const refreshPatientList = withLoading(() =>
+    getPatient().then(setPatientList)
+  );
 
   const onPatientRegistrationFormSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -33,7 +35,7 @@ export default function RegistrationPage() {
 
     useFormReturn.handleSubmit(
       //onValid
-      async fieldValues => {
+      withLoadingSubmit(async fieldValues => {
         formData.append(
           'picture',
           await urlToFile(
@@ -52,9 +54,8 @@ export default function RegistrationPage() {
         // TODO: implement check for recent visit
         createVisit(patient);
         toast.success('New Visit Created!');
-        togglePatientFormOpen();
         refreshPatientList();
-      },
+      }),
       // onInvalid
       () => {
         toast.error('Missing Input');
@@ -65,27 +66,24 @@ export default function RegistrationPage() {
   return (
     <div className="p-4">
       <h1>Registration</h1>
-      <RegistrationAutosuggest
-        patientList={patientList}
-        setPatient={setSelectedPatient}
-      />
-      <div className="my-2">
-        <div className="flex justify-center">
-          <Button
-            colour="green"
-            onClick={togglePatientFormOpen}
-            text={'New Patient'}
-          />
-          <PatientScanForm setSelectedPatient={setSelectedPatient} />
+      <LoadingPage isLoading={isLoading} message="Loading Patients...">
+        <RegistrationAutosuggest
+          patientList={patientList}
+          setPatient={setSelectedPatient}
+        />
+        <div className="my-2">
+          <div className="flex justify-center">
+            <FormProvider {...useFormReturn}>
+              <NewPatientModal
+                onSubmit={onPatientRegistrationFormSubmit}
+                isSubmitting={isSubmitting}
+              />
+            </FormProvider>
+            <PatientScanForm setSelectedPatient={setSelectedPatient} />
+          </div>
         </div>
-        <ReactModal isOpen={isPatientFormOpen} ariaHideApp={false}>
-          <FormProvider {...useFormReturn}>
-            <PatientForm onSubmit={onPatientRegistrationFormSubmit} />
-          </FormProvider>
-          <Button colour="red" onClick={togglePatientFormOpen} text="Close" />
-        </ReactModal>
-      </div>
-      <PatientInfo patient={selectedPatient} />
+        <PatientInfo patient={selectedPatient} />
+      </LoadingPage>
     </div>
   );
 }

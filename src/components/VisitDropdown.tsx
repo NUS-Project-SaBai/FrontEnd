@@ -28,10 +28,14 @@ export function VisitDropdown({ name, visits }: DropdownProps) {
   }, [params, pathname, router, visitId]);
 
   useEffect(() => {
-    if (visits && !visitId) {
+    // If the visitId is not in the list of visits, set it to the first visit
+    if (visits && !visits.some(v => v.id == visitId)) {
       setVisitId(visits[0].id);
+    } else {
+      setVisitId('');
     }
-  }, [visitId, visits]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visits]);
 
   if (!visits && !visitId) {
     return <div>No visits found</div>;
