@@ -1,6 +1,7 @@
 'use client';
 import { VillageContext } from '@/context/VillageContext';
 import { getPatient } from '@/data/patient/getPatient';
+import { WithLoadingType } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -16,19 +17,23 @@ import { VillageOptionDropdown } from './VillageOptionDropdown';
 
 export function PatientSearchInput({
   setPatients,
+  isLoading = false,
+  withLoading = x => x,
 }: {
   setPatients: Dispatch<SetStateAction<Patient[]>>;
+  isLoading?: boolean;
+  withLoading?: WithLoadingType;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const queryStr = useSearchParams().get('query')?.toLowerCase();
+  const queryStr = searchParams.get('query')?.toLowerCase();
 
   const [fullPatientList, setFullPatientList] = useState<Patient[]>([]);
   const { village, setVillage } = useContext(VillageContext);
-
   useEffect(() => {
-    getPatient().then(setFullPatientList);
+    withLoading(getPatient)().then(setFullPatientList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -67,8 +72,10 @@ export function PatientSearchInput({
         </label>
         <input
           id="patientSearch"
-          className="w-full"
+          className="w-full disabled:bg-gray-200"
           defaultValue={searchParams.get('query')?.toString()}
+          placeholder={isLoading ? 'Loading patients...' : ''}
+          disabled={isLoading}
           onChange={e => {
             debouncedSearch(e.target.value);
           }}

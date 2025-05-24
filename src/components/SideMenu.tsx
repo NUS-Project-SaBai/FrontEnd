@@ -93,7 +93,7 @@ function NavItem({
 }) {
   const isCurrentUrl = usePathname() == href;
   return (
-    <Link href={href}>
+    <Link href={href} prefetch={false}>
       <div
         className={
           'flex gap-x-2 rounded px-4 py-2 hover:bg-gray-800 hover:text-gray-200 ' +

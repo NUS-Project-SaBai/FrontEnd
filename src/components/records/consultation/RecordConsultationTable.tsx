@@ -1,13 +1,14 @@
 'use client';
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
-import { DiagnosesTable } from '@/components/records/DiagnosesTable';
+import { LoadingUI } from '@/components/LoadingUI';
+import { DiagnosesTable } from '@/components/records/consultation/DiagnosesTable';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-import { PrescriptionTable } from './PrescriptionTable';
+import { PrescriptionTable } from '../prescription/PrescriptionTable';
 import { RecordConsultationTableRow } from './RecordConsultationTableRow';
 
 export function RecordConsultationTable({
@@ -26,7 +27,7 @@ export function RecordConsultationTable({
   }, [consult]);
 
   if (consults == null) {
-    return <p>Loading...</p>;
+    return <LoadingUI message="Loading Consultations..." />;
   } else if (consults.length === 0) {
     return <p>No Consultations Found</p>;
   }
@@ -59,7 +60,6 @@ export function RecordConsultationTable({
                 label="Remarks"
                 content={consult.remarks || 'NIL'}
               />
-              {/* TODO: Implement the diagnoses and prescription table */}
               <div className="py-2">
                 <p className="font-bold">Diagnoses</p>
                 <DiagnosesTable diagnoses={diagnosisArray} />

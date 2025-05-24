@@ -44,19 +44,19 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       <td>
         {/* record */}
         <Link href={`/records/patient-record?id=${patient.pk}`}>
-          <Button text="View" />
+          <Button text="View" colour="indigo" />
         </Link>
       </td>
       <td>
         {/* vitals */}
         <Link href={`/records/patient-vitals?id=${patient.pk}`}>
-          <Button text="Create" />
+          <Button text="Create" colour="green" />
         </Link>
       </td>
       <td>
         {/* consultation */}
         <Link href={`/records/patient-consultation?id=${patient.pk}`}>
-          <Button text="Create" />
+          <Button text="Create" colour="green" />
         </Link>
       </td>
     </tr>

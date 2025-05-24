@@ -2,7 +2,7 @@
 import { Button } from '@/components/Button';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
-import { DiagnosisField } from '@/components/records/DiagnosisField';
+import { DiagnosisField } from '@/components/records/consultation/DiagnosisField';
 import { createConsult } from '@/data/consult/createConsult';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';

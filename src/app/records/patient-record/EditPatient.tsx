@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
-import { PatientForm } from '@/components/records/PatientForm';
+import { PatientForm } from '@/components/records/patient/PatientForm';
 import { patchPatient } from '@/data/patient/patchPatient';
 import { Patient } from '@/types/Patient';
 import { urlToFile } from '@/utils/urlToFile';
@@ -22,7 +22,11 @@ export function EditPatient({ patient }: { patient: Patient }) {
   const router = useRouter();
   return (
     <>
-      <Button text="Edit Patient Details" onClick={() => setIsOpen(true)} />
+      <Button
+        text="Edit Patient Details"
+        colour="green"
+        onClick={() => setIsOpen(true)}
+      />
       <ReactModal isOpen={isOpen} ariaHideApp={false}>
         <FormProvider {...useFormReturn}>
           <PatientForm

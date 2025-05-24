@@ -8,6 +8,11 @@ export async function getVisitByPatientId(patientId: string): Promise<Visit[]> {
 
 export async function getVisitById(visitId: string): Promise<Visit | null> {
   if (!visitId) return null;
-  const visit = (await axiosInstance.get(`/visits/${visitId}`)).data;
-  return visit;
+  try {
+    return await (
+      await axiosInstance.get(`/visits/${visitId}`)
+    ).data;
+  } catch {
+    return null;
+  }
 }

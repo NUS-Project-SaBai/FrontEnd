@@ -19,7 +19,7 @@ export default {
       pattern: /^text-(red|blue|green|yellow|purple)-400$/,
     },
     {
-      pattern: /^bg-(red|green|blue)-?.+$/,
+      pattern: /^bg-(red|green|blue|white|indigo)-?.+$/,
     },
   ],
   plugins: [],

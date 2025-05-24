@@ -1,18 +1,29 @@
 'use client';
+import { LoadingUI } from '@/components/LoadingUI';
 import { VILLAGES } from '@/constants';
 import { getVisitByPatientId } from '@/data/visit/getVisit';
+import { WithLoadingType } from '@/hooks/useLoadingState';
 import { Patient, getPatientAge } from '@/types/Patient';
 import { Visit } from '@/types/Visit';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { VisitDropdown } from '../VisitDropdown';
-import { UploadDocument } from './UploadDocument';
-import { ViewDocument } from './ViewDocument';
+import { VisitDropdown } from '../../VisitDropdown';
+import { UploadDocument } from '../UploadDocument';
+import { ViewDocument } from '../ViewDocument';
 
-export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
-  const [visits, setVisits] = useState<Visit[]>([]);
+export function PatientInfoHeaderSection({
+  patient,
+  withLoading = x => x,
+}: {
+  patient: Patient;
+  withLoading?: WithLoadingType;
+}) {
+  const [visits, setVisits] = useState<Visit[] | null>(null);
   useEffect(() => {
-    getVisitByPatientId(patient.pk.toString()).then(vs => setVisits(vs));
+    withLoading(getVisitByPatientId)(patient.pk.toString()).then(vs =>
+      setVisits(vs)
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.pk]);
 
   const age = getPatientAge(patient);
@@ -38,9 +49,16 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
           <p>{patient.name}</p>
         </div>
 
-        {visits.length != 0 && (
+        {visits == null ? (
+          <div className="w-fit text-nowrap text-lg">
+            <LoadingUI message="Loading Visits..." />
+          </div>
+        ) : visits.length == 0 ? (
           <div>
-            <p>Visited On:</p>
+            <p>No Visits Found</p>
+          </div>
+        ) : (
+          <div>
             <VisitDropdown name="visit_date" visits={visits} />
           </div>
         )}

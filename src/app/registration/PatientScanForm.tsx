@@ -1,6 +1,9 @@
+'use client';
 import { Button } from '@/components/Button';
 import { WebcamInput } from '@/components/inputs/WebcamInput';
+import { LoadingUI } from '@/components/LoadingUI';
 import { searchFace } from '@/data/patient/searchFace';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
@@ -16,6 +19,24 @@ export function PatientScanForm({
   const [isOpen, setIsOpen] = useState(false);
   const [imgDetails, setImgDetails] = useState<string | null>(null);
   const [scanSuggestionsList, setScanSuggestionsList] = useState<Patient[]>([]);
+  const { isLoading, withLoading } = useLoadingState(false);
+  const onSearch = withLoading(async () => {
+    if (imgDetails == null) {
+      toast.error('Please take a photo first!');
+      return;
+    }
+    try {
+      const data = await searchFace(imgDetails);
+      if (data.length == 0) {
+        toast.error('Patient does not exist!');
+        return;
+      }
+      setScanSuggestionsList(data);
+    } catch (error) {
+      toast.error(`Error scanning face: ${error}`);
+      console.error('Error scanning face:', error);
+    }
+  });
   return (
     <>
       <Button text="Scan Face" onClick={() => setIsOpen(true)} colour="green" />
@@ -26,29 +47,16 @@ export function PatientScanForm({
           setImageDetails={setImgDetails}
         />
         <div className="flex justify-center space-x-2">
-          <Button
-            text="Search"
-            colour="green"
-            Icon={<MagnifyingGlassIcon className="inline h-5 w-5" />}
-            onClick={() => {
-              if (imgDetails == null) {
-                toast.error('Please take a photo first!');
-                return;
-              }
-              try {
-                searchFace(imgDetails).then(data => {
-                  if (data.length == 0) {
-                    toast.error('Patient does not exist!');
-                    return;
-                  }
-                  setScanSuggestionsList(data);
-                });
-              } catch (error) {
-                toast.error(`Error scanning face: ${error}`);
-                console.error('Error scanning face:', error);
-              }
-            }}
-          />
+          {isLoading ? (
+            <LoadingUI message="Searching Face..." />
+          ) : (
+            <Button
+              text="Search"
+              colour="green"
+              Icon={<MagnifyingGlassIcon className="inline h-5 w-5" />}
+              onClick={onSearch}
+            />
+          )}
           <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
         </div>
         <div className="flex w-full flex-col divide-y-2">

@@ -4,6 +4,7 @@ import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { WebcamInput } from '@/components/inputs/WebcamInput';
+import { LoadingUI } from '@/components/LoadingUI';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { FormEventHandler, useContext } from 'react';
@@ -11,9 +12,11 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 export function PatientForm({
   onSubmit,
+  isSubmitting = false,
   closeForm = undefined,
 }: {
   onSubmit: FormEventHandler<HTMLFormElement>;
+  isSubmitting?: boolean;
   closeForm?: () => void;
 }) {
   const { village } = useContext(VillageContext);
@@ -109,7 +112,11 @@ export function PatientForm({
             );
           }}
         />
-        <Button colour="green" text="Submit" type="submit" />
+        {isSubmitting ? (
+          <LoadingUI message="Submitting..." />
+        ) : (
+          <Button colour="green" text="Submit" type="submit" />
+        )}
         {closeForm && (
           <Button
             colour="red"

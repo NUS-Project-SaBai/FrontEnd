@@ -1,8 +1,11 @@
+'use client';
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { LoadingUI } from '@/components/LoadingUI';
 import { getMedication } from '@/data/medication/getMedications';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Medication } from '@/types/Medication';
 import { Patient } from '@/types/Patient';
@@ -31,9 +34,11 @@ export function MedicationOrderForm({
         ? { index: undefined, medication: '', quantity: undefined, notes: '' }
         : selectedOrder,
   });
+  const { isLoading, withLoading } = useLoadingState(true);
 
   useEffect(() => {
-    getMedication().then(setMedications);
+    withLoading(getMedication)().then(setMedications);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const selectedMedicationId =
@@ -87,16 +92,20 @@ export function MedicationOrderForm({
                   : patient.drug_allergy || '-'
               }
             />
-            <RHFDropdown
-              name="medication"
-              label="Medicine"
-              options={medications.map(med => ({
-                value: `${med.id.toString()} ${med.medicine_name}`,
-                label: `${med.medicine_name} (qty: ${med.quantity})`,
-              }))}
-              defaultValue={selectedOrder?.medication || ''}
-              isRequired={true}
-            />
+            {isLoading ? (
+              <LoadingUI message="Loading Available Medications..." />
+            ) : (
+              <RHFDropdown
+                name="medication"
+                label="Medicine"
+                options={medications.map(med => ({
+                  value: `${med.id.toString()} ${med.medicine_name}`,
+                  label: `${med.medicine_name} (qty: ${med.quantity})`,
+                }))}
+                defaultValue={selectedOrder?.medication || ''}
+                isRequired={true}
+              />
+            )}
             <div className="grid grid-cols-2 gap-4">
               <DisplayField
                 label="In Stock"
