@@ -19,7 +19,11 @@ export function ViewVital({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Button text="View Vitals" onClick={() => setIsOpen(true)} />
+      <Button
+        text="View Vitals"
+        colour="indigo"
+        onClick={() => setIsOpen(true)}
+      />
       <ReactModal isOpen={isOpen} ariaHideApp={false}>
         <h2>Vitals</h2>
         <PastVitalTable

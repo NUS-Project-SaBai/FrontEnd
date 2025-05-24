@@ -22,7 +22,11 @@ export function EditPatient({ patient }: { patient: Patient }) {
   const router = useRouter();
   return (
     <>
-      <Button text="Edit Patient Details" onClick={() => setIsOpen(true)} />
+      <Button
+        text="Edit Patient Details"
+        colour="green"
+        onClick={() => setIsOpen(true)}
+      />
       <ReactModal isOpen={isOpen} ariaHideApp={false}>
         <FormProvider {...useFormReturn}>
           <PatientForm

@@ -11,7 +11,7 @@ export function Button({
   text: string;
   onClick?: () => void;
   type?: 'submit' | 'button' | 'reset';
-  colour?: 'green' | 'red' | 'blue' | 'white';
+  colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';
   Icon?: ReactNode;
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,8 +28,10 @@ export function Button({
   return (
     <button
       className={
-        `text m-0.5 rounded-md border-2 p-2 shadow-sm hover:shadow hover:outline hover:outline-black ` +
-        (colour == 'white' ? 'bg-white' : `bg-${colour}-500 text-white`)
+        `m-0.5 rounded-md border-2 p-2 shadow-sm hover:shadow hover:outline hover:outline-black ` +
+        (colour == 'white'
+          ? 'bg-white'
+          : `bg-${colour}-500 border-0 text-white`)
       }
       type={type}
       onClick={handleClick}

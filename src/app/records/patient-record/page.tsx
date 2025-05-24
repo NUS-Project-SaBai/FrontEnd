@@ -39,12 +39,14 @@ export default async function PatientRecordPage({
       <hr className="my-2 w-full border-t-2" />
       <div className="grid grid-cols-2 gap-1 md:gap-4">
         <div>
-          <ViewVital
-            consults={consults || []}
-            patient={patient}
-            vitals={vitals || EMPTY_VITAL}
-          />
-          <EditPatient patient={patient} />
+          <div className="grid grid-cols-2 gap-2">
+            <ViewVital
+              consults={consults || []}
+              patient={patient}
+              vitals={vitals || EMPTY_VITAL}
+            />
+            <EditPatient patient={patient} />
+          </div>
           <PatientInfoDetailSection patient={patient} />
         </div>
 
