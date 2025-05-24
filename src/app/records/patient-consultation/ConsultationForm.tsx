@@ -62,7 +62,7 @@ export function ConsultationForm({
         try {
           const result = await createConsult(jsonPayload);
           if (result == null) {
-            toast.error('Error submitting conusultation form');
+            toast.error('Error submitting consultation form');
           } else {
             toast.success('Medical Consult Completed!');
             reset();
@@ -119,7 +119,7 @@ export function ConsultationForm({
             label="Referral for (optional)"
             options={[
               { value: '', label: 'Not Referred' },
-              { value: 'Diagnositic', label: 'Diagnositic' },
+              { value: 'Diagnostic', label: 'Diagnositic' },
               { value: 'Acute', label: 'Acute' },
               { value: 'Chronic', label: 'Chronic' },
               {

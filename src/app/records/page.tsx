@@ -1,5 +1,6 @@
 'use client';
 import { LoadingPage } from '@/components/LoadingPage';
+import { LoadingUI } from '@/components/LoadingUI';
 import { PatientSearchInput } from '@/components/PatientSearchbar';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
@@ -13,7 +14,7 @@ export default function RecordPage() {
   return (
     <div className="p-2">
       <h1>Patients List</h1>
-      <Suspense>
+      <Suspense fallback={<LoadingUI message="Loading search input..." />}>
         <PatientSearchInput
           setPatients={setPatients}
           isLoading={isLoading}

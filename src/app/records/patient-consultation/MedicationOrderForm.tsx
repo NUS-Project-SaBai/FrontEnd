@@ -88,7 +88,7 @@ export function MedicationOrderForm({
               label="Patient Allergies"
               content={
                 patient === null
-                  ? 'Error Gettting Patient Allergies'
+                  ? 'Error Getting Patient Allergies'
                   : patient.drug_allergy || '-'
               }
             />

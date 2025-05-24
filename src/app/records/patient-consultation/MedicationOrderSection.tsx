@@ -21,7 +21,7 @@ export function MedicationOrderSection({
           <div className="rounded-lg bg-gray-50 p-2 shadow">
             <h2>Order</h2>
             <hr />
-            {value == undefined ? (
+            {value === undefined ? (
               <p className="py-2">No orders yet</p>
             ) : (
               <MedicationOrderTable
