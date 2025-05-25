@@ -31,8 +31,6 @@ export function VisitDropdown({ name, visits }: DropdownProps) {
     // If the visitId is not in the list of visits, set it to the first visit
     if (visits && !visits.some(v => v.id == visitId)) {
       setVisitId(visits[0].id);
-    } else {
-      setVisitId('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visits]);
