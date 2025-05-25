@@ -1,5 +1,5 @@
 import { Button } from '@/components/Button';
-import { VILLAGES } from '@/constants';
+import { VILLAGES_AND_ALL } from '@/constants';
 import { Patient } from '@/types/Patient';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,7 +29,11 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
 function PatientRecordRow({ patient }: { patient: Patient }) {
   return (
     <tr>
-      <td className={'font-semibold ' + VILLAGES[patient.village_prefix].color}>
+      <td
+        className={
+          'font-semibold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+        }
+      >
         {patient.patient_id}
       </td>
       <td>

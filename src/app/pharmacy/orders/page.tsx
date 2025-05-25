@@ -3,7 +3,7 @@ import { Button } from '@/components/Button';
 import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientSearchInput } from '@/components/PatientSearchbar';
-import { VILLAGES } from '@/constants';
+import { VILLAGES_AND_ALL } from '@/constants';
 import { getPendingOrder } from '@/data/order/getOrder';
 import { patchOrder } from '@/data/order/patchOrder';
 import { useLoadingState } from '@/hooks/useLoadingState';
@@ -155,7 +155,11 @@ function OrderRow({
         />
       </td>
       <td>
-        <p className={'font-bold ' + VILLAGES[patient.village_prefix].color}>
+        <p
+          className={
+            'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+          }
+        >
           {patient.patient_id}
         </p>
         <p className="font-semibold">{patient.name}</p>

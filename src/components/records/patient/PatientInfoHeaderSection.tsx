@@ -1,6 +1,6 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
-import { VILLAGES } from '@/constants';
+import { VILLAGES_AND_ALL } from '@/constants';
 import { getVisitByPatientId } from '@/data/visit/getVisit';
 import { WithLoadingType } from '@/hooks/useLoadingState';
 import { Patient, getPatientAge } from '@/types/Patient';
@@ -44,7 +44,11 @@ export function PatientInfoHeaderSection({
       <div className="grid grid-cols-[2fr,3fr] grid-rows-2 gap-x-8 pl-8 text-2xl">
         <div>
           <p>ID:</p>
-          <p className={'font-bold ' + VILLAGES[patient.village_prefix].color}>
+          <p
+            className={
+              'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+            }
+          >
             {patient.patient_id}
           </p>
         </div>
