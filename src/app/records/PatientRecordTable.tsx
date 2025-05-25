@@ -7,9 +7,9 @@ import Link from 'next/link';
 export function PatientRecordTable({ patients }: { patients: Patient[] }) {
   return (
     <table className="w-full divide-y-2 divide-gray-500 text-left">
-      <thead>
+      <thead className="sticky top-[106px] z-10 bg-white">
         <tr className="py-8">
-          <th className="w-[10%]">ID</th>
+          <th className="w-[20%]">ID</th>
           <th className="w-[20%]">Photo</th>
           <th className="w-[40%]">Full Name</th>
           <th className="w-[10%]">Record</th>
