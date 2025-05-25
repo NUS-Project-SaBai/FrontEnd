@@ -57,6 +57,10 @@ export function RecordConsultationTable({
                 content={consult.referred_for || 'NIL'}
               />
               <DisplayField
+                label="Referred Notes"
+                content={consult.referral_notes || 'NIL'}
+              />
+              <DisplayField
                 label="Remarks"
                 content={consult.remarks || 'NIL'}
               />
