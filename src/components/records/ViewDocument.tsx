@@ -34,14 +34,16 @@ export function ViewDocument({ patient }: { patient: Patient }) {
           <tbody>
             {documents.map((doc, index) => (
               <tr key={index}>
-                <Link
-                  href={doc.file_path || doc.offline_file || ''}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  <td>{doc.file_name}</td>
-                </Link>
+                <td>
+                  <Link
+                    href={doc.file_path || doc.offline_file || ''}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                  >
+                    {doc.file_name}
+                  </Link>
+                </td>
                 <td>{new Date(doc.created_at).toLocaleString()}</td>
               </tr>
             ))}
