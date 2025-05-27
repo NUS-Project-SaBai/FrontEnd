@@ -1,7 +1,6 @@
 import { Button } from '@/components/Button';
 import { getConsultByID } from '@/data/consult/getConsult';
 import { patchReferrals } from '@/data/referrals/patchReferral';
-import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
 import Image from 'next/image';
@@ -17,8 +16,6 @@ export default function ReferralCard({
   pat: Patient;
   date: Date;
 }) {
-  //todo: add loading page, add suspense.
-
   const referralState = [
     'None',
     'New',
@@ -28,32 +25,30 @@ export default function ReferralCard({
     'CompletedSuccess',
     'CompletedFailure',
   ];
-  const { isLoading, withLoading } = useLoadingState(true);
+
   const [patient, setPatient] = useState<Patient | null>();
   const [referralStatus, setReferralStatus] = useState<string>('');
 
   useEffect(() => {
-    const fetchConsults = withLoading(async () => {
+    const fetchConsults = async () => {
       getConsultByID(ref.consult.toString())
         .then(() => {
           setReferralStatus(ref.referral_state);
           setPatient(pat);
         })
         .catch(e => console.log(e));
-    });
+    };
     fetchConsults();
   }, []);
 
-  console.log(isLoading); //to implement loading screen for card - need debug dropdown not working when LoadingPage added
-
   function dropdownChanged(e: ChangeEvent<HTMLSelectElement>) {
-    const patchReferral = withLoading(async () => {
+    const patchReferral = async () => {
       const payload = {
         ...ref,
         referral_state: e.target.value,
       };
       patchReferrals(payload, ref.id.toString());
-    });
+    };
     patchReferral()
       .then(() => toast.success('Updated successfully!'))
       .catch(() => toast.error('Failed to update'));
