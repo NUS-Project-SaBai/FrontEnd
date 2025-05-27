@@ -4,6 +4,7 @@ import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { DiagnosisField } from '@/components/records/consultation/DiagnosisField';
 import { createConsult } from '@/data/consult/createConsult';
+import { createReferral } from '@/data/referrals/createReferral';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
 import { FormEvent } from 'react';
@@ -59,6 +60,21 @@ export function ConsultationForm({
           }
         });
 
+        const referralPayload: {
+          [key: string]: Patient | Date | string | null;
+        } = {};
+        //todo: look for better method to find the consult id instead of going into the query params.
+        const currentUrl = new URL(window.location.href);
+        const consultParam = currentUrl.searchParams.get('id');
+
+        Object.entries(data).forEach(item => {
+          if (item[0] == 'referral_notes') {
+            referralPayload['referral_comments'] = item[1];
+            referralPayload['referral_state'] = 'New';
+            referralPayload['consult'] = consultParam;
+          }
+        });
+
         try {
           const result = await createConsult(jsonPayload);
           if (result == null) {
@@ -69,6 +85,20 @@ export function ConsultationForm({
           }
         } catch (error) {
           console.error('Error submitting consultation form:', error);
+          toast.error('Unknown Error');
+        }
+
+        //form submission for referral
+        try {
+          const result = createReferral(referralPayload);
+          if (result == null) {
+            toast.error('Error submitting consultation form');
+          } else {
+            toast.success('Referral submitted!');
+            reset();
+          }
+        } catch (error) {
+          console.error('Error submitting referral form:', error);
           toast.error('Unknown Error');
         }
       },
