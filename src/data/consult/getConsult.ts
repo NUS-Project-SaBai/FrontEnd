@@ -12,3 +12,16 @@ export async function getConsultByVisitId(
     (val: Consult) => consultFromJson(val)
   );
 }
+
+export async function getConsultByID(
+  consultID: string
+): Promise<Consult | null> {
+  if (!consultID) return null;
+  try {
+    return await (
+      await axiosInstance.get(`/consults/${consultID}`)
+    ).data;
+  } catch {
+    return null;
+  }
+}
