@@ -3,4 +3,5 @@ export type Medication = {
   medicine_name: string;
   quantity: number;
   notes: string;
+  code?: string;
 };
