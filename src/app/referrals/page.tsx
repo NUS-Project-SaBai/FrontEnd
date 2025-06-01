@@ -44,7 +44,7 @@ export default function ReferralPage() {
             <ReferralCard
               key={ref.referral.id}
               ref={ref.referral}
-              pat={ref.patient}
+              patient={ref.patient}
               date={ref.date}
             />
           ))

@@ -4,16 +4,17 @@ import { patchReferrals } from '@/data/referrals/patchReferral';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChangeEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function ReferralCard({
   ref,
-  pat,
+  patient,
   date,
 }: {
   ref: Referral;
-  pat: Patient;
+  patient: Patient;
   date: Date;
 }) {
   const referralState = [
@@ -26,7 +27,6 @@ export default function ReferralCard({
     'CompletedFailure',
   ];
 
-  const [patient, setPatient] = useState<Patient | null>();
   const [referralStatus, setReferralStatus] = useState<string>('');
 
   useEffect(() => {
@@ -34,7 +34,6 @@ export default function ReferralCard({
       getConsultByID(ref.consult.toString())
         .then(() => {
           setReferralStatus(ref.referral_state);
-          setPatient(pat);
         })
         .catch(e => console.log(e));
     };
@@ -60,7 +59,7 @@ export default function ReferralCard({
         <p>Loading patient</p>
       ) : (
         <Image
-          src={pat.picture}
+          src={patient.picture}
           alt="Patient Picture"
           width={180}
           height={180}
@@ -69,14 +68,16 @@ export default function ReferralCard({
 
       <div className="grid items-center justify-center">
         <div>
-          <p>Patient ID: {pat.identification_number}</p>
-          <p>Name: {pat.name}</p>
+          <p>Patient ID: {patient.identification_number}</p>
+          <p>Name: {patient.name}</p>
           <p>Visited on: {date.toString()}</p>
         </div>
       </div>
 
       <div className="grid items-center justify-center">
-        <Button text="To form" />
+        <Link href={`./referrals/${ref.id}`}>
+          <Button text="To form" />
+        </Link>
       </div>
 
       <div className="grid items-center justify-center">
