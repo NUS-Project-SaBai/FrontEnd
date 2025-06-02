@@ -33,7 +33,7 @@ export function MedicationForm({
         />
         <RHFInputField
           label="Medicine Code"
-          name="code"
+          name="medicine_code"
           type="text"
           isRequired={true}
         />
