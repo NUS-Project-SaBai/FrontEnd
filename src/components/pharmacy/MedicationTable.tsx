@@ -13,6 +13,7 @@ export function MedicationTable({
         <thead>
           <tr className="border-b-2 border-gray-300">
             <th>Medication name</th>
+            <th>Medication code</th>
             <th>Quantity</th>
             <th>Code</th>
             <th>Actions</th>
@@ -42,6 +43,7 @@ function MedicationItemRow({ medicine }: { medicine: Medication }) {
   return (
     <tr>
       <td>{medicine.medicine_name}</td>
+      <td>{medicine.medicine_code}</td>
       <td>{medicine.quantity}</td>
       <td>{medicine.code || 'N/A'}</td>
       <td>
