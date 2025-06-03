@@ -1,6 +1,6 @@
 'use client';
 import { LoadingPage } from '@/components/LoadingPage';
-import { PatientSearchInput } from '@/components/PatientSearchbar';
+import { PatientSearchInputByReferral } from '@/components/referrals/PatientSearchbarByReferral';
 import {
   getReferrals,
   ReferralWithDetails,
@@ -33,22 +33,20 @@ export default function ReferralPage() {
     <LoadingPage isLoading={isLoading} message="Loading referrals...">
       <div className="p-2">
         <h1>Referrals</h1>
-        {/* todo: make search bar filter */}
         <Suspense>
-          <PatientSearchInput setPatients={setPatients} />
+          <PatientSearchInputByReferral
+            setReferrals={setReferralsWithPatient}
+          />
         </Suspense>
-        {referralWithDetails.length == 0 ? (
-          <h1>No referrals</h1>
-        ) : (
-          referralWithDetails!.map(ref => (
-            <ReferralCard
-              key={ref.referral.id}
-              ref={ref.referral}
-              patient={ref.patient}
-              date={ref.date}
-            />
-          ))
-        )}
+
+        {referralWithDetails!.map(ref => (
+          <ReferralCard
+            key={ref.referral.id}
+            ref={ref.referral}
+            patient={ref.patient}
+            date={ref.date}
+          />
+        ))}
       </div>
     </LoadingPage>
   );
