@@ -9,7 +9,7 @@ export type ReferralWithDetails = {
   date: Date;
 };
 
-export async function getReferrals(): Promise<ReferralWithDetails[] | null> {
+export async function getReferrals(): Promise<ReferralWithDetails[]> {
   const data = (await axiosInstance.get('/referrals')).data;
   return data;
 }
