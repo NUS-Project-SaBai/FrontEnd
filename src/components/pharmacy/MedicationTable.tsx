@@ -43,7 +43,7 @@ function MedicationItemRow({ medicine }: { medicine: Medication }) {
   return (
     <tr>
       <td>{medicine.medicine_name}</td>
-      <td>{medicine.medicine_code}</td>
+      <td>{medicine.code}</td>
       <td>{medicine.quantity}</td>
       <td>{medicine.code || 'N/A'}</td>
       <td>
