@@ -20,28 +20,30 @@ export default function ReferralDetailsPage() {
   useEffect(() => {
     const fetchReferral = withLoading(async () => {
       const data = await getReferral(id!.toString());
-      setDate(data?.date);
-      setPatient(data?.patient);
-      setReferral(data?.referral);
+      setDate(data!.date);
+      setPatient(data!.patient);
+      setReferral(data!.referral);
     });
     fetchReferral();
   }, []);
 
   return (
-    <div>
-      <h1>Patient Details</h1>
+    <div className="p-2">
+      <h1 className="pt-4">Patient Details</h1>
       {patient != null ? (
         <PatientInfoHeaderSection patient={patient!} showVisit={false} />
       ) : (
         <h1>Loading patient...</h1>
       )}
+      <hr className="my-2 w-full border-t-2" />
       <LoadingPage isLoading={isLoading}>
-        <h1>Referral Details</h1>
-        <p>Referral ID: {referral?.id}</p>
-        <p>Referral State: {referral?.referral_state}</p>
-        <p>Consult ID: {referral?.consult}</p>
-        <p>Referral date: {date?.toString()}</p>
-        <textarea value={referral?.referral_comments} readOnly></textarea>
+        <div className="p-2">
+          <h1>Referral Details</h1>
+          <p>Referral State: {referral?.referral_state}</p>
+          <p>Referral Date: {date?.toString()}</p>
+          <p>Referral Comments: </p>
+          <textarea value={referral?.referral_comments} readOnly></textarea>
+        </div>
       </LoadingPage>
     </div>
   );
