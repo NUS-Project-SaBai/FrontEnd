@@ -54,50 +54,60 @@ export default function ReferralCard({
   }
 
   return (
-    <div className="flex">
-      {patient == null ? (
-        <p>Loading patient</p>
-      ) : (
-        <Image
-          src={patient.picture}
-          alt="Patient Picture"
-          width={180}
-          height={180}
-        />
-      )}
-
-      <div className="grid items-center justify-center">
-        <div>
-          <p>Patient ID: {patient.identification_number}</p>
-          <p>Name: {patient.name}</p>
-          <p>Visited on: {date.toString()}</p>
+    <tr>
+      <td>
+        {patient == null ? (
+          <p>Loading patient</p>
+        ) : (
+          <Image
+            src={patient.picture}
+            alt="Patient Picture"
+            width={180}
+            height={180}
+            className="justify-self-center"
+          />
+        )}
+      </td>
+      <td>
+        <div className="grid items-center justify-center p-2">
+          <div>
+            <p>Patient ID: {patient.identification_number}</p>
+            <p>Name: {patient.name}</p>
+            <p>Visited on: {date.toString()}</p>
+          </div>
         </div>
-      </div>
-
-      <div className="grid items-center justify-center">
-        <Link href={`./referrals/${ref.id}`}>
-          <Button text="To form" />
-        </Link>
-      </div>
-
-      <div className="grid items-center justify-center">
-        <div>
-          <label htmlFor="status">Referral status:</label>
-          <select name="status" id="status" onChange={e => dropdownChanged(e)}>
-            {referralState.map(status =>
-              status == referralStatus ? (
-                <option key={status} value={status} selected>
-                  {status}
-                </option>
-              ) : (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              )
-            )}
-          </select>
+      </td>
+      <td>
+        <div className="grid items-center justify-center p-2">
+          <Link href={`./referrals/${ref.id}`}>
+            <Button text="Details" />
+          </Link>
         </div>
-      </div>
-    </div>
+      </td>
+      <td>
+        <div className="grid items-center justify-center p-2">
+          <div>
+            <label htmlFor="status">Referral status:</label>
+            <select
+              name="status"
+              id="status"
+              onChange={e => dropdownChanged(e)}
+            >
+              {referralState.map(status =>
+                status == referralStatus ? (
+                  <option key={status} value={status} selected>
+                    {status}
+                  </option>
+                ) : (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                )
+              )}
+            </select>
+          </div>
+        </div>
+      </td>
+    </tr>
   );
 }
