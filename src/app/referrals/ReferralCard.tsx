@@ -70,10 +70,12 @@ export default function ReferralCard({
       </td>
       <td>
         <div className="grid items-center justify-center p-2">
-          <div>
-            <p>Patient ID: {patient.identification_number}</p>
-            <p>Name: {patient.name}</p>
-            <p>Visited on: {date.toString()}</p>
+          <div className="grid justify-center">
+            <p className="text-center">
+              Patient ID: {patient.identification_number}
+            </p>
+            <p className="text-center">Name: {patient.name}</p>
+            <p className="text-center">Visited on: {date.toString()}</p>
           </div>
         </div>
       </td>
@@ -87,11 +89,11 @@ export default function ReferralCard({
       <td>
         <div className="grid items-center justify-center p-2">
           <div>
-            <label htmlFor="status">Referral status:</label>
             <select
               name="status"
               id="status"
               onChange={e => dropdownChanged(e)}
+              className="w-full rounded border-2 p-1"
             >
               {referralState.map(status =>
                 status == referralStatus ? (

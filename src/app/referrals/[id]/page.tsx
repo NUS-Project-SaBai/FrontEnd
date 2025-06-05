@@ -29,7 +29,7 @@ export default function ReferralDetailsPage() {
 
   return (
     <div className="p-2">
-      <h1 className="pt-4">Patient Details</h1>
+      <h1 className="pt-4">Referral Details</h1>
       {patient != null ? (
         <PatientInfoHeaderSection patient={patient!} showVisit={false} />
       ) : (
@@ -38,11 +38,9 @@ export default function ReferralDetailsPage() {
       <hr className="my-2 w-full border-t-2" />
       <LoadingPage isLoading={isLoading}>
         <div className="p-2">
-          <h1>Referral Details</h1>
           <p>Referral State: {referral?.referral_state}</p>
           <p>Referral Date: {date?.toString()}</p>
-          <p>Referral Comments: </p>
-          <textarea value={referral?.referral_comments} readOnly></textarea>
+          <p>Referral Comments: {referral?.referral_comments}</p>
         </div>
       </LoadingPage>
     </div>
