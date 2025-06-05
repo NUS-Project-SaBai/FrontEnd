@@ -13,6 +13,7 @@ import { Patient } from '@/types/Patient';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
 import { Suspense, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function OrdersPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -128,6 +129,20 @@ function OrderRow({
   orders,
   removeNonPendingOrder,
 }: OrderRowData & { removeNonPendingOrder: (id: number) => void }) {
+  const onPatchError = (err: Error, o: Order) => {
+    toast.error(() => (
+      <p>
+        {err.message}
+        <br />
+        <br />
+        <b>Patient: </b>
+        {o.visit.patient.patient_id}
+        <br />
+        <b>Medicine: </b>
+        {o.medication_review.medicine.medicine_name}
+      </p>
+    ));
+  };
   return (
     <tr>
       <td className="px-0">
@@ -178,12 +193,14 @@ function OrderRow({
               </div>
               <ApproveRejectOrderButton
                 handleApproveOrder={async () => {
-                  await patchOrder(o.id.toString(), 'APPROVED');
-                  removeNonPendingOrder(o.id);
+                  await patchOrder(o.id.toString(), 'APPROVED')
+                    .then(() => removeNonPendingOrder(o.id))
+                    .catch(err => onPatchError(err, o));
                 }}
                 handleCancelOrder={async () => {
-                  await patchOrder(o.id.toString(), 'CANCELLED');
-                  removeNonPendingOrder(o.id);
+                  await patchOrder(o.id.toString(), 'CANCELLED')
+                    .then(() => removeNonPendingOrder(o.id))
+                    .catch(err => onPatchError(err, o));
                 }}
               />
             </div>
