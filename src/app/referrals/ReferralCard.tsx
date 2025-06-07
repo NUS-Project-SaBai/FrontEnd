@@ -45,7 +45,7 @@ export default function ReferralCard({
       <td>
         <div className="grid items-center justify-center p-2">
           <Link href={`./referrals/${ref.id}`}>
-            <Button text="Details" />
+            <Button text="Details" colour="blue" />
           </Link>
         </div>
       </td>
