@@ -1,5 +1,5 @@
 import { getConsultByID } from '@/data/consult/getConsult';
-import { patchReferrals } from '@/data/referrals/patchReferral';
+import { patchReferral } from '@/data/referrals/patchReferral';
 import { Referral } from '@/types/Referral';
 import { ChangeEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -29,14 +29,13 @@ export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
   }, []);
 
   function dropdownChanged(e: ChangeEvent<HTMLSelectElement>) {
-    const patchReferral = async () => {
+    const patch = async () => {
       const payload = {
-        ...ref,
         referral_state: e.target.value,
       };
-      patchReferrals(payload, ref.id.toString());
+      patchReferral(payload, ref.id.toString());
     };
-    patchReferral()
+    patch()
       .then(() => toast.success('Updated successfully!'))
       .catch(() => toast.error('Failed to update'));
   }
