@@ -14,15 +14,20 @@ import { ViewDocument } from '../ViewDocument';
 export function PatientInfoHeaderSection({
   patient,
   withLoading = x => x,
+  showVisit = true,
 }: {
   patient: Patient;
   withLoading?: WithLoadingType;
+  showVisit?: boolean;
 }) {
   const [visits, setVisits] = useState<Visit[] | null>(null);
+
   useEffect(() => {
-    withLoading(getVisitByPatientId)(patient.pk.toString()).then(vs =>
-      setVisits(vs)
-    );
+    if (showVisit) {
+      withLoading(getVisitByPatientId)(patient.pk.toString()).then(vs =>
+        setVisits(vs)
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.pk]);
 
@@ -49,18 +54,22 @@ export function PatientInfoHeaderSection({
           <p>{patient.name}</p>
         </div>
 
-        {visits == null ? (
-          <div className="w-fit text-nowrap text-lg">
-            <LoadingUI message="Loading Visits..." />
-          </div>
-        ) : visits.length == 0 ? (
-          <div>
-            <p>No Visits Found</p>
-          </div>
+        {showVisit ? (
+          visits == null ? (
+            <div className="w-fit text-nowrap text-lg">
+              <LoadingUI message="Loading Visits..." />
+            </div>
+          ) : visits.length == 0 ? (
+            <div>
+              <p>No Visits Found</p>
+            </div>
+          ) : (
+            <div>
+              <VisitDropdown name="visit_date" visits={visits} />
+            </div>
+          )
         ) : (
-          <div>
-            <VisitDropdown name="visit_date" visits={visits} />
-          </div>
+          <></>
         )}
 
         <div>
