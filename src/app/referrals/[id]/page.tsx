@@ -69,7 +69,7 @@ export default function ReferralDetailsPage() {
               </tr>
               <tr>
                 <td>Referral Date</td>
-                <td>{date?.toString()}</td>
+                <td>{new Date(date!).toDateString()}</td>
               </tr>
               <tr>
                 <td>Referral For</td>

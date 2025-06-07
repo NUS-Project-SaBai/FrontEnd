@@ -36,7 +36,9 @@ export default function ReferralCard({
               Patient ID: {patient.identification_number}
             </p>
             <p className="text-center">Name: {patient.name}</p>
-            <p className="text-center">Visited on: {date.toString()}</p>
+            <p className="text-center">
+              Visited on: {new Date(date).toDateString()}
+            </p>
           </div>
         </div>
       </td>
