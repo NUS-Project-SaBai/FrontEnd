@@ -63,15 +63,10 @@ export function ConsultationForm({
         const referralPayload: {
           [key: string]: Patient | Date | string | null;
         } = {};
-        //todo: look for better method to find the consult id instead of going into the query params.
-        const currentUrl = new URL(window.location.href);
-        const consultParam = currentUrl.searchParams.get('id');
 
         Object.entries(data).forEach(item => {
-          if (item[0] == 'referral_notes') {
-            referralPayload['referral_comments'] = item[1];
-            referralPayload['referral_state'] = 'New';
-            referralPayload['consult'] = consultParam;
+          if (item[0] == 'referral_notes' || item[0] == 'referred_for') {
+            referralPayload[item[0]] = item[1];
           }
         });
 
@@ -88,18 +83,34 @@ export function ConsultationForm({
           toast.error('Unknown Error');
         }
 
-        //form submission for referral
-        try {
-          const result = createReferral(referralPayload);
-          if (result == null) {
-            toast.error('Error submitting consultation form');
-          } else {
-            toast.success('Referral submitted!');
-            reset();
+        // only submit the form if 'referred_for' is filled in and is not 'Not Referred'
+        if ('referred_for' in referralPayload) {
+          if (referralPayload['referred_for'] !== 'Not Referred') {
+            if (!('referral_notes' in referralPayload)) {
+              referralPayload['referral_notes'] = 'No notes entered';
+            }
+
+            //todo: look for better method to find the consult id instead of going into the query params.
+            const currentUrl = new URL(window.location.href);
+            const consultParam = currentUrl.searchParams.get('id');
+
+            referralPayload['referral_state'] = 'New';
+            referralPayload['consult'] = consultParam;
+            referralPayload['referral_outcome'] = '';
+
+            try {
+              const result = createReferral(referralPayload);
+              if (result == null) {
+                toast.error('Error submitting consultation form');
+              } else {
+                toast.success('Referral submitted!');
+                reset();
+              }
+            } catch (error) {
+              console.error('Error submitting referral form:', error);
+              toast.error('Unknown Error');
+            }
           }
-        } catch (error) {
-          console.error('Error submitting referral form:', error);
-          toast.error('Unknown Error');
         }
       },
 
