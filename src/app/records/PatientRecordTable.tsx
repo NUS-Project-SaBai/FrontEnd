@@ -9,7 +9,7 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
     <table className="w-full divide-y-2 divide-gray-500 text-left">
       <thead className="z-1 sticky top-[108px] bg-white">
         <tr className="py-8">
-          <th className="w-[20%]">ID</th>
+          <th className="w-[10%]">ID</th>
           <th className="w-[20%]">Photo</th>
           <th className="w-[40%]">Full Name</th>
           <th className="w-[10%]">Record</th>
@@ -17,7 +17,7 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
           <th className="w-[10%]">Consultation</th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-gray-300">
+      <tbody className="divide-y">
         {patients.map(patient => (
           <PatientRecordRow key={patient.pk} patient={patient} />
         ))}
