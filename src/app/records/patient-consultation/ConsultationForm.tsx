@@ -61,8 +61,9 @@ export function ConsultationForm({
         });
 
         const referralPayload: {
-          [key: string]: Patient | Date | string | null;
+          [key: string]: Patient | Date | string | number | null;
         } = {};
+        let consultID;
 
         Object.entries(data).forEach(item => {
           if (item[0] == 'referral_notes' || item[0] == 'referred_for') {
@@ -75,6 +76,7 @@ export function ConsultationForm({
           if (result == null) {
             toast.error('Error submitting consultation form');
           } else {
+            consultID = result.id;
             toast.success('Medical Consult Completed!');
             reset();
           }
@@ -90,22 +92,21 @@ export function ConsultationForm({
               referralPayload['referral_notes'] = 'No notes entered';
             }
 
-            //todo: look for better method to find the consult id instead of going into the query params.
-            const currentUrl = new URL(window.location.href);
-            const consultParam = currentUrl.searchParams.get('id');
-
             referralPayload['referral_state'] = 'New';
-            referralPayload['consult'] = consultParam;
+            referralPayload['consult'] = Number(consultID);
             referralPayload['referral_outcome'] = '';
 
             try {
               const result = createReferral(referralPayload);
-              if (result == null) {
-                toast.error('Error submitting consultation form');
-              } else {
-                toast.success('Referral submitted!');
-                reset();
-              }
+              result
+                .then(
+                  () => {
+                    toast.success('Referral submitted!');
+                    reset();
+                  },
+                  () => console.log('error')
+                )
+                .catch(() => toast.error('Error submitting consultation form'));
             } catch (error) {
               console.error('Error submitting referral form:', error);
               toast.error('Unknown Error');
