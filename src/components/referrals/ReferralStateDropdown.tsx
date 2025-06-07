@@ -36,30 +36,32 @@ export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
       patchReferral(payload, ref.id.toString());
     };
     patch()
-      .then(() => toast.success('Updated successfully!'))
+      .then(() => {
+        setReferralStatus(e.target.value);
+        toast.success('Updated successfully!');
+      })
       .catch(() => toast.error('Failed to update'));
   }
 
   return (
     <div>
-      <select
-        name="status"
-        id="status"
-        onChange={e => dropdownChanged(e)}
-        className="w-full rounded border-2 p-1"
-      >
-        {referralState.map(status =>
-          status == referralStatus ? (
-            <option key={status} value={status} selected>
-              {status}
-            </option>
-          ) : (
+      {referralStatus == '' ? (
+        <p>Loading...</p>
+      ) : (
+        <select
+          name="status"
+          id="status"
+          defaultValue={referralStatus}
+          onChange={e => dropdownChanged(e)}
+          className="w-full rounded border-2 p-1"
+        >
+          {referralState.map(status => (
             <option key={status} value={status}>
               {status}
             </option>
-          )
-        )}
-      </select>
+          ))}
+        </select>
+      )}
     </div>
   );
 }
