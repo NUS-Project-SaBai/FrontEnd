@@ -58,7 +58,7 @@ export default function ReferralDetailsPage() {
           <table>
             <tbody>
               <tr>
-                <td>Referral State</td>
+                <td className="whitespace-nowrap">Referral State</td>
                 <td>
                   <div>
                     {referral != undefined && (
@@ -68,51 +68,60 @@ export default function ReferralDetailsPage() {
                 </td>
               </tr>
               <tr>
-                <td>Referral Date</td>
+                <td className="whitespace-nowrap">Referral Date</td>
                 <td>{new Date(date!).toDateString()}</td>
               </tr>
               <tr>
-                <td>Referral For</td>
+                <td className="whitespace-nowrap">Referral For</td>
                 <td>{referral?.referred_for}</td>
               </tr>
               <tr>
-                <td>Referral Notes</td>
+                <td className="whitespace-nowrap">Referral Notes</td>
                 <td>{referral?.referral_notes}</td>
               </tr>
               <tr>
-                <td>Referral Outcome</td>
+                <td className="whitespace-nowrap">Referral Outcome</td>
                 {
-                  <td>
+                  <td className="w-full">
                     <div className="flex">
                       {editable ? (
-                        <textarea
-                          value={referral!.referral_outcome}
-                          onChange={item =>
-                            setReferral({
-                              ...referral!,
-                              referral_outcome: item.target.value,
-                            })
-                          }
-                        />
+                        <div className="w-full">
+                          <textarea
+                            value={referral!.referral_outcome}
+                            onChange={item =>
+                              setReferral({
+                                ...referral!,
+                                referral_outcome: item.target.value,
+                              })
+                            }
+                            className="w-full"
+                          />
+                        </div>
                       ) : (
-                        referral?.referral_outcome
+                        <div>
+                          <p>{referral?.referral_outcome}</p>
+                        </div>
                       )}
 
                       {editable ? (
-                        <Button
-                          text="Save"
-                          colour="green"
-                          onClick={() => {
-                            setEditable(false);
-                            saveOutcome(referral!.referral_outcome);
-                          }}
-                        />
+                        <div className="grid items-center">
+                          <Button
+                            text="Save"
+                            colour="green"
+                            onClick={() => {
+                              setEditable(false);
+                              saveOutcome(referral!.referral_outcome);
+                            }}
+                          />
+                        </div>
                       ) : (
-                        <Button
-                          text="Edit"
-                          colour="green"
-                          onClick={() => setEditable(true)}
-                        />
+                        <div className="grid items-center">
+                          <Button
+                            text="Edit"
+                            colour="green"
+                            onClick={() => setEditable(true)}
+                          />
+                        </div>
                       )}
                     </div>
                   </td>
