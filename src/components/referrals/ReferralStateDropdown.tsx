@@ -53,7 +53,7 @@ export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
           id="status"
           defaultValue={referralStatus}
           onChange={e => dropdownChanged(e)}
-          className="w-full rounded border-2 border-green-500 bg-green-500 p-1 text-white"
+          className="w-full rounded border-2 border-black p-1"
         >
           {referralState.map(status => (
             <option key={status} value={status}>
