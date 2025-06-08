@@ -87,7 +87,7 @@ export function ConsultationForm({
 
         // only submit the form if 'referred_for' is filled in and is not 'Not Referred'
         if ('referred_for' in referralPayload) {
-          if (referralPayload['referred_for'] !== 'Not Referred') {
+          if (referralPayload['referred_for'] !== '') {
             if (!('referral_notes' in referralPayload)) {
               referralPayload['referral_notes'] = 'No notes entered';
             }
