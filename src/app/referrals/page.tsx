@@ -39,26 +39,30 @@ export default function ReferralPage() {
           />
         </Suspense>
 
-        <table className="w-full divide-y-2 divide-gray-500">
-          <thead>
-            <tr>
-              <th>Photo</th>
-              <th>Referral Summary</th>
-              <th>To details</th>
-              <th>Referral Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {referralWithDetails!.map(ref => (
-              <ReferralCard
-                key={ref.referral.id}
-                ref={ref.referral}
-                patient={ref.patient}
-                date={ref.date}
-              />
-            ))}
-          </tbody>
-        </table>
+        {referralWithDetails.length == 0 ? (
+          <h2>No referrals</h2>
+        ) : (
+          <table className="w-full divide-y-2 divide-gray-500">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Referral Summary</th>
+                <th>To details</th>
+                <th>Referral Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {referralWithDetails!.map(ref => (
+                <ReferralCard
+                  key={ref.referral.id}
+                  ref={ref.referral}
+                  patient={ref.patient}
+                  date={ref.date}
+                />
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </LoadingPage>
   );
