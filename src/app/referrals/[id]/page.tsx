@@ -56,7 +56,7 @@ export default function ReferralDetailsPage() {
       <LoadingPage isLoading={isLoading}>
         <div className="p-2">
           <table>
-            <tbody>
+            <tbody className="divide-y divide-gray-400">
               <tr>
                 <td className="whitespace-nowrap">Referral State</td>
                 <td>
@@ -99,7 +99,9 @@ export default function ReferralDetailsPage() {
                         </div>
                       ) : (
                         <div>
-                          <p>{referral?.referral_outcome}</p>
+                          <p className="whitespace-break-spaces">
+                            {referral?.referral_outcome}
+                          </p>
                         </div>
                       )}
 
