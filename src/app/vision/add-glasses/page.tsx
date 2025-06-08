@@ -1,19 +1,13 @@
 import { LoadingUI } from '@/components/LoadingUI';
-
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
-//import { HeightWeightGraph } from '@/components/records/vital/HeightWeightGraph';
-//import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
-//import { PrescriptionConsultCol } from '@/components/records/VitalPresConsultCol';
-
-import { getConsultByVisitId } from '@/data/consult/getConsult';
+import { PastVisionTable } from '@/components/vision/PastVisionTable';
 import { getPatientById } from '@/data/patient/getPatient';
-import { getVisitById } from '@/data/visit/getVisit';
-import { getVitalByVisit } from '@/data/vital/getVital';
-//import { calculateDobDifference } from '@/types/Patient';
-import { EMPTY_VITAL } from '@/types/Vital';
-//import { VitalsForm } from '@/app/records/patient-vitals/VitalsForm';
+//import { getVisitById } from '@/data/visit/getVisit';
+import { getVisionByVisit } from '@/data/vision/getVision';
+import { EMPTY_VISION } from '@/types/Vision';
+import { VisionForm } from './VisionForm';
 
-export default async function PatientGlassesPage({
+export default async function PatientVisionPage({
   searchParams,
 }: {
   searchParams: Promise<{ id: string; visit: string }>;
@@ -33,13 +27,9 @@ export default async function PatientGlassesPage({
     );
   }
 
-  const [patient] = await Promise.all([
+  const [patient, curVision] = await Promise.all([
     getPatientById(patientId),
-    getVitalByVisit(visitId).then(vital => vital || EMPTY_VITAL),
-    getVisitById(visitId).then(visit =>
-      visit == null ? new Date() : new Date(visit.date)
-    ),
-    getConsultByVisitId(visitId),
+    getVisionByVisit(visitId).then(vision => vision ?? EMPTY_VISION), // Once getVisionByVisit is implemented, it will return the vision data or an empty vision object
   ]);
 
   // const patientVisitAge = calculateDobDifference(
@@ -53,12 +43,17 @@ export default async function PatientGlassesPage({
       <div className="border-b-2 py-2">
         <PatientInfoHeaderSection patient={patient} />
       </div>
-      {/* This will either be an editable page or left is fixed, right is a form to update */}
+
       <div className="mb-4 mt-2 grid grid-cols-2 gap-4">
-        <h2>Past Glasses Records</h2>
-        <div>{/* Details of existing info goes here */}</div>
-        <h2>Update Glasses</h2>
-        <div>{/* Form goes here */}</div>
+        <div>
+          <h2 className="mb-2 text-lg font-semibold">Past Glasses Records</h2>
+          <PastVisionTable vision={curVision} />
+        </div>
+
+        <div>
+          <h2 className="mb-2 text-lg font-semibold">Update Glasses</h2>
+          <VisionForm visitId={visitId} curVision={curVision} />
+        </div>
       </div>
     </div>
   );
