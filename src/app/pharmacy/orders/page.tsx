@@ -190,6 +190,10 @@ function OrderRow({
                   <b>Dosage Instruction: </b>
                   {o.notes}
                 </p>
+                <p>
+                  <b> Code: </b>
+                  {o.medication_review.medicine.code || 'N/A'}
+                </p>
               </div>
               <ApproveRejectOrderButton
                 handleApproveOrder={async () => {

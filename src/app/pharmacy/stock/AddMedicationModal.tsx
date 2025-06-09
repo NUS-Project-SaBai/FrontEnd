@@ -36,6 +36,7 @@ export function AddMedicationModal() {
 
             const jsonPayload = {
               medicine_name: data.medicine_name.toString().trim(),
+              code: data.code.toString().trim(),
               quantity: data.quantity_changed as number,
               notes: data.notes as string,
             };
