@@ -19,15 +19,18 @@ export default function ReferralDetailsPage() {
   const [referral, setReferral] = useState<Referral>();
   const [editable, setEditable] = useState<boolean>(false);
 
-  const params = useParams();
-  const id = params.id;
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchReferral = withLoading(async () => {
-      const data = await getReferral(id!.toString());
-      setDate(data!.date);
-      setPatient(data!.patient);
-      setReferral(data!.referral);
+      if (id == null) {
+        toast.error('No ID provided for referral');
+        return;
+      }
+      const data = await getReferral(id.toString());
+      setDate(data.date);
+      setPatient(data.patient);
+      setReferral(data.referral);
     });
     fetchReferral();
   }, []);
@@ -37,7 +40,11 @@ export default function ReferralDetailsPage() {
       const payload = {
         referral_outcome: outcome,
       };
-      patchReferral(payload, referral!.id.toString());
+      if (referral == undefined) {
+        toast.error('Error updating null referral');
+        return;
+      }
+      patchReferral(payload, referral.id.toString());
     };
     patch()
       .then(() => toast.success('Updated successfully!'))
@@ -48,7 +55,7 @@ export default function ReferralDetailsPage() {
     <div className="p-2">
       <h1 className="pt-4">Referral Details</h1>
       {patient != null ? (
-        <PatientInfoHeaderSection patient={patient!} showVisit={false} />
+        <PatientInfoHeaderSection patient={patient} showVisit={false} />
       ) : (
         <h1>Loading patient...</h1>
       )}
@@ -69,7 +76,11 @@ export default function ReferralDetailsPage() {
               </tr>
               <tr>
                 <td className="whitespace-nowrap">Referral Date</td>
-                <td>{new Date(date!).toDateString()}</td>
+                <td>
+                  {date == undefined
+                    ? 'No Date'
+                    : new Date(date).toDateString()}
+                </td>
               </tr>
               <tr>
                 <td className="whitespace-nowrap">Referral For</td>
@@ -81,16 +92,18 @@ export default function ReferralDetailsPage() {
               </tr>
               <tr>
                 <td className="whitespace-nowrap">Referral Outcome</td>
-                {
+                {referral == undefined ? (
+                  <p>No Referral Found</p>
+                ) : (
                   <td className="w-full">
                     <div className="flex">
                       {editable ? (
                         <div className="w-full">
                           <textarea
-                            value={referral!.referral_outcome}
+                            value={referral?.referral_outcome || ''}
                             onChange={item =>
                               setReferral({
-                                ...referral!,
+                                ...referral,
                                 referral_outcome: item.target.value,
                               })
                             }
@@ -112,7 +125,7 @@ export default function ReferralDetailsPage() {
                             colour="green"
                             onClick={() => {
                               setEditable(false);
-                              saveOutcome(referral!.referral_outcome);
+                              saveOutcome(referral.referral_outcome);
                             }}
                           />
                         </div>
@@ -127,7 +140,7 @@ export default function ReferralDetailsPage() {
                       )}
                     </div>
                   </td>
-                }
+                )}
               </tr>
             </tbody>
           </table>
