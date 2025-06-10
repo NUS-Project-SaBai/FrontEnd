@@ -69,7 +69,7 @@ export default function ReferralDetailsPage() {
                 <td>
                   <div>
                     {referral != undefined && (
-                      <ReferralStateDropdown ref={referral} />
+                      <ReferralStateDropdown referral={referral} />
                     )}
                   </div>
                 </td>

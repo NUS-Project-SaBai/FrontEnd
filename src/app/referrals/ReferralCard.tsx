@@ -7,11 +7,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ReferralCard({
-  ref,
+  referral,
   patient,
   date,
 }: {
-  ref: Referral;
+  referral: Referral;
   patient: Patient;
   date: Date;
 }) {
@@ -52,14 +52,14 @@ export default function ReferralCard({
       </td>
       <td>
         <div className="grid items-center justify-center p-2">
-          <Link href={`./referrals/${ref.id}`}>
+          <Link href={`./referrals/${referral.id}`}>
             <Button text="Details" colour="blue" />
           </Link>
         </div>
       </td>
       <td>
         <div className="grid items-center justify-center p-2">
-          <ReferralStateDropdown ref={ref} />
+          <ReferralStateDropdown referral={referral} />
         </div>
       </td>
     </tr>

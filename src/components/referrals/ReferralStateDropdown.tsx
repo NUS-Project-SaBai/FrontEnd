@@ -6,7 +6,11 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { LoadingUI } from '../LoadingUI';
 
-export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
+export default function ReferralStateDropdown({
+  referral,
+}: {
+  referral: Referral;
+}) {
   const referralState = [
     'None',
     'New',
@@ -22,9 +26,9 @@ export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
 
   useEffect(() => {
     const fetchConsults = async () => {
-      getConsultByID(ref.consult.toString())
+      getConsultByID(referral.consult.toString())
         .then(() => {
-          setReferralStatus(ref.referral_state);
+          setReferralStatus(referral.referral_state);
         })
         .catch(e => console.log(e));
     };
@@ -36,7 +40,7 @@ export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
       const payload = {
         referral_state: e.target.value,
       };
-      await patchReferral(payload, ref.id.toString());
+      await patchReferral(payload, referral.id.toString());
     });
     patch()
       .then(() => {

@@ -31,6 +31,7 @@ export function ConsultationForm({
     event.preventDefault();
 
     // TODO: simplify backend to not require nesting of consult fields?
+    // TODO: and also to let it handle the creation of referral.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const jsonPayload: { [key: string]: any } = {
       consult: {

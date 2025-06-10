@@ -37,12 +37,12 @@ export default function ReferralPage() {
             </tr>
           </thead>
           <tbody>
-            {referralWithDetails.map(ref => (
+            {referralWithDetails.map(referral => (
               <ReferralCard
-                key={ref.referral.id}
-                ref={ref.referral}
-                patient={ref.patient}
-                date={ref.date}
+                key={referral.referral.id}
+                referral={referral.referral}
+                patient={referral.patient}
+                date={referral.date}
               />
             ))}
           </tbody>
