@@ -1,8 +1,10 @@
 import { getConsultByID } from '@/data/consult/getConsult';
 import { patchReferral } from '@/data/referrals/patchReferral';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Referral } from '@/types/Referral';
 import { ChangeEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { LoadingUI } from '../LoadingUI';
 
 export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
   const referralState = [
@@ -16,6 +18,7 @@ export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
   ];
 
   const [referralStatus, setReferralStatus] = useState<string>('');
+  const { isLoading, withLoading } = useLoadingState(false);
 
   useEffect(() => {
     const fetchConsults = async () => {
@@ -29,12 +32,12 @@ export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
   }, []);
 
   function dropdownChanged(e: ChangeEvent<HTMLSelectElement>) {
-    const patch = async () => {
+    const patch = withLoading(async () => {
       const payload = {
         referral_state: e.target.value,
       };
-      patchReferral(payload, ref.id.toString());
-    };
+      await patchReferral(payload, ref.id.toString());
+    });
     patch()
       .then(() => {
         setReferralStatus(e.target.value);
@@ -47,6 +50,8 @@ export default function ReferralStateDropdown({ ref }: { ref: Referral }) {
     <div className="max-w-40">
       {referralStatus == '' ? (
         <p>Loading...</p>
+      ) : isLoading ? (
+        <LoadingUI message="Updating" />
       ) : (
         <select
           name="status"
