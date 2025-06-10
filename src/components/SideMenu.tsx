@@ -5,6 +5,7 @@ import {
   ArrowLeftStartOnRectangleIcon,
   BeakerIcon,
   ClipboardDocumentListIcon,
+  EyeIcon,
   IdentificationIcon,
   PencilIcon,
   UserCircleIcon,
@@ -41,6 +42,11 @@ const navItems: NavItemData[] = [
     name: 'Pharmacy Stock',
     href: '/pharmacy/stock',
     icon: BeakerIcon,
+  },
+  {
+    name: 'Vision',
+    href: '/vision',
+    icon: EyeIcon,
   },
 ];
 
