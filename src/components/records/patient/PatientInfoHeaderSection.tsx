@@ -54,8 +54,8 @@ export function PatientInfoHeaderSection({
           <p>{patient.name}</p>
         </div>
 
-        {showVisit ? (
-          visits == null ? (
+        {showVisit &&
+          (visits == null ? (
             <div className="w-fit text-nowrap text-lg">
               <LoadingUI message="Loading Visits..." />
             </div>
@@ -67,10 +67,7 @@ export function PatientInfoHeaderSection({
             <div>
               <VisitDropdown name="visit_date" visits={visits} />
             </div>
-          )
-        ) : (
-          <></>
-        )}
+          ))}
 
         <div>
           <p>Age:</p>

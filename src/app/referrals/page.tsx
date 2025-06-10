@@ -21,7 +21,7 @@ export default function ReferralPage() {
     const patientsTemp: Patient[] = [];
     const fetchReferrals = withLoading(async () => {
       const data = await getReferrals();
-      setReferralsWithPatient(data!);
+      setReferralsWithPatient(data);
 
       referralWithDetails.forEach(item => patients.push(item.patient));
       setPatients(patientsTemp);
@@ -52,7 +52,7 @@ export default function ReferralPage() {
               </tr>
             </thead>
             <tbody>
-              {referralWithDetails!.map(ref => (
+              {referralWithDetails.map(ref => (
                 <ReferralCard
                   key={ref.referral.id}
                   ref={ref.referral}
