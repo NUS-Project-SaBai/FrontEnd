@@ -27,7 +27,7 @@ export function UploadDocument({ patient }: { patient: Patient }) {
       <ReactModal isOpen={isOpen} ariaHideApp={false}>
         <FormProvider {...useFormReturn}>
           <form
-            onSubmit={async e => {
+            onSubmit={withLoading(async e => {
               e.preventDefault();
               useFormReturn.handleSubmit(
                 async vals => {
@@ -53,14 +53,12 @@ export function UploadDocument({ patient }: { patient: Patient }) {
                   formData.append('patient_pk', patient.pk.toString());
 
                   try {
-                    await withLoading(async () => {
-                      await postUpload(formData);
-                      useFormReturn.reset();
-                      setIsOpen(false);
-                      toast.success(
-                        'File uploaded successfully as \n' + labeledDocumentName
-                      );
-                    })();
+                    await postUpload(formData);
+                    useFormReturn.reset();
+                    setIsOpen(false);
+                    toast.success(
+                      'File uploaded successfully as \n' + labeledDocumentName
+                    );
                   } catch (err) {
                     console.log(err);
                     toast.error('Error uploading file:\n' + err);
@@ -68,7 +66,7 @@ export function UploadDocument({ patient }: { patient: Patient }) {
                 },
                 () => toast.error('Invalid/Missing File/input')
               )();
-            }}
+            })}
           >
             <RHFInputField
               name="file"
