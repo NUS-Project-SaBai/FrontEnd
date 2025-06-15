@@ -101,8 +101,6 @@ export function RecordConsultationTable({
               consult={consult}
               openConsultModal={consult => setConsult(consult)}
               onGeneratePDF={() => {
-                console.log('Consult ID for PDF:', consult.id);
-
                 getPdfConsult(consult.id).then(payload => {
                   if (payload == null) return;
                   const url = URL.createObjectURL(payload);
