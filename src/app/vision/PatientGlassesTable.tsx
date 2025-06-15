@@ -13,7 +13,7 @@ export function PatientGlassesTable({ patients }: { patients: Patient[] }) {
           <th className="w-[20%]">Photo</th>
           <th className="w-[40%]">Full Name</th>
           <th className="w-[10%]">Record</th>
-          <th className="w-[20%]">Add Glasses</th>
+          <th className="w-[20%]">Add/Update Glasses</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-300">
@@ -48,8 +48,8 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       </td>
       <td>
         {/* vitals */}
-        <Link href={`/vision/add-glasses?id=${patient.pk}`}>
-          <Button text="Add" colour="green" />
+        <Link href={`/vision/add-update-glasses?id=${patient.pk}`}>
+          <Button text="Add/Edit" colour="green" />
         </Link>
       </td>
     </tr>

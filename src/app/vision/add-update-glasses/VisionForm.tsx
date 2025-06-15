@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/Button';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { createVision } from '@/data/vision/createVision';
 import { patchVision } from '@/data/vision/patchVision';
 //import { Patient } from '@/types/Patient';
 import { Vision } from '@/types/Vision';
@@ -27,11 +28,23 @@ export function VisionForm({
 
     handleSubmit(
       async (data: FieldValues) => {
-        data.visit = visitId;
-        patchVision(data as Vision).then(() => {
-          reset();
-          toast.success('Updated Vision');
-        });
+        data.visit_id = visitId;
+
+        if (curVision.visit_id === undefined) {
+          // Create new vision record with JSON
+          createVision(data as Vision).then(() => {
+            reset();
+            toast.success('Created Vision');
+          });
+        } else {
+          // Update existing vision record with JSON
+          data.id = curVision.id; // Ensure we are updating the correct record
+          console.log('Updating vision with data:', data);
+          patchVision(data as Vision).then(() => {
+            reset();
+            toast.success('Updated Vision');
+          });
+        }
       },
       () => {
         toast.error('Invalid/Missing Input');
@@ -45,46 +58,22 @@ export function VisionForm({
         onSubmit={submitVisionFormHandler}
         className="rounded-lg bg-blue-50 p-4"
       >
-        <h2>Visual Acuity</h2>
+        <h2>Glasses Degree</h2>
         <div className="grids-col-1 grid gap-2 md:grid-cols-2">
           <RHFInputField
-            name="right_eye_degree"
-            label="Right Eye (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVision.right_eye_degree}
-          />
-          <RHFInputField
-            name="left_eye_degree"
-            label="Left Eye (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVision.left_eye_degree}
-          />
-          <RHFInputField
-            name="right_eye_pinhole"
-            label="Right Eye Pinhole (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVision.right_eye_pinhole}
-          />
-          <RHFInputField
-            name="left_eye_pinhole"
-            label="Left Eye Pinhole (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVision.left_eye_pinhole}
-          />
-          <RHFInputField
-            name="left_eye_prescribed_glasses"
-            label="Left Eye Prescribed Glasses Degree (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVision.left_eye_glasses_degree}
-          />
-          <RHFInputField
-            name="right_eye_prescribed_glasses"
+            name="right_glasses_degree"
             label="Right Eye Prescribed Glasses Degree (Fraction eg. 6/6)"
             type="text"
-            placeholder={curVision.right_eye_glasses_degree}
+            placeholder={curVision.right_glasses_degree}
+          />
+          <RHFInputField
+            name="left_glasses_degree"
+            label="Left Eye Prescribed Glasses Degree (Fraction eg. 6/6)"
+            type="text"
+            placeholder={curVision.left_glasses_degree}
           />
         </div>
-        <Button text="Update" colour="green" type="submit" />
+        <Button text="Add/Update" colour="green" type="submit" />
       </form>
     </FormProvider>
   );

@@ -4,7 +4,9 @@ import { PastVisionTable } from '@/components/vision/PastVisionTable';
 import { getPatientById } from '@/data/patient/getPatient';
 //import { getVisitById } from '@/data/visit/getVisit';
 import { getVisionByVisit } from '@/data/vision/getVision';
+import { getVitalByVisit } from '@/data/vital/getVital';
 import { EMPTY_VISION } from '@/types/Vision';
+import { EMPTY_VITAL } from '@/types/Vital';
 import { VisionForm } from './VisionForm';
 
 export default async function PatientVisionPage({
@@ -27,15 +29,11 @@ export default async function PatientVisionPage({
     );
   }
 
-  const [patient, curVision] = await Promise.all([
+  const [patient, curVision, curVital] = await Promise.all([
     getPatientById(patientId),
-    getVisionByVisit(visitId).then(vision => vision ?? EMPTY_VISION), // Once getVisionByVisit is implemented, it will return the vision data or an empty vision object
+    getVisionByVisit(visitId).then(vision => vision ?? EMPTY_VISION),
+    getVitalByVisit(visitId).then(vital => vital ?? EMPTY_VITAL),
   ]);
-
-  // const patientVisitAge = calculateDobDifference(
-  //   new Date(patient.date_of_birth),
-  //   visitDate
-  // );
 
   return (
     <div className="p-2">
@@ -47,11 +45,11 @@ export default async function PatientVisionPage({
       <div className="mb-4 mt-2 grid grid-cols-2 gap-4">
         <div>
           <h2 className="mb-2 text-lg font-semibold">Past Glasses Records</h2>
-          <PastVisionTable vision={curVision} />
+          <PastVisionTable vision={curVision} vital={curVital} />
         </div>
 
         <div>
-          <h2 className="mb-2 text-lg font-semibold">Update Glasses</h2>
+          <h2 className="mb-2 text-lg font-semibold">Add/Update Glasses</h2>
           <VisionForm visitId={visitId} curVision={curVision} />
         </div>
       </div>

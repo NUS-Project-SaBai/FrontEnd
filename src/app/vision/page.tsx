@@ -21,7 +21,7 @@ import { Suspense, useState } from 'react';
 //import toast from 'react-hot-toast';
 import { PatientGlassesTable } from './PatientGlassesTable';
 
-export default function RegistrationPage() {
+export default function VisionPage() {
   //const useFormReturn = useForm({ resetOptions: { keepDirtyValues: true } });
   //const [patientList, setPatientList] = useState<Patient[]>([]);
   //const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);

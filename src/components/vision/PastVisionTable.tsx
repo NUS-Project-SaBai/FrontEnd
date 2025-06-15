@@ -1,6 +1,7 @@
 import { DisplayField } from '@/components/DisplayField';
 import { GenderType } from '@/types/Gender';
 import { Vision } from '@/types/Vision';
+import { Vital } from '@/types/Vital';
 
 type VisionFieldsDataType = {
   label: string;
@@ -10,21 +11,27 @@ type VisionFieldsDataType = {
   gender?: GenderType;
 };
 
-export function PastVisionTable({ vision }: { vision: Vision }) {
+export function PastVisionTable({
+  vision,
+  vital,
+}: {
+  vision: Vision;
+  vital: Vital;
+}) {
   const visionFields: VisionFieldsDataType[] = [
-    { label: 'Right Eye', value: vision.right_eye_degree },
-    { label: 'Left Eye', value: vision.left_eye_degree },
+    { label: 'Right Eye', value: vital.right_eye_degree },
+    { label: 'Left Eye', value: vital.left_eye_degree },
     { label: '', value: '' },
-    { label: 'Right Eye Pinhole', value: vision.right_eye_pinhole },
-    { label: 'Left Eye Pinhole', value: vision.left_eye_pinhole },
+    { label: 'Right Eye Pinhole', value: vital.right_eye_pinhole },
+    { label: 'Left Eye Pinhole', value: vital.left_eye_pinhole },
     { label: '', value: '' },
     {
       label: 'Right Eye Prescribed Glasses Degree',
-      value: vision.right_eye_glasses_degree,
+      value: vision.right_glasses_degree,
     },
     {
       label: 'Left Eye Prescribed Glasses Degree',
-      value: vision.left_eye_glasses_degree,
+      value: vision.left_glasses_degree,
     },
     { label: '', value: '' },
   ];
