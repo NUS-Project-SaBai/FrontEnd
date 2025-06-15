@@ -3,6 +3,7 @@ import { VillageContext } from '@/context/VillageContext';
 import { useUser } from '@auth0/nextjs-auth0';
 import {
   ArrowLeftStartOnRectangleIcon,
+  ArrowTrendingUpIcon,
   BeakerIcon,
   ClipboardDocumentListIcon,
   EyeIcon,
@@ -47,6 +48,11 @@ const navItems: NavItemData[] = [
     name: 'Vision',
     href: '/vision',
     icon: EyeIcon,
+  },
+  {
+    name: 'Referrals',
+    href: '/referrals',
+    icon: ArrowTrendingUpIcon,
   },
 ];
 

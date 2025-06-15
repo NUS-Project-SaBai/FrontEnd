@@ -4,6 +4,7 @@ import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { DiagnosisField } from '@/components/records/consultation/DiagnosisField';
 import { createConsult } from '@/data/consult/createConsult';
+import { createReferral } from '@/data/referrals/createReferral';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
 import { FormEvent } from 'react';
@@ -30,6 +31,7 @@ export function ConsultationForm({
     event.preventDefault();
 
     // TODO: simplify backend to not require nesting of consult fields?
+    // TODO: and also to let it handle the creation of referral.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const jsonPayload: { [key: string]: any } = {
       consult: {
@@ -59,17 +61,58 @@ export function ConsultationForm({
           }
         });
 
+        const referralPayload: {
+          [key: string]: Patient | Date | string | number | null;
+        } = {};
+        let consultID;
+
+        Object.entries(data).forEach(item => {
+          if (item[0] == 'referral_notes' || item[0] == 'referred_for') {
+            referralPayload[item[0]] = item[1];
+          }
+        });
+
         try {
           const result = await createConsult(jsonPayload);
           if (result == null) {
             toast.error('Error submitting consultation form');
           } else {
+            consultID = result.id;
             toast.success('Medical Consult Completed!');
             reset();
           }
         } catch (error) {
           console.error('Error submitting consultation form:', error);
           toast.error('Unknown Error');
+        }
+
+        // only submit the form if 'referred_for' is filled in and is not 'Not Referred'
+        if ('referred_for' in referralPayload) {
+          if (referralPayload['referred_for'] !== '') {
+            if (!('referral_notes' in referralPayload)) {
+              referralPayload['referral_notes'] = 'No notes entered';
+            }
+
+            referralPayload['referral_state'] = 'New';
+            referralPayload['consult'] = Number(consultID);
+            referralPayload['referral_outcome'] = '';
+
+            try {
+              const result = createReferral(referralPayload);
+              result
+                .then(
+                  () => {
+                    toast.success('Referral submitted!');
+                    reset();
+                  },
+                  () => console.log('error')
+                )
+                .catch(() => toast.error('Error submitting consultation form'));
+            } catch (error) {
+              console.error('Error submitting referral form:', error);
+              toast.error('Unknown Error');
+            }
+          }
         }
       },
 
