@@ -10,6 +10,7 @@ type RHFDropdownProps = {
   options: OptionData[];
   defaultValue?: string;
   isRequired?: boolean;
+  className?: string;
 };
 
 export function RHFDropdown({
@@ -18,6 +19,7 @@ export function RHFDropdown({
   options,
   defaultValue = '',
   isRequired = false,
+  className = '',
 }: RHFDropdownProps) {
   const { register, formState, setValue } = useFormContext();
   // Update the form value whenever defaultValue changes
@@ -28,7 +30,7 @@ export function RHFDropdown({
   }, [defaultValue, name, setValue]);
 
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={name} className="text-sm font-medium">
         {label}
         {isRequired && <span className="text-red-500">*</span>}

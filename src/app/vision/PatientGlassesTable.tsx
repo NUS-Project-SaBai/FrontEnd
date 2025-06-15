@@ -4,20 +4,19 @@ import { Patient } from '@/types/Patient';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export function PatientRecordTable({ patients }: { patients: Patient[] }) {
+export function PatientGlassesTable({ patients }: { patients: Patient[] }) {
   return (
     <table className="w-full divide-y-2 divide-gray-500 text-left">
-      <thead className="z-1 sticky top-[108px] bg-white">
+      <thead>
         <tr className="py-8">
           <th className="w-[10%]">ID</th>
           <th className="w-[20%]">Photo</th>
           <th className="w-[40%]">Full Name</th>
           <th className="w-[10%]">Record</th>
-          <th className="w-[10%]">Vitals</th>
-          <th className="w-[10%]">Consultation</th>
+          <th className="w-[20%]">Add/Update Glasses</th>
         </tr>
       </thead>
-      <tbody className="divide-y">
+      <tbody className="divide-y divide-gray-300">
         {patients.map(patient => (
           <PatientRecordRow key={patient.pk} patient={patient} />
         ))}
@@ -49,14 +48,8 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       </td>
       <td>
         {/* vitals */}
-        <Link href={`/records/patient-vitals?id=${patient.pk}`}>
-          <Button text="Create" colour="green" />
-        </Link>
-      </td>
-      <td>
-        {/* consultation */}
-        <Link href={`/records/patient-consultation?id=${patient.pk}`}>
-          <Button text="Create" colour="green" />
+        <Link href={`/vision/add-update-glasses?id=${patient.pk}`}>
+          <Button text="Add/Edit" colour="green" />
         </Link>
       </td>
     </tr>
