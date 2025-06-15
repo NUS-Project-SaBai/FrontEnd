@@ -21,7 +21,6 @@ export default function RegistrationPage() {
   const { isLoading, withLoading } = useLoadingState(true);
   const { isLoading: isSubmitting, withLoading: withLoadingSubmit } =
     useLoadingState(false);
-
   useEffect(() => {
     refreshPatientList();
     // eslint-disable-next-line react-hooks/exhaustive-deps

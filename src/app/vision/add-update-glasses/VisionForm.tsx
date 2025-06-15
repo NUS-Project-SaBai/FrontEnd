@@ -4,18 +4,15 @@ import { Button } from '@/components/Button';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { createVision } from '@/data/vision/createVision';
 import { patchVision } from '@/data/vision/patchVision';
-//import { Patient } from '@/types/Patient';
 import { Vision } from '@/types/Vision';
 import { FormEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 export function VisionForm({
-  //patient,
   visitId,
   curVision,
 }: {
-  //patient: Patient;
   visitId: string;
   curVision: Vision; // can be EMPTY_GLASSES
 }) {
@@ -39,7 +36,6 @@ export function VisionForm({
         } else {
           // Update existing vision record with JSON
           data.id = curVision.id; // Ensure we are updating the correct record
-          console.log('Updating vision with data:', data);
           patchVision(data as Vision).then(() => {
             reset();
             toast.success('Updated Vision');
