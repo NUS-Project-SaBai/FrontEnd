@@ -27,46 +27,48 @@ export function UploadDocument({ patient }: { patient: Patient }) {
       <ReactModal isOpen={isOpen} ariaHideApp={false}>
         <FormProvider {...useFormReturn}>
           <form
-            onSubmit={withLoading(async e => {
+            onSubmit={async e => {
               e.preventDefault();
-              useFormReturn.handleSubmit(
-                async vals => {
-                  const file = vals.file[0];
+              withLoading(
+                useFormReturn.handleSubmit(
+                  async vals => {
+                    const file = vals.file[0];
 
-                  const currentDate = moment().format('YYYY-MM-DD');
-                  const patientIdentifier = patient.patient_id;
-                  const documentName: string =
-                    vals.file_name == ''
-                      ? file.name
-                      : vals.file_name +
-                        file.name.slice(file.name.lastIndexOf('.'));
+                    const currentDate = moment().format('YYYY-MM-DD');
+                    const patientIdentifier = patient.patient_id;
+                    const documentName: string =
+                      vals.file_name == ''
+                        ? file.name
+                        : vals.file_name +
+                          file.name.slice(file.name.lastIndexOf('.'));
 
-                  const labeledDocumentName = [
-                    patientIdentifier,
-                    currentDate,
-                    documentName,
-                  ].join('_');
+                    const labeledDocumentName = [
+                      patientIdentifier,
+                      currentDate,
+                      documentName,
+                    ].join('_');
 
-                  const formData = new FormData();
-                  formData.append('file', file, labeledDocumentName);
-                  formData.append('file_name', labeledDocumentName);
-                  formData.append('patient_pk', patient.pk.toString());
+                    const formData = new FormData();
+                    formData.append('file', file, labeledDocumentName);
+                    formData.append('file_name', labeledDocumentName);
+                    formData.append('patient_pk', patient.pk.toString());
 
-                  try {
-                    await postUpload(formData);
-                    useFormReturn.reset();
-                    setIsOpen(false);
-                    toast.success(
-                      'File uploaded successfully as \n' + labeledDocumentName
-                    );
-                  } catch (err) {
-                    console.log(err);
-                    toast.error('Error uploading file:\n' + err);
-                  }
-                },
-                () => toast.error('Invalid/Missing File/input')
+                    try {
+                      await postUpload(formData);
+                      useFormReturn.reset();
+                      setIsOpen(false);
+                      toast.success(
+                        'File uploaded successfully as \n' + labeledDocumentName
+                      );
+                    } catch (err) {
+                      console.log(err);
+                      toast.error('Error uploading file:\n' + err);
+                    }
+                  },
+                  () => toast.error('Invalid/Missing File/input')
+                )
               )();
-            })}
+            }}
           >
             <RHFInputField
               name="file"
