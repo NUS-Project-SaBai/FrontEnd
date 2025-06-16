@@ -18,7 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <Auth0Provider>
         <VillageProvider>
-          <body className="flex h-screen">
+          <body
+            className="vsc-initialized flex h-screen" /* add vsc-initialized to fix hydration error triggered by the Video Speed Controller Chrome extension */
+          >
             <SideMenu />
             <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
             <div className="flex-auto overflow-auto">{children}</div>
