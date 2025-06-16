@@ -19,7 +19,7 @@ export default function RootLayout({
       <Auth0Provider>
         <VillageProvider>
           <body
-            className="vsc-initialized flex h-screen" /* add vsc-initialized to fix hydration error triggered by the Video Speed Controller Chrome extension */
+            className="vsc-initialized flex h-screen" /* add vsc-initialized to fix hydration error triggered by the Video Speed Controller Chrome extension https://stackoverflow.com/a/53400956/7577786 */
           >
             <SideMenu />
             <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
