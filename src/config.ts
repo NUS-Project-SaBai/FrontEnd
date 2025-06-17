@@ -5,7 +5,10 @@ export const APP_CONFIG: {
   IS_PROD: boolean;
 } = {
   OFFLINE: process.env.OFFLINE == 'true',
-  BACKEND_API_URL: process.env.BACKEND_API_URL || 'http://localhost:8000',
+  BACKEND_API_URL:
+    process.env.NEXT_PUBLIC_BACKEND_API_URL ||
+    process.env.BACKEND_API_URL || // TODO: remove this line when everyone is synced
+    'http://localhost:8000',
   APP_BASE_URL:
     process.env.APP_BASE_URL ||
     (process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : undefined),

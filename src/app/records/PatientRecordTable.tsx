@@ -1,5 +1,5 @@
 import { Button } from '@/components/Button';
-import { VILLAGES } from '@/constants';
+import { VILLAGES_AND_ALL } from '@/constants';
 import { Patient } from '@/types/Patient';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,7 +7,7 @@ import Link from 'next/link';
 export function PatientRecordTable({ patients }: { patients: Patient[] }) {
   return (
     <table className="w-full divide-y-2 divide-gray-500 text-left">
-      <thead>
+      <thead className="z-1 sticky top-[108px] bg-white">
         <tr className="py-8">
           <th className="w-[10%]">ID</th>
           <th className="w-[20%]">Photo</th>
@@ -17,7 +17,7 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
           <th className="w-[10%]">Consultation</th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-gray-300">
+      <tbody className="divide-y">
         {patients.map(patient => (
           <PatientRecordRow key={patient.pk} patient={patient} />
         ))}
@@ -29,7 +29,11 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
 function PatientRecordRow({ patient }: { patient: Patient }) {
   return (
     <tr>
-      <td className={'font-semibold ' + VILLAGES[patient.village_prefix].color}>
+      <td
+        className={
+          'font-semibold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+        }
+      >
         {patient.patient_id}
       </td>
       <td>

@@ -3,13 +3,8 @@ import { VillagePrefix } from './types/VillagePrefixEnum';
 type VillageInfo = { key: VillagePrefix; label: string; color: string };
 
 export const VILLAGES: {
-  [key in VillagePrefix]: VillageInfo;
+  [key in Exclude<VillagePrefix, VillagePrefix.ALL>]: VillageInfo;
 } = {
-  [VillagePrefix.ALL]: {
-    key: VillagePrefix.ALL,
-    label: 'ALL',
-    color: 'text-black-400',
-  },
   [VillagePrefix.PC]: {
     key: VillagePrefix.PC,
     label: 'PC',
@@ -35,4 +30,15 @@ export const VILLAGES: {
     label: 'Smong',
     color: 'text-purple-400',
   },
+};
+
+export const VILLAGES_AND_ALL: {
+  [key in VillagePrefix]: VillageInfo;
+} = {
+  [VillagePrefix.ALL]: {
+    key: VillagePrefix.ALL,
+    label: 'ALL',
+    color: 'text-black-400',
+  },
+  ...VILLAGES,
 };

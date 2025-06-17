@@ -3,6 +3,7 @@ import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
 import { LoadingUI } from '@/components/LoadingUI';
 import { DiagnosesTable } from '@/components/records/consultation/DiagnosesTable';
+import { getPdfConsult } from '@/data/consult/getPdfConsult';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
@@ -31,6 +32,7 @@ export function RecordConsultationTable({
   } else if (consults.length === 0) {
     return <p>No Consultations Found</p>;
   }
+
   return (
     <>
       <ReactModal isOpen={consult != null} ariaHideApp={false}>
@@ -55,6 +57,10 @@ export function RecordConsultationTable({
               <DisplayField
                 label="Referred for"
                 content={consult.referred_for || 'NIL'}
+              />
+              <DisplayField
+                label="Referred Notes"
+                content={consult.referral_notes || 'NIL'}
               />
               <DisplayField
                 label="Remarks"
@@ -94,6 +100,13 @@ export function RecordConsultationTable({
               key={consult.id}
               consult={consult}
               openConsultModal={consult => setConsult(consult)}
+              onGeneratePDF={() => {
+                getPdfConsult(consult.id).then(payload => {
+                  if (payload == null) return;
+                  const url = URL.createObjectURL(payload);
+                  window.open(url, '_blank');
+                });
+              }}
             />
           ))}
         </tbody>
