@@ -7,7 +7,6 @@ import {
   BeakerIcon,
   ClipboardDocumentListIcon,
   EyeIcon,
-  IdentificationIcon,
   PencilIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
@@ -25,12 +24,7 @@ type NavItemData = {
 };
 const navItems: NavItemData[] = [
   {
-    name: 'Registration',
-    href: '/registration',
-    icon: IdentificationIcon,
-  },
-  {
-    name: 'Patient Records',
+    name: 'Patients',
     href: '/records',
     icon: ClipboardDocumentListIcon,
   },
