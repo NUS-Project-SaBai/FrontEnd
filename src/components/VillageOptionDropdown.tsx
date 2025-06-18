@@ -29,7 +29,7 @@ export function VillageOptionDropdown({
         value={village}
         onChange={e => handleVillageChange(e.target.value as VillagePrefix)}
         className={
-          'w-full rounded border-2 p-1' +
+          'h-[4.5vh] w-full rounded border-2 p-1' +
           (village == VillagePrefix.ALL
             ? 'text-gray-800'
             : VILLAGES_AND_ALL[village].color) +

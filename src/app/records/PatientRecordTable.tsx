@@ -6,23 +6,33 @@ import Link from 'next/link';
 
 export function PatientRecordTable({ patients }: { patients: Patient[] }) {
   return (
-    <table className="w-full divide-y-2 divide-gray-500 text-left">
-      <thead className="z-1 sticky top-[108px] bg-white">
-        <tr className="py-8">
-          <th className="w-[10%]">ID</th>
-          <th className="w-[20%]">Photo</th>
-          <th className="w-[40%]">Full Name</th>
-          <th className="w-[10%]">Record</th>
-          <th className="w-[10%]">Vitals</th>
-          <th className="w-[10%]">Consultation</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y">
-        {patients.map(patient => (
-          <PatientRecordRow key={patient.pk} patient={patient} />
-        ))}
-      </tbody>
-    </table>
+    <div className="overflow-auto">
+      <table className="w-full table-auto text-left">
+        {/* <thead className="z-1 sticky top-0 bg-white">
+          <tr className="py-8">
+            <th className="w-[10%]">ID</th>
+            <th className="w-[20%]">Photo</th>
+            <th className="w-[40%]">Full Name</th>
+            <th className="w-[10%]">Record</th>
+            <th className="w-[10%]">Vitals</th>
+            <th className="w-[10%]">Consultation</th>
+          </tr>
+        </thead> */}
+        <colgroup>
+          <col className="w-[10%]" />
+          <col className="w-[15%]" />
+          <col className="w-[45%]" />
+          <col className="w-[10%]" />
+          <col className="w-[10%]" />
+          <col className="w-[10%]" />
+        </colgroup>
+        <tbody className="divide-y">
+          {patients.map(patient => (
+            <PatientRecordRow key={patient.pk} patient={patient} />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

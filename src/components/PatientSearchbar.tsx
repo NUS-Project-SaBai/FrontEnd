@@ -60,28 +60,26 @@ export function PatientSearchInput({
   }, 500);
 
   return (
-    <div className="flex-grow gap-x-2">
-      <div className="flex">
-        <VillageOptionDropdown
-          village={village}
-          handleVillageChange={setVillage}
-          label="Search by Village"
+    <div className="flex flex-grow gap-x-2">
+      <VillageOptionDropdown
+        village={village}
+        handleVillageChange={setVillage}
+        label="Search by Village"
+      />
+      <div className="flex-grow">
+        <label htmlFor="patientSearch" className="block">
+          Input Patient ID/Name to search
+        </label>
+        <input
+          id="patientSearch"
+          className="h-[4.5vh] w-full disabled:bg-gray-200"
+          defaultValue={searchParams.get('query')?.toString()}
+          placeholder={isLoading ? 'Loading patients...' : ''}
+          disabled={isLoading}
+          onChange={e => {
+            debouncedSearch(e.target.value);
+          }}
         />
-        <div className="flex-grow">
-          <label htmlFor="patientSearch" className="block">
-            Input Patient ID/Name to search
-          </label>
-          <input
-            id="patientSearch"
-            className="w-full disabled:bg-gray-200"
-            defaultValue={searchParams.get('query')?.toString()}
-            placeholder={isLoading ? 'Loading patients...' : ''}
-            disabled={isLoading}
-            onChange={e => {
-              debouncedSearch(e.target.value);
-            }}
-          />
-        </div>
       </div>
     </div>
   );

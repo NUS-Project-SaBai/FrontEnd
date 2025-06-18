@@ -34,8 +34,8 @@ export function Button({
     <button
       className={
         isLoading
-          ? 'm-0.5 rounded-md bg-gray-300 opacity-50 hover:cursor-default'
-          : `m-0.5 rounded-md border-2 p-2 shadow-sm hover:shadow hover:outline hover:outline-black ` +
+          ? 'rounded-md bg-gray-300 opacity-50 hover:cursor-default'
+          : `rounded-md p-2 shadow-sm hover:shadow hover:outline hover:outline-gray-400 ` +
             (colour == 'white'
               ? 'bg-white'
               : `bg-${colour}-500 border-0 text-white`)
