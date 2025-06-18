@@ -18,7 +18,7 @@ export default function VisionPage() {
       <Suspense fallback={<LoadingUI message="Loading search input..." />}>
         <PatientSearchInput
           setPatients={setPatients}
-          isLoading={isLoading}
+          // isLoading={isLoading}
           withLoading={withLoading}
         />
       </Suspense>

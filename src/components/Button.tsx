@@ -24,7 +24,7 @@ export function Button({
   const handleClick = async () => {
     try {
       setIsLoading(true);
-      await onClick();
+      onClick();
     } finally {
       setIsLoading(false);
     }

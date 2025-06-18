@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export function PatientRecordTable({ patients }: { patients: Patient[] }) {
   return (
-    <div className="overflow-auto">
+    <div className="flex-1 overflow-auto">
       <table className="w-full table-auto text-left">
         {/* <thead className="z-1 sticky top-0 bg-white">
           <tr className="py-8">
