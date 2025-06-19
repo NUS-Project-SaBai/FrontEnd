@@ -8,12 +8,14 @@ export function Button({
   type = 'button',
   colour = 'white',
   Icon = <></>,
+  moreStyles = '',
 }: {
   text: string;
   onClick?: (e: MouseEvent) => void;
   type?: 'submit' | 'button' | 'reset';
   colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';
   Icon?: ReactNode;
+  moreStyles?: string;
 }) {
   const [isLoading, setIsLoading] = useState(true);
   // makes the button interactive only when it is hydrated
@@ -33,12 +35,12 @@ export function Button({
   return (
     <button
       className={
-        isLoading
+        (isLoading
           ? 'rounded-md bg-gray-300 opacity-50 hover:cursor-default'
           : `rounded-md p-2 shadow-sm hover:shadow hover:outline hover:outline-gray-400 ` +
             (colour == 'white'
               ? 'bg-white'
-              : `bg-${colour}-500 border-0 text-white`)
+              : `bg-${colour}-500 border-0 text-white`)) + moreStyles
       }
       type={type}
       onClick={handleClick}

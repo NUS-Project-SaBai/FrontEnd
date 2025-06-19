@@ -60,9 +60,9 @@ export default function RecordPage() {
   };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col overflow-auto">
       <h1 className="-mb-2">Patients</h1>
-      <div className="z-1 sticky top-0 bg-white p-2 drop-shadow-md">
+      <div className="z-1 sticky top-0 bg-white p-2 drop-shadow-lg">
         <div className="flex gap-x-2">
           <PatientSearchInput
             setPatients={setPatients}
@@ -94,49 +94,3 @@ export default function RecordPage() {
     </div>
   );
 }
-
-// return (
-//   <div className="space-y-10">
-//     {/* Some tall content above */}
-//     <section className="flex h-64 items-center justify-center bg-gray-100">
-//       <p className="text-xl">Intro Content Above</p>
-//     </section>
-
-//     {/* Sticky Section */}
-//     <section className="relative">
-//       <h2 className="mb-4 text-2xl font-bold">User Table</h2>
-
-//       {/* Scrollable wrapper only for the table rows */}
-//       <div className="max-h-96 overflow-auto rounded-md border">
-//         <table className="min-w-full table-auto">
-//           <thead className="sticky top-0 z-10 bg-white">
-//             <tr>
-//               <th className="relative p-2 text-left">
-//                 Name
-//                 <div className="absolute bottom-0 left-0 w-full border-b border-black" />
-//               </th>
-//               <th className="relative p-2 text-left">
-//                 Age
-//                 {/* <div className="absolute bottom-0 left-0 w-full border-b border-black" /> */}
-//               </th>
-//             </tr>
-//           </thead>
-
-//           <tbody>
-//             {Array.from({ length: 30 }, (_, i) => (
-//               <tr key={i} className="odd:bg-gray-50">
-//                 <td className="border-b p-2">User {i + 1}</td>
-//                 <td className="border-b p-2">{20 + (i % 10)}</td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     </section>
-
-//     {/* Some more content below */}
-//     <section className="flex h-64 items-center justify-center bg-gray-200">
-//       <p className="text-xl">More Content Below</p>
-//     </section>
-//   </div>
-// );
