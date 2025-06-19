@@ -82,7 +82,7 @@ export default function RecordPage() {
       <div className="flex flex-1 p-2">
         <LoadingPage isLoading={isLoading} message="Loading Patients...">
           <PatientInfo patient={selectedPatient} />
-          <PatientRecordTable patients={patients} />
+          <PatientRecordTable patients={patients} setPatients={setPatients} />
         </LoadingPage>
         <ReactModal isOpen={isPatientFormOpen} ariaHideApp={false}>
           <FormProvider {...useFormReturn}>

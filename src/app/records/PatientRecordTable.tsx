@@ -1,22 +1,63 @@
 import { Button } from '@/components/Button';
 import { VILLAGES_AND_ALL } from '@/constants';
+import { getPatientById } from '@/data/patient/getPatient';
+import { createVisit } from '@/data/visit/createVisit';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
+import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
-export function PatientRecordTable({ patients }: { patients: Patient[] }) {
+export function PatientRecordTable({
+  patients,
+  setPatients,
+}: {
+  patients: Patient[];
+  setPatients: Dispatch<SetStateAction<Patient[]>>;
+}) {
   return (
     <div className="flex-1">
       {patients.map(patient => (
-        <PatientRecordRow key={patient.pk} patient={patient} />
+        <PatientRecordRow
+          key={patient.pk}
+          patient={patient}
+          setPatients={setPatients}
+        />
       ))}
     </div>
   );
 }
 
-function PatientRecordRow({ patient }: { patient: Patient }) {
+function PatientRecordRow({
+  patient,
+  setPatients,
+}: {
+  patient: Patient;
+  setPatients: Dispatch<SetStateAction<Patient[]>>;
+}) {
+  const { withLoading } = useLoadingState();
   const [isHovered, setIsHovered] = useState(false);
+
+  const lastVisitDateMoment = moment(patient.last_visit);
+  const timeSinceLastVisit = moment.duration(
+    lastVisitDateMoment.diff(moment.now())
+  );
+  const lastVisitLabel =
+    timeSinceLastVisit < moment.duration({ days: -7 })
+      ? lastVisitDateMoment.format('DD MMM YY')
+      : lastVisitDateMoment.fromNow();
+
+  async function handleCreateVisit(patient: Patient) {
+    withLoading(async () =>
+      createVisit(patient).then(() => getPatientById(patient.patient_id))
+    )().then(freshPatient => () => {
+      setPatients(old => [
+        freshPatient,
+        ...old.filter(v => v.patient_id != freshPatient.patient_id),
+      ]);
+    });
+  }
 
   return (
     <Link
@@ -43,14 +84,18 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
         />
       </div>
       <div className="flex-[8]">{patient.name}</div>
-      <div className="flex w-80 flex-col items-center gap-2">
+      <div className="flex w-96 flex-col items-center gap-2">
         <Button
           text="Create new visit"
           colour="green"
           moreStyles="flex-1 w-full text-gray-100"
+          onClick={e => {
+            e.stopPropagation();
+            handleCreateVisit(patient);
+          }}
         />
         <div className="flex w-full flex-row items-center gap-2">
-          <div className="flex-1">Last visit: xyz</div>
+          <div className="flex-1">Last visit: {lastVisitLabel}</div>
           <Link
             href={`/records/patient-vitals?id=${patient.pk}`}
             onMouseDown={e => e.stopPropagation()}
