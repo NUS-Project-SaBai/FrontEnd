@@ -1,5 +1,5 @@
 'use client';
-import { ReactNode, useEffect, useState } from 'react';
+import { MouseEvent, ReactNode, useEffect, useState } from 'react';
 import { LoadingUI } from './LoadingUI';
 
 export function Button({
@@ -10,7 +10,7 @@ export function Button({
   Icon = <></>,
 }: {
   text: string;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent) => void;
   type?: 'submit' | 'button' | 'reset';
   colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';
   Icon?: ReactNode;
@@ -21,10 +21,10 @@ export function Button({
     setIsLoading(false);
   }, []);
 
-  const handleClick = async () => {
+  const handleClick = async (e: MouseEvent) => {
     try {
       setIsLoading(true);
-      onClick();
+      onClick(e);
     } finally {
       setIsLoading(false);
     }
@@ -42,6 +42,9 @@ export function Button({
       }
       type={type}
       onClick={handleClick}
+      // onMouseOver={e => {e.stopPropagation();
+      //   console.log('ajshdf')
+      // }}
       disabled={isLoading}
     >
       {isLoading ? (

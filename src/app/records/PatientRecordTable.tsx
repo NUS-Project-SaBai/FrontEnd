@@ -3,6 +3,7 @@ import { VILLAGES_AND_ALL } from '@/constants';
 import { Patient } from '@/types/Patient';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function PatientRecordTable({ patients }: { patients: Patient[] }) {
   return (
@@ -21,8 +22,8 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
         <colgroup>
           <col className="w-[10%]" />
           <col className="w-[15%]" />
-          <col className="w-[45%]" />
-          <col className="w-[10%]" />
+          <col className="w-[40%]" />
+          <col className="w-[15%]" />
           <col className="w-[10%]" />
           <col className="w-[10%]" />
         </colgroup>
@@ -37,8 +38,14 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
 }
 
 function PatientRecordRow({ patient }: { patient: Patient }) {
+  const router = useRouter();
+
   return (
-    <tr>
+    <tr
+      onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
+      className="group cursor-pointer bg-white hover:bg-gray-200"
+      role="button"
+    >
       <td
         className={
           'font-semibold ' + VILLAGES_AND_ALL[patient.village_prefix].color
@@ -49,28 +56,29 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       <td>
         <Image
           src={patient.picture}
-          alt={'Patient Photo'}
+          alt="Patient Photo"
           height={100}
           width={100}
         />
       </td>
       <td>{patient.name}</td>
+      <td>Last visit: xyz</td>
       <td>
-        {/* record */}
-        <Link href={`/records/patient-record?id=${patient.pk}`}>
-          <Button text="View" colour="indigo" />
+        <Link
+          href={`/records/patient-vitals?id=${patient.pk}`}
+          className="group-hover:bg-white"
+          onClick={e => e.stopPropagation()}
+        >
+          <Button text="Vitals" colour="red" />
         </Link>
       </td>
       <td>
-        {/* vitals */}
-        <Link href={`/records/patient-vitals?id=${patient.pk}`}>
-          <Button text="Create" colour="green" />
-        </Link>
-      </td>
-      <td>
-        {/* consultation */}
-        <Link href={`/records/patient-consultation?id=${patient.pk}`}>
-          <Button text="Create" colour="green" />
+        <Link
+          href={`/records/patient-consultation?id=${patient.pk}`}
+          className="group-hover:bg-white"
+          onClick={e => e.stopPropagation()}
+        >
+          <Button text="Consultation" colour="indigo" />
         </Link>
       </td>
     </tr>
