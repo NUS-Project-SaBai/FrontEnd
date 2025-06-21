@@ -69,7 +69,7 @@ export default function RecordPage() {
             // isLoading={isLoading}
             withLoading={withLoading}
           />
-          <div className="flex h-[5vh] gap-2 self-end">
+          <div className="flex h-[40px] gap-2 self-end">
             <Button
               colour="green"
               onClick={togglePatientFormOpen}

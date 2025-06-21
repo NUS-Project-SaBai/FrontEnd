@@ -9,6 +9,7 @@ export function Button({
   colour = 'white',
   Icon = <></>,
   moreStyles = '',
+  ...others
 }: {
   text: string;
   onClick?: (e: MouseEvent) => void;
@@ -16,7 +17,7 @@ export function Button({
   colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';
   Icon?: ReactNode;
   moreStyles?: string;
-}) {
+} & React.HTMLProps<HTMLButtonElement>) {
   const [isLoading, setIsLoading] = useState(true);
   // makes the button interactive only when it is hydrated
   useEffect(() => {
@@ -48,6 +49,7 @@ export function Button({
       //   console.log('ajshdf')
       // }}
       disabled={isLoading}
+      {...others}
     >
       {isLoading ? (
         <LoadingUI />

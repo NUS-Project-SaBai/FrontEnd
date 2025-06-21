@@ -72,7 +72,7 @@ export function PatientSearchInput({
         </label>
         <input
           id="patientSearch"
-          className="h-[5vh] w-full disabled:bg-gray-200"
+          className="h-[40px] w-full disabled:bg-gray-200"
           defaultValue={searchParams.get('query')?.toString()}
           // placeholder={isLoading ? 'Loading patients...' : ''}
           // disabled={isLoading}

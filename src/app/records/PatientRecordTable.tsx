@@ -7,7 +7,8 @@ import { Patient } from '@/types/Patient';
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 export function PatientRecordTable({
   patients,
@@ -36,22 +37,36 @@ function PatientRecordRow({
   patient: Patient;
   setPatients: Dispatch<SetStateAction<Patient[]>>;
 }) {
+  const router = useRouter();
   const { withLoading } = useLoadingState();
   const [isHovered, setIsHovered] = useState(false);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_forceUpdate, setForceUpdate] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setForceUpdate(prev => prev + 1); // Update state to trigger re-render
+    }, 10000); // Re-render every 10 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []); // Empty dependency array ensures effect runs once
 
   const lastVisitDateMoment = moment(patient.last_visit);
   const timeSinceLastVisit = moment.duration(
     lastVisitDateMoment.diff(moment.now())
   );
   const lastVisitLabel =
-    timeSinceLastVisit < moment.duration({ days: -7 })
-      ? lastVisitDateMoment.format('DD MMM YY')
-      : lastVisitDateMoment.fromNow();
+    timeSinceLastVisit > moment.duration({ seconds: -9 })
+      ? 'Just now'
+      : timeSinceLastVisit < moment.duration({ days: -7 })
+        ? lastVisitDateMoment.format('DD MMM YY')
+        : lastVisitDateMoment.fromNow();
 
   async function handleCreateVisit(patient: Patient) {
     withLoading(async () =>
-      createVisit(patient).then(() => getPatientById(patient.patient_id))
-    )().then(freshPatient => () => {
+      createVisit(patient).then(() => getPatientById(patient.pk.toString()))
+    )().then(freshPatient => {
       setPatients(old => [
         freshPatient,
         ...old.filter(v => v.patient_id != freshPatient.patient_id),
@@ -60,8 +75,8 @@ function PatientRecordRow({
   }
 
   return (
-    <Link
-      href={`/records/patient-record?id=${patient.pk}`}
+    <div
+      onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
       className={`m-2 flex flex-row items-center rounded-md p-1 shadow ${isHovered && 'shadow-md'}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -84,18 +99,24 @@ function PatientRecordRow({
         />
       </div>
       <div className="flex-[8]">{patient.name}</div>
-      <div className="flex w-96 flex-col items-center gap-2">
+      <div className="flex flex-row items-center gap-2">
         <Button
           text="Create new visit"
           colour="green"
-          moreStyles="flex-1 w-full text-gray-100"
           onClick={e => {
             e.stopPropagation();
             handleCreateVisit(patient);
           }}
+          onMouseEnter={e => {
+            e.stopPropagation();
+            setIsHovered(false);
+          }}
+          onMouseLeave={() => {
+            setIsHovered(true);
+          }}
         />
-        <div className="flex w-full flex-row items-center gap-2">
-          <div className="flex-1">Last visit: {lastVisitLabel}</div>
+        <div className="flex flex-1 items-center gap-2 rounded-md border p-2">
+          <div className="w-40 flex-1">Last visit: {lastVisitLabel}</div>
           <Link
             href={`/records/patient-vitals?id=${patient.pk}`}
             onMouseDown={e => e.stopPropagation()}
@@ -124,6 +145,6 @@ function PatientRecordRow({
           </Link>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
