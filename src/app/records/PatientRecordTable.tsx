@@ -161,12 +161,12 @@ function PatientRecordRow({
             </button>
           </div>
         </div>
+        {isExpanded && (
+          <div className="z-0 mt-2 flex w-full flex-row items-center p-1">
+            <PatientDetails patient={patient} />
+          </div>
+        )}
       </div>
-      {isExpanded && (
-        <div className="z-0 m-3 -mt-4 mb-5 flex flex-row items-center rounded p-1 shadow-md">
-          <PatientDetails patient={patient} />
-        </div>
-      )}
     </div>
   );
 }
