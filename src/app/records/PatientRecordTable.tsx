@@ -40,6 +40,7 @@ function PatientRecordRow({
   const router = useRouter();
   const { withLoading } = useLoadingState();
   const [isHovered, setIsHovered] = useState(false);
+  const [shouldFlash, setShouldFlash] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_forceUpdate, setForceUpdate] = useState(0);
@@ -50,7 +51,7 @@ function PatientRecordRow({
     }, 10000); // Re-render every 10 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
-  }, []); // Empty dependency array ensures effect runs once
+  }, []);
 
   const lastVisitDateMoment = moment(patient.last_visit);
   const timeSinceLastVisit = moment.duration(
@@ -71,13 +72,17 @@ function PatientRecordRow({
         freshPatient,
         ...old.filter(v => v.patient_id != freshPatient.patient_id),
       ]);
+      setShouldFlash(true);
+      setTimeout(() => setShouldFlash(false), 1000); // 1 second flash
     });
   }
 
   return (
     <div
       onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
-      className={`m-2 flex flex-row items-center rounded-md p-1 shadow ${isHovered && 'shadow-md'}`}
+      className={`m-2 flex flex-row items-center rounded-md p-1 shadow transition-shadow duration-300 ${
+        isHovered ? 'shadow-md' : ''
+      } ${shouldFlash ? 'flash' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       role="button"

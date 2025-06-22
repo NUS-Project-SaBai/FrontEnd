@@ -38,3 +38,19 @@ td,
 th {
   @apply p-2;
 }
+
+@keyframes flash {
+  0% {
+    background-color: #c9c9c9; /* yellow-100 */
+  }
+  50% {
+    background-color: #e3e3e3; /* yellow-300 */
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.flash {
+  animation: flash 0.5s ease-in-out;
+}
