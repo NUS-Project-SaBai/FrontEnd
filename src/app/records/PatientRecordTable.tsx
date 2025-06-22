@@ -124,7 +124,7 @@ function PatientRecordRow({
           <div className="w-40 flex-1">Last visit: {lastVisitLabel}</div>
           <Link
             href={`/records/patient-vitals?id=${patient.pk}`}
-            onMouseDown={e => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
             onMouseEnter={e => {
               e.stopPropagation();
               setIsHovered(false);
@@ -137,7 +137,7 @@ function PatientRecordRow({
           </Link>
           <Link
             href={`/records/patient-consultation?id=${patient.pk}`}
-            onMouseDown={e => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
             onMouseEnter={e => {
               e.stopPropagation();
               setIsHovered(false);
