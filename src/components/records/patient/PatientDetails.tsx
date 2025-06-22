@@ -20,11 +20,11 @@ export function PatientDetails({ patient }: { patient: Patient }) {
       value: (
         <div className="text-lg">
           <span className="font-bold">{age.year}</span>
-          <span> YEARS </span>
+          <span>Y </span>
           <span className="font-bold">{age.month}</span>
-          <span> MONTHS </span>
+          <span>M </span>
           <span className="font-bold">{age.day}</span>
-          <span> DAYS </span>
+          <span>D </span>
         </div>
       ),
     },
@@ -33,12 +33,9 @@ export function PatientDetails({ patient }: { patient: Patient }) {
     { label: 'Sabai Card', value: patient.sabai },
     { label: 'Allergies', value: patient.drug_allergy },
   ];
+
   return (
-    <div
-      className={
-        'center-items m-2 grid w-full gap-2 border-t-2 pt-4 md:grid-cols-4'
-      }
-    >
+    <div className="m-2 grid w-full gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(20vh,1fr))]">
       {fieldArray.map(({ label, value }) => (
         <DisplayField
           key={label}
@@ -55,17 +52,5 @@ export function PatientDetails({ patient }: { patient: Patient }) {
         </Link>
       </div>
     </div>
-    // <div className={'flex flex-col flex-wrap'}>
-    //   {fieldArray.map(({ label, value }) => (
-    //     // <DisplayField
-    //     //   key={label}
-    //     //   label={label}
-    //     //   content={value || 'NOT FILLED'}
-    //     // />
-    //     <div className='p-2 shadow'>
-    //       {label}: {value || 'NOT FILLED'}
-    //     </div>
-    //   ))}
-    // </div>
   );
 }
