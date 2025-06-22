@@ -35,7 +35,7 @@ export function PatientDetails({ patient }: { patient: Patient }) {
   ];
 
   return (
-    <div className="m-2 grid w-full gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(20vh,1fr))]">
+    <div className="m-2 grid w-full gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(22vh,1fr))]">
       {fieldArray.map(({ label, value }) => (
         <DisplayField
           key={label}

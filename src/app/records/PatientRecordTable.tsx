@@ -86,7 +86,7 @@ function PatientRecordRow({
       <div
         // onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
         onClick={toggleExpanded}
-        className={`z-10 m-2 flex flex-col items-center rounded-md bg-white p-2 shadow-md transition-shadow duration-300 ${
+        className={`m-2 flex flex-col items-center rounded-md bg-white p-2 shadow-md transition-shadow duration-300 ${
           isHovered ? 'shadow-md' : ''
         } ${shouldFlash ? 'flash' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
@@ -162,7 +162,7 @@ function PatientRecordRow({
           </div>
         </div>
         {isExpanded && (
-          <div className="z-0 mt-2 flex w-full flex-row items-center">
+          <div className="mt-2 flex w-full flex-row items-center">
             <PatientDetails patient={patient} />
           </div>
         )}
