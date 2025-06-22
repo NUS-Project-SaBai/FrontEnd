@@ -55,7 +55,7 @@ export default function ReferralDetailsPage() {
     <div className="p-2">
       <h1 className="pt-4">Referral Details</h1>
       {patient != null ? (
-        <PatientInfoHeaderSection patient={patient} showVisit={false} />
+        <PatientInfoHeaderSection patient={patient} />
       ) : (
         <h1>Loading patient...</h1>
       )}

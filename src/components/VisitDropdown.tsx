@@ -46,7 +46,7 @@ export function VisitDropdown({ name, visits }: DropdownProps) {
       </label>
       <select
         name={name}
-        className={'block w-full rounded-md border-2 p-2 text-sm'}
+        className={'block h-[40px] rounded-md border-2 p-2 text-sm'}
         value={visitId}
         onChange={e => setVisitId(e.target.value)}
       >

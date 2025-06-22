@@ -57,7 +57,7 @@ function PatientRecordRow({
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
-  const lastVisitDateMoment = moment(patient.last_visit);
+  const lastVisitDateMoment = moment(patient.last_visit_date);
   const timeSinceLastVisit = moment.duration(
     lastVisitDateMoment.diff(moment.now())
   );
@@ -163,7 +163,7 @@ function PatientRecordRow({
         </div>
         {isExpanded && (
           <div className="mt-2 flex w-full flex-row items-center">
-            <PatientDetails patient={patient} />
+            <PatientDetails patient={patient} showFullDetailsButton />
           </div>
         )}
       </div>

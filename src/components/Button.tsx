@@ -45,9 +45,6 @@ export function Button({
       }
       type={type}
       onClick={handleClick}
-      // onMouseOver={e => {e.stopPropagation();
-      //   console.log('ajshdf')
-      // }}
       disabled={isLoading}
       {...others}
     >

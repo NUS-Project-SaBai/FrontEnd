@@ -1,25 +1,17 @@
 'use server';
-import { PatientInfoDetailSection } from '@/components/records/patient/PatientInfoDetailSection';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
-import { PrescriptionConsultCol } from '@/components/records/VitalPresConsultCol';
-import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
-import { getVitalByVisit } from '@/data/vital/getVital';
-import { EditPatient } from './EditPatient';
-import { ViewVital } from './ViewVital';
+import { PatientRecordBody } from './PatientRecordBody';
 
 export default async function PatientRecordPage({
   searchParams,
 }: {
   searchParams: Promise<{ id: string; visit: string }>;
 }) {
-  const { id: patientId = '', visit: visitId = '' } = await searchParams;
+  // const { id: patientId = '', visit: visitId = '' } = await searchParams;
+  const { id: patientId = '' } = await searchParams;
 
-  const [patient, consults, vitals] = await Promise.all([
-    getPatientById(patientId),
-    getConsultByVisitId(visitId),
-    getVitalByVisit(visitId),
-  ]);
+  const patient = await getPatientById(patientId);
 
   if (!patient) {
     return (
@@ -36,20 +28,29 @@ export default async function PatientRecordPage({
 
       <PatientInfoHeaderSection patient={patient} />
       <hr className="my-2 w-full border-t-2" />
-      <div className="grid grid-cols-2 gap-1 md:gap-4">
-        <div>
-          <div className="grid grid-cols-2 gap-2">
-            <ViewVital
-              consults={consults || []}
-              patient={patient}
-              vitals={vitals}
-            />
-            <EditPatient patient={patient} />
+      <PatientRecordBody patient={patient} />
+      {/* <div className="grid grid-cols-2 gap-1 md:gap-4">
+        {visits == null ? (
+          <div className="w-fit text-nowrap text-lg">
+            <LoadingUI message="Loading Visits..." />
           </div>
-          <PatientInfoDetailSection patient={patient} />
-        </div>
+        ) : visits.length == 0 ? (
+          <div>
+            <p>No Visits Found</p>
+          </div>
+        ) : (
+          <div>
+            <VisitDropdown name="visit_date" visits={visits} />
+          </div>
+        )}
+        <ViewVital
+          consults={consults || []}
+          patient={patient}
+          vitals={vitals}
+        />
+        <EditPatient patient={patient} />
         <PrescriptionConsultCol consults={consults} />
-      </div>
+      </div> */}
     </div>
   );
 }

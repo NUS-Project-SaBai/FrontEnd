@@ -1,10 +1,19 @@
+import { EditPatient } from '@/app/records/patient-record/EditPatient';
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
 import { getPatientAge, Patient } from '@/types/Patient';
 import moment from 'moment';
 import Link from 'next/link';
 
-export function PatientDetails({ patient }: { patient: Patient }) {
+export function PatientDetails({
+  patient,
+  showFullDetailsButton = false,
+  showEditDetailsButton = false,
+}: {
+  patient: Patient;
+  showFullDetailsButton?: boolean;
+  showEditDetailsButton?: boolean;
+}) {
   const age = getPatientAge(patient);
   const fieldArray = [
     { label: 'Village', value: patient.village_prefix },
@@ -35,7 +44,7 @@ export function PatientDetails({ patient }: { patient: Patient }) {
   ];
 
   return (
-    <div className="m-2 grid w-full gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(22vh,1fr))]">
+    <div className="m-2 grid flex-1 gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(175px,1fr))]">
       {fieldArray.map(({ label, value }) => (
         <DisplayField
           key={label}
@@ -43,14 +52,17 @@ export function PatientDetails({ patient }: { patient: Patient }) {
           content={value || 'NOT FILLED'}
         />
       ))}
-      <div className="h-full w-full content-end">
-        <Link
-          href={`/records/patient-record?id=${patient.pk}`}
-          className="bg-blue-200"
-        >
-          <Button text="View full details" colour="blue" />
-        </Link>
-      </div>
+      {showFullDetailsButton && (
+        <div className="h-full w-full content-end">
+          <Link
+            href={`/records/patient-record?id=${patient.pk}`}
+            className="bg-blue-200"
+          >
+            <Button text="View full details" colour="blue" />
+          </Link>
+        </div>
+      )}
+      {showEditDetailsButton && <EditPatient patient={patient} />}
     </div>
   );
 }
