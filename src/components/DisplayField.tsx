@@ -4,7 +4,7 @@ export function DisplayField({
   highlight = '',
 }: {
   label: string;
-  content: string;
+  content: string | React.JSX.Element;
   highlight?: 'bg-red-200' | 'bg-amber-200' | 'bg-green-200' | '';
 }) {
   return (

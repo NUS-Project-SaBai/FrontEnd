@@ -1,13 +1,16 @@
 import { Button } from '@/components/Button';
+import { PatientDetails } from '@/components/records/patient/PatientDetails';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { getPatientById } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
+import { useToggle } from '@/hooks/useToggle';
 import { Patient } from '@/types/Patient';
+import { ChevronDownIcon } from '@heroicons/react/16/solid';
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 export function PatientRecordTable({
@@ -37,9 +40,10 @@ function PatientRecordRow({
   patient: Patient;
   setPatients: Dispatch<SetStateAction<Patient[]>>;
 }) {
-  const router = useRouter();
+  // const router = useRouter();
   const { withLoading } = useLoadingState();
   const [isHovered, setIsHovered] = useState(false);
+  const [isExpanded, toggleExpanded] = useToggle(false);
   const [shouldFlash, setShouldFlash] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,78 +82,91 @@ function PatientRecordRow({
   }
 
   return (
-    <div
-      onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
-      className={`m-2 flex flex-row items-center rounded-md p-1 shadow transition-shadow duration-300 ${
-        isHovered ? 'shadow-md' : ''
-      } ${shouldFlash ? 'flash' : ''}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      role="button"
-    >
+    <div>
       <div
-        className={
-          'flex-[2] font-semibold ' +
-          VILLAGES_AND_ALL[patient.village_prefix].color
-        }
+        // onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
+        onClick={toggleExpanded}
+        className={`z-10 m-2 flex flex-col items-center rounded-md bg-white p-1 shadow-md transition-shadow duration-300 ${
+          isHovered ? 'shadow-md' : ''
+        } ${shouldFlash ? 'flash' : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        role="button"
       >
-        {patient.patient_id}
-      </div>
-      <div className="flex-[3]">
-        <Image
-          src={patient.picture}
-          alt="Patient Photo"
-          height={100}
-          width={100}
-        />
-      </div>
-      <div className="flex-[8]">{patient.name}</div>
-      <div className="flex flex-row items-center gap-2">
-        <Button
-          text="Create new visit"
-          colour="green"
-          onClick={e => {
-            e.stopPropagation();
-            handleCreateVisit(patient);
-          }}
-          onMouseEnter={e => {
-            e.stopPropagation();
-            setIsHovered(false);
-          }}
-          onMouseLeave={() => {
-            setIsHovered(true);
-          }}
-        />
-        <div className="flex flex-1 items-center gap-2 rounded-md border p-2">
-          <div className="w-40 flex-1">Last visit: {lastVisitLabel}</div>
-          <Link
-            href={`/records/patient-vitals?id=${patient.pk}`}
-            onClick={e => e.stopPropagation()}
-            onMouseEnter={e => {
-              e.stopPropagation();
-              setIsHovered(false);
-            }}
-            onMouseLeave={() => {
-              setIsHovered(true);
-            }}
+        <div className="flex w-full flex-row items-center p-1">
+          <div
+            className={
+              'flex-[2] font-semibold ' +
+              VILLAGES_AND_ALL[patient.village_prefix].color
+            }
           >
-            <Button text="Vitals" colour="red" />
-          </Link>
-          <Link
-            href={`/records/patient-consultation?id=${patient.pk}`}
-            onClick={e => e.stopPropagation()}
-            onMouseEnter={e => {
-              e.stopPropagation();
-              setIsHovered(false);
-            }}
-            onMouseLeave={() => {
-              setIsHovered(true);
-            }}
-          >
-            <Button text="Consultation" colour="indigo" />
-          </Link>
+            {patient.patient_id}
+          </div>
+          <div className="flex-[3]">
+            <Image
+              src={patient.picture}
+              alt="Patient Photo"
+              height={100}
+              width={100}
+            />
+          </div>
+          <div className="flex-[8]">{patient.name}</div>
+          <div className="flex flex-row items-center gap-2">
+            <Button
+              text="Create new visit"
+              colour="green"
+              onClick={e => {
+                e.stopPropagation();
+                handleCreateVisit(patient);
+              }}
+              onMouseEnter={e => {
+                e.stopPropagation();
+                setIsHovered(false);
+              }}
+              onMouseLeave={() => {
+                setIsHovered(true);
+              }}
+            />
+            <div className="flex flex-1 items-center gap-2 rounded-md border p-2">
+              <div className="w-40 flex-1">Last visit: {lastVisitLabel}</div>
+              <Link
+                href={`/records/patient-vitals?id=${patient.pk}`}
+                onClick={e => e.stopPropagation()}
+                onMouseEnter={e => {
+                  e.stopPropagation();
+                  setIsHovered(false);
+                }}
+                onMouseLeave={() => {
+                  setIsHovered(true);
+                }}
+              >
+                <Button text="Vitals" colour="red" />
+              </Link>
+              <Link
+                href={`/records/patient-consultation?id=${patient.pk}`}
+                onClick={e => e.stopPropagation()}
+                onMouseEnter={e => {
+                  e.stopPropagation();
+                  setIsHovered(false);
+                }}
+                onMouseLeave={() => {
+                  setIsHovered(true);
+                }}
+              >
+                <Button text="Consultation" colour="indigo" />
+              </Link>
+            </div>
+            <button className="w-5">
+              <ChevronDownIcon />
+            </button>
+          </div>
         </div>
       </div>
+      {isExpanded && (
+        <div className="z-0 m-3 -mt-4 mb-5 flex flex-row items-center rounded p-1 shadow-md">
+          <PatientDetails patient={patient} />
+        </div>
+      )}
     </div>
   );
 }
