@@ -1,7 +1,9 @@
+import { Visit } from './Visit';
+
 //35 fields excluding id, visit_id.
 export type Vital = {
   id?: number;
-  visit?: number;
+  visit?: Visit;
   height: string;
   weight: string;
   temperature: string;

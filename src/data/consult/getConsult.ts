@@ -25,3 +25,14 @@ export async function getConsultByID(
     return null;
   }
 }
+
+export async function getConsultsByPatientID(
+  patientID: number
+): Promise<Consult[] | null> {
+  if (!patientID) {
+    return null;
+  }
+  return (await axiosInstance.get(`/consults?patientID=${patientID}`)).data.map(
+    (val: Consult) => consultFromJson(val)
+  );
+}

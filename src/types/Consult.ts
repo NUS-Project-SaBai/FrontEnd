@@ -18,6 +18,7 @@ export type Consult = {
   referred_for?: string;
   referral_notes?: string;
   remarks?: string;
+  visit: Visit;
 };
 
 export function consultFromJson(
@@ -25,7 +26,7 @@ export function consultFromJson(
 ): Consult {
   if (jsonObj && jsonObj.visit != undefined) {
     jsonObj = { ...jsonObj, patient: (jsonObj.visit as Visit).patient };
-    delete jsonObj['visit'];
+    // delete jsonObj['visit'];
   }
   return jsonObj as Consult;
 }

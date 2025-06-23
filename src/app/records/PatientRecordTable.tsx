@@ -86,7 +86,7 @@ function PatientRecordRow({
       <div
         // onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
         onClick={toggleExpanded}
-        className={`m-2 flex flex-col items-center rounded-md bg-white p-2 shadow-md transition-shadow duration-300 ${
+        className={`m-2 flex flex-col items-center rounded-md bg-white p-2 shadow transition-shadow duration-300 ${
           isHovered ? 'shadow-md' : ''
         } ${shouldFlash ? 'flash' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
@@ -130,28 +130,24 @@ function PatientRecordRow({
             <div className="flex flex-1 items-center gap-2 rounded-md border p-2">
               <div className="w-40 flex-1">Last visit: {lastVisitLabel}</div>
               <Link
-                href={`/records/patient-vitals?id=${patient.pk}`}
+                href={`/records/patient-vitals?id=${patient.pk}&visit=${patient.last_visit_id}`}
                 onClick={e => e.stopPropagation()}
                 onMouseEnter={e => {
                   e.stopPropagation();
                   setIsHovered(false);
                 }}
-                onMouseLeave={() => {
-                  setIsHovered(true);
-                }}
+                onMouseLeave={() => setIsHovered(true)}
               >
                 <Button text="Vitals" colour="red" />
               </Link>
               <Link
-                href={`/records/patient-consultation?id=${patient.pk}`}
+                href={`/records/patient-consultation?id=${patient.pk}&visit=${patient.last_visit_id}`}
                 onClick={e => e.stopPropagation()}
                 onMouseEnter={e => {
                   e.stopPropagation();
                   setIsHovered(false);
                 }}
-                onMouseLeave={() => {
-                  setIsHovered(true);
-                }}
+                onMouseLeave={() => setIsHovered(true)}
               >
                 <Button text="Consultation" colour="indigo" />
               </Link>
@@ -163,7 +159,11 @@ function PatientRecordRow({
         </div>
         {isExpanded && (
           <div className="mt-2 flex w-full flex-row items-center">
-            <PatientDetails patient={patient} showFullDetailsButton />
+            <PatientDetails
+              patient={patient}
+              showFullDetailsButton
+              setIsHovered={setIsHovered}
+            />
           </div>
         )}
       </div>

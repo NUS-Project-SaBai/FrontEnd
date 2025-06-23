@@ -12,3 +12,12 @@ export async function getVitalByVisit(visitId: string): Promise<Vital | null> {
   data.visit = data.visit.id;
   return vitalFromJson(data);
 }
+
+export async function getVitalsByPatientID(
+  patientID: number
+): Promise<Vital[] | null> {
+  if (!patientID) return null;
+  return (await axiosInstance.get(`/vitals?patientID=${patientID}`)).data.map(
+    vitalFromJson
+  );
+}

@@ -4,15 +4,18 @@ import { DisplayField } from '@/components/DisplayField';
 import { getPatientAge, Patient } from '@/types/Patient';
 import moment from 'moment';
 import Link from 'next/link';
+import { Dispatch, SetStateAction } from 'react';
 
 export function PatientDetails({
   patient,
   showFullDetailsButton = false,
   showEditDetailsButton = false,
+  setIsHovered,
 }: {
   patient: Patient;
   showFullDetailsButton?: boolean;
   showEditDetailsButton?: boolean;
+  setIsHovered?: Dispatch<SetStateAction<boolean>>;
 }) {
   const age = getPatientAge(patient);
   const fieldArray = [
@@ -55,10 +58,15 @@ export function PatientDetails({
       {showFullDetailsButton && (
         <div className="h-full w-full content-end">
           <Link
-            href={`/records/patient-record?id=${patient.pk}`}
-            className="bg-blue-200"
+            href={`/records/patient-record?id=${patient.pk}&visit=${patient.last_visit_id}`}
+            onClick={e => e.stopPropagation()}
+            onMouseEnter={e => {
+              e.stopPropagation();
+              if (setIsHovered) setIsHovered(false); //just to avoid error: Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+            }}
+            onMouseLeave={() => setIsHovered && setIsHovered(true)}
           >
-            <Button text="View full details" colour="blue" />
+            <Button text="View full details" colour="indigo" />
           </Link>
         </div>
       )}

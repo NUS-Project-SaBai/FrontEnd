@@ -24,7 +24,7 @@ export async function PatientInfoHeaderSection({
       </div>
       <div className="flex flex-1 flex-col">
         <div className="m-2 flex flex-row gap-2">
-          <div className="flex-1 content-center text-2xl">
+          <h1 className="flex-1 content-center text-start">
             <span
               className={
                 'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
@@ -33,7 +33,7 @@ export async function PatientInfoHeaderSection({
               {patient.patient_id}
             </span>
             <span>, {patient.name}</span>
-          </div>
+          </h1>
           <UploadDocument patient={patient} />
           <ViewDocument patient={patient} />
           <EditPatient patient={patient} />

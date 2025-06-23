@@ -1,7 +1,7 @@
 import { Patient } from './Patient';
 
 export type Visit = {
-  id: string;
+  id: number;
   patient: Patient;
   date: string;
   status: string;

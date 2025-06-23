@@ -20,7 +20,7 @@ export type Patient = {
   patient_id: string;
   confidence: string;
   last_visit_date: string;
-  last_visit_id: string;
+  last_visit_id: number;
 };
 
 /**
