@@ -1,7 +1,7 @@
 'use client';
 import { Consult } from '@/types/Consult';
 import { LoadingUI } from '../LoadingUI';
-import { RecordConsultationTable } from './consultation/RecordConsultationTable';
+import { RecordConsultationTableModal } from './consultation/RecordConsultationTableModal';
 import { PrescriptionTable } from './prescription/PrescriptionTable';
 
 export function PrescriptionConsultCol({
@@ -18,7 +18,7 @@ export function PrescriptionConsultCol({
       {showConsult && (
         <div>
           <p className="font-bold">Consults</p>
-          <RecordConsultationTable consults={consults} />
+          <RecordConsultationTableModal consults={consults} />
         </div>
       )}
 

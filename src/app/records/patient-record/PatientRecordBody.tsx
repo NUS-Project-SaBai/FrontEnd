@@ -36,7 +36,9 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
       <div className="mx-2 flex flex-1 flex-col">
         <h1 className="py-0">Visits</h1>
         {visits.map(visit => {
-          const consult = consults?.find(v => v.visit.id == visit.id);
+          const thisVisitConsults = consults?.filter(
+            v => v.visit.id == visit.id
+          );
           const vital = vitals?.find(v => v.visit?.id == visit.id) ?? null;
 
           const isLatestVisit = visit.id == patient.last_visit_id;
@@ -56,7 +58,7 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
             </div>
           );
 
-          if (!consult && !vital)
+          if (thisVisitConsults.length == 0 && !vital)
             return (
               <div
                 key={visit.id}
@@ -111,16 +113,14 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
                   )}
                 </div>
                 <div className="flex flex-1 rounded-lg border px-2">
-                  {consult ? (
+                  {thisVisitConsults.length > 0 ? (
                     <div className="flex-1 pb-4">
                       <h1 className="pb-0 text-2xl">Consultation</h1>
-                      <PrescriptionConsultCol
-                        consults={consult ? [consult] : null}
-                      />
+                      <PrescriptionConsultCol consults={thisVisitConsults} />
                     </div>
                   ) : (
                     <div className="flex-1 content-center text-center">
-                      No consult found
+                      No consults found
                     </div>
                   )}
                 </div>

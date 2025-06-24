@@ -12,7 +12,7 @@ import ReactModal from 'react-modal';
 import { PrescriptionTable } from '../prescription/PrescriptionTable';
 import { RecordConsultationTableRow } from './RecordConsultationTableRow';
 
-export function RecordConsultationTable({
+export function RecordConsultationTableModal({
   consults,
 }: {
   consults: Consult[] | null;
