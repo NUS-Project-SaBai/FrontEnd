@@ -10,6 +10,7 @@ import { Button } from '../Button';
 
 export function ViewDocument({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
   const [documents, setDocuments] = useState<Upload[]>([]);
   useEffect(() => {
     getUploadByPatientId(patient.pk).then(data => {
@@ -23,7 +24,11 @@ export function ViewDocument({ patient }: { patient: Patient }) {
         onClick={() => setIsOpen(true)}
         colour="blue"
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         <table className="w-full divide-y divide-gray-400 text-left">
           <thead>
             <tr>
@@ -49,7 +54,7 @@ export function ViewDocument({ patient }: { patient: Patient }) {
             ))}
           </tbody>
         </table>
-        <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
+        <Button text="Close" onClick={closeModal} colour="red" />
       </ReactModal>
     </>
   );

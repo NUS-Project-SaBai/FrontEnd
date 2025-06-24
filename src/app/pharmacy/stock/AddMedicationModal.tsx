@@ -11,6 +11,7 @@ import ReactModal from 'react-modal';
 
 export function AddMedicationModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
   const { isLoading: isSubmitting, withLoading } = useLoadingState(false);
 
   const useFormReturn = useForm();
@@ -44,7 +45,7 @@ export function AddMedicationModal() {
             const med = await createMedicine(jsonPayload);
             toast.success(`Added Medicine: ${med.medicine_name}`);
             useFormReturn.reset();
-            setIsOpen(false);
+            closeModal();
           });
 
           await handleSubmission();
@@ -66,10 +67,14 @@ export function AddMedicationModal() {
         colour="green"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         <FormProvider {...useFormReturn}>
           <MedicationForm
-            closeForm={() => setIsOpen(false)}
+            closeForm={closeModal}
             onSubmit={submitMedicationFormHandler}
             isSubmitting={isSubmitting}
           />

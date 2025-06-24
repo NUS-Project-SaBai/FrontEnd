@@ -12,6 +12,7 @@ import ReactModal from 'react-modal';
 
 export function EditPatient({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
 
   const useFormReturn = useForm({
     defaultValues: {
@@ -27,10 +28,14 @@ export function EditPatient({ patient }: { patient: Patient }) {
         colour="green"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         <FormProvider {...useFormReturn}>
           <PatientForm
-            closeForm={() => setIsOpen(false)}
+            closeForm={closeModal}
             onSubmit={e => {
               e.preventDefault();
 
@@ -52,7 +57,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
                   patchPatient(fieldValues.pk, formData).then(() => {
                     toast.success('Patient Updated!');
                     router.refresh();
-                    setIsOpen(false);
+                    closeModal();
                   });
                 },
                 () => {
