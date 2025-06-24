@@ -1,12 +1,12 @@
 'use server';
 import { Button } from '@/components/Button';
+import AllConsultationDetails from '@/components/records/consultation/AllConsultationDetails';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
-import { PrescriptionConsultCol } from '@/components/records/VitalPresConsultCol';
 import { getConsultsByPatientID } from '@/data/consult/getConsult';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { getVitalsByPatientID } from '@/data/vital/getVital';
 import { calculateDobDifference, Patient } from '@/types/Patient';
-import moment from 'moment';
+import { stringToFormattedDate } from '@/utils/datetimeMethods';
 import Link from 'next/link';
 
 export async function PatientRecordBody({ patient }: { patient: Patient }) {
@@ -53,7 +53,7 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
               <Link
                 href={`/records/patient-consultation?id=${patient.pk}&visit=${visit.id}`}
               >
-                <Button text="Edit consultation" colour="indigo" />
+                <Button text="New consultation" colour="indigo" />
               </Link>
             </div>
           );
@@ -68,7 +68,7 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
                 }
               >
                 <span className="font-bold">
-                  {moment(visit.date).format('DD MMM YYYY HH:mm')}
+                  {stringToFormattedDate(visit.date)}
                   {': '}
                 </span>
                 {actionButtons}
@@ -86,11 +86,11 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
             >
               <div className="flex flex-1 gap-2">
                 <h2 className="text-lg font-bold">
-                  {moment(visit.date).format('DD MMM YYYY HH:mm')}
+                  {stringToFormattedDate(visit.date)}
                 </h2>
                 {actionButtons}
               </div>
-              <div className="mt-2 grid flex-1 grid-cols-2 gap-4">
+              <div className="mt-2 grid flex-1 grid-cols-2 gap-2">
                 <div className="flex flex-1 rounded-lg border px-2">
                   {vital ? (
                     <div className="flex-1 pb-4">
@@ -115,8 +115,9 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
                 <div className="flex flex-1 rounded-lg border px-2">
                   {thisVisitConsults.length > 0 ? (
                     <div className="flex-1 pb-4">
-                      <h1 className="pb-0 text-2xl">Consultation</h1>
-                      <PrescriptionConsultCol consults={thisVisitConsults} />
+                      <h1 className="mb-2 text-2xl">Consultations</h1>
+                      {/* <PrescriptionConsultCol consults={thisVisitConsults} /> */}
+                      <AllConsultationDetails consults={thisVisitConsults} />
                     </div>
                   ) : (
                     <div className="flex-1 content-center text-center">
