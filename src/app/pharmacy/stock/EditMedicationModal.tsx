@@ -53,13 +53,18 @@ export function EditMedicationModal({
     values: {
       id: editMedication?.id || null,
       medicine_name: editMedication?.medicine_name || '',
+      code: editMedication?.code || '',
       notes: editMedication?.notes || '',
       quantity_changed: null,
     },
   });
 
   return (
-    <ReactModal isOpen={editMedicationId != null} ariaHideApp={false}>
+    <ReactModal
+      isOpen={editMedicationId != null}
+      onRequestClose={closeModal}
+      ariaHideApp={false}
+    >
       {isLoading ? (
         <LoadingUI message="Loading medication data..." />
       ) : editMedication ? (
@@ -91,6 +96,7 @@ export function EditMedicationModal({
 
                     const jsonPayload = {
                       medicine_name: data.medicine_name.trim(),
+                      code: data.code.trim(),
                       quantityChange: Number(data.quantity_changed) || 0,
                       notes: data.notes as string,
                     };

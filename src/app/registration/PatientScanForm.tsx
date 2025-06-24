@@ -17,6 +17,7 @@ export function PatientScanForm({
   setSelectedPatient: (patient: Patient) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
   const [imgDetails, setImgDetails] = useState<string | null>(null);
   const [scanSuggestionsList, setScanSuggestionsList] = useState<Patient[]>([]);
   const { isLoading, withLoading } = useLoadingState(false);
@@ -41,7 +42,11 @@ export function PatientScanForm({
     <>
       <Button text="Scan Face" onClick={() => setIsOpen(true)} colour="green" />
 
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         <WebcamInput
           imageDetails={imgDetails}
           setImageDetails={setImgDetails}
@@ -57,7 +62,7 @@ export function PatientScanForm({
               onClick={onSearch}
             />
           )}
-          <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
+          <Button text="Close" onClick={closeModal} colour="red" />
         </div>
         <div className="flex w-full flex-col divide-y-2">
           {scanSuggestionsList.map((patient, index) => (
@@ -65,7 +70,7 @@ export function PatientScanForm({
               key={index}
               onClick={() => {
                 setSelectedPatient(patient);
-                setIsOpen(false);
+                closeModal();
               }}
               className="flex py-2 hover:cursor-pointer hover:bg-gray-300"
             >

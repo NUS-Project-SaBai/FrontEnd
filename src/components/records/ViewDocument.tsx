@@ -10,6 +10,7 @@ import { Button } from '../Button';
 
 export function ViewDocument({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
   const [documents, setDocuments] = useState<Upload[]>([]);
   useEffect(() => {
     getUploadByPatientId(patient.pk).then(data => {
@@ -23,7 +24,11 @@ export function ViewDocument({ patient }: { patient: Patient }) {
         onClick={() => setIsOpen(true)}
         colour="blue"
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         <table className="w-full divide-y divide-gray-400 text-left">
           <thead>
             <tr>
@@ -34,20 +39,22 @@ export function ViewDocument({ patient }: { patient: Patient }) {
           <tbody>
             {documents.map((doc, index) => (
               <tr key={index}>
-                <Link
-                  href={doc.file_path || doc.offline_file || ''}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  <td>{doc.file_name}</td>
-                </Link>
+                <td>
+                  <Link
+                    href={doc.file_path || doc.offline_file || ''}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                  >
+                    {doc.file_name}
+                  </Link>
+                </td>
                 <td>{new Date(doc.created_at).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
+        <Button text="Close" onClick={closeModal} colour="red" />
       </ReactModal>
     </>
   );

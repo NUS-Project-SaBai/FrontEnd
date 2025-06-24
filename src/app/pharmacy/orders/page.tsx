@@ -3,7 +3,7 @@ import { Button } from '@/components/Button';
 import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientSearchInput } from '@/components/PatientSearchbar';
-import { VILLAGES } from '@/constants';
+import { VILLAGES_AND_ALL } from '@/constants';
 import { getPendingOrder } from '@/data/order/getOrder';
 import { patchOrder } from '@/data/order/patchOrder';
 import { useLoadingState } from '@/hooks/useLoadingState';
@@ -13,6 +13,7 @@ import { Patient } from '@/types/Patient';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
 import { Suspense, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function OrdersPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -128,6 +129,20 @@ function OrderRow({
   orders,
   removeNonPendingOrder,
 }: OrderRowData & { removeNonPendingOrder: (id: number) => void }) {
+  const onPatchError = (err: Error, o: Order) => {
+    toast.error(() => (
+      <p>
+        {err.message}
+        <br />
+        <br />
+        <b>Patient: </b>
+        {o.visit.patient.patient_id}
+        <br />
+        <b>Medicine: </b>
+        {o.medication_review.medicine.medicine_name}
+      </p>
+    ));
+  };
   return (
     <tr>
       <td className="px-0">
@@ -140,7 +155,11 @@ function OrderRow({
         />
       </td>
       <td>
-        <p className={'font-bold ' + VILLAGES[patient.village_prefix].color}>
+        <p
+          className={
+            'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+          }
+        >
           {patient.patient_id}
         </p>
         <p className="font-semibold">{patient.name}</p>
@@ -175,15 +194,21 @@ function OrderRow({
                   <b>Dosage Instruction: </b>
                   {o.notes}
                 </p>
+                <p>
+                  <b> Code: </b>
+                  {o.medication_review.medicine.code || 'N/A'}
+                </p>
               </div>
               <ApproveRejectOrderButton
                 handleApproveOrder={async () => {
-                  await patchOrder(o.id.toString(), 'APPROVED');
-                  removeNonPendingOrder(o.id);
+                  await patchOrder(o.id.toString(), 'APPROVED')
+                    .then(() => removeNonPendingOrder(o.id))
+                    .catch(err => onPatchError(err, o));
                 }}
                 handleCancelOrder={async () => {
-                  await patchOrder(o.id.toString(), 'CANCELLED');
-                  removeNonPendingOrder(o.id);
+                  await patchOrder(o.id.toString(), 'CANCELLED')
+                    .then(() => removeNonPendingOrder(o.id))
+                    .catch(err => onPatchError(err, o));
                 }}
               />
             </div>

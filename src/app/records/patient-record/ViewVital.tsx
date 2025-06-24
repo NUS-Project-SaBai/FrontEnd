@@ -17,6 +17,8 @@ export function ViewVital({
   vitals: Vital | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
+
   return (
     <>
       <Button
@@ -24,7 +26,11 @@ export function ViewVital({
         colour="indigo"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         <h2>Vitals</h2>
         {vitals == null ? (
           <p>No vitals found for current visit</p>
@@ -38,7 +44,7 @@ export function ViewVital({
             gender={patient.gender}
           />
         )}
-        <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
+        <Button text="Close" onClick={closeModal} colour="red" />
       </ReactModal>
     </>
   );
