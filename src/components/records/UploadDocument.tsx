@@ -13,6 +13,7 @@ import { LoadingUI } from '../LoadingUI';
 
 export function UploadDocument({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
   const useFormReturn = useForm({});
 
   const { isLoading, withLoading } = useLoadingState(false);
@@ -24,7 +25,11 @@ export function UploadDocument({ patient }: { patient: Patient }) {
         colour="green"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         <FormProvider {...useFormReturn}>
           <form
             onSubmit={async e => {
@@ -56,7 +61,7 @@ export function UploadDocument({ patient }: { patient: Patient }) {
                     try {
                       await postUpload(formData);
                       useFormReturn.reset();
-                      setIsOpen(false);
+                      closeModal();
                       toast.success(
                         'File uploaded successfully as \n' + labeledDocumentName
                       );
@@ -77,11 +82,7 @@ export function UploadDocument({ patient }: { patient: Patient }) {
               isRequired={true}
             />
             <RHFInputField name="file_name" label="File Name" type="text" />
-            <Button
-              text="Close"
-              colour="red"
-              onClick={() => setIsOpen(false)}
-            />
+            <Button text="Close" colour="red" onClick={closeModal} />
             {isLoading ? (
               <LoadingUI message="Uploading Document..." />
             ) : (

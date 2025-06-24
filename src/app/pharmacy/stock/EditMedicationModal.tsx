@@ -60,7 +60,11 @@ export function EditMedicationModal({
   });
 
   return (
-    <ReactModal isOpen={editMedicationId != null} ariaHideApp={false}>
+    <ReactModal
+      isOpen={editMedicationId != null}
+      onRequestClose={closeModal}
+      ariaHideApp={false}
+    >
       {isLoading ? (
         <LoadingUI message="Loading medication data..." />
       ) : editMedication ? (

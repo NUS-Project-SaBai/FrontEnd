@@ -18,6 +18,7 @@ export function RecordConsultationTable({
   consults: Consult[] | null;
 }) {
   const [consult, setConsult] = useState<Consult | null>(null);
+  const closeModal = () => setConsult(null);
 
   // TODO: refactor api call such that diagnosis is part of the consult
   const [diagnosisArray, setDiagnosisArray] = useState<Diagnosis[]>([]);
@@ -35,7 +36,11 @@ export function RecordConsultationTable({
 
   return (
     <>
-      <ReactModal isOpen={consult != null} ariaHideApp={false}>
+      <ReactModal
+        isOpen={consult != null}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         {consult == null ? (
           <p>No Consult Found</p>
         ) : (
@@ -77,11 +82,7 @@ export function RecordConsultationTable({
                 />
               </div>
             </div>
-            <Button
-              onClick={() => setConsult(null)}
-              text="Close"
-              colour="red"
-            />
+            <Button onClick={closeModal} text="Close" colour="red" />
           </>
         )}
       </ReactModal>
