@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Sa'bai Biometrics",
+  title: "Sa'Bai Biometrics",
 };
 
 export default function RootLayout({
