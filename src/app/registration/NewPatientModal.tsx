@@ -1,26 +1,29 @@
 import { Button } from '@/components/Button';
 import { PatientForm } from '@/components/records/patient/PatientForm';
-import { FormEvent, useState } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import ReactModal from 'react-modal';
 
 export function NewPatientModal({
   onSubmit,
   isSubmitting,
+  modalState,
 }: {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   isSubmitting: boolean;
+  modalState?: [boolean, Dispatch<SetStateAction<boolean>>];
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const closeModal = () => setIsOpen(false);
+  const localModalState = useState(false);
+  const [modalIsOpen, setModalIsOpen] = modalState ?? localModalState;
+  const closeModal = () => setModalIsOpen(false);
   return (
     <>
       <Button
         colour="green"
-        onClick={() => setIsOpen(true)}
+        onClick={() => setModalIsOpen(true)}
         text={'New Patient'}
       />
       <ReactModal
-        isOpen={isOpen}
+        isOpen={modalIsOpen}
         onRequestClose={closeModal}
         ariaHideApp={false}
       >
