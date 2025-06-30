@@ -1,6 +1,6 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
-import { VILLAGES } from '@/constants';
+import { VILLAGES_AND_ALL } from '@/constants';
 import { getVisitByPatientId } from '@/data/visit/getVisit';
 import { WithLoadingType } from '@/hooks/useLoadingState';
 import { Patient, getPatientAge } from '@/types/Patient';
@@ -14,15 +14,20 @@ import { ViewDocument } from '../ViewDocument';
 export function PatientInfoHeaderSection({
   patient,
   withLoading = x => x,
+  showVisit = true,
 }: {
   patient: Patient;
   withLoading?: WithLoadingType;
+  showVisit?: boolean;
 }) {
   const [visits, setVisits] = useState<Visit[] | null>(null);
+
   useEffect(() => {
-    withLoading(getVisitByPatientId)(patient.pk.toString()).then(vs =>
-      setVisits(vs)
-    );
+    if (showVisit) {
+      withLoading(getVisitByPatientId)(patient.pk.toString()).then(vs =>
+        setVisits(vs)
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.pk]);
 
@@ -39,7 +44,11 @@ export function PatientInfoHeaderSection({
       <div className="grid grid-cols-[2fr,3fr] grid-rows-2 gap-x-8 pl-8 text-2xl">
         <div>
           <p>ID:</p>
-          <p className={'font-bold ' + VILLAGES[patient.village_prefix].color}>
+          <p
+            className={
+              'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+            }
+          >
             {patient.patient_id}
           </p>
         </div>
@@ -49,19 +58,20 @@ export function PatientInfoHeaderSection({
           <p>{patient.name}</p>
         </div>
 
-        {visits == null ? (
-          <div className="w-fit text-nowrap text-lg">
-            <LoadingUI message="Loading Visits..." />
-          </div>
-        ) : visits.length == 0 ? (
-          <div>
-            <p>No Visits Found</p>
-          </div>
-        ) : (
-          <div>
-            <VisitDropdown name="visit_date" visits={visits} />
-          </div>
-        )}
+        {showVisit &&
+          (visits == null ? (
+            <div className="w-fit text-nowrap text-lg">
+              <LoadingUI message="Loading Visits..." />
+            </div>
+          ) : visits.length == 0 ? (
+            <div>
+              <p>No Visits Found</p>
+            </div>
+          ) : (
+            <div>
+              <VisitDropdown name="visit_date" visits={visits} />
+            </div>
+          ))}
 
         <div>
           <p>Age:</p>

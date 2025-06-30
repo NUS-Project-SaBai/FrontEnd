@@ -11,6 +11,7 @@ export function NewPatientModal({
   isSubmitting: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
   return (
     <>
       <Button
@@ -18,9 +19,13 @@ export function NewPatientModal({
         onClick={() => setIsOpen(true)}
         text={'New Patient'}
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
         <PatientForm onSubmit={onSubmit} isSubmitting={isSubmitting} />
-        <Button colour="red" onClick={() => setIsOpen(false)} text="Close" />
+        <Button colour="red" onClick={closeModal} text="Close" />
       </ReactModal>
     </>
   );

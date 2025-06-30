@@ -31,6 +31,7 @@ export function MedicationForm({
           type="text"
           isRequired={true}
         />
+        <RHFInputField label="Code" name="code" type="text" isRequired={true} />
         <DisplayField
           label="Current Quantity"
           content={

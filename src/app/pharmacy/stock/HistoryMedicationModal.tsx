@@ -41,7 +41,11 @@ export function HistoryMedicationModal() {
   const closeModal = () => router.back();
 
   return (
-    <ReactModal isOpen={viewMedicationId != null} ariaHideApp={false}>
+    <ReactModal
+      isOpen={viewMedicationId != null}
+      onRequestClose={closeModal}
+      ariaHideApp={false}
+    >
       <h2>
         {`View Medication ${
           medicationHistory.length === 0
