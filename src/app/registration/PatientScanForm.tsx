@@ -27,8 +27,10 @@ export function PatientScanForm({
       return;
     }
     try {
-      const data = await searchFace(imgDetails);
-      if (data.length == 0) {
+      const { data, isMockData } = await searchFace(imgDetails);
+      if (isMockData) {
+        toast('Mock facial recognition response', { icon: 'ℹ️' });
+      } else if (data.length == 0) {
         toast.error('Patient does not exist!');
         return;
       }
