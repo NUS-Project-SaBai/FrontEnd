@@ -27,8 +27,11 @@ export function PatientScanForm({
       return;
     }
     try {
-      const data = await searchFace(imgDetails);
-      if (data.length == 0) {
+      const { data, isDummyData: isDummyResponse } =
+        await searchFace(imgDetails);
+      if (isDummyResponse) {
+        toast.success('Backend used dummy facial recognition response');
+      } else if (data.length == 0) {
         toast.error('Patient does not exist!');
         return;
       }
