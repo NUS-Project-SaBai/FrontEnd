@@ -4,7 +4,7 @@ import { Vision, visionFromJson } from '@/types/Vision';
 
 export async function createVision(data: Vision): Promise<Vision | null> {
   try {
-    const response = await axiosInstance.post('/glasses', data, {
+    const response = await axiosInstance.post('/glasses/', data, {
       headers: {
         'Content-Type': 'application/json',
       },

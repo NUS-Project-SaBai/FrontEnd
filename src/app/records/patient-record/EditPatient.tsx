@@ -45,7 +45,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
                   formData.append(
                     'picture',
                     await urlToFile(
-                      fieldValues.picture,
+                      fieldValues.picture_url,
                       'patient_screenshot.jpg',
                       'image/jpg'
                     )

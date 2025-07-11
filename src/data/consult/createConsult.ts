@@ -6,7 +6,7 @@ export async function createConsult(
   formData: FormData | object
 ): Promise<Consult | null> {
   return await axiosInstance
-    .post('/consults', formData)
+    .post('/consults/', formData)
     .then(val => consultFromJson(val.data))
     .catch(err => {
       console.error(err);

@@ -10,7 +10,7 @@ export type ReferralWithDetails = {
 };
 
 export async function getReferrals(): Promise<ReferralWithDetails[]> {
-  const data = (await axiosInstance.get('/referrals')).data;
+  const data = (await axiosInstance.get('/referrals/')).data;
   return data;
 }
 

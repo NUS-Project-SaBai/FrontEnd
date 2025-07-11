@@ -1,7 +1,7 @@
 //35 fields excluding id, visit_id.
 export type Vital = {
   id?: number;
-  visit?: number;
+  visit_id?: number;
   height: string;
   weight: string;
   temperature: string;
@@ -62,7 +62,7 @@ export function displayBMI(height: string, weight: string) {
 
 export const EMPTY_VITAL: Vital = {
   id: undefined,
-  visit: undefined,
+  visit_id: undefined,
   height: '',
   weight: '',
   temperature: '',
