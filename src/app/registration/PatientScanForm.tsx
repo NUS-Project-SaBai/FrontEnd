@@ -75,7 +75,7 @@ export function PatientScanForm({
               className="flex py-2 hover:cursor-pointer hover:bg-gray-300"
             >
               <Image
-                src={patient.picture}
+                src={patient.picture_url}
                 alt={'Patient Image'}
                 width={120}
                 height={120}

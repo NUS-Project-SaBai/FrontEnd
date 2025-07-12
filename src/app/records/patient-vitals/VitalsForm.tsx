@@ -32,7 +32,7 @@ export function VitalsForm({
 
     handleSubmit(
       async (data: FieldValues) => {
-        data.visit = visitId;
+        data.visit_id = visitId;
         patchVital(data as Vital).then(() => {
           reset();
           toast.success('Updated Vital');

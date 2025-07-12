@@ -1,4 +1,5 @@
 import { Consult } from './Consult';
+import { Diagnosis } from './Diagnosis';
 import { MedicationReview } from './MedicationReview';
 import { Visit } from './Visit';
 
@@ -11,3 +12,7 @@ export type Order = {
   remarks: string;
   visit: Visit;
 };
+
+export interface OrderWithDiagnoses extends Order {
+  diagnoses: Diagnosis[];
+}

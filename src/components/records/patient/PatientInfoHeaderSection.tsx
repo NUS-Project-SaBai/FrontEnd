@@ -36,7 +36,7 @@ export function PatientInfoHeaderSection({
   return (
     <div className="flex">
       <Image
-        src={patient.picture}
+        src={patient.picture_url}
         alt="Patient Picture"
         width={180}
         height={180}

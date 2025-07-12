@@ -6,7 +6,7 @@ export async function createReferral(
   formData: FormData | object
 ): Promise<Referral | null> {
   return await axiosInstance
-    .post('/referrals', formData)
+    .post('/referrals/', formData)
     .then(val => val.data)
     .catch(err => {
       console.error(err);

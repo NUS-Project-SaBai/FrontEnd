@@ -35,7 +35,7 @@ export function ConsultationForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const jsonPayload: { [key: string]: any } = {
       consult: {
-        visit: visitId,
+        visit_id: visitId,
       },
     };
     handleSubmit(

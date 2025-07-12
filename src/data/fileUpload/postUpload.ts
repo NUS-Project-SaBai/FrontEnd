@@ -4,7 +4,7 @@
 import { axiosClientInstance } from '@/lib/axiosClientInstance';
 
 export async function postUpload(formData: FormData) {
-  const r = await axiosClientInstance.post('/upload/', formData, {
+  const r = await axiosClientInstance.post('/files/upload/', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

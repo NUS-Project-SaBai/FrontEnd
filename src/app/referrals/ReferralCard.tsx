@@ -22,7 +22,7 @@ export default function ReferralCard({
           <p>Loading patient</p>
         ) : (
           <Image
-            src={patient.picture}
+            src={patient.picture_url}
             alt="Patient Picture"
             width={180}
             height={180}

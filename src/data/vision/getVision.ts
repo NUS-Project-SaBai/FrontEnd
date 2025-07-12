@@ -10,7 +10,7 @@ export async function getVisionByVisit(
   if (!visitId) return null;
 
   try {
-    const response = await axiosInstance.get(`/glasses?visit=${visitId}`);
+    const response = await axiosInstance.get(`/glasses/?visit=${visitId}`);
     const data = response.data;
     return visionFromJson(data);
   } catch (err) {
