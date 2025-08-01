@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 export function useSaveOnWrite<T extends object>(
   name: string,
   initialFormDetails: T,
-  dependencies: [] = []
+  dependencies: unknown[] = []
 ) {
   const [formDetails, setFormDetails] = useState<T>(initialFormDetails);
 
@@ -20,7 +20,6 @@ export function useSaveOnWrite<T extends object>(
   useEffect(() => {
     const savedData = localStorage.getItem(storageKey);
     if (savedData) {
-      console.log(savedData);
       setFormDetails(JSON.parse(savedData));
     }
   }, dependencies);
@@ -31,7 +30,7 @@ export function useSaveOnWrite<T extends object>(
       localStorage.setItem(storageKey, JSON.stringify(formDetails));
     }, 500);
     return () => clearTimeout(timeout);
-  }, [...dependencies, formDetails]);
+  }, [formDetails, storageKey]);
 
   // Purge data from localStorage on successful submit
   const clearLocalStorageData = () => {
@@ -39,5 +38,9 @@ export function useSaveOnWrite<T extends object>(
     setFormDetails(initialFormDetails);
   };
 
-  return [formDetails, setFormDetails, clearLocalStorageData];
+  return [formDetails, setFormDetails, clearLocalStorageData] as [
+    T,
+    typeof setFormDetails,
+    () => void,
+  ];
 }
