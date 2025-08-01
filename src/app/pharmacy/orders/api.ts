@@ -4,7 +4,7 @@ import { VillagePrefix } from '@/types/VillagePrefixEnum';
  * Fetches the medication orders for all patient. Used in the main page.
  * GET /api/pharmacy/orders/
  */
-export async function fetchPharmacyOrders(): Promise<
+export async function getAllPatientMedicationOrders(): Promise<
   {
     patient: {
       patient_id: string;
@@ -12,15 +12,18 @@ export async function fetchPharmacyOrders(): Promise<
       picture_url: string;
       village_prefix: VillagePrefix;
     };
-    orders: {
-      id: number;
-      medication_name: string;
-      medication_code: string;
-      quantity_changed: number;
-      notes: string;
+    data: {
+      orders: {
+        id: number;
+        medication_name: string;
+        medication_code: string;
+        quantity_changed: number;
+        notes: string;
+      }[];
+      diagnoses: { category: string; details: string }[];
+      visit_id: number;
+      visit_date: string;
     }[];
-    diagnoses: { category: string; details: string }[];
-    visit_date: string;
   }[]
 > {
   return [
@@ -31,20 +34,46 @@ export async function fetchPharmacyOrders(): Promise<
         picture_url: '/images/patient.jpg',
         village_prefix: VillagePrefix.PC,
       },
-      orders: [
+      data: [
         {
-          id: 1,
-          medication_name: 'Aspirin',
-          medication_code: 'ASP123',
-          quantity_changed: 2,
-          notes: 'Take one tablet daily',
+          orders: [
+            {
+              id: 1,
+              medication_name: 'Aspirin',
+              medication_code: 'ASP123',
+              quantity_changed: 2,
+              notes: 'Take one tablet daily',
+            },
+            {
+              id: 2,
+              medication_name: 'Paracetamol',
+              medication_code: 'PAR456',
+              quantity_changed: 1,
+              notes: 'Take as needed for pain',
+            },
+          ],
+          diagnoses: [
+            { category: 'Eye', details: 'Myopia' },
+            { category: 'Others', details: 'Routine check-up' },
+          ],
+          visit_id: 1,
+          visit_date: new Date().toISOString(),
+        },
+        {
+          orders: [
+            {
+              id: 2,
+              medication_name: 'Paracetamol',
+              medication_code: 'PAR456',
+              quantity_changed: 1,
+              notes: 'Take as needed for pain',
+            },
+          ],
+          diagnoses: [{ category: 'Others', details: 'Fever' }],
+          visit_id: 2,
+          visit_date: new Date().toISOString(),
         },
       ],
-      diagnoses: [
-        { category: 'Eye', details: 'Myopia' },
-        { category: 'Others', details: 'Routine check-up' },
-      ],
-      visit_date: new Date().toISOString(),
     },
   ];
 }
