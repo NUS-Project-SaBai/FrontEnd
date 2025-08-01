@@ -12,6 +12,7 @@ import { Diagnosis } from '@/types/Diagnosis';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 
+// TODO: fetch diagnoses and consultations based on consult id. Instead of fetching all consultations data.
 export function RecordConsultationTable({
   consults,
 }: {
@@ -20,7 +21,6 @@ export function RecordConsultationTable({
   const [consult, setConsult] = useState<Consult | null>(null);
   const closeModal = () => setConsult(null);
 
-  // TODO: refactor api call such that diagnosis is part of the consult
   const [diagnosisArray, setDiagnosisArray] = useState<Diagnosis[]>([]);
 
   useEffect(() => {

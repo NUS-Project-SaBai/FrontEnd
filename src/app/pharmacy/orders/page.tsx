@@ -93,28 +93,32 @@ export default function OrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {orderRowData.map((x, index) => (
-                <OrderRow
-                  key={x.patient?.identification_number || index}
-                  {...x}
-                  removeNonPendingOrder={id => {
-                    if (orders[x.patient.patient_id] == undefined) return;
-                    const newOrders = orders[x.patient.patient_id].filter(
-                      o => o.id != id
-                    );
-                    if (newOrders.length == 0) {
-                      const tmp = { ...orders };
-                      delete tmp[x.patient.patient_id];
-                      setOrders(tmp);
-                    } else {
-                      setOrders(prev => ({
-                        ...prev,
-                        [x.patient.patient_id]: newOrders,
-                      }));
-                    }
-                  }}
-                />
-              ))}
+              {orderRowData.length == 0 ? (
+                <td className="col-span-4">No Pending Orders</td>
+              ) : (
+                orderRowData.map((x, index) => (
+                  <OrderRow
+                    key={x.patient?.patient_id || index}
+                    {...x}
+                    removeNonPendingOrder={id => {
+                      if (orders[x.patient.patient_id] == undefined) return;
+                      const newOrders = orders[x.patient.patient_id].filter(
+                        o => o.id != id
+                      );
+                      if (newOrders.length == 0) {
+                        const tmp = { ...orders };
+                        delete tmp[x.patient.patient_id];
+                        setOrders(tmp);
+                      } else {
+                        setOrders(prev => ({
+                          ...prev,
+                          [x.patient.patient_id]: newOrders,
+                        }));
+                      }
+                    }}
+                  />
+                ))
+              )}
             </tbody>
           </table>
         </div>

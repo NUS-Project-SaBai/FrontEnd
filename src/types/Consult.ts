@@ -1,4 +1,3 @@
-import { Doctor } from './Doctor';
 import { MedicationReview } from './MedicationReview';
 import { Patient } from './Patient';
 import { Prescription } from './Prescription';
@@ -9,7 +8,7 @@ export type Consult = {
   patient: Patient;
   date: string;
   status: string;
-  doctor: Doctor;
+  doctor: { nickname: string };
   prescriptions: Prescription[];
   medication_review: MedicationReview;
   past_medical_history: string;

@@ -37,7 +37,6 @@ export function VitalsForm({
       ? String(formWeight)
       : curVital.weight;
 
-  curVital = curVital;
   const submitVitalsFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
