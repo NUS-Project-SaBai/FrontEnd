@@ -1,7 +1,7 @@
 /**
- * For HistoryMedicationModal
+ * For HistoryMedicationModal, all medication_review
  *
- * /api/medication/{id}/history/
+ * GET /api/medication/{id}/history/
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function fetchMedicationHistory(id: number): Promise<
@@ -34,7 +34,7 @@ export async function fetchMedicationHistory(id: number): Promise<
   ];
 }
 /**
- * Get the stock data for the pharmacy page
+ * Get all the stock data for the pharmacy page
  * GET /api/pharmacy/stock/
  */
 export async function fetchPharmacyStockData(): Promise<

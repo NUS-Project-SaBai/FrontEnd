@@ -4,12 +4,11 @@ import { Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
 
 /**
- * /api/consultation/?visit_id={visitId}
+ * Fetches all the patient for a visit.
+ *
+ * GET /api/consultation/?visit_id={visitId}
  */
-export async function fetchPatientConsultationInfo(
-  patientId: number,
-  visitId: number
-): Promise<{
+export async function fetchPatientConsultationInfo(visitId: number): Promise<{
   patient: Patient;
   vitals: Vital;
   visit_date: string;

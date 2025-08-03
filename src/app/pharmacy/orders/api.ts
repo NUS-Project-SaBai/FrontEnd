@@ -2,9 +2,10 @@ import { VillagePrefix } from '@/types/VillagePrefixEnum';
 
 /**
  * Fetches the medication orders for all patient. Used in the main page.
+ *
  * GET /api/pharmacy/orders/
  */
-export async function getAllPatientMedicationOrders(): Promise<
+export async function fetchAllPatientMedicationOrders(): Promise<
   {
     patient: {
       patient_id: string;

@@ -2,6 +2,11 @@ import { Consult } from '@/types/Consult';
 import { Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
 
+/**
+ * Fetches all the patient records including consultations and prescriptions.
+ *
+ * GET /api/records/patient-records/
+ */
 export async function fetchPatientRecords(): Promise<{
   patient: Patient;
   vitals: Vital;

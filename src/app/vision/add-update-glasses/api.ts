@@ -2,10 +2,12 @@ import { Patient } from '@/types/Patient';
 import { Vision } from '@/types/Vision';
 import { Vital } from '@/types/Vital';
 
-export async function fetchVisionData(
-  patientId: number,
-  visitId: number
-): Promise<{
+/**
+ * Fetches the vision data for a patient based on their ID and visit ID.
+ *
+ * GET /api/vision/?visit_id={visitId}
+ */
+export async function fetchVisionData(visitId: number): Promise<{
   patient: Patient;
   vision: Vision;
   vital: Pick<
@@ -16,7 +18,7 @@ export async function fetchVisionData(
     | 'left_eye_pinhole'
   >;
 }> {
-  throw new Error('Function not implemented.' + patientId + visitId);
+  throw new Error('Function not implemented.' + visitId);
   return {
     patient: {} as Patient,
     vision: {} as Vision,
