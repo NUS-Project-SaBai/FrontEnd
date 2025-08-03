@@ -25,7 +25,11 @@
    1. Delete the current `node_modules`
    2. Run `pnpm i`
 
-3. Installation of project libraries
+3. Environmental Setup
+
+   Create a new `.env` and fill it with relevant details under the "FRONTEND" heading in the _"Key Credentials"_ document.
+
+4. Installation of project libraries
 
    ```bash
    git clone https://github.com/NUS-Project-SaBai/FrontEnd
@@ -33,16 +37,7 @@
    cd FrontEnd
    # Install the necessary libraries for the project
    pnpm i
-   # Run the development server
-   pnpm dev
-   ```
-
-4. Environmental Setup
-
-   Create a new `.env` and fill it with relevant details under the "FRONTEND" heading in the "Key Credentials" document.
-
-   ```bash
-   # Run the following command to start the server:
+   # Run the development server. Ensure backend server is already running
    pnpm dev
    ```
 
