@@ -1,5 +1,5 @@
 import { Patient } from '@/types/Patient';
-import moment from 'moment';
+import { formatDate } from '@/utils/formatDate';
 import { DisplayField } from '../../DisplayField';
 
 export function PatientInfoDetailSection({ patient }: { patient: Patient }) {
@@ -10,7 +10,7 @@ export function PatientInfoDetailSection({ patient }: { patient: Patient }) {
     { label: 'Gender', value: patient.gender },
     {
       label: 'Date of Birth',
-      value: moment(patient.date_of_birth).format('DD-MMMM-YYYY'),
+      value: formatDate(patient.date_of_birth, 'date'),
     },
     { label: 'Village', value: patient.village_prefix },
     { label: 'POOR', value: patient.poor },

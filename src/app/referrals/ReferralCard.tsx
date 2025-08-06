@@ -3,6 +3,7 @@ import ReferralStateDropdown from '@/components/referrals/ReferralStateDropdown'
 import { VILLAGES } from '@/constants';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
+import { formatDate } from '@/utils/formatDate';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -45,7 +46,7 @@ export default function ReferralCard({
             </p>
             <p className="text-center">Name: {patient.name}</p>
             <p className="text-center">
-              Visited on: {new Date(date).toDateString()}
+              Visited on: {formatDate(new Date(date).toDateString(), 'date')}
             </p>
           </div>
         </div>

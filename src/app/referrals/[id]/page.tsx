@@ -8,6 +8,7 @@ import { patchReferral } from '@/data/referrals/patchReferral';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
+import { formatDate } from '@/utils/formatDate';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -79,7 +80,7 @@ export default function ReferralDetailsPage() {
                 <td>
                   {date == undefined
                     ? 'No Date'
-                    : new Date(date).toDateString()}
+                    : formatDate(new Date(date).toDateString(), 'date')}
                 </td>
               </tr>
               <tr>

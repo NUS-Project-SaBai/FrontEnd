@@ -3,6 +3,7 @@
 import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { Patient } from '@/types/Patient';
 import { Upload } from '@/types/Upload';
+import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
@@ -49,7 +50,7 @@ export function ViewDocument({ patient }: { patient: Patient }) {
                     {doc.file_name}
                   </Link>
                 </td>
-                <td>{new Date(doc.created_at).toLocaleString()}</td>
+                <td>{formatDate(doc.created_at, 'datetime')}</td>
               </tr>
             ))}
           </tbody>

@@ -4,6 +4,7 @@ import { LoadingUI } from '@/components/LoadingUI';
 import { getMedicationReviewById } from '@/data/medicationReview/getMedicationReview';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { MedicationReview } from '@/types/MedicationReview';
+import { formatDate } from '@/utils/formatDate';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
@@ -114,7 +115,7 @@ function MedicationHistoryRow({ history }: { history: MedicationReview }) {
         {qty_changed >= 0 ? `+${qty_changed}` : qty_changed}
       </td>
       <td>{history.quantity_remaining}</td>
-      <td>{new Date(history.date).toLocaleString()}</td>
+      <td>{formatDate(history.date, 'datetime')}</td>
     </tr>
   );
 }
