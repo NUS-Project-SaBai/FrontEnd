@@ -8,7 +8,7 @@ export async function patchOrder(
   orderStatus: 'APPROVED' | 'CANCELLED'
 ): Promise<MedicationReview> {
   return axiosInstance
-    .patch(`/orders/${orderId}`, {
+    .patch(`/orders/${orderId}/`, {
       order_status: orderStatus,
     })
     .then(val => val.data)
