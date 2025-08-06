@@ -26,6 +26,17 @@ export function VitalsForm({
   const { handleSubmit, reset, watch } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
 
+  // if the user hasn’t provided a new height/weight, fall back
+  // to the current vital values (curVital.height, curVital.weight).
+  const heightToUse =
+    formHeight != null && formHeight !== ''
+      ? String(formHeight)
+      : curVital.height;
+  const weightToUse =
+    formWeight != null && formWeight !== ''
+      ? String(formWeight)
+      : curVital.weight;
+
   curVital = curVital;
   const submitVitalsFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,7 +79,7 @@ export function VitalsForm({
           />
           <DisplayField
             label="BMI"
-            content={displayBMI(formHeight, formWeight)}
+            content={displayBMI(heightToUse, weightToUse)}
           />
         </div>
         <h2>Blood Pressure</h2>
