@@ -15,6 +15,6 @@ export async function getReferrals(): Promise<ReferralWithDetails[]> {
 }
 
 export async function getReferral(id: string): Promise<ReferralWithDetails> {
-  const data = (await axiosInstance.get(`/referrals/${id}`)).data;
+  const data = (await axiosInstance.get(`/referrals/${id}/`)).data;
   return data;
 }

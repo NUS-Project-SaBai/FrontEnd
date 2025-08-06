@@ -4,7 +4,8 @@ import { MedicationForm } from '@/components/pharmacy/MedicationForm';
 import { createMedicine } from '@/data/medication/createMedication';
 import { getMedication } from '@/data/medication/getMedications';
 import { useLoadingState } from '@/hooks/useLoadingState';
-import { useState } from 'react';
+import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
+import { useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
@@ -14,7 +15,21 @@ export function AddMedicationModal() {
   const closeModal = () => setIsOpen(false);
   const { isLoading: isSubmitting, withLoading } = useLoadingState(false);
 
-  const useFormReturn = useForm();
+  const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
+    'AddMedicationModal',
+    {} as FieldValues,
+    []
+  );
+  const useFormReturn = useForm({ values: formDetails });
+  useEffect(() => {
+    const unsub = useFormReturn.subscribe({
+      formState: { values: true },
+      callback: ({ values }) => {
+        setFormDetails(values);
+      },
+    });
+    return () => unsub();
+  }, []);
   const submitMedicationFormHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     useFormReturn.handleSubmit(
@@ -44,7 +59,8 @@ export function AddMedicationModal() {
 
             const med = await createMedicine(jsonPayload);
             toast.success(`Added Medicine: ${med.medicine_name}`);
-            useFormReturn.reset();
+            useFormReturn.reset({});
+            clearLocalStorageData();
             closeModal();
           });
 

@@ -31,7 +31,7 @@ export function MedicationForm({
           type="text"
           isRequired={true}
         />
-        <RHFInputField label="Code" name="code" type="text" isRequired={true} />
+        <RHFInputField label="Code" name="code" type="text" />
         <DisplayField
           label="Current Quantity"
           content={
@@ -42,7 +42,6 @@ export function MedicationForm({
           label="Quantity to Add (Negative to subtract)"
           name="quantity_changed"
           type="number"
-          isRequired={true}
         />
         <RHFInputField label="Notes" name="notes" type="text" />
         <div className="flex">

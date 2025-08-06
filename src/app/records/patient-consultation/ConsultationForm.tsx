@@ -5,9 +5,10 @@ import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { DiagnosisField } from '@/components/records/consultation/DiagnosisField';
 import { createConsult } from '@/data/consult/createConsult';
 import { createReferral } from '@/data/referrals/createReferral';
+import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect } from 'react';
 import {
   Controller,
   FieldValues,
@@ -24,7 +25,24 @@ export function ConsultationForm({
   visitId: string;
   patient: Patient | null;
 }) {
-  const useFormReturn = useForm();
+  const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
+    'ConsultationForm',
+    {} as FieldValues,
+    [visitId]
+  );
+  const useFormReturn = useForm({ values: formDetails });
+  useEffect(() => {
+    const unsub = useFormReturn.subscribe({
+      formState: { values: true },
+      callback: ({ values }) => {
+        setFormDetails(values);
+      },
+    });
+    return () => {
+      unsub();
+      useFormReturn.reset({});
+    };
+  }, [visitId]);
   const { control, handleSubmit, reset } = useFormReturn;
 
   const submitConsultationFormHandler = (event: FormEvent<HTMLFormElement>) => {
@@ -79,7 +97,8 @@ export function ConsultationForm({
           } else {
             consultID = result.id;
             toast.success('Medical Consult Completed!');
-            reset();
+            reset({});
+            clearLocalStorageData();
           }
         } catch (error) {
           console.error('Error submitting consultation form:', error);
@@ -103,7 +122,6 @@ export function ConsultationForm({
                 .then(
                   () => {
                     toast.success('Referral submitted!');
-                    reset();
                   },
                   () => console.log('error')
                 )
@@ -135,12 +153,14 @@ export function ConsultationForm({
             label="Past Medical History"
             type="textarea"
             placeholder="Type your problems here..."
+            isRequired={true}
           />
           <RHFInputField
             name="consultation"
             label="Consultation"
             type="textarea"
             placeholder="Type your consultation here..."
+            isRequired={true}
           />
           <Controller
             name="diagnoses"
