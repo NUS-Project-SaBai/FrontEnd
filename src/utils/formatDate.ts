@@ -1,16 +1,17 @@
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 export function formatDate(
   date?: string,
   format?: 'date' | 'datetime'
 ): string {
-  if (format == 'datetime') {
-    return date
-      ? moment(date).format('DD MMM YYYY HH:mm')
-      : moment().format('DD MMM YYYY HH:mm');
+  if (!date) {
+    return format === 'datetime'
+      ? DateTime.now().toFormat('dd MMM yyyy HH:mm')
+      : DateTime.now().toFormat('dd MMM yyyy');
   } else {
-    return date
-      ? moment(date).format('DD MMM YYYY')
-      : moment().format('DD MMM YYYY');
+    const dt = DateTime.fromISO(date);
+    return format === 'date'
+      ? dt.toFormat('dd MMM yyyy')
+      : dt.toFormat('dd MMM yyyy HH:mm');
   }
 }
