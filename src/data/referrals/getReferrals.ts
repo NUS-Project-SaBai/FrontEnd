@@ -6,7 +6,7 @@ import { Referral } from '@/types/Referral';
 export type ReferralWithDetails = {
   patient: Patient;
   referral: Referral;
-  date: Date;
+  date: string;
 };
 
 export async function getReferrals(): Promise<ReferralWithDetails[]> {

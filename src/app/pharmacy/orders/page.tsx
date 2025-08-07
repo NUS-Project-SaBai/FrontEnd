@@ -10,6 +10,7 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { Diagnosis } from '@/types/Diagnosis';
 import { OrderWithDiagnoses } from '@/types/Order';
 import { Patient } from '@/types/Patient';
+import { formatDate } from '@/utils/formatDate';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
 import { Suspense, useEffect, useState } from 'react';
@@ -158,8 +159,8 @@ function OrderRow({
         <p className="font-semibold">{patient.name}</p>
         <p className="text-nowrap text-gray-400">
           {orders == undefined || orders[0] == undefined
-            ? 'Error Getting Date'
-            : new Date(orders[0].visit.date).toLocaleString()}
+            ? 'No Date'
+            : formatDate(orders[0].visit.date, 'datetime')}
         </p>
       </td>
       <td className="min-w-60 text-gray-700">
