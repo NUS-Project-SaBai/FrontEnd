@@ -166,9 +166,31 @@ export function ConsultationForm({
             name="diagnoses"
             control={control}
             defaultValue={[]}
-            render={({ field: { value, onChange } }) => (
-              <DiagnosisField diagnosis={value} setDiagnosis={onChange} />
+            render={({ field: { value, onChange }, fieldState }) => (
+              <DiagnosisField
+                diagnosis={value}
+                setDiagnosis={onChange}
+                error={fieldState.error?.message}
+              />
             )}
+            rules={{
+              validate: {
+                ensureFilled: (
+                  val: { details: string; category: string }[]
+                ) => {
+                  if (val.length === 0)
+                    return 'At least one diagnosis is required';
+                  if (
+                    val.some(
+                      d => d.details.trim() === '' || d.category.trim() === ''
+                    )
+                  ) {
+                    return 'All diagnoses must have details and category';
+                  }
+                  return true;
+                },
+              },
+            }}
           />
 
           <RHFInputField
@@ -180,6 +202,7 @@ export function ConsultationForm({
           <RHFDropdown
             name="referred_for"
             label="Referral for (optional)"
+            omitDefaultPrompt={true}
             options={[
               { value: '', label: 'Not Referred' },
               { value: 'Diagnostic', label: 'Diagnositic' },
@@ -195,12 +218,17 @@ export function ConsultationForm({
               },
             ]}
           />
-          <RHFInputField
-            name="referral_notes"
-            label="Referral Notes"
-            type="textarea"
-            placeholder="Type your referral notes here..."
-          />
+          {useFormReturn.watch('referred_for') === '' || (
+            <RHFInputField
+              name="referral_notes"
+              label="Referral Notes"
+              type="textarea"
+              placeholder="Type your referral notes here..."
+              isRequired={
+                useFormReturn.watch('referred_for') !== 'Not Referred'
+              }
+            />
+          )}
 
           <RHFInputField
             name="remarks"

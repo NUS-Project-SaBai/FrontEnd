@@ -22,14 +22,24 @@ const diagnosisOptions = [
 export function DiagnosisField({
   diagnosis,
   setDiagnosis,
+  error,
 }: {
   diagnosis: Diagnosis[];
   setDiagnosis: (diagnoses: Diagnosis[]) => void;
+  error: string | undefined;
 }) {
   const EMPTY_DIAGNOSIS = { details: '', category: '' };
   return (
-    <div className="flex flex-col gap-1">
-      <p>Diagnosis</p>
+    <div
+      className={
+        'flex flex-col gap-1 ' +
+        (error ? 'rounded border-2 border-red-500' : '')
+      }
+    >
+      <p>
+        Diagnosis<span className="text-red-500">*</span>
+      </p>
+      {error && <p className="font-semibold text-red-500">{error}</p>}
       {diagnosis.map((val, index) => (
         <DiagnosisInputRow
           key={index}
@@ -67,7 +77,10 @@ function DiagnosisInputRow({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label>Diagnosis {diagnosisNumber}</label>
+      <label>
+        Diagnosis {diagnosisNumber}
+        <span className="text-red-500">*</span>
+      </label>
       <textarea
         placeholder="Type your diagnosis here..."
         rows={3}
