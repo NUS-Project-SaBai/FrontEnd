@@ -159,11 +159,8 @@ function OrderRow({
         <p className="font-semibold">{patient.name}</p>
         <p className="text-nowrap text-gray-400">
           {orders == undefined || orders[0] == undefined
-            ? 'Error Getting Date'
-            : formatDate(
-                new Date(orders[0].visit.date).toLocaleString(),
-                'datetime'
-              )}
+            ? 'No Date'
+            : formatDate(orders[0].visit.date, 'datetime')}
         </p>
       </td>
       <td className="min-w-60 text-gray-700">

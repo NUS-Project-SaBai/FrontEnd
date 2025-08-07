@@ -14,7 +14,7 @@ export default function ReferralCard({
 }: {
   referral: Referral;
   patient: Patient;
-  date: Date;
+  date: string;
 }) {
   return (
     <tr>
@@ -46,7 +46,7 @@ export default function ReferralCard({
             </p>
             <p className="text-center">Name: {patient.name}</p>
             <p className="text-center">
-              Visited on: {formatDate(new Date(date).toDateString(), 'date')}
+              Visited on: {formatDate(date, 'date')}
             </p>
           </div>
         </div>
