@@ -1,20 +1,13 @@
-import { APP_CONFIG } from '@/config';
+'use server';
+
+import { axiosInstance } from '@/lib/axiosInstance';
 import { Upload } from '@/types/Upload';
 
 export async function patchUploadName(
-  id: number,
+  uploadId: number,
   file_name: string
-): Promise<Upload> {
-  const url = `${APP_CONFIG.BACKEND_API_URL}/files/upload/${id}/`;
-  const res = await fetch(url, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ file_name }),
-  });
-  const payload = await res.json();
-  if (!res.ok) {
-    // backend returns { error: "..." }
-    throw new Error(payload.error || 'Rename failed');
-  }
-  return payload as Upload;
+): Promise<Upload | null> {
+  return axiosInstance
+    .patch(`/files/upload/${uploadId}/`, { file_name })
+    .then(r => r.data);
 }

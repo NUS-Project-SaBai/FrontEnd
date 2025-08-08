@@ -6,6 +6,7 @@ import { patchUploadName } from '@/data/fileUpload/patchUploadName';
 import { Patient } from '@/types/Patient';
 import { Upload } from '@/types/Upload';
 import { formatDate } from '@/utils/formatDate';
+import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -13,7 +14,6 @@ import ReactModal from 'react-modal';
 
 export function ViewDocument({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);
-  const closeModal = () => setIsOpen(false);
   const [documents, setDocuments] = useState<Upload[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newFileName, setNewFileName] = useState('');
@@ -28,12 +28,21 @@ export function ViewDocument({ patient }: { patient: Patient }) {
   const handleRename = async (doc: Upload) => {
     try {
       const updated = await patchUploadName(doc.id, newFileName);
-      setDocuments(ds => ds.map(d => (d.id === doc.id ? updated : d)));
+      setDocuments(ds =>
+        ds.map(d => (d.id === doc.id && updated ? updated : d))
+      );
       setEditingId(null);
+      setNewFileName('');
       toast.success('Document renamed');
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('patchUploadName failed:', err);
-      const message = err instanceof Error ? err.message : JSON.stringify(err);
+      let message = 'Unknown error';
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data as { error?: string } | undefined;
+        message = data?.error ?? err.message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
       toast.error(`Failed to rename document: ${message}`);
     }
   };
@@ -47,21 +56,26 @@ export function ViewDocument({ patient }: { patient: Patient }) {
       />
       <ReactModal
         isOpen={isOpen}
-        onRequestClose={closeModal}
+        onRequestClose={() => setIsOpen(false)}
         ariaHideApp={false}
       >
-        <table className="w-full divide-y divide-gray-400 text-left">
+        <table className="w-full table-fixed divide-y divide-gray-400 text-left">
+          <colgroup>
+            <col className="w-1/2" />
+            <col className="w-1/4" />
+            <col className="w-1/4" />
+          </colgroup>
           <thead>
             <tr>
-              <th>File Name</th>
-              <th>Created At</th>
-              <th>Actions</th>
+              <th className="px-2 py-1">File Name</th>
+              <th className="px-2 py-1">Created At</th>
+              <th className="px-2 py-1">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-200">
             {documents.map(doc => (
               <tr key={doc.id}>
-                <td className="pr-4">
+                <td className="px-2 py-1">
                   {editingId === doc.id ? (
                     <input
                       type="text"
@@ -71,10 +85,10 @@ export function ViewDocument({ patient }: { patient: Patient }) {
                     />
                   ) : (
                     <Link
-                      href={doc.file_path || doc.offline_file || ''}
+                      href={doc.file_path || doc.offline_file || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 underline"
+                      className="text-blue-600 underline"
                     >
                       {doc.file_name}
                     </Link>
@@ -83,7 +97,7 @@ export function ViewDocument({ patient }: { patient: Patient }) {
                 <td className="pr-4">
                   {formatDate(doc.created_at, 'datetime')}
                 </td>
-                <td>
+                <td className="px-2 py-1">
                   {editingId === doc.id ? (
                     <div className="flex space-x-2">
                       <Button
@@ -115,7 +129,7 @@ export function ViewDocument({ patient }: { patient: Patient }) {
             ))}
           </tbody>
         </table>
-        <Button text="Close" onClick={closeModal} colour="red" />
+        <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
       </ReactModal>
     </>
   );
