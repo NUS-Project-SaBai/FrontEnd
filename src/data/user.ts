@@ -1,17 +1,16 @@
-import { User } from '@/types/User';
+import { axiosInstance } from '@/lib/axiosInstance';
+import type { User } from '@/types/User';
 
+// GET /users
 export async function getUsers(): Promise<User[]> {
-  const res = await fetch('/api/users');
-  if (!res.ok) throw new Error('Failed to fetch users');
-  return res.json();
+  const { data } = await axiosInstance.get<User[]>('/users');
+  return data;
 }
 
-export async function createUser(userData: User) {
-  const res = await fetch('/api/users', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(userData),
-  });
-  if (!res.ok) throw new Error('Failed to create user');
-  return res.json();
+// POST /users  (payload without id/role)
+export async function createUser(
+  payload: Omit<User, 'id' | 'role'>
+): Promise<User> {
+  const { data } = await axiosInstance.post<User>('/users', payload);
+  return data;
 }
