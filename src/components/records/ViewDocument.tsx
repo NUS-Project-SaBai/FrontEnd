@@ -94,7 +94,7 @@ export function ViewDocument({ patient }: { patient: Patient }) {
                     </Link>
                   )}
                 </td>
-                <td className="pr-4">
+                <td className="px-2 py-1">
                   {formatDate(doc.created_at, 'datetime')}
                 </td>
                 <td className="px-2 py-1">
