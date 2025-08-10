@@ -17,6 +17,8 @@ export type Vital = {
   right_eye_degree: string;
   left_eye_pinhole: string;
   right_eye_pinhole: string;
+  left_astigmatism: string;
+  right_astigmatism: string;
   gross_motor: string;
   red_reflex: string;
   scoliosis: string;
@@ -78,6 +80,8 @@ export const EMPTY_VITAL: Vital = {
   right_eye_degree: '',
   left_eye_pinhole: '',
   right_eye_pinhole: '',
+  left_astigmatism: '',
+  right_astigmatism: '',
   gross_motor: '',
   red_reflex: '',
   scoliosis: '',

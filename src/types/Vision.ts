@@ -3,6 +3,7 @@ export type Vision = {
   left_glasses_degree?: string;
   right_glasses_degree?: string;
   visit_id?: number;
+  notes?: string;
 };
 
 export function visionFromJson(jsonObj: object): Vision | null {
@@ -14,4 +15,5 @@ export const EMPTY_VISION: Vision = {
   left_glasses_degree: '',
   right_glasses_degree: '',
   visit_id: undefined,
+  notes: '',
 };
