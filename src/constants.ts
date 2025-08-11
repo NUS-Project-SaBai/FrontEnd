@@ -1,4 +1,4 @@
-import { VillagePrefix } from './types/VillagePrefixEnum';
+import { VillagePrefix } from '@/types/VillagePrefixEnum';
 
 type VillageInfo = { key: VillagePrefix; label: string; color: string };
 

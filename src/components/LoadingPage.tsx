@@ -1,4 +1,4 @@
-import { LoadingUI } from './LoadingUI';
+import { LoadingUI } from '@/components/LoadingUI';
 
 export function LoadingPage({
   children,

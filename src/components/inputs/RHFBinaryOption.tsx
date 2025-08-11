@@ -1,4 +1,4 @@
-import { OptionData, RHFDropdown } from './RHFDropdown';
+import { OptionData, RHFDropdown } from '@/components/inputs/RHFDropdown';
 
 type RHFBinaryOptionProps = {
   name: string;

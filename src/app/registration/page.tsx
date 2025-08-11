@@ -1,6 +1,9 @@
 'use client';
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientInfo } from '@/components/records/patient/PatientInfo';
+import { NewPatientModal } from '@/components/registration/NewPatientModal';
+import { PatientScanForm } from '@/components/registration/PatientScanForm';
+import { RegistrationAutosuggest } from '@/components/registration/RegistrationAutosuggest';
 import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
@@ -11,9 +14,6 @@ import { urlToFile } from '@/utils/urlToFile';
 import { FormEvent, useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { NewPatientModal } from './NewPatientModal';
-import { PatientScanForm } from './PatientScanForm';
-import { RegistrationAutosuggest } from './RegistrationAutosuggest';
 
 export default function RegistrationPage() {
   const [patientList, setPatientList] = useState<Patient[]>([]);

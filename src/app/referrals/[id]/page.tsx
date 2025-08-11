@@ -2,7 +2,7 @@
 import { Button } from '@/components/Button';
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
-import ReferralStateDropdown from '@/components/referrals/ReferralStateDropdown';
+import { ReferralStateDropdown } from '@/components/referrals/ReferralStateDropdown';
 import { getReferral } from '@/data/referrals/getReferrals';
 import { patchReferral } from '@/data/referrals/patchReferral';
 import { useLoadingState } from '@/hooks/useLoadingState';

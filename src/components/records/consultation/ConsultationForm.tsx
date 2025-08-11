@@ -3,6 +3,7 @@ import { Button } from '@/components/Button';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { DiagnosisField } from '@/components/records/consultation/DiagnosisField';
+import { MedicationOrderSection } from '@/components/records/consultation/MedicationOrderSection';
 import { createConsult } from '@/data/consult/createConsult';
 import { createReferral } from '@/data/referrals/createReferral';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
@@ -16,7 +17,6 @@ import {
   useForm,
 } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { MedicationOrderSection } from './MedicationOrderSection';
 
 export function ConsultationForm({
   visitId,

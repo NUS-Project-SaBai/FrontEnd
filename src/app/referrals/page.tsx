@@ -1,10 +1,10 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientSearchInputByReferral } from '@/components/referrals/PatientSearchbarByReferral';
+import { ReferralCard } from '@/components/referrals/ReferralCard';
 import { ReferralWithDetails } from '@/data/referrals/getReferrals';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Suspense, useState } from 'react';
-import ReferralCard from './ReferralCard';
 
 export default function ReferralPage() {
   const [referralWithDetails, setReferralsWithPatient] = useState<
