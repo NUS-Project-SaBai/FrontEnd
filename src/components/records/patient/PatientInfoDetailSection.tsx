@@ -1,6 +1,6 @@
+import { DisplayField } from '@/components/DisplayField';
 import { Patient } from '@/types/Patient';
 import { formatDate } from '@/utils/formatDate';
-import { DisplayField } from '../../DisplayField';
 
 export function PatientInfoDetailSection({ patient }: { patient: Patient }) {
   const fieldArray = [

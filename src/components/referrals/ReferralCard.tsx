@@ -1,5 +1,5 @@
 import { Button } from '@/components/Button';
-import ReferralStateDropdown from '@/components/referrals/ReferralStateDropdown';
+import { ReferralStateDropdown } from '@/components/referrals/ReferralStateDropdown';
 import { VILLAGES } from '@/constants';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
@@ -7,7 +7,7 @@ import { formatDate } from '@/utils/formatDate';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function ReferralCard({
+export function ReferralCard({
   referral,
   patient,
   date,

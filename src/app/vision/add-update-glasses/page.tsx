@@ -1,11 +1,11 @@
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
+import { VisionForm } from '@/components/vision/VisionForm';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisionByVisit } from '@/data/vision/getVision';
 import { getVitalByVisit } from '@/data/vital/getVital';
 import { EMPTY_VISION } from '@/types/Vision';
 import { EMPTY_VITAL } from '@/types/Vital';
-import { VisionForm } from './VisionForm';
 
 export default async function PatientVisionPage({
   searchParams,

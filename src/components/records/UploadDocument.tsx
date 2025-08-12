@@ -1,4 +1,7 @@
 'use client';
+import { Button } from '@/components/Button';
+import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { LoadingUI } from '@/components/LoadingUI';
 import { postUpload } from '@/data/fileUpload/postUpload';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
@@ -7,9 +10,6 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
-import { Button } from '../Button';
-import { RHFInputField } from '../inputs/RHFInputField';
-import { LoadingUI } from '../LoadingUI';
 
 export function UploadDocument({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);

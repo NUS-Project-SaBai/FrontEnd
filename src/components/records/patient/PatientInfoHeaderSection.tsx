@@ -1,5 +1,8 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
+import { VisitDropdown } from '@/components/VisitDropdown';
+import { UploadDocument } from '@/components/records/UploadDocument';
+import { ViewDocument } from '@/components/records/ViewDocument';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { getVisitByPatientId } from '@/data/visit/getVisit';
 import { WithLoadingType } from '@/hooks/useLoadingState';
@@ -7,9 +10,6 @@ import { Patient, getPatientAge } from '@/types/Patient';
 import { Visit } from '@/types/Visit';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { VisitDropdown } from '../../VisitDropdown';
-import { UploadDocument } from '../UploadDocument';
-import { ViewDocument } from '../ViewDocument';
 
 export function PatientInfoHeaderSection({
   patient,

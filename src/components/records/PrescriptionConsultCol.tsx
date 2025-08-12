@@ -1,8 +1,8 @@
 'use client';
+import { LoadingUI } from '@/components/LoadingUI';
+import { RecordConsultationTable } from '@/components/records/consultation/RecordConsultationTable';
+import { PrescriptionTable } from '@/components/records/prescription/PrescriptionTable';
 import { Consult } from '@/types/Consult';
-import { LoadingUI } from '../LoadingUI';
-import { RecordConsultationTable } from './consultation/RecordConsultationTable';
-import { PrescriptionTable } from './prescription/PrescriptionTable';
 
 export function PrescriptionConsultCol({
   consults,

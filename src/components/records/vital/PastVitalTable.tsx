@@ -1,7 +1,7 @@
 import { DisplayField } from '@/components/DisplayField';
+import { ALL_CHILD_AGES } from '@/components/records/vital/ChildVitalsFields';
 import { GenderType } from '@/types/Gender';
 import { displayBMI, Vital } from '@/types/Vital';
-import { ALL_CHILD_AGES } from './ChildVitalsFields';
 
 type VitalFieldsDataType = {
   label: string;
