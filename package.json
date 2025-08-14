@@ -12,9 +12,13 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.6.0",
     "@heroicons/react": "^2.2.0",
+    "@radix-ui/react-select": "^2.2.6",
     "@types/react-autosuggest": "^10.1.11",
     "@types/react-modal": "^3.16.3",
     "axios": "^1.9.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.539.0",
     "luxon": "^3.7.1",
     "next": "^15.3.2",
     "react": "^19.1.0",
@@ -24,6 +28,8 @@
     "react-hot-toast": "^2.5.2",
     "react-modal": "^3.16.3",
     "react-webcam": "^7.2.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.4"
   },
   "devDependencies": {
