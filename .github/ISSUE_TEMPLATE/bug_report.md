@@ -25,7 +25,9 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Which browser are you using? eg firefox, safari, chrome, etc:
+
 Commit hash of backend:
+
 Commit hash of frontend:
 
 Add any other context about the problem here.
