@@ -1,7 +1,7 @@
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 
 /**
- * Fetches the medication orders for all patient. Used in the main page.
+ * Fetches the pending medication orders for all patient. Used in the main page.
  *
  * GET /api/pharmacy/orders/
  */
