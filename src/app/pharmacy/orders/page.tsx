@@ -94,7 +94,9 @@ export default function OrdersPage() {
             </thead>
             <tbody className="divide-y">
               {orderRowData.length == 0 ? (
-                <td className="col-span-4">No Pending Orders</td>
+                <tr>
+                  <td className="col-span-4">No Pending Orders</td>
+                </tr>
               ) : (
                 orderRowData.map((x, index) => (
                   <OrderRow
