@@ -6,10 +6,6 @@ export type Vision = {
   notes?: string;
 };
 
-export function visionFromJson(jsonObj: object): Vision | null {
-  return jsonObj as Vision;
-}
-
 export const EMPTY_VISION: Vision = {
   id: undefined,
   left_glasses_degree: '',

@@ -1,6 +1,6 @@
 'use server';
 import { axiosInstance } from '@/lib/axiosInstance';
-import { Consult, consultFromJson } from '@/types/Consult';
+import { Consult } from '@/types/Consult';
 
 export async function getConsultByVisitId(
   visitId: string
@@ -8,9 +8,7 @@ export async function getConsultByVisitId(
   if (!visitId) {
     return null;
   }
-  return (await axiosInstance.get(`/consults?visit=${visitId}`)).data.map(
-    (val: Consult) => consultFromJson(val)
-  );
+  return (await axiosInstance.get(`/consults?visit=${visitId}`)).data;
 }
 
 export async function getConsultByID(

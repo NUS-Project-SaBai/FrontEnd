@@ -22,6 +22,8 @@ export function PastVisionTable({
     | 'left_eye_degree'
     | 'right_eye_pinhole'
     | 'left_eye_pinhole'
+    | 'right_astigmatism'
+    | 'left_astigmatism'
   >;
 }) {
   const visionFields: VisionFieldsDataType[] = [

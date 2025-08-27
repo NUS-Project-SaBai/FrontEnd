@@ -24,8 +24,8 @@ export function DiagnosisField({
   setDiagnosis,
   error,
 }: {
-  diagnosis: Diagnosis[];
-  setDiagnosis: (diagnoses: Diagnosis[]) => void;
+  diagnosis: Omit<Diagnosis, 'consult'>[];
+  setDiagnosis: (diagnoses: Omit<Diagnosis, 'consult'>[]) => void;
   error: string | undefined;
 }) {
   const EMPTY_DIAGNOSIS = { details: '', category: '' };
@@ -71,9 +71,9 @@ function DiagnosisInputRow({
   onDiagnosisEdit,
 }: {
   diagnosisNumber: number;
-  diagnosis: Diagnosis;
+  diagnosis: Omit<Diagnosis, 'consult'>;
   onDiagnosisDelete: () => void;
-  onDiagnosisEdit: (curDiagnosis: Diagnosis) => void;
+  onDiagnosisEdit: (curDiagnosis: Omit<Diagnosis, 'consult'>) => void;
 }) {
   return (
     <div className="flex flex-col gap-1">
