@@ -1,9 +1,11 @@
+'use server';
+import { axiosInstance } from '@/lib/axiosInstance';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 
 /**
  * Fetches the pending medication orders for all patient. Used in the main page.
  *
- * GET /api/pharmacy/orders/
+ * GET /api/pharmacy_orders/
  */
 export async function fetchAllPatientMedicationOrders(): Promise<
   {
@@ -27,54 +29,6 @@ export async function fetchAllPatientMedicationOrders(): Promise<
     }[];
   }[]
 > {
-  return [
-    {
-      patient: {
-        patient_id: '0001',
-        name: 'John',
-        picture_url: '/images/patient.jpg',
-        village_prefix: VillagePrefix.PC,
-      },
-      data: [
-        {
-          orders: [
-            {
-              id: 1,
-              medication_name: 'Aspirin',
-              medication_code: 'ASP123',
-              quantity_changed: 2,
-              notes: 'Take one tablet daily',
-            },
-            {
-              id: 2,
-              medication_name: 'Paracetamol',
-              medication_code: 'PAR456',
-              quantity_changed: 1,
-              notes: 'Take as needed for pain',
-            },
-          ],
-          diagnoses: [
-            { category: 'Eye', details: 'Myopia' },
-            { category: 'Others', details: 'Routine check-up' },
-          ],
-          visit_id: 1,
-          visit_date: new Date().toISOString(),
-        },
-        {
-          orders: [
-            {
-              id: 2,
-              medication_name: 'Paracetamol',
-              medication_code: 'PAR456',
-              quantity_changed: 1,
-              notes: 'Take as needed for pain',
-            },
-          ],
-          diagnoses: [{ category: 'Others', details: 'Fever' }],
-          visit_id: 2,
-          visit_date: new Date().toISOString(),
-        },
-      ],
-    },
-  ];
+  // TODO: data.orders.id is the pk for that order, not medicine_id
+  return axiosInstance.get('/pharmacy_orders/').then(res => res.data);
 }
