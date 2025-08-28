@@ -1,9 +1,11 @@
 'use client';
 
+import { Button } from '@/components/Button';
+import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { createUser, getUsers } from '@/data/user';
 import type { User } from '@/types/User';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 export default function AccountManagement() {
   const [users, setUsers] = useState<User[]>([]);
@@ -13,12 +15,8 @@ export default function AccountManagement() {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   // react-hook-form
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<Omit<User, 'id' | 'role'>>();
+  const useFormReturn = useForm<Omit<User, 'id' | 'role'>>();
+  const { handleSubmit, reset } = useFormReturn;
 
   useEffect(() => {
     setLoading(true);
@@ -40,7 +38,11 @@ export default function AccountManagement() {
     <div>
       <div className="flex items-center justify-between">
         <h1>Account Management</h1>
-        <button onClick={() => dialogRef.current?.showModal()}>Add User</button>
+        <Button
+          onClick={() => dialogRef.current?.showModal()}
+          text="Add User"
+          colour="green"
+        />
       </div>
 
       <table>
@@ -63,32 +65,45 @@ export default function AccountManagement() {
       </table>
 
       {/* minimal modal using native <dialog> */}
-      <dialog ref={dialogRef}>
-        <form onSubmit={handleSubmit(onSubmit)} method="dialog">
-          <h2>Add New User</h2>
+      <dialog ref={dialogRef} className="rounded border p-4">
+        <FormProvider {...useFormReturn}>
+          <form onSubmit={handleSubmit(onSubmit)} method="dialog">
+            <h2>Add New User</h2>
 
-          <input
-            placeholder="Username"
-            {...register('username', { required: true })}
-          />
-          {errors.username && <p>Username is required</p>}
+            <RHFInputField
+              name="username"
+              type="text"
+              placeholder="Username"
+              label="Username"
+              isRequired={true}
+            />
 
-          <input placeholder="Nickname" {...register('nickname')} />
+            <RHFInputField
+              name="nickname"
+              type="text"
+              placeholder="Nickname"
+              label="Nickname"
+              isRequired={true}
+            />
 
-          <input
-            type="email"
-            placeholder="Email"
-            {...register('email', { required: true })}
-          />
-          {errors.email && <p>Email is required</p>}
+            <RHFInputField
+              name="email"
+              type="email"
+              placeholder="Email"
+              label="Email"
+              isRequired={true}
+            />
 
-          <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
-            <button type="button" onClick={() => dialogRef.current?.close()}>
-              Cancel
-            </button>
-            <button type="submit">Create</button>
-          </div>
-        </form>
+            <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+              <Button
+                text="Cancel"
+                onClick={() => dialogRef.current?.close()}
+                colour="red"
+              />
+              <Button type="submit" text="Create" colour="green" />
+            </div>
+          </form>
+        </FormProvider>
       </dialog>
     </div>
   );
