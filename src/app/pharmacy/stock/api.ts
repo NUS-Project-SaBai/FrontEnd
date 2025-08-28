@@ -1,9 +1,12 @@
+'use server';
 /**
  * For HistoryMedicationModal, all medication_review
  *
- * GET /api/medication_history/?medicine_id={id}
+ * GET /api/v1/medication_history/?medicine_id={id}
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+import { axiosInstance } from '@/lib/axiosInstance';
+
 export async function fetchMedicationHistory(id: number): Promise<
   {
     approval_name: string;
@@ -14,49 +17,8 @@ export async function fetchMedicationHistory(id: number): Promise<
     date: string;
   }[]
 > {
-  return [
-    {
-      approval_name: 'sabai',
-      doctor_name: '-',
-      patient_name: '-',
-      qty_changed: 50,
-      qty_remaining: 50,
-      date: '2023-10-01T12:00:00Z',
-    },
-    {
-      approval_name: 'sabai',
-      doctor_name: 'Dr. Smith',
-      patient_name: 'John',
-      qty_changed: -10,
-      qty_remaining: 40,
-      date: '2023-10-01T12:00:00Z',
-    },
-  ];
-}
-/**
- * Get all the stock data for the pharmacy page
- * GET /api/pharmacy/stock/
- */
-export async function fetchPharmacyStockData(): Promise<
-  {
-    medicine_id: number;
-    medicine_name: string;
-    quantity: number;
-    code: string;
-  }[]
-> {
-  return [
-    {
-      medicine_id: 1,
-      medicine_name: 'Paracetamol',
-      quantity: 100,
-      code: 'PAR123',
-    },
-    {
-      medicine_id: 2,
-      medicine_name: 'Ibuprofen',
-      quantity: 50,
-      code: 'IBU456',
-    },
-  ];
+  const response = await axiosInstance.get(
+    `/medication_history/?medicine_id=${id}`
+  );
+  return response.data;
 }
