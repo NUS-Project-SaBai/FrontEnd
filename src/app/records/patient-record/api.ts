@@ -1,3 +1,5 @@
+'use server';
+import { axiosInstance } from '@/lib/axiosInstance';
 import { Consult } from '@/types/Consult';
 import { Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
@@ -5,9 +7,9 @@ import { Vital } from '@/types/Vital';
 /**
  * Fetches all the patient records including consultations and prescriptions.
  *
- * GET /api/records/patient-records/
+ * GET /api/v1/patient_records/?visit_id={visitId}
  */
-export async function fetchPatientRecords(): Promise<{
+export async function fetchPatientRecords(visitId: string): Promise<{
   patient: Patient;
   vitals: Vital;
   visit_date: string;
@@ -21,6 +23,9 @@ export async function fetchPatientRecords(): Promise<{
     status: string;
   }[];
 }> {
+  return axiosInstance
+    .get(`/patient_records/?visit_id=${visitId}`)
+    .then(res => res.data);
   return {
     patient: {} as Patient,
     vitals: {} as Vital,

@@ -5,28 +5,39 @@ import { LoadingUI } from '@/components/LoadingUI';
 import { DiagnosesTable } from '@/components/records/consultation/DiagnosesTable';
 import { RecordConsultationTableRow } from '@/components/records/consultation/RecordConsultationTableRow';
 import { PrescriptionTable } from '@/components/records/prescription/PrescriptionTable';
+import { getConsultByID } from '@/data/consult/getConsult';
 import { getPdfConsult } from '@/data/consult/getPdfConsult';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 
-// TODO: fetch diagnoses and consultations based on consult id. Instead of fetching all consultations data.
 export function RecordConsultationTable({
   consults,
 }: {
-  consults: Consult[] | null;
+  consults: Pick<Consult, 'id' | 'date' | 'doctor' | 'referred_for'>[] | null;
 }) {
+  const [consultId, setConsultId] = useState<number | null>(null);
   const [consult, setConsult] = useState<Consult | null>(null);
-  const closeModal = () => setConsult(null);
-
   const [diagnosisArray, setDiagnosisArray] = useState<Diagnosis[]>([]);
+  const { isLoading, withLoading } = useLoadingState(true);
+  const closeModal = () => {
+    setConsultId(null);
+    setConsult(null);
+    setDiagnosisArray([]);
+  };
 
   useEffect(() => {
-    if (consult == null) return;
-    getDiagnosisByConsult(consult.id).then(setDiagnosisArray);
-  }, [consult]);
+    if (consultId == null) return;
+    withLoading(async () => {
+      await Promise.all([
+        getConsultByID(consultId.toString()).then(setConsult),
+        getDiagnosisByConsult(consultId).then(setDiagnosisArray),
+      ]);
+    })();
+  }, [consultId]);
 
   if (consults == null) {
     return <LoadingUI message="Loading Consultations..." />;
@@ -37,11 +48,13 @@ export function RecordConsultationTable({
   return (
     <>
       <ReactModal
-        isOpen={consult != null}
+        isOpen={consultId != null}
         onRequestClose={closeModal}
         ariaHideApp={false}
       >
-        {consult == null ? (
+        {isLoading ? (
+          <LoadingUI message="Loading Consultation..." />
+        ) : consult == null ? (
           <p>No Consult Found</p>
         ) : (
           <>
@@ -78,7 +91,16 @@ export function RecordConsultationTable({
               <div className="py-2">
                 <p className="font-bold">Prescriptions</p>
                 <PrescriptionTable
-                  prescriptions={consult?.prescriptions || []}
+                  prescriptions={
+                    consult?.prescriptions.map(p => ({
+                      consult_id: p.consult,
+                      visit_date: p.visit.date,
+                      medication: p.medication_review.medicine.medicine_name,
+                      quantity: p.medication_review.quantity_changed,
+                      notes: p.notes,
+                      status: p.medication_review.order_status,
+                    })) || []
+                  }
                 />
               </div>
             </div>
@@ -100,7 +122,7 @@ export function RecordConsultationTable({
             <RecordConsultationTableRow
               key={consult.id}
               consult={consult}
-              openConsultModal={consult => setConsult(consult)}
+              openConsultModal={setConsultId}
               onGeneratePDF={() => {
                 getPdfConsult(consult.id).then(payload => {
                   if (payload == null) return;

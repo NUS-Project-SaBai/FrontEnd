@@ -83,7 +83,21 @@ function MainBody({
             gender={patient.gender}
           />
         )}
-        <PrescriptionConsultCol consults={consults} />
+        <PrescriptionConsultCol
+          consults={consults}
+          prescriptions={
+            consults?.flatMap(c =>
+              c.prescriptions.map(p => ({
+                consult_id: p.consult,
+                visit_date: p.visit.date,
+                medication: p.medication_review.medicine.medicine_name,
+                quantity: p.medication_review.quantity_changed,
+                notes: p.notes,
+                status: p.medication_review.order_status,
+              }))
+            ) || []
+          }
+        />
       </div>
       <div className="mb-2">
         <ConsultationForm visitId={visitId} patient={patient} />
