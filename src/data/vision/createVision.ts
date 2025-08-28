@@ -1,6 +1,6 @@
 'use server';
 import { axiosInstance } from '@/lib/axiosInstance';
-import { Vision, visionFromJson } from '@/types/Vision';
+import { Vision } from '@/types/Vision';
 
 export async function createVision(data: Vision): Promise<Vision | null> {
   try {
@@ -9,7 +9,7 @@ export async function createVision(data: Vision): Promise<Vision | null> {
         'Content-Type': 'application/json',
       },
     });
-    return visionFromJson(response.data);
+    return response.data;
   } catch (err) {
     console.error('Error in createVision:', err);
     return null;

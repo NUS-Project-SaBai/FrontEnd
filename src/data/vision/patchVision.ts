@@ -1,7 +1,7 @@
 'use server';
 
 import { axiosInstance } from '@/lib/axiosInstance';
-import { Vision, visionFromJson } from '@/types/Vision';
+import { Vision } from '@/types/Vision';
 
 export async function patchVision(data: Vision): Promise<Vision | null> {
   const { ...patchData } = data;
@@ -11,7 +11,7 @@ export async function patchVision(data: Vision): Promise<Vision | null> {
       `/glasses/${data.id}/`,
       patchData
     );
-    return visionFromJson(response.data);
+    return response.data;
   } catch (err) {
     console.error('Error in patchVision:', err);
     return null;

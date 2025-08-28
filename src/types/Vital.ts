@@ -41,10 +41,6 @@ export type Vital = {
   others: string;
 };
 
-export function vitalFromJson(jsonObj: object): Vital | null {
-  return jsonObj as Vital;
-}
-
 /**
  * Returns the BMI of the patient based on the height and weight.
  * If height or weight is invalid, returns 'Invalid/Missing Height or Weight'.

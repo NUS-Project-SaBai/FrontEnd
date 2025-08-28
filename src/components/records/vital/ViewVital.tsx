@@ -13,7 +13,7 @@ export function ViewVital({
   vitals,
 }: {
   patient: Patient;
-  consults: Consult[];
+  consults: Pick<Consult, 'id' | 'date' | 'doctor' | 'referred_for'>[];
   vitals: Vital | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);

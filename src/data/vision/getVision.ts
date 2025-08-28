@@ -1,7 +1,7 @@
 'use server';
 
 import { axiosInstance } from '@/lib/axiosInstance';
-import { Vision, visionFromJson } from '@/types/Vision';
+import { Vision } from '@/types/Vision';
 import { AxiosError } from 'axios';
 
 export async function getVisionByVisit(
@@ -12,7 +12,7 @@ export async function getVisionByVisit(
   try {
     const response = await axiosInstance.get(`/glasses/?visit=${visitId}`);
     const data = response.data;
-    return visionFromJson(data);
+    return data;
   } catch (err) {
     // Use a type guard to narrow to AxiosError
     if (isAxiosError(err)) {

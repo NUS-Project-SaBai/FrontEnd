@@ -6,8 +6,8 @@ export function RecordConsultationTableRow({
   openConsultModal,
   onGeneratePDF,
 }: {
-  consult: Consult;
-  openConsultModal: (consult: Consult) => void;
+  consult: Pick<Consult, 'id' | 'date' | 'doctor' | 'referred_for'>;
+  openConsultModal: (consultId: number) => void;
   onGeneratePDF: () => void;
 }) {
   return (
@@ -15,7 +15,7 @@ export function RecordConsultationTableRow({
       <td>{consult.doctor.nickname}</td>
       <td>{consult.referred_for || 'Not Referred'}</td>
       <td>
-        <Button text="View" onClick={() => openConsultModal(consult)} />
+        <Button text="View" onClick={() => openConsultModal(consult.id)} />
       </td>
       <td>
         <Button text="Generate PDF" onClick={() => onGeneratePDF()} />
