@@ -8,6 +8,6 @@ export async function patchUploadName(
   file_name: string
 ): Promise<Upload | null> {
   return axiosInstance
-    .patch(`/files/upload/${uploadId}/`, { file_name })
+    .patch(`/files/${uploadId}/`, { file_name })
     .then(r => r.data);
 }
