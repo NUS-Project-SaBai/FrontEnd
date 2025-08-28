@@ -55,7 +55,7 @@ export default function AccountManagement() {
         </thead>
         <tbody>
           {users.map(u => (
-            <tr key={u.id}>
+            <tr key={u.username}>
               <td>{u.username}</td>
               <td>{u.nickname}</td>
               <td>{u.email}</td>
