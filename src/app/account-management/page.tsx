@@ -6,6 +6,7 @@ import { createUser, getUsers } from '@/data/user';
 import type { User } from '@/types/User';
 import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 
 export default function AccountManagement() {
   const [users, setUsers] = useState<User[]>([]);
@@ -25,11 +26,18 @@ export default function AccountManagement() {
       .finally(() => setLoading(false));
   }, []);
 
-  const onSubmit = async (values: Omit<User, 'id' | 'role'>) => {
-    const created = await createUser(values); // let backend assign id
-    setUsers(prev => [...prev, created]);
-    reset();
-    dialogRef.current?.close();
+  const onSubmit = (values: Omit<User, 'id' | 'role'>) => {
+    createUser(values).then(({ user, error }) => {
+      if (error) {
+        toast.error(`Failed to create user:\n ${error}`);
+        return;
+      }
+      if (user) {
+        setUsers(prev => [...prev, user]);
+        reset();
+      }
+      dialogRef.current?.close();
+    });
   };
 
   if (loading) return <div>Loading users...</div>;
