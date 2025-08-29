@@ -34,12 +34,12 @@ export function MedicationOrderForm({
         ? { index: undefined, medication: '', quantity: undefined, notes: '' }
         : selectedOrder,
   });
-  const { isLoading, withLoading } = useLoadingState(true);
+  const { isLoading, withLoading } = useLoadingState(false);
 
   useEffect(() => {
-    withLoading(getMedication)().then(setMedications);
+    withLoading(async () => getMedication().then(setMedications))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedOrder]);
 
   const selectedMedicationId =
     useFormReturn.watch('medication').split(' ', 1)[0] || '';
