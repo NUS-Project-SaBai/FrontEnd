@@ -41,13 +41,14 @@ export function Modal({
       {/* Header Section */}
       <div className="flex items-center justify-between border-b border-gray-200 p-6">
         <h2 className="text-xl font-semibold">{title}</h2>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-end gap-1">
           <Button
             colour="red"
             onClick={onRequestClose}
             text={text}
             type="button"
           />
+          <span className="text-xs text-gray-500">or press Esc</span>
         </div>
       </div>
 
