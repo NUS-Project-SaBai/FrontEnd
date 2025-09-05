@@ -104,7 +104,7 @@ function PatientRecordRow({
           </div>
           <div className="flex-[3]">
             <Image
-              src={patient.picture}
+              src={patient.picture_url}
               alt="Patient Photo"
               height={100}
               width={100}

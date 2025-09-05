@@ -10,6 +10,6 @@ export async function patchMedicine(
   patchMedication: PatchMedication
 ): Promise<Medication | null> {
   return axiosInstance
-    .patch(`/medications/${medicationId}`, patchMedication)
+    .patch(`/medication/${medicationId}`, patchMedication)
     .then(r => r.data);
 }

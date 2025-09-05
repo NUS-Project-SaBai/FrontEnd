@@ -7,7 +7,7 @@ export async function getPdfConsult(consultId: number): Promise<Blob | null> {
   }
 
   return new Blob(
-    [(await axiosInstance.get(`/pdf_consults/${consultId}`)).data],
+    [(await axiosInstance.get(`/consults/${consultId}/pdf`)).data],
     { type: 'application/pdf' }
   );
 }

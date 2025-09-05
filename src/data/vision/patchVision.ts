@@ -8,7 +8,7 @@ export async function patchVision(data: Vision): Promise<Vision | null> {
 
   try {
     const response = await axiosInstance.patch(
-      `/glasses/${data.id}`,
+      `/glasses/${data.id}/`,
       patchData
     );
     return visionFromJson(response.data);

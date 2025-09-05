@@ -8,7 +8,7 @@ import { getPendingOrder } from '@/data/order/getOrder';
 import { patchOrder } from '@/data/order/patchOrder';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Diagnosis } from '@/types/Diagnosis';
-import { Order } from '@/types/Order';
+import { OrderWithDiagnoses } from '@/types/Order';
 import { Patient } from '@/types/Patient';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
@@ -17,17 +17,18 @@ import toast from 'react-hot-toast';
 
 export default function OrdersPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [orders, setOrders] = useState<Record<string, Order[]>>({});
-  const [diagnoses, setDiagnoses] = useState<Record<string, Diagnosis[]>>({});
+  const [orders, setOrders] = useState<Record<string, OrderWithDiagnoses[]>>(
+    {}
+  );
   const [orderRowData, setOrderRowData] = useState<OrderRowData[]>([]);
   const { isLoading, withLoading } = useLoadingState(true);
 
   useEffect(() => {
     const fetchPendingOrders = withLoading(async () => {
-      const data = await getPendingOrder();
+      const ordersWithDiagnoses = await getPendingOrder();
 
-      const tmpOrder: Record<string, Order[]> = {};
-      data.orders.forEach(order => {
+      const tmpOrder: Record<string, OrderWithDiagnoses[]> = {};
+      ordersWithDiagnoses.forEach(order => {
         const patientId = order.visit.patient.patient_id;
         if (!tmpOrder[patientId]) {
           tmpOrder[patientId] = [];
@@ -35,19 +36,6 @@ export default function OrdersPage() {
         tmpOrder[patientId].push(order);
       });
       setOrders(tmpOrder);
-
-      const tmpDiagnosis: Record<string, Diagnosis[]> = {};
-      data.diagnoses.forEach(diagnosis => {
-        const patientId = diagnosis.consult?.patient?.patient_id;
-        if (!patientId) {
-          return;
-        }
-        if (!tmpDiagnosis[patientId]) {
-          tmpDiagnosis[patientId] = [];
-        }
-        tmpDiagnosis[patientId].push(diagnosis);
-      });
-      setDiagnoses(tmpDiagnosis);
     });
 
     fetchPendingOrders();
@@ -57,15 +45,20 @@ export default function OrdersPage() {
   useEffect(() => {
     const tmpOrderRowData: OrderRowData[] = [];
     patients.forEach(patient => {
+      const patientOrders = orders[patient.patient_id] || [];
+
+      // flatten all diagnoses across all orders for this patient
+      const diagnoses = patientOrders.flatMap(order => order.diagnoses);
+
       tmpOrderRowData.push({
         patient: patient,
-        diagnoses: diagnoses[patient.patient_id] || [],
-        orders: orders[patient.patient_id] || [],
+        diagnoses: diagnoses,
+        orders: patientOrders,
       });
     });
-
+    console.log(tmpOrderRowData);
     setOrderRowData(tmpOrderRowData.filter(x => x.orders.length > 0));
-  }, [patients, orders, diagnoses]);
+  }, [patients, orders]);
 
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
@@ -121,7 +114,7 @@ export default function OrdersPage() {
 type OrderRowData = {
   patient: Patient;
   diagnoses: Diagnosis[];
-  orders: Order[];
+  orders: OrderWithDiagnoses[];
 };
 function OrderRow({
   patient,
@@ -129,7 +122,7 @@ function OrderRow({
   orders,
   removeNonPendingOrder,
 }: OrderRowData & { removeNonPendingOrder: (id: number) => void }) {
-  const onPatchError = (err: Error, o: Order) => {
+  const onPatchError = (err: Error, o: OrderWithDiagnoses) => {
     toast.error(() => (
       <p>
         {err.message}
@@ -148,7 +141,7 @@ function OrderRow({
       <td className="px-0">
         <Image
           alt="Patient Image"
-          src={patient.picture}
+          src={patient.picture_url}
           className="h-24 w-20 object-cover"
           height={80}
           width={80}

@@ -57,7 +57,7 @@ export function SideMenu() {
     <div className="flex h-full min-w-[205px] flex-col bg-gray-900 text-gray-400">
       <div className="flex items-center p-4">
         <Image alt="Sa'bai Logo" src="/sabaiLogo.png" width={32} height={32} />
-        <h1 className="ml-2 text-2xl text-gray-500">Sa&apos;Bai &apos;24</h1>
+        <h1 className="ml-2 text-2xl text-gray-500">Sa&apos;Bai</h1>
       </div>
 
       <nav className="py-4">

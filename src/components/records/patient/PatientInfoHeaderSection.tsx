@@ -16,7 +16,7 @@ export async function PatientInfoHeaderSection({
     <div className="flex">
       <div className="relative h-[15vw] w-[15vw]">
         <Image
-          src={patient.picture}
+          src={patient.picture_url}
           alt="Patient Picture"
           fill
           className="rounded object-cover"

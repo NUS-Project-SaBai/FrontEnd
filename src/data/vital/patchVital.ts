@@ -11,13 +11,12 @@ export async function patchVital(vital: Vital) {
   let data;
   try {
     data = (
-      await axiosInstance.patch(`/vitals?visit=${vital.visit}`, jsonPayload)
+      await axiosInstance.patch(`/vitals/?visit=${vital.visit_id}`, jsonPayload)
     ).data;
   } catch (e) {
     console.error(e);
     return null;
   }
 
-  data.visit = data.visit.id;
   return vitalFromJson(data);
 }

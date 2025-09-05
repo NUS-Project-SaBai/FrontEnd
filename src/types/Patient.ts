@@ -15,7 +15,7 @@ export type Patient = {
   sabai: YesNoOption;
   drug_allergy: string;
   face_encodings: string;
-  picture: string;
+  picture_url: string;
   filter_string: string;
   patient_id: string;
   confidence: string;
