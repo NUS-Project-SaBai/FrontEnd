@@ -117,7 +117,12 @@ export function PatientForm({
           <LoadingUI message="Submitting..." />
         ) : (
           <div className="mt-4 flex justify-center">
-            <Button colour="green" text="Submit" type="submit" />
+            <Button
+              colour="green"
+              text="Submit"
+              type="submit"
+              data-modal-submit
+            />
           </div>
         )}
         {closeForm && (
