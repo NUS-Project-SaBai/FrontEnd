@@ -9,7 +9,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
+import { Modal } from '../Modal';
 
 export function PatientScanForm({
   setSelectedPatient,
@@ -42,10 +42,13 @@ export function PatientScanForm({
     <>
       <Button text="Scan Face" onClick={() => setIsOpen(true)} colour="green" />
 
-      <ReactModal
+      <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
         ariaHideApp={false}
+        title="Scan Face"
+        text="Close"
+        className="mx-auto my-8"
       >
         <WebcamInput
           imageDetails={imgDetails}
@@ -62,7 +65,6 @@ export function PatientScanForm({
               onClick={onSearch}
             />
           )}
-          <Button text="Close" onClick={closeModal} colour="red" />
         </div>
         <div className="flex w-full flex-col divide-y-2">
           {scanSuggestionsList.map((patient, index) => (
@@ -88,7 +90,7 @@ export function PatientScanForm({
             </div>
           ))}
         </div>
-      </ReactModal>
+      </Modal>
     </>
   );
 }
