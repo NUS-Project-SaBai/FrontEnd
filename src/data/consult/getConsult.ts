@@ -8,9 +8,7 @@ export async function getConsultByVisitId(
   if (!visitId) {
     return null;
   }
-  return (await axiosInstance.get(`/consults?visit=${visitId}`)).data.map(
-    (val: Consult) => consultFromJson(val)
-  );
+  return (await axiosInstance.get(`/consults?visit=${visitId}`)).data;
 }
 
 export async function getConsultByID(

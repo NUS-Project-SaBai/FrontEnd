@@ -16,7 +16,15 @@ export function PastVisionTable({
   vital,
 }: {
   vision: Vision;
-  vital: Vital;
+  vital: Pick<
+    Vital,
+    | 'right_eye_degree'
+    | 'left_eye_degree'
+    | 'right_eye_pinhole'
+    | 'left_eye_pinhole'
+    | 'right_astigmatism'
+    | 'left_astigmatism'
+  >;
 }) {
   const visionFields: VisionFieldsDataType[] = [
     { label: 'Right Eye', value: vital.right_eye_degree },

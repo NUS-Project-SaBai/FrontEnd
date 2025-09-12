@@ -6,10 +6,19 @@ import { RecordConsultationTableModal } from './consultation/RecordConsultationT
 
 export function PrescriptionConsultCol({
   consults,
+  prescriptions,
   showConsult = true,
   showPrescription = true,
 }: {
-  consults: Consult[] | null;
+  consults: Pick<Consult, 'id' | 'date' | 'doctor' | 'referred_for'>[] | null;
+  prescriptions: {
+    consult_id: number;
+    visit_date: string;
+    medication: string;
+    quantity: number;
+    notes: string;
+    status: string;
+  }[];
   showConsult?: boolean;
   showPrescription?: boolean;
 }) {
@@ -28,11 +37,7 @@ export function PrescriptionConsultCol({
           {consults == null ? (
             <LoadingUI message="Loading Prescriptions..." />
           ) : (
-            <PrescriptionTable
-              prescriptions={
-                consults?.flatMap(consult => consult.prescriptions) || []
-              }
-            />
+            <PrescriptionTable prescriptions={prescriptions} />
           )}
         </div>
       )}

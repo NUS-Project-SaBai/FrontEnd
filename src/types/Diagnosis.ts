@@ -1,7 +1,5 @@
-import { Consult } from './Consult';
-
 export type Diagnosis = {
-  consult?: Consult;
+  consult: number;
   details: string;
   category: string;
 };

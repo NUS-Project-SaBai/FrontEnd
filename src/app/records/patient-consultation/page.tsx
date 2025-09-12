@@ -4,13 +4,11 @@ import { ConsultationForm } from '@/components/records/consultation/Consultation
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
 import { PrescriptionConsultCol } from '@/components/records/PrescriptionConsultCol';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
-import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
-import { getVisitById } from '@/data/visit/getVisit';
-import { getVitalByVisit } from '@/data/vital/getVital';
 import { Consult } from '@/types/Consult';
 import { calculateDobDifference, Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
+import { fetchPatientConsultationInfo } from './api';
 
 export default async function PatientConsultationPage({
   searchParams,
@@ -22,15 +20,15 @@ export default async function PatientConsultationPage({
     return <h1>No Patient Found</h1>;
   }
 
-  const [patient, vitals, visit, consults] =
-    visitId == undefined
-      ? [await getPatientById(patientId), null, null, null]
-      : await Promise.all([
-          getPatientById(patientId),
-          getVitalByVisit(visitId),
-          getVisitById(visitId),
-          getConsultByVisitId(visitId),
-        ]);
+  const {
+    patient,
+    vitals,
+    visit_date: visitDate,
+    consults,
+    prescriptions,
+  } = visitId == undefined
+    ? { patient: await getPatientById(patientId) }
+    : await fetchPatientConsultationInfo(Number(visitId));
 
   return (
     <div className="flex h-full flex-col p-2">
@@ -43,11 +41,12 @@ export default async function PatientConsultationPage({
         <LoadingUI message="Loading data..." />
       ) : (
         <MainBody
-          vitals={vitals}
-          consults={consults}
+          vitals={vitals ?? null}
+          consults={consults ?? null}
           patient={patient}
           visitId={visitId}
-          visitDate={visit?.date == null ? new Date() : new Date(visit?.date)}
+          visitDate={visitDate ? new Date(visitDate) : new Date()}
+          prescriptions={prescriptions ?? []}
         />
       )}
     </div>
@@ -60,12 +59,21 @@ function MainBody({
   patient,
   visitId,
   visitDate,
+  prescriptions,
 }: {
   vitals: Vital | null;
-  consults: Consult[] | null;
+  consults: Pick<Consult, 'id' | 'date' | 'doctor' | 'referred_for'>[] | null;
   patient: Patient;
   visitId: string;
   visitDate: Date;
+  prescriptions: {
+    consult_id: number;
+    visit_date: string;
+    medication: string;
+    quantity: number;
+    notes: string;
+    status: string;
+  }[];
 }) {
   return (
     <div className="grid flex-grow grid-cols-2 gap-x-2">
@@ -83,7 +91,10 @@ function MainBody({
             gender={patient.gender}
           />
         )}
-        <PrescriptionConsultCol consults={consults} />
+        <PrescriptionConsultCol
+          consults={consults}
+          prescriptions={prescriptions}
+        />
       </div>
       <div className="mb-2">
         <ConsultationForm visitId={visitId} patient={patient} />

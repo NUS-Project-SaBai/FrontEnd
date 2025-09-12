@@ -50,7 +50,18 @@ export default async function ConsultationDetails({
         </div>
         <div className="py-2">
           <p className="font-bold">Prescriptions</p>
-          <PrescriptionTable prescriptions={consult?.prescriptions || []} />
+          <PrescriptionTable
+            prescriptions={
+              consult?.prescriptions.map(p => ({
+                consult_id: p.consult,
+                visit_date: p.visit.date,
+                medication: p.medication_review.medicine.medicine_name,
+                quantity: p.medication_review.quantity_changed,
+                notes: p.notes,
+                status: p.medication_review.order_status,
+              })) || []
+            }
+          />
         </div>
       </div>
       {onClose && <Button onClick={onClose} text="Close" colour="red" />}
