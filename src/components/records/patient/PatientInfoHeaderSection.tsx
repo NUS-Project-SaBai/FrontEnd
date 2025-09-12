@@ -1,11 +1,11 @@
 'use server';
-import { EditPatient } from '@/app/records/patient-record/EditPatient';
+import { EditPatient } from '@/components/records/patient/EditPatient';
+import { PatientDetails } from '@/components/records/patient/PatientDetails';
+import { UploadDocument } from '@/components/records/UploadDocument';
+import { ViewDocument } from '@/components/records/ViewDocument';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { Patient } from '@/types/Patient';
 import Image from 'next/image';
-import { UploadDocument } from '../UploadDocument';
-import { ViewDocument } from '../ViewDocument';
-import { PatientDetails } from './PatientDetails';
 
 export async function PatientInfoHeaderSection({
   patient,

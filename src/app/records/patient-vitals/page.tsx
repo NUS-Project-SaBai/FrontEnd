@@ -1,15 +1,15 @@
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
+import { PrescriptionConsultCol } from '@/components/records/PrescriptionConsultCol';
 import { HeightWeightGraph } from '@/components/records/vital/HeightWeightGraph';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
-import { PrescriptionConsultCol } from '@/components/records/VitalPresConsultCol';
+import { VitalsForm } from '@/components/records/vital/VitalsForm';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitById } from '@/data/visit/getVisit';
 import { getVitalByVisit } from '@/data/vital/getVital';
 import { calculateDobDifference } from '@/types/Patient';
 import { EMPTY_VITAL } from '@/types/Vital';
-import { VitalsForm } from './VitalsForm';
 
 export default async function PatientVitalPage({
   searchParams,

@@ -1,6 +1,6 @@
-import { EditPatient } from '@/app/records/patient-record/EditPatient';
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
+import { EditPatient } from '@/components/records/patient/EditPatient';
 import { getPatientAge, Patient } from '@/types/Patient';
 import { DateTime } from 'luxon';
 import Link from 'next/link';

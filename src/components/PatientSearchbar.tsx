@@ -1,4 +1,5 @@
 'use client';
+import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { getPatient } from '@/data/patient/getPatient';
 import { WithLoadingType } from '@/hooks/useLoadingState';
@@ -13,7 +14,6 @@ import {
   useState,
 } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { VillageOptionDropdown } from './VillageOptionDropdown';
 
 export function PatientSearchInput({
   setPatients,

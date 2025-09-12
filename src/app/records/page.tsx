@@ -1,8 +1,10 @@
 'use client';
-import { PatientRecordTable } from '@/app/records/PatientRecordTable';
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientSearchInput } from '@/components/PatientSearchbar';
 import { PatientInfo } from '@/components/records/patient/PatientInfo';
+import { PatientRecordTable } from '@/components/records/PatientRecordTable';
+import { NewPatientModal } from '@/components/registration/NewPatientModal';
+import { PatientScanForm } from '@/components/registration/PatientScanForm';
 import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
@@ -13,8 +15,6 @@ import { urlToFile } from '@/utils/urlToFile';
 import { FormEvent, useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { NewPatientModal } from '../registration/NewPatientModal';
-import { PatientScanForm } from '../registration/PatientScanForm';
 
 export default function RecordPage() {
   const [patients, setPatients] = useState<Patient[]>([]);

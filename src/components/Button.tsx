@@ -1,6 +1,6 @@
 'use client';
+import { LoadingUI } from '@/components/LoadingUI';
 import { MouseEvent, ReactNode, useEffect, useState } from 'react';
-import { LoadingUI } from './LoadingUI';
 
 export function Button({
   text,

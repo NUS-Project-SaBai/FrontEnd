@@ -1,9 +1,9 @@
 'use client';
+import { Button } from '@/components/Button';
 import { useToggle } from '@/hooks/useToggle';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useCallback, useRef } from 'react';
 import Webcam from 'react-webcam';
-import { Button } from '../Button';
 
 const videoConstraints = {
   width: 720,

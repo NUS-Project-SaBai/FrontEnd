@@ -3,14 +3,14 @@ import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
 import { LoadingUI } from '@/components/LoadingUI';
 import { DiagnosesTable } from '@/components/records/consultation/DiagnosesTable';
+import { RecordConsultationTableRow } from '@/components/records/consultation/RecordConsultationTableRow';
+import { PrescriptionTable } from '@/components/records/prescription/PrescriptionTable';
 import { getPdfConsult } from '@/data/consult/getPdfConsult';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-import { PrescriptionTable } from '../prescription/PrescriptionTable';
-import { RecordConsultationTableRow } from './RecordConsultationTableRow';
 
 export function RecordConsultationTableModal({
   consults,

@@ -3,10 +3,10 @@
 import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientSearchInput } from '@/components/PatientSearchbar';
+import { PatientGlassesTable } from '@/components/vision/PatientGlassesTable';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { Suspense, useState } from 'react';
-import { PatientGlassesTable } from './PatientGlassesTable';
 
 export default function VisionPage() {
   const [patients, setPatients] = useState<Patient[]>([]);

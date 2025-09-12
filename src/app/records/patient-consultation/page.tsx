@@ -1,8 +1,9 @@
 'use server';
 import { LoadingUI } from '@/components/LoadingUI';
+import { ConsultationForm } from '@/components/records/consultation/ConsultationForm';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
+import { PrescriptionConsultCol } from '@/components/records/PrescriptionConsultCol';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
-import { PrescriptionConsultCol } from '@/components/records/VitalPresConsultCol';
 import { getConsultByVisitId } from '@/data/consult/getConsult';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitById } from '@/data/visit/getVisit';
@@ -10,7 +11,6 @@ import { getVitalByVisit } from '@/data/vital/getVital';
 import { Consult } from '@/types/Consult';
 import { calculateDobDifference, Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
-import { ConsultationForm } from './ConsultationForm';
 
 export default async function PatientConsultationPage({
   searchParams,

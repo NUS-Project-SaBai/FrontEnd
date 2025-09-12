@@ -1,16 +1,12 @@
+import { LoadingUI } from '@/components/LoadingUI';
 import { getConsultByID } from '@/data/consult/getConsult';
 import { patchReferral } from '@/data/referrals/patchReferral';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Referral } from '@/types/Referral';
 import { ChangeEvent, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { LoadingUI } from '../LoadingUI';
 
-export default function ReferralStateDropdown({
-  referral,
-}: {
-  referral: Referral;
-}) {
+export function ReferralStateDropdown({ referral }: { referral: Referral }) {
   const referralState = [
     'None',
     'New',

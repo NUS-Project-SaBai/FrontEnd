@@ -1,4 +1,5 @@
 'use client';
+import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { useUser } from '@auth0/nextjs-auth0';
 import {
@@ -14,7 +15,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
-import { VillageOptionDropdown } from './VillageOptionDropdown';
 
 type HeroIconType = React.ComponentType<React.ComponentProps<'svg'>>;
 type NavItemData = {

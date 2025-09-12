@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/Button';
 import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { Patient } from '@/types/Patient';
 import { Upload } from '@/types/Upload';
@@ -7,7 +8,6 @@ import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
-import { Button } from '../Button';
 
 export function ViewDocument({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);

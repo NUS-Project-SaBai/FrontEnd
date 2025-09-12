@@ -1,10 +1,10 @@
 'use client';
+import { Button } from '@/components/Button';
+import { DisplayField } from '@/components/DisplayField';
+import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { LoadingUI } from '@/components/LoadingUI';
 import { Medication } from '@/types/Medication';
 import { FormEventHandler } from 'react';
-import { Button } from '../Button';
-import { DisplayField } from '../DisplayField';
-import { RHFInputField } from '../inputs/RHFInputField';
-import { LoadingUI } from '../LoadingUI';
 
 export function MedicationForm({
   closeForm,

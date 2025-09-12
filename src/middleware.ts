@@ -1,6 +1,6 @@
+import { APP_CONFIG } from '@/config';
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
 import { NextResponse, type NextRequest } from 'next/server';
-import { APP_CONFIG } from './config';
 
 export async function middleware(req: NextRequest) {
   if (!APP_CONFIG.IS_PROD && !APP_CONFIG.APP_BASE_URL)

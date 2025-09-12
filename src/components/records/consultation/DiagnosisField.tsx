@@ -1,7 +1,7 @@
 'use client';
 
+import { Button } from '@/components/Button';
 import { Diagnosis } from '@/types/Diagnosis';
-import { Button } from '../../Button';
 const diagnosisOptions = [
   'Cardiovascular',
   'Dermatology',

@@ -1,6 +1,6 @@
+import { Button } from '@/components/Button';
 import { Medication } from '@/types/Medication';
 import Link from 'next/link';
-import { Button } from '../Button';
 
 export function MedicationTable({
   medications,

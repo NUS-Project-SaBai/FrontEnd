@@ -1,9 +1,9 @@
 'use client';
+import { Button } from '@/components/Button';
 import { createVisit } from '@/data/visit/createVisit';
 import { Patient } from '@/types/Patient';
 import { redirect, RedirectType } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Button } from '../../Button';
 
 export function PatientInfoActionBar({ patient }: { patient: Patient }) {
   const actions: Action[] = [
