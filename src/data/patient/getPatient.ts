@@ -8,6 +8,6 @@ export async function getPatient(): Promise<Patient[]> {
 }
 
 export async function getPatientById(patientId: string): Promise<Patient> {
-  const data = (await axiosInstance.get(`/patients/${patientId}`)).data;
+  const data = (await axiosInstance.get(`/patients/${patientId}/`)).data;
   return data;
 }

@@ -6,6 +6,6 @@ export async function patchReferral(
   payload: Partial<Referral>,
   id: string
 ): Promise<void> {
-  const data = (await axiosInstance.patch(`/referrals/${id}`, payload)).data;
+  const data = (await axiosInstance.patch(`/referrals/${id}/`, payload)).data;
   return data;
 }

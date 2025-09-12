@@ -12,7 +12,7 @@ export async function getVisitById(visitId: string): Promise<Visit | null> {
   if (!visitId) return null;
   try {
     return await (
-      await axiosInstance.get(`/visits/${visitId}`)
+      await axiosInstance.get(`/visits/${visitId}/`)
     ).data;
   } catch {
     return null;
