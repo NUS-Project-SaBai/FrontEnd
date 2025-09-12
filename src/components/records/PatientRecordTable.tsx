@@ -7,10 +7,9 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { useToggle } from '@/hooks/useToggle';
 import { Patient } from '@/types/Patient';
 import { ChevronDownIcon } from '@heroicons/react/16/solid';
+import { DateTime, Duration } from 'luxon';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { useRouter } from 'next/navigation';
-import { DateTime, Duration } from 'luxon';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 export function PatientRecordTable({
