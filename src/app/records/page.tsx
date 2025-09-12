@@ -7,10 +7,11 @@ import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
+import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
 import { urlToFile } from '@/utils/urlToFile';
-import { FormEvent, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormEvent, useEffect, useState } from 'react';
+import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { NewPatientModal } from '../registration/NewPatientModal';
 import { PatientScanForm } from '../registration/PatientScanForm';
@@ -21,13 +22,37 @@ export default function RecordPage() {
     useLoadingState(true);
   const { isLoading: isSubmitting, withLoading: submitWithLoading } =
     useLoadingState(false);
-  const useFormReturn = useForm({ resetOptions: { keepDirtyValues: true } });
   const patientModalState = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
   const refreshPatientList = patientsWithLoading(() =>
     getPatient().then(setPatients)
   );
+
+  const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
+    'RegistrationForm',
+    {} as FieldValues,
+    []
+  );
+
+  const useFormReturn = useForm({
+    values: formDetails,
+    resetOptions: { keepDirtyValues: true },
+  });
+
+  useEffect(() => {
+    const unsub = useFormReturn.subscribe({
+      formState: { values: true },
+      callback: ({ values }) => {
+        setFormDetails(values);
+      },
+    });
+    return () => {
+      unsub();
+      useFormReturn.reset({});
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onPatientRegistrationFormSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -49,7 +74,9 @@ export default function RecordPage() {
           toast.error('Unknown error creating patient');
           return;
         }
-        useFormReturn.reset();
+        useFormReturn.reset({});
+        clearLocalStorageData();
+
         toast.success('Patient Created!');
         // TODO: implement check for recent visit
         createVisit(patient);
