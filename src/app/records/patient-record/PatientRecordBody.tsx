@@ -6,7 +6,7 @@ import { getConsultsByPatientID } from '@/data/consult/getConsult';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { getVitalsByPatientID } from '@/data/vital/getVital';
 import { calculateDobDifference, Patient } from '@/types/Patient';
-import { stringToFormattedDate } from '@/utils/datetimeMethods';
+import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
 
 export async function PatientRecordBody({ patient }: { patient: Patient }) {
@@ -68,7 +68,7 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
                 }
               >
                 <span className="font-bold">
-                  {stringToFormattedDate(visit.date)}
+                  {formatDate(visit.date, 'datetime')}
                   {': '}
                 </span>
                 {actionButtons}
@@ -86,7 +86,7 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
             >
               <div className="flex flex-1 gap-2">
                 <h2 className="text-lg font-bold">
-                  {stringToFormattedDate(visit.date)}
+                  {formatDate(visit.date, 'datetime')}
                 </h2>
                 {actionButtons}
               </div>

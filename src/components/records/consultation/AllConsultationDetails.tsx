@@ -1,7 +1,7 @@
 'use server';
 
 import { Consult } from '@/types/Consult';
-import { stringToFormattedDate } from '@/utils/datetimeMethods';
+import { formatDate } from '@/utils/formatDate';
 import ConsultationDetails from './ConsultationDetails';
 
 export default async function AllConsultationDetails({
@@ -17,7 +17,7 @@ export default async function AllConsultationDetails({
           className="flex flex-1 flex-col rounded-md border px-2"
         >
           <h2 className="mb-2 text-center">
-            Consult on: {stringToFormattedDate(consult.date)}
+            Consult on: {formatDate(consult.date, 'datetime')}
           </h2>
           <ConsultationDetails consult={consult} />
         </div>

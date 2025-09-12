@@ -8,13 +8,14 @@ import { patchReferral } from '@/data/referrals/patchReferral';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
+import { formatDate } from '@/utils/formatDate';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function ReferralDetailsPage() {
   const { isLoading, withLoading } = useLoadingState(true);
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<string>();
   const [patient, setPatient] = useState<Patient>();
   const [referral, setReferral] = useState<Referral>();
   const [editable, setEditable] = useState<boolean>(false);
@@ -77,9 +78,7 @@ export default function ReferralDetailsPage() {
               <tr>
                 <td className="whitespace-nowrap">Referral Date</td>
                 <td>
-                  {date == undefined
-                    ? 'No Date'
-                    : new Date(date).toDateString()}
+                  {date == undefined ? 'No Date' : formatDate(date, 'date')}
                 </td>
               </tr>
               <tr>

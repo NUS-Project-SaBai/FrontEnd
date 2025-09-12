@@ -11,6 +11,7 @@ type RHFDropdownProps = {
   defaultValue?: string;
   isRequired?: boolean;
   className?: string;
+  omitDefaultPrompt?: boolean;
 };
 
 export function RHFDropdown({
@@ -20,6 +21,7 @@ export function RHFDropdown({
   defaultValue = '',
   isRequired = false,
   className = '',
+  omitDefaultPrompt = false,
 }: RHFDropdownProps) {
   const { register, formState, setValue } = useFormContext();
   // Update the form value whenever defaultValue changes
@@ -51,9 +53,11 @@ export function RHFDropdown({
             : '')
         }
       >
-        <option hidden value="">
-          Please select an option
-        </option>
+        {omitDefaultPrompt || (
+          <option hidden value="">
+            Please select an option
+          </option>
+        )}
         {options.map(({ label, value }) => (
           <option value={value} key={value}>
             {label}

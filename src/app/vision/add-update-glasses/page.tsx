@@ -1,8 +1,6 @@
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
-import { PastVisionTable } from '@/components/vision/PastVisionTable';
 import { getPatientById } from '@/data/patient/getPatient';
-//import { getVisitById } from '@/data/visit/getVisit';
 import { getVisionByVisit } from '@/data/vision/getVision';
 import { getVitalByVisit } from '@/data/vital/getVital';
 import { EMPTY_VISION } from '@/types/Vision';
@@ -42,16 +40,13 @@ export default async function PatientVisionPage({
         <PatientInfoHeaderSection patient={patient} />
       </div>
 
-      <div className="mb-4 mt-2 grid grid-cols-2 gap-4">
-        <div>
-          <h2 className="mb-2 text-lg font-semibold">Past Glasses Records</h2>
-          <PastVisionTable vision={curVision} vital={curVital} />
-        </div>
-
-        <div>
-          <h2 className="mb-2 text-lg font-semibold">Add/Update Glasses</h2>
-          <VisionForm visitId={visitId} curVision={curVision} />
-        </div>
+      <div className="mx-4 mt-4">
+        <h2 className="mb-2 text-lg font-semibold">Add/Update Glasses</h2>
+        <VisionForm
+          visitId={visitId}
+          curVision={curVision}
+          curVitals={curVital}
+        />
       </div>
     </div>
   );

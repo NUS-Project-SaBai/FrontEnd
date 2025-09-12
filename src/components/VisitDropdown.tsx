@@ -1,6 +1,6 @@
 'use client';
 import { Visit } from '@/types/Visit';
-import { stringToFormattedDate } from '@/utils/datetimeMethods';
+import { formatDate } from '@/utils/formatDate';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -55,7 +55,7 @@ export function VisitDropdown({ name, visits }: DropdownProps) {
         </option>
         {visits.map(({ date: label, id: value }) => (
           <option value={value} key={value}>
-            {stringToFormattedDate(label)}
+            {formatDate(label, 'datetime')}
           </option>
         ))}
       </select>

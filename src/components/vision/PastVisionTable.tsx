@@ -25,6 +25,9 @@ export function PastVisionTable({
     { label: 'Right Eye Pinhole', value: vital.right_eye_pinhole },
     { label: 'Left Eye Pinhole', value: vital.left_eye_pinhole },
     { label: '', value: '' },
+    { label: 'Right Eye Astigmatism', value: vital.right_astigmatism },
+    { label: 'Left Eye Astigmatism', value: vital.left_astigmatism },
+    { label: '', value: '' },
     {
       label: 'Right Eye Prescribed Glasses Degree',
       value: vision.right_glasses_degree,
@@ -33,7 +36,6 @@ export function PastVisionTable({
       label: 'Left Eye Prescribed Glasses Degree',
       value: vision.left_glasses_degree,
     },
-    { label: '', value: '' },
   ];
 
   return (
@@ -51,6 +53,13 @@ export function PastVisionTable({
             />
           )
         )}
+      </div>
+      <div className="mt-4">
+        <DisplayField
+          key={vision.notes}
+          label="General Notes"
+          content={vision.notes?.toString() || '-'}
+        />
       </div>
     </>
   );

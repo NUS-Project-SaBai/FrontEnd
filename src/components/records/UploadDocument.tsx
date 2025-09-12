@@ -2,7 +2,7 @@
 import { postUpload } from '@/data/fileUpload/postUpload';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -39,7 +39,7 @@ export function UploadDocument({ patient }: { patient: Patient }) {
                   async vals => {
                     const file = vals.file[0];
 
-                    const currentDate = moment().format('YYYY-MM-DD');
+                    const currentDate = DateTime.now().toFormat('yyyy-MM-dd');
                     const patientIdentifier = patient.patient_id;
                     const documentName: string =
                       vals.file_name == ''

@@ -7,10 +7,10 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { useToggle } from '@/hooks/useToggle';
 import { Patient } from '@/types/Patient';
 import { ChevronDownIcon } from '@heroicons/react/16/solid';
-import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 // import { useRouter } from 'next/navigation';
+import { DateTime, Duration } from 'luxon';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 export function PatientRecordTable({
@@ -57,16 +57,16 @@ function PatientRecordRow({
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
-  const lastVisitDateMoment = moment(patient.last_visit_date);
-  const timeSinceLastVisit = moment.duration(
-    lastVisitDateMoment.diff(moment.now())
+  const lastVisitDateMoment = DateTime.fromISO(patient.last_visit_date);
+  const timeSinceLastVisit = Duration.fromMillis(
+    lastVisitDateMoment.diff(DateTime.now()).toMillis()
   );
   const lastVisitLabel =
-    timeSinceLastVisit > moment.duration({ seconds: -9 })
+    timeSinceLastVisit > Duration.fromObject({ seconds: -9 })
       ? 'Just now'
-      : timeSinceLastVisit < moment.duration({ days: -7 })
-        ? lastVisitDateMoment.format('DD MMM YY')
-        : lastVisitDateMoment.fromNow();
+      : timeSinceLastVisit < Duration.fromObject({ days: -7 })
+        ? lastVisitDateMoment.toFormat('DD MMM YY')
+        : lastVisitDateMoment.toRelative();
 
   async function handleCreateVisit(patient: Patient) {
     withLoading(async () =>

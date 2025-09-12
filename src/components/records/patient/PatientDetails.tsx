@@ -2,7 +2,7 @@ import { EditPatient } from '@/app/records/patient-record/EditPatient';
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
 import { getPatientAge, Patient } from '@/types/Patient';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -25,7 +25,7 @@ export function PatientDetails({
     { label: 'Gender', value: patient.gender },
     {
       label: 'Date of Birth',
-      value: moment(patient.date_of_birth).format('DD-MMMM-YYYY'),
+      value: DateTime.fromISO(patient.date_of_birth).toFormat('DD-MMMM-YYYY'),
     },
     {
       label: 'Age',
