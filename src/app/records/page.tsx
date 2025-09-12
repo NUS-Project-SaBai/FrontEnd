@@ -1,10 +1,11 @@
 'use client';
 import { LoadingPage } from '@/components/LoadingPage';
-import { PatientSearchInput } from '@/components/PatientSearchbar';
+import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { PatientInfo } from '@/components/records/patient/PatientInfo';
 import { PatientRecordTable } from '@/components/records/PatientRecordTable';
 import { NewPatientModal } from '@/components/registration/NewPatientModal';
 import { PatientScanForm } from '@/components/registration/PatientScanForm';
+import { PatientListContext } from '@/context/PatientListContext';
 import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
@@ -12,14 +13,17 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
 import { urlToFile } from '@/utils/urlToFile';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 export default function RecordPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const { isLoading: patientsLoading, withLoading: patientsWithLoading } =
-    useLoadingState(true);
+  const {
+    patients: allPatients,
+    isLoading: patientsLoading,
+    withLoading: patientsWithLoading,
+  } = useContext(PatientListContext);
   const { isLoading: isSubmitting, withLoading: submitWithLoading } =
     useLoadingState(false);
   const patientModalState = useState(false);
@@ -96,10 +100,13 @@ export default function RecordPage() {
       <h1 className="-mb-2">Patients</h1>
       <div className="z-1 sticky top-0 bg-white p-2 drop-shadow-lg">
         <div className="flex gap-x-2">
-          <PatientSearchInput
-            setPatients={setPatients}
-            // isLoading={isLoading}
-            withLoading={patientsWithLoading}
+          <PatientSearchbar
+            data={allPatients}
+            setFilteredItems={setPatients}
+            filterFunction={(query: string) => (item: Patient) =>
+              item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
+              item.name.toLowerCase().includes(query.toLowerCase())
+            }
           />
           <div className="flex h-[40px] gap-2 self-end">
             <FormProvider {...useFormReturn}>

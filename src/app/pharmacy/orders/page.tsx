@@ -2,8 +2,9 @@
 import { Button } from '@/components/Button';
 import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
-import { PatientSearchInput } from '@/components/PatientSearchbar';
+import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { VILLAGES_AND_ALL } from '@/constants';
+import { PatientListContext } from '@/context/PatientListContext';
 import { getPendingOrder } from '@/data/order/getOrder';
 import { patchOrder } from '@/data/order/patchOrder';
 import { useLoadingState } from '@/hooks/useLoadingState';
@@ -13,7 +14,7 @@ import { Patient } from '@/types/Patient';
 import { formatDate } from '@/utils/formatDate';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function OrdersPage() {
@@ -22,10 +23,12 @@ export default function OrdersPage() {
     {}
   );
   const [orderRowData, setOrderRowData] = useState<OrderRowData[]>([]);
-  const { isLoading, withLoading } = useLoadingState(true);
+  const { isLoading: ordersIsLoading, withLoading: ordersWithloading } =
+    useLoadingState(true);
+  const { patients: allPatients } = useContext(PatientListContext);
 
   useEffect(() => {
-    const fetchPendingOrders = withLoading(async () => {
+    const fetchPendingOrders = ordersWithloading(async () => {
       const ordersWithDiagnoses = await getPendingOrder();
 
       const tmpOrder: Record<string, OrderWithDiagnoses[]> = {};
@@ -62,11 +65,21 @@ export default function OrdersPage() {
   }, [patients, orders]);
 
   return (
-    <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
+    <LoadingPage
+      isLoading={ordersIsLoading}
+      message="Loading Pending Orders..."
+    >
       <div className="p-2">
         <h1>Orders</h1>
         <Suspense>
-          <PatientSearchInput setPatients={setPatients} />
+          <PatientSearchbar
+            data={allPatients}
+            setFilteredItems={setPatients}
+            filterFunction={query => item =>
+              item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
+              item.name.toLowerCase().includes(query.toLowerCase())
+            }
+          />
         </Suspense>
         <div className="pt-4">
           <table className="w-full text-left">

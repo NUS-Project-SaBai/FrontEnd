@@ -4,7 +4,6 @@ about: Create a report to help us improve
 title: ''
 labels: bug
 assignees: ''
-
 ---
 
 **Describe the bug**
@@ -12,6 +11,7 @@ A clear and concise description of what the bug is. And which page is it on? etc
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -25,4 +25,9 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Which browser are you using? eg firefox, safari, chrome, etc:
+
+Commit hash of backend:
+
+Commit hash of frontend:
+
 Add any other context about the problem here.
