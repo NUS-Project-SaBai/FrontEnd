@@ -56,16 +56,17 @@ function PatientRecordRow({
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
-  const lastVisitDateMoment = DateTime.fromISO(patient.last_visit_date);
+  const lastVisitDateLuxon = DateTime.fromISO(patient.last_visit_date);
+  // Positive duration since last visit
   const timeSinceLastVisit = Duration.fromMillis(
-    lastVisitDateMoment.diff(DateTime.now()).toMillis()
+    DateTime.now().diff(lastVisitDateLuxon).toMillis()
   );
   const lastVisitLabel =
-    timeSinceLastVisit > Duration.fromObject({ seconds: -9 })
+    timeSinceLastVisit < Duration.fromObject({ seconds: 5 })
       ? 'Just now'
-      : timeSinceLastVisit < Duration.fromObject({ days: -7 })
-        ? lastVisitDateMoment.toFormat('DD MMM YY')
-        : lastVisitDateMoment.toRelative();
+      : timeSinceLastVisit < Duration.fromObject({ days: 10 })
+        ? lastVisitDateLuxon.toFormat('dd LLL yyyy')
+        : lastVisitDateLuxon.toRelative();
 
   async function handleCreateVisit(patient: Patient) {
     withLoading(async () =>
@@ -127,7 +128,10 @@ function PatientRecordRow({
               }}
             />
             <div className="flex flex-1 items-center gap-2 rounded-md border p-2">
-              <div className="w-40 flex-1">Last visit: {lastVisitLabel}</div>
+              <div className="w-[115px]">
+                <p>Last visit:</p>
+                <p>{lastVisitLabel}</p>
+              </div>
               <Link
                 href={`/records/patient-vitals?id=${patient.pk}&visit=${patient.last_visit_id}`}
                 onClick={e => e.stopPropagation()}
