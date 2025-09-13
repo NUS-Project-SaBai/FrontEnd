@@ -56,17 +56,7 @@ function PatientRecordRow({
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
-  const lastVisitDateLuxon = DateTime.fromISO(patient.last_visit_date);
-  // Positive duration since last visit
-  const timeSinceLastVisit = Duration.fromMillis(
-    DateTime.now().diff(lastVisitDateLuxon).toMillis()
-  );
-  const lastVisitLabel =
-    timeSinceLastVisit < Duration.fromObject({ seconds: 5 })
-      ? 'Just now'
-      : timeSinceLastVisit < Duration.fromObject({ days: 10 })
-        ? lastVisitDateLuxon.toFormat('dd LLL yyyy')
-        : lastVisitDateLuxon.toRelative();
+  const lastVisitLabel = getLastVisitLabel(patient.last_visit_date);
 
   async function handleCreateVisit(patient: Patient) {
     withLoading(async () =>
@@ -172,4 +162,20 @@ function PatientRecordRow({
       </div>
     </div>
   );
+}
+
+function getLastVisitLabel(lastVisitDate: string): string {
+  if (!lastVisitDate) {
+    return 'Missing last visit date';
+  }
+  const lastVisitDateLuxon = DateTime.fromISO(lastVisitDate);
+  // Positive duration since last visit
+  const timeSinceLastVisit = Duration.fromMillis(
+    DateTime.now().diff(lastVisitDateLuxon).toMillis()
+  );
+  return timeSinceLastVisit < Duration.fromObject({ seconds: 5 })
+    ? 'Just now'
+    : timeSinceLastVisit < Duration.fromObject({ days: 10 })
+      ? lastVisitDateLuxon.toFormat('dd LLL yyyy')
+      : lastVisitDateLuxon.toRelative() || '';
 }
