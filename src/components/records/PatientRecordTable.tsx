@@ -179,7 +179,7 @@ function getLastVisitLabel(lastVisitDate: string): string {
     ? 'Just now'
     : timeSinceLastVisit < Duration.fromObject({ minutes: 10 })
       ? lastVisitDateLuxon.toRelative() || 'Missing relative time?'
-      : timeSinceLastVisit < Duration.fromObject({ months: 3 })
+      : timeSinceLastVisit < Duration.fromObject({ days: 10 })
         ? lastVisitDateLuxon.toLocaleString({
             ...DateTime.DATETIME_MED,
             hour12: true,
