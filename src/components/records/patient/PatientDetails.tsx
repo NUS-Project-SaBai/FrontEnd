@@ -25,7 +25,9 @@ export function PatientDetails({
     { label: 'Gender', value: patient.gender },
     {
       label: 'Date of Birth',
-      value: DateTime.fromISO(patient.date_of_birth).toFormat('DD-MMMM-YYYY'),
+      value: DateTime.fromISO(patient.date_of_birth).toLocaleString(
+        DateTime.DATE_MED
+      ),
     },
     {
       label: 'Age',
