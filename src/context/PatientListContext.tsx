@@ -1,19 +1,29 @@
 'use client';
 import { getPatient } from '@/data/patient/getPatient';
-import { useLoadingState, WithLoadingType } from '@/hooks/useLoadingState';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { VillageContext } from './VillageContext';
 
 export const PatientListContext = createContext<{
   patients: Patient[];
   isLoading: boolean;
-  withLoading: WithLoadingType;
+  refresh: () => Promise<void>;
+  setPatients: Dispatch<SetStateAction<Patient[]>>;
 }>({
   patients: [],
   isLoading: true,
-  withLoading: x => x,
+  refresh: async () => {},
+  setPatients: () => {},
 });
 
 export function PatientListProvider({
@@ -25,7 +35,7 @@ export function PatientListProvider({
   const { village } = useContext(VillageContext);
   const { isLoading, withLoading } = useLoadingState(true);
 
-  useEffect(() => {
+  const refresh = useCallback(
     withLoading(() =>
       getPatient().then(data => {
         const tmp = data.filter(
@@ -33,11 +43,18 @@ export function PatientListProvider({
         );
         setPatients(tmp);
       })
-    )();
-  }, [village, withLoading]);
+    ),
+    [village, withLoading]
+  );
+
+  useEffect(() => {
+    refresh();
+  }, [village, refresh]);
 
   return (
-    <PatientListContext.Provider value={{ patients, isLoading, withLoading }}>
+    <PatientListContext.Provider
+      value={{ patients, isLoading, refresh, setPatients }}
+    >
       {children}
     </PatientListContext.Provider>
   );

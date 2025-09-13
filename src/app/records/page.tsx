@@ -7,7 +7,6 @@ import { NewPatientModal } from '@/components/registration/NewPatientModal';
 import { PatientScanForm } from '@/components/registration/PatientScanForm';
 import { PatientListContext } from '@/context/PatientListContext';
 import { createPatient } from '@/data/patient/createPatient';
-import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
@@ -18,20 +17,16 @@ import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 export default function RecordPage() {
-  const [patients, setPatients] = useState<Patient[]>([]);
   const {
     patients: allPatients,
     isLoading: patientsLoading,
-    withLoading: patientsWithLoading,
+    refresh: refreshPatientList,
+    setPatients,
   } = useContext(PatientListContext);
   const { isLoading: isSubmitting, withLoading: submitWithLoading } =
     useLoadingState(false);
   const patientModalState = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-
-  const refreshPatientList = patientsWithLoading(() =>
-    getPatient().then(setPatients)
-  );
 
   const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
     'RegistrationForm',
@@ -126,7 +121,7 @@ export default function RecordPage() {
           message="Loading Patients..."
         >
           <PatientInfo patient={selectedPatient} />
-          <PatientRecordTable patients={patients} setPatients={setPatients} />
+          <PatientRecordTable />
         </LoadingPage>
       </div>
     </div>

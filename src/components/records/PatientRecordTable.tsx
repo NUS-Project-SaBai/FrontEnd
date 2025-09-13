@@ -1,6 +1,7 @@
 import { Button } from '@/components/Button';
 import { PatientDetails } from '@/components/records/patient/PatientDetails';
 import { VILLAGES_AND_ALL } from '@/constants';
+import { PatientListContext } from '@/context/PatientListContext';
 import { getPatientById } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
@@ -10,15 +11,16 @@ import { ChevronDownIcon } from '@heroicons/react/16/solid';
 import { DateTime, Duration } from 'luxon';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
-export function PatientRecordTable({
-  patients,
-  setPatients,
-}: {
-  patients: Patient[];
-  setPatients: Dispatch<SetStateAction<Patient[]>>;
-}) {
+export function PatientRecordTable() {
+  const { patients, setPatients } = useContext(PatientListContext);
   return (
     <div className="flex-1">
       {patients.map(patient => (
@@ -175,7 +177,9 @@ function getLastVisitLabel(lastVisitDate: string): string {
   );
   return timeSinceLastVisit < Duration.fromObject({ seconds: 5 })
     ? 'Just now'
-    : timeSinceLastVisit < Duration.fromObject({ days: 10 })
-      ? lastVisitDateLuxon.toFormat('dd LLL yyyy')
-      : lastVisitDateLuxon.toRelative() || '';
+    : timeSinceLastVisit < Duration.fromObject({ minutes: 10 })
+      ? lastVisitDateLuxon.toRelative() || 'Missing relative time?'
+      : timeSinceLastVisit < Duration.fromObject({ days: 10 })
+        ? lastVisitDateLuxon.toFormat('dd LLL yyyy hh:mm a')
+        : lastVisitDateLuxon.toFormat('dd LLL yyyy');
 }
