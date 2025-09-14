@@ -59,6 +59,17 @@ export function Modal({
       onRequestClose={onRequestClose}
       ariaHideApp={ariaHideApp}
       className={`${sizeClasses[size]} ${className}`}
+      overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center"
+      style={{
+        content: {
+          backgroundColor: 'white',
+          border: 'none',
+          borderRadius: '0.5rem',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          padding: 0,
+          margin: 'auto',
+        },
+      }}
     >
       {/* Header Section */}
       <div className="flex items-center justify-between border-b border-gray-200 p-6">
