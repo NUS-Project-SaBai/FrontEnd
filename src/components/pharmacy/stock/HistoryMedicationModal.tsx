@@ -2,12 +2,12 @@
 import { fetchMedicationHistory } from '@/app/pharmacy/stock/api';
 import { Button } from '@/components/Button';
 import { LoadingUI } from '@/components/LoadingUI';
+import { Modal } from '@/components/Modal';
 import { getMedicationById } from '@/data/medication/getMedications';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { formatDate } from '@/utils/formatDate';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import ReactModal from 'react-modal';
 
 export type MedicationHistoryRowData = {
   approval_name: string;
@@ -49,10 +49,12 @@ export function HistoryMedicationModal() {
   const closeModal = () => router.back();
 
   return (
-    <ReactModal
+    <Modal
       isOpen={viewMedicationId != null}
       onRequestClose={closeModal}
       ariaHideApp={false}
+      title="View Medication History"
+      text="Close"
     >
       <h2>{`View Medication ${medicationName ?? ''} History`}</h2>
       {isLoading ? (
@@ -89,7 +91,7 @@ export function HistoryMedicationModal() {
         </>
       )}
       <Button onClick={closeModal} text="Close" colour="red" />
-    </ReactModal>
+    </Modal>
   );
 }
 

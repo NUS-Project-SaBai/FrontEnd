@@ -68,11 +68,15 @@ export function Modal({
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
           padding: 0,
           margin: 'auto',
+          maxHeight: '90vh',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
         },
       }}
     >
-      {/* Header Section */}
-      <div className="flex items-center justify-between border-b border-gray-200 p-6">
+      {/* Header Section - Fixed */}
+      <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 p-6">
         <h2 className="text-xl font-semibold">{title}</h2>
         <div className="flex flex-col items-end gap-1">
           <Button
@@ -85,8 +89,8 @@ export function Modal({
         </div>
       </div>
 
-      {/* Content Section - can pass in react components as children */}
-      <div className="items-center p-6">{children}</div>
+      {/* Content Section - Scrollable */}
+      <div className="flex-1 overflow-y-auto p-6">{children}</div>
     </ReactModal>
   );
 }
