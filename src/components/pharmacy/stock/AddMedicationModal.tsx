@@ -1,5 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
+import { Modal } from '@/components/Modal';
 import { MedicationForm } from '@/components/pharmacy/MedicationForm';
 import { createMedicine } from '@/data/medication/createMedication';
 import { getMedication } from '@/data/medication/getMedications';
@@ -8,7 +9,6 @@ import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
 
 export function AddMedicationModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +29,7 @@ export function AddMedicationModal() {
       },
     });
     return () => unsub();
-  }, []);
+  }, [setFormDetails, useFormReturn]);
   const submitMedicationFormHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     useFormReturn.handleSubmit(
@@ -83,19 +83,20 @@ export function AddMedicationModal() {
         colour="green"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal
+      <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
         ariaHideApp={false}
+        title="Add New Medicine"
+        text="Close"
       >
         <FormProvider {...useFormReturn}>
           <MedicationForm
-            closeForm={closeModal}
             onSubmit={submitMedicationFormHandler}
             isSubmitting={isSubmitting}
           />
         </FormProvider>
-      </ReactModal>
+      </Modal>
     </>
   );
 }

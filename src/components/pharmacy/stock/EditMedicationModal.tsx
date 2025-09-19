@@ -70,7 +70,6 @@ export function EditMedicationModal({
       ) : editMedication ? (
         <FormProvider {...useFormReturn}>
           <MedicationForm
-            closeForm={closeModal}
             isSubmitting={isSubmitting}
             onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
