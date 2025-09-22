@@ -11,7 +11,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
 
-export function UploadDocument({ patient }: { patient: Patient }) {
+export function UploadDocument({
+  patient,
+  onUploadSuccess,
+}: {
+  patient: Patient;
+  onUploadSuccess: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
   const useFormReturn = useForm({});
@@ -65,6 +71,7 @@ export function UploadDocument({ patient }: { patient: Patient }) {
                       toast.success(
                         'File uploaded successfully as \n' + labeledDocumentName
                       );
+                      onUploadSuccess();
                     } catch (err) {
                       console.log(err);
                       toast.error('Error uploading file:\n' + err);

@@ -4,9 +4,11 @@ import { VisitDropdown } from '@/components/VisitDropdown';
 import { UploadDocument } from '@/components/records/UploadDocument';
 import { ViewDocument } from '@/components/records/ViewDocument';
 import { VILLAGES_AND_ALL } from '@/constants';
+import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { getVisitByPatientId } from '@/data/visit/getVisit';
 import { WithLoadingType } from '@/hooks/useLoadingState';
 import { Patient, getPatientAge } from '@/types/Patient';
+import { Upload } from '@/types/Upload';
 import { Visit } from '@/types/Visit';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -21,6 +23,13 @@ export function PatientInfoHeaderSection({
   showVisit?: boolean;
 }) {
   const [visits, setVisits] = useState<Visit[] | null>(null);
+  const [documents, setDocuments] = useState<Upload[]>([]);
+
+  const fetchDocuments = () => {
+    getUploadByPatientId(patient.pk).then(data => {
+      setDocuments(data);
+    });
+  };
 
   useEffect(() => {
     if (showVisit) {
@@ -28,6 +37,7 @@ export function PatientInfoHeaderSection({
         setVisits(vs)
       );
     }
+    fetchDocuments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.pk]);
 
@@ -85,9 +95,9 @@ export function PatientInfoHeaderSection({
           </p>
         </div>
       </div>
-      <div>
-        <UploadDocument patient={patient} />
-        <ViewDocument patient={patient} />
+      <div className="flex flex-col space-y-2">
+        <UploadDocument patient={patient} onUploadSuccess={fetchDocuments} />
+        <ViewDocument documents={documents} setDocuments={setDocuments} />
       </div>
     </div>
   );
