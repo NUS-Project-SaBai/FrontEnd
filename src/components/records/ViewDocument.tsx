@@ -1,21 +1,14 @@
 'use client';
 
-import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
-import { Patient } from '@/types/Patient';
 import { Upload } from '@/types/Upload';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ReactModal from 'react-modal';
 import { Button } from '../Button';
 
-export function ViewDocument({ patient }: { patient: Patient }) {
+export function ViewDocument({ documents }: { documents: Upload[] }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [documents, setDocuments] = useState<Upload[]>([]);
-  useEffect(() => {
-    getUploadByPatientId(patient.pk).then(data => {
-      setDocuments(data);
-    });
-  }, [patient.pk]);
+
   return (
     <>
       <Button
@@ -32,7 +25,7 @@ export function ViewDocument({ patient }: { patient: Patient }) {
             </tr>
           </thead>
           <tbody>
-            {documents.map((doc, index) => (
+            {documents?.map((doc, index) => (
               <tr key={index}>
                 <td>
                   <Link

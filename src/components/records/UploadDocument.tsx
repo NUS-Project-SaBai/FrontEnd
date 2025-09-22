@@ -1,5 +1,6 @@
 'use client';
 import { postUpload } from '@/data/fileUpload/postUpload';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import moment from 'moment';
 import { useState } from 'react';
@@ -8,11 +9,19 @@ import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
 import { Button } from '../Button';
 import { RHFInputField } from '../inputs/RHFInputField';
+import { LoadingUI } from '../LoadingUI';
 
-export function UploadDocument({ patient }: { patient: Patient }) {
+export function UploadDocument({
+  patient,
+  onUploadSuccess,
+}: {
+  patient: Patient;
+  onUploadSuccess: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const useFormReturn = useForm({});
 
+  const { isLoading, withLoading } = useLoadingState(false);
   return (
     <>
       <Button
@@ -23,10 +32,10 @@ export function UploadDocument({ patient }: { patient: Patient }) {
       <ReactModal isOpen={isOpen} ariaHideApp={false}>
         <FormProvider {...useFormReturn}>
           <form
-            onSubmit={e => {
+            onSubmit={withLoading(async e => {
               e.preventDefault();
-              useFormReturn.handleSubmit(
-                vals => {
+              await useFormReturn.handleSubmit(
+                async vals => {
                   const file = vals.file[0];
 
                   const currentDate = moment().format('YYYY-MM-DD');
@@ -48,22 +57,22 @@ export function UploadDocument({ patient }: { patient: Patient }) {
                   formData.append('file_name', labeledDocumentName);
                   formData.append('patient_pk', patient.pk.toString());
 
-                  postUpload(formData)
-                    .then(() => {
-                      useFormReturn.reset();
-                      setIsOpen(false);
-                      toast.success(
-                        'File uploaded successfully as \n' + labeledDocumentName
-                      );
-                    })
-                    .catch(err => {
-                      console.log(err);
-                      toast.error('Error uploading file:\n' + err);
-                    });
+                  try {
+                    await postUpload(formData);
+                    useFormReturn.reset();
+                    setIsOpen(false);
+                    toast.success(
+                      'File uploaded successfully as \n' + labeledDocumentName
+                    );
+                    onUploadSuccess();
+                  } catch (err) {
+                    console.log(err);
+                    toast.error('Error uploading file:\n' + err);
+                  }
                 },
                 () => toast.error('Invalid/Missing File/input')
               )();
-            }}
+            })}
           >
             <RHFInputField
               name="file"
@@ -77,7 +86,11 @@ export function UploadDocument({ patient }: { patient: Patient }) {
               colour="red"
               onClick={() => setIsOpen(false)}
             />
-            <Button text="Upload" colour="green" type="submit" />
+            {isLoading ? (
+              <LoadingUI message="Uploading Document..." />
+            ) : (
+              <Button text="Upload" colour="green" type="submit" />
+            )}
           </form>
         </FormProvider>
       </ReactModal>

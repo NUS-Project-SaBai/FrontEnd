@@ -1,9 +1,11 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
 import { VILLAGES } from '@/constants';
+import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { getVisitByPatientId } from '@/data/visit/getVisit';
 import { WithLoadingType } from '@/hooks/useLoadingState';
 import { Patient, getPatientAge } from '@/types/Patient';
+import { Upload } from '@/types/Upload';
 import { Visit } from '@/types/Visit';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -19,10 +21,25 @@ export function PatientInfoHeaderSection({
   withLoading?: WithLoadingType;
 }) {
   const [visits, setVisits] = useState<Visit[] | null>(null);
+  const [documents, setDocuments] = useState<Upload[]>([]);
+
+  const fetchDocuments = () => {
+    if (!patient?.pk) return;
+    getUploadByPatientId(patient.pk).then(data => {
+      if (Array.isArray(data)) {
+        setDocuments(data);
+      }
+    });
+  };
   useEffect(() => {
     withLoading(getVisitByPatientId)(patient.pk.toString()).then(vs =>
       setVisits(vs)
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patient.pk]);
+
+  useEffect(() => {
+    fetchDocuments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.pk]);
 
@@ -76,8 +93,8 @@ export function PatientInfoHeaderSection({
         </div>
       </div>
       <div>
-        <UploadDocument patient={patient} />
-        <ViewDocument patient={patient} />
+        <UploadDocument patient={patient} onUploadSuccess={fetchDocuments} />
+        <ViewDocument documents={documents} />
       </div>
     </div>
   );
