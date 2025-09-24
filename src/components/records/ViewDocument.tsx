@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { Modal } from '@/components/Modal';
 import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { patchUploadName } from '@/data/fileUpload/patchUploadName';
 import { Patient } from '@/types/Patient';
@@ -10,7 +11,6 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
 
 export function ViewDocument({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,10 +54,12 @@ export function ViewDocument({ patient }: { patient: Patient }) {
         onClick={() => setIsOpen(true)}
         colour="blue"
       />
-      <ReactModal
+      <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
         ariaHideApp={false}
+        title="View Documents"
+        text="Close"
       >
         {documents.length === 0 ? (
           <div className="px-2 py-4 text-center text-gray-500">
@@ -136,7 +138,7 @@ export function ViewDocument({ patient }: { patient: Patient }) {
           </table>
         )}
         <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
-      </ReactModal>
+      </Modal>
     </>
   );
 }
