@@ -83,7 +83,6 @@ export function MedicationOrderForm({
       text="Close"
     >
       <div className="flex flex-col gap-y-2">
-        <h2>Order</h2>
         <FormProvider {...useFormReturn}>
           <form onSubmit={onOrderSubmit}>
             <DisplayField

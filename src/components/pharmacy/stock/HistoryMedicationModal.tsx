@@ -1,6 +1,5 @@
 'use client';
 import { fetchMedicationHistory } from '@/app/pharmacy/stock/api';
-import { Button } from '@/components/Button';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { getMedicationById } from '@/data/medication/getMedications';
@@ -53,10 +52,9 @@ export function HistoryMedicationModal() {
       isOpen={viewMedicationId != null}
       onRequestClose={closeModal}
       ariaHideApp={false}
-      title="View Medication History"
+      title={`View Medication ${medicationName ?? ''} History`}
       text="Close"
     >
-      <h2>{`View Medication ${medicationName ?? ''} History`}</h2>
       {isLoading ? (
         <LoadingUI message="Loading medication history..." />
       ) : (
@@ -90,7 +88,6 @@ export function HistoryMedicationModal() {
           </table>
         </>
       )}
-      <Button onClick={closeModal} text="Close" colour="red" />
     </Modal>
   );
 }
