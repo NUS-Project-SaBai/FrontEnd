@@ -1,5 +1,5 @@
 'use client';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import ReactModal from 'react-modal';
 import { Button } from './Button';
 
@@ -30,28 +30,6 @@ export function Modal({
     lg: 'max-w-3xl',
     xl: 'max-w-4xl',
   };
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Enter' && isOpen) {
-        // Find and click the submit button inside the modal
-        const submitButton = document.querySelector(
-          '[data-modal-submit]'
-        ) as HTMLButtonElement;
-        if (submitButton) {
-          submitButton.click();
-        }
-      }
-    }
-
-    if (isOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-    }
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen]);
 
   return (
     <ReactModal
