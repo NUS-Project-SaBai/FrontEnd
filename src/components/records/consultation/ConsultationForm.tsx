@@ -232,7 +232,7 @@ export function ConsultationForm({
               label="Referral Notes"
               type="textarea"
               placeholder="Type your referral notes here..."
-              isRequired={true}
+              isRequired={useFormReturn.watch('referred_for') !== ''}
             />
           )}
 
