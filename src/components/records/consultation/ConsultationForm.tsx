@@ -235,7 +235,6 @@ export function ConsultationForm({
               isRequired={useFormReturn.watch('referred_for') !== ''}
             />
           )}
-
           <RHFInputField
             name="remarks"
             label="Remarks"
