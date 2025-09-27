@@ -222,15 +222,20 @@ export function ConsultationForm({
               },
             ]}
           />
-          {useFormReturn.watch('referred_for') === '' || (
-            <RHFInputField
-              name="referral_notes"
-              label="Referral Notes"
-              type="textarea"
-              placeholder="Type your referral notes here..."
-              isRequired={useFormReturn.watch('referred_for') !== ''}
-            />
-          )}
+          {(() => {
+            const referredFor = useFormReturn.watch('referred_for');
+            return (
+              referredFor !== '' && (
+                <RHFInputField
+                  name="referral_notes"
+                  label="Referral Notes"
+                  type="textarea"
+                  placeholder="Type your referral notes here..."
+                  isRequired={true}
+                />
+              )
+            );
+          })()}
 
           <RHFInputField
             name="remarks"
