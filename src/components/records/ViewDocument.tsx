@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { Modal } from '@/components/Modal';
 import { patchUploadName } from '@/data/fileUpload/patchUploadName';
 import { Upload } from '@/types/Upload';
 import { formatDate } from '@/utils/formatDate';
