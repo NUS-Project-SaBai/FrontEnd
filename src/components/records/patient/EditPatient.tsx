@@ -1,5 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
+import { Modal } from '@/components/Modal';
 import { PatientForm } from '@/components/records/patient/PatientForm';
 import { patchPatient } from '@/data/patient/patchPatient';
 import { Patient } from '@/types/Patient';
@@ -8,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
 
 export function EditPatient({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,10 +28,12 @@ export function EditPatient({ patient }: { patient: Patient }) {
         colour="green"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal
+      <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
         ariaHideApp={false}
+        title="Edit Patient Details"
+        text="Close"
       >
         <FormProvider {...useFormReturn}>
           <PatientForm
@@ -67,7 +69,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
             }}
           />
         </FormProvider>
-      </ReactModal>
+      </Modal>
     </>
   );
 }

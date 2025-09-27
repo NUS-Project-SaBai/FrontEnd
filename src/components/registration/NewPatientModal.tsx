@@ -1,7 +1,7 @@
 import { Button } from '@/components/Button';
 import { PatientForm } from '@/components/records/patient/PatientForm';
 import { FormEvent, useState } from 'react';
-import ReactModal from 'react-modal';
+import { Modal } from '../Modal';
 
 export function NewPatientModal({
   onSubmit,
@@ -19,14 +19,16 @@ export function NewPatientModal({
         onClick={() => setIsOpen(true)}
         text={'New Patient'}
       />
-      <ReactModal
+      <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
         ariaHideApp={false}
+        title="New Patient"
+        text="Close"
+        className="mx-auto my-8"
       >
         <PatientForm onSubmit={onSubmit} isSubmitting={isSubmitting} />
-        <Button colour="red" onClick={closeModal} text="Close" />
-      </ReactModal>
+      </Modal>
     </>
   );
 }
