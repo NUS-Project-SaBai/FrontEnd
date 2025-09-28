@@ -2,27 +2,24 @@
 
 import { Button } from '@/components/Button';
 import { Modal } from '@/components/Modal';
-import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { patchUploadName } from '@/data/fileUpload/patchUploadName';
-import { Patient } from '@/types/Patient';
 import { Upload } from '@/types/Upload';
 import { formatDate } from '@/utils/formatDate';
 import axios from 'axios';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-export function ViewDocument({ patient }: { patient: Patient }) {
+export function ViewDocument({
+  documents,
+  setDocuments,
+}: {
+  documents: Upload[];
+  setDocuments: React.Dispatch<React.SetStateAction<Upload[]>>;
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [documents, setDocuments] = useState<Upload[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newFileName, setNewFileName] = useState('');
-
-  useEffect(() => {
-    getUploadByPatientId(patient.pk).then(data => {
-      setDocuments(data);
-    });
-  }, [patient.pk]);
 
   // handle the rename action
   const handleRename = async (doc: Upload) => {
