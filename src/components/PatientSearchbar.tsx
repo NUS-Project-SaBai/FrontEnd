@@ -1,5 +1,5 @@
 'use client';
-import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
+import { DynamicVillageDropdown } from '@/components/DynamicVillageDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Dispatch, SetStateAction, useContext, useEffect } from 'react';
@@ -38,7 +38,7 @@ export function PatientSearchbar<T>({
     } else {
       setFilteredItems(data);
     }
-  }, [queryStr, setFilteredItems, village, data]);
+  }, [queryStr, setFilteredItems, village, data, filterFunction]);
 
   const debouncedSearch = useDebouncedCallback(query => {
     const params = new URLSearchParams(searchParams);
@@ -52,7 +52,7 @@ export function PatientSearchbar<T>({
 
   return (
     <div className="flex gap-x-2">
-      <VillageOptionDropdown
+      <DynamicVillageDropdown
         village={village}
         handleVillageChange={setVillage}
         label="Search by Village"
