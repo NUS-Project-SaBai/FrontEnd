@@ -96,7 +96,7 @@ function PatientRecordRow({
           </div>
           <div className="flex-[3]">
             <Image
-              src={patient.picture_url}
+              src={patient.picture_url ?? '/default-profile.webp'}
               alt="Patient Photo"
               height={100}
               width={100}
