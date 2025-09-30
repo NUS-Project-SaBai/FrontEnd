@@ -1,10 +1,13 @@
 'use client';
+import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { useUser } from '@auth0/nextjs-auth0';
 import {
   ArrowLeftStartOnRectangleIcon,
+  ArrowTrendingUpIcon,
   BeakerIcon,
   ClipboardDocumentListIcon,
+  EyeIcon,
   IdentificationIcon,
   PencilIcon,
   UserCircleIcon,
@@ -13,7 +16,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
-import { VillageOptionDropdown } from './VillageOptionDropdown';
 
 type HeroIconType = React.ComponentType<React.ComponentProps<'svg'>>;
 type NavItemData = {
@@ -42,6 +44,16 @@ const navItems: NavItemData[] = [
     href: '/pharmacy/stock',
     icon: BeakerIcon,
   },
+  {
+    name: 'Vision',
+    href: '/vision',
+    icon: EyeIcon,
+  },
+  {
+    name: 'Referrals',
+    href: '/referrals',
+    icon: ArrowTrendingUpIcon,
+  },
 ];
 
 export function SideMenu() {
@@ -51,7 +63,7 @@ export function SideMenu() {
     <div className="flex h-full flex-col bg-gray-900 text-gray-400">
       <div className="flex items-center p-4">
         <Image alt="Sa'bai Logo" src="/sabaiLogo.png" width={32} height={32} />
-        <h1 className="ml-2 text-2xl text-gray-500">Sa&apos;Bai &apos;24</h1>
+        <h1 className="ml-2 text-2xl text-gray-500">Sa&apos;Bai</h1>
       </div>
 
       <nav className="py-4">

@@ -1,10 +1,10 @@
 import { Button } from '@/components/Button';
-import { VILLAGES } from '@/constants';
+import { VILLAGES_AND_ALL } from '@/constants';
 import { Patient } from '@/types/Patient';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export function PatientRecordTable({ patients }: { patients: Patient[] }) {
+export function PatientGlassesTable({ patients }: { patients: Patient[] }) {
   return (
     <table className="w-full divide-y-2 divide-gray-500 text-left">
       <thead>
@@ -13,8 +13,7 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
           <th className="w-[20%]">Photo</th>
           <th className="w-[40%]">Full Name</th>
           <th className="w-[10%]">Record</th>
-          <th className="w-[10%]">Vitals</th>
-          <th className="w-[10%]">Consultation</th>
+          <th className="w-[20%]">Add/Update Glasses</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-300">
@@ -29,12 +28,16 @@ export function PatientRecordTable({ patients }: { patients: Patient[] }) {
 function PatientRecordRow({ patient }: { patient: Patient }) {
   return (
     <tr>
-      <td className={'font-semibold ' + VILLAGES[patient.village_prefix].color}>
+      <td
+        className={
+          'font-semibold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+        }
+      >
         {patient.patient_id}
       </td>
       <td>
         <Image
-          src={patient.picture}
+          src={patient.picture_url}
           alt={'Patient Photo'}
           height={100}
           width={100}
@@ -49,14 +52,8 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       </td>
       <td>
         {/* vitals */}
-        <Link href={`/records/patient-vitals?id=${patient.pk}`}>
-          <Button text="Create" colour="green" />
-        </Link>
-      </td>
-      <td>
-        {/* consultation */}
-        <Link href={`/records/patient-consultation?id=${patient.pk}`}>
-          <Button text="Create" colour="green" />
+        <Link href={`/vision/add-update-glasses?id=${patient.pk}`}>
+          <Button text="Add/Edit" colour="green" />
         </Link>
       </td>
     </tr>

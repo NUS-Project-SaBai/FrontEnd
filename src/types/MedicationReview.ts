@@ -9,6 +9,6 @@ export type MedicationReview = {
   quantity_changed: number;
   quantity_remaining: number;
   date: string;
-  order_status: string;
-  order?: Order;
+  order_status: 'PENDING' | 'APPROVED' | 'CANCELLED';
+  order: Order;
 };

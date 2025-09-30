@@ -1,13 +1,13 @@
 'use client';
 import { LoadingPage } from '@/components/LoadingPage';
 import { MedicationTable } from '@/components/pharmacy/MedicationTable';
+import { AddMedicationModal } from '@/components/pharmacy/stock/AddMedicationModal';
+import { EditMedicationModal } from '@/components/pharmacy/stock/EditMedicationModal';
+import { HistoryMedicationModal } from '@/components/pharmacy/stock/HistoryMedicationModal';
 import { getMedication } from '@/data/medication/getMedications';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Medication } from '@/types/Medication';
 import { useEffect, useMemo, useState } from 'react';
-import { AddMedicationModal } from './AddMedicationModal';
-import { EditMedicationModal } from './EditMedicationModal';
-import { HistoryMedicationModal } from './HistoryMedicationModal';
 
 export default function PharmacyStockPage() {
   const [medications, setMedications] = useState<Medication[]>([]);

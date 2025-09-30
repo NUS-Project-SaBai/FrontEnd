@@ -1,21 +1,21 @@
 'use client';
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientInfo } from '@/components/records/patient/PatientInfo';
+import { NewPatientModal } from '@/components/registration/NewPatientModal';
+import { PatientScanForm } from '@/components/registration/PatientScanForm';
+import { RegistrationAutosuggest } from '@/components/registration/RegistrationAutosuggest';
 import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
 import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
+import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
 import { urlToFile } from '@/utils/urlToFile';
 import { FormEvent, useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { NewPatientModal } from './NewPatientModal';
-import { PatientScanForm } from './PatientScanForm';
-import { RegistrationAutosuggest } from './RegistrationAutosuggest';
 
 export default function RegistrationPage() {
-  const useFormReturn = useForm({ resetOptions: { keepDirtyValues: true } });
   const [patientList, setPatientList] = useState<Patient[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const { isLoading, withLoading } = useLoadingState(true);
@@ -28,6 +28,31 @@ export default function RegistrationPage() {
   const refreshPatientList = withLoading(() =>
     getPatient().then(setPatientList)
   );
+
+  const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
+    'RegistrationForm',
+    {} as FieldValues,
+    []
+  );
+
+  const useFormReturn = useForm({
+    values: formDetails,
+    resetOptions: { keepDirtyValues: true },
+  });
+
+  useEffect(() => {
+    const unsub = useFormReturn.subscribe({
+      formState: { values: true },
+      callback: ({ values }) => {
+        setFormDetails(values);
+      },
+    });
+    return () => {
+      unsub();
+      useFormReturn.reset({});
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onPatientRegistrationFormSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -49,7 +74,9 @@ export default function RegistrationPage() {
           toast.error('Unknown error creating patient');
           return;
         }
-        useFormReturn.reset();
+        useFormReturn.reset({});
+        clearLocalStorageData();
+
         toast.success('Patient Created!');
         // TODO: implement check for recent visit
         createVisit(patient);

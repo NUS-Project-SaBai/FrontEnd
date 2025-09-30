@@ -75,7 +75,7 @@ function SuggestionItem({
       className="grid grid-cols-2 items-center border-b-2 border-gray-200 p-1 hover:cursor-pointer hover:bg-blue-200"
     >
       <Image
-        src={patient.picture}
+        src={patient.picture_url}
         alt="Patient Picture"
         width={100}
         height={100}

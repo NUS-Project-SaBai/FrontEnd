@@ -1,5 +1,6 @@
 'use client';
 import { Button } from '@/components/Button';
+import { Modal } from '@/components/Modal';
 import { PatientForm } from '@/components/records/patient/PatientForm';
 import { patchPatient } from '@/data/patient/patchPatient';
 import { Patient } from '@/types/Patient';
@@ -8,10 +9,10 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
 
 export function EditPatient({ patient }: { patient: Patient }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
 
   const useFormReturn = useForm({
     defaultValues: {
@@ -27,10 +28,16 @@ export function EditPatient({ patient }: { patient: Patient }) {
         colour="green"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+        title="Edit Patient Details"
+        text="Close"
+      >
         <FormProvider {...useFormReturn}>
           <PatientForm
-            closeForm={() => setIsOpen(false)}
+            closeForm={closeModal}
             onSubmit={e => {
               e.preventDefault();
 
@@ -40,7 +47,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
                   formData.append(
                     'picture',
                     await urlToFile(
-                      fieldValues.picture,
+                      fieldValues.picture_url,
                       'patient_screenshot.jpg',
                       'image/jpg'
                     )
@@ -52,7 +59,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
                   patchPatient(fieldValues.pk, formData).then(() => {
                     toast.success('Patient Updated!');
                     router.refresh();
-                    setIsOpen(false);
+                    closeModal();
                   });
                 },
                 () => {
@@ -62,7 +69,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
             }}
           />
         </FormProvider>
-      </ReactModal>
+      </Modal>
     </>
   );
 }

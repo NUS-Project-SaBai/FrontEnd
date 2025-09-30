@@ -1,7 +1,7 @@
 'use client';
-import { useUser } from '@auth0/nextjs-auth0';
+
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  const { user } = useUser();
-  return <p>Hi {user?.nickname}</p>;
+  redirect('registration');
 }

@@ -1,7 +1,7 @@
 //35 fields excluding id, visit_id.
 export type Vital = {
   id?: number;
-  visit?: number;
+  visit_id?: number;
   height: string;
   weight: string;
   temperature: string;
@@ -17,6 +17,8 @@ export type Vital = {
   right_eye_degree: string;
   left_eye_pinhole: string;
   right_eye_pinhole: string;
+  left_astigmatism: string;
+  right_astigmatism: string;
   gross_motor: string;
   red_reflex: string;
   scoliosis: string;
@@ -39,10 +41,6 @@ export type Vital = {
   others: string;
 };
 
-export function vitalFromJson(jsonObj: object): Vital | null {
-  return jsonObj as Vital;
-}
-
 /**
  * Returns the BMI of the patient based on the height and weight.
  * If height or weight is invalid, returns 'Invalid/Missing Height or Weight'.
@@ -62,7 +60,7 @@ export function displayBMI(height: string, weight: string) {
 
 export const EMPTY_VITAL: Vital = {
   id: undefined,
-  visit: undefined,
+  visit_id: undefined,
   height: '',
   weight: '',
   temperature: '',
@@ -78,6 +76,8 @@ export const EMPTY_VITAL: Vital = {
   right_eye_degree: '',
   left_eye_pinhole: '',
   right_eye_pinhole: '',
+  left_astigmatism: '',
+  right_astigmatism: '',
   gross_motor: '',
   red_reflex: '',
   scoliosis: '',

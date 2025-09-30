@@ -4,6 +4,7 @@ import { DisplayField } from '@/components/DisplayField';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { LoadingUI } from '@/components/LoadingUI';
+import { Modal } from '@/components/Modal';
 import { getMedication } from '@/data/medication/getMedications';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
@@ -12,7 +13,6 @@ import { Patient } from '@/types/Patient';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
 
 export function MedicationOrderForm({
   selectedOrder,
@@ -34,12 +34,12 @@ export function MedicationOrderForm({
         ? { index: undefined, medication: '', quantity: undefined, notes: '' }
         : selectedOrder,
   });
-  const { isLoading, withLoading } = useLoadingState(true);
+  const { isLoading, withLoading } = useLoadingState(false);
 
   useEffect(() => {
-    withLoading(getMedication)().then(setMedications);
+    withLoading(async () => getMedication().then(setMedications))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedOrder]);
 
   const selectedMedicationId =
     useFormReturn.watch('medication').split(' ', 1)[0] || '';
@@ -75,13 +75,14 @@ export function MedicationOrderForm({
   };
 
   return (
-    <ReactModal
+    <Modal
       isOpen={selectedOrder != null}
       onRequestClose={closeForm}
       ariaHideApp={false}
+      title="Order"
+      text="Close"
     >
       <div className="flex flex-col gap-y-2">
-        <h2>Order</h2>
         <FormProvider {...useFormReturn}>
           <form onSubmit={onOrderSubmit}>
             <DisplayField
@@ -141,6 +142,6 @@ export function MedicationOrderForm({
           </form>
         </FormProvider>
       </div>
-    </ReactModal>
+    </Modal>
   );
 }

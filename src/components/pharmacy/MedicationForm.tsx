@@ -1,18 +1,16 @@
 'use client';
+import { Button } from '@/components/Button';
+import { DisplayField } from '@/components/DisplayField';
+import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { LoadingUI } from '@/components/LoadingUI';
 import { Medication } from '@/types/Medication';
 import { FormEventHandler } from 'react';
-import { Button } from '../Button';
-import { DisplayField } from '../DisplayField';
-import { RHFInputField } from '../inputs/RHFInputField';
-import { LoadingUI } from '../LoadingUI';
 
 export function MedicationForm({
-  closeForm,
   onSubmit,
   isSubmitting = false,
   editMedication = null,
 }: {
-  closeForm: () => void;
   onSubmit: FormEventHandler;
   isSubmitting?: boolean;
   editMedication?: Medication | null;
@@ -31,6 +29,7 @@ export function MedicationForm({
           type="text"
           isRequired={true}
         />
+        <RHFInputField label="Code" name="code" type="text" />
         <DisplayField
           label="Current Quantity"
           content={
@@ -45,7 +44,6 @@ export function MedicationForm({
         />
         <RHFInputField label="Notes" name="notes" type="text" />
         <div className="flex">
-          <Button text="Close" colour="red" type="button" onClick={closeForm} />
           {isSubmitting ? (
             <LoadingUI message="Submitting medication..." />
           ) : (

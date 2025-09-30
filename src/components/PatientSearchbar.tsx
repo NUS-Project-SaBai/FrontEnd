@@ -1,53 +1,44 @@
 'use client';
+import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
-import { getPatient } from '@/data/patient/getPatient';
-import { WithLoadingType } from '@/hooks/useLoadingState';
-import { Patient } from '@/types/Patient';
-import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { VillageOptionDropdown } from './VillageOptionDropdown';
 
-export function PatientSearchInput({
-  setPatients,
+/**
+ * Search bar component to filter patients.
+ *
+ * @param data - The list of patient-related data to filter
+ * @param setFilteredItems - Function to set the result of the filtered list.
+ * @param filterFunction - This function receives the search query as a string and returns a function that takes a patient item and returns true if it matches the query.
+ */
+export function PatientSearchbar<T>({
+  data,
+  setFilteredItems,
+  filterFunction,
   isLoading = false,
-  withLoading = x => x,
 }: {
-  setPatients: Dispatch<SetStateAction<Patient[]>>;
+  data: T[];
+  filterFunction: (filterString: string) => (item: T) => boolean;
+  setFilteredItems: Dispatch<SetStateAction<T[]>>;
   isLoading?: boolean;
-  withLoading?: WithLoadingType;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryStr = searchParams.get('query')?.toLowerCase();
 
-  const [fullPatientList, setFullPatientList] = useState<Patient[]>([]);
   const { village, setVillage } = useContext(VillageContext);
-  useEffect(() => {
-    withLoading(getPatient)().then(setFullPatientList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
-    let filteredList =
-      village == VillagePrefix.ALL
-        ? fullPatientList
-        : fullPatientList.filter(p => p.village_prefix == village);
     if (queryStr) {
-      filteredList = filteredList.filter(p =>
-        p.filter_string.toLowerCase().includes(queryStr)
-      );
+      const filter = filterFunction(queryStr);
+      const filteredList = data.filter(filter);
+      setFilteredItems(filteredList);
+    } else {
+      setFilteredItems(data);
     }
-    setPatients(filteredList);
-  }, [fullPatientList, queryStr, setPatients, village]);
+  }, [queryStr, setFilteredItems, village, data]);
 
   const debouncedSearch = useDebouncedCallback(query => {
     const params = new URLSearchParams(searchParams);

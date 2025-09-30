@@ -1,6 +1,6 @@
+import { DisplayField } from '@/components/DisplayField';
 import { Patient } from '@/types/Patient';
-import moment from 'moment';
-import { DisplayField } from '../../DisplayField';
+import { formatDate } from '@/utils/formatDate';
 
 export function PatientInfoDetailSection({ patient }: { patient: Patient }) {
   const fieldArray = [
@@ -10,7 +10,7 @@ export function PatientInfoDetailSection({ patient }: { patient: Patient }) {
     { label: 'Gender', value: patient.gender },
     {
       label: 'Date of Birth',
-      value: moment(patient.date_of_birth).format('DD-MMMM-YYYY'),
+      value: formatDate(patient.date_of_birth, 'date'),
     },
     { label: 'Village', value: patient.village_prefix },
     { label: 'POOR', value: patient.poor },

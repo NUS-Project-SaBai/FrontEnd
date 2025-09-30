@@ -2,14 +2,12 @@ import { LoadingUI } from '@/components/LoadingUI';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
 import { HeightWeightGraph } from '@/components/records/vital/HeightWeightGraph';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
-import { PrescriptionConsultCol } from '@/components/records/VitalPresConsultCol';
-import { getConsultByVisitId } from '@/data/consult/getConsult';
+import { VitalsForm } from '@/components/records/vital/VitalsForm';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitById } from '@/data/visit/getVisit';
 import { getVitalByVisit } from '@/data/vital/getVital';
 import { calculateDobDifference } from '@/types/Patient';
 import { EMPTY_VITAL } from '@/types/Vital';
-import { VitalsForm } from './VitalsForm';
 
 export default async function PatientVitalPage({
   searchParams,
@@ -31,14 +29,20 @@ export default async function PatientVitalPage({
     );
   }
 
-  const [patient, curVital, visitDate, consults] = await Promise.all([
-    getPatientById(patientId),
+  const [curVital, { date: visitDate, patient: patient }] = await Promise.all([
     getVitalByVisit(visitId).then(vital => vital || EMPTY_VITAL),
-    getVisitById(visitId).then(visit =>
-      visit == null ? new Date() : new Date(visit.date)
-    ),
-    getConsultByVisitId(visitId),
+    getVisitById(visitId).then(visit => ({
+      ...visit,
+      date: visit == null ? new Date() : new Date(visit.date),
+    })),
   ]);
+  if (!patient) {
+    return (
+      <div className="p-2">
+        <p>Cannot find patient</p>
+      </div>
+    );
+  }
 
   const patientVisitAge = calculateDobDifference(
     new Date(patient.date_of_birth),
@@ -58,7 +62,6 @@ export default async function PatientVitalPage({
             age={patientVisitAge}
             gender={patient.gender}
           />
-          <PrescriptionConsultCol consults={consults} />
           <h2>HeightWeightGraph</h2>
           <HeightWeightGraph
             age={patientVisitAge.year}

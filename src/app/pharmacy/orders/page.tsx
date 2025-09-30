@@ -2,84 +2,79 @@
 import { Button } from '@/components/Button';
 import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
-import { PatientSearchInput } from '@/components/PatientSearchbar';
-import { VILLAGES } from '@/constants';
-import { getPendingOrder } from '@/data/order/getOrder';
+import { PatientSearchbar } from '@/components/PatientSearchbar';
+import { VILLAGES_AND_ALL } from '@/constants';
 import { patchOrder } from '@/data/order/patchOrder';
 import { useLoadingState } from '@/hooks/useLoadingState';
-import { Diagnosis } from '@/types/Diagnosis';
-import { Order } from '@/types/Order';
-import { Patient } from '@/types/Patient';
+import { VillagePrefix } from '@/types/VillagePrefixEnum';
+import { formatDate } from '@/utils/formatDate';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
 import { Suspense, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { fetchAllPatientMedicationOrders } from './api';
+
+type OrderRowData = {
+  patient: {
+    patient_id: string;
+    name: string;
+    picture_url: string;
+    village_prefix: VillagePrefix;
+  };
+  data: {
+    orders: {
+      id: number;
+      medication_name: string;
+      medication_code: string;
+      quantity_changed: number;
+      notes: string;
+    }[];
+    diagnoses: { category: string; details: string }[];
+    visit_id: number;
+    visit_date: string;
+  }[];
+};
 
 export default function OrdersPage() {
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [orders, setOrders] = useState<Record<string, Order[]>>({});
-  const [diagnoses, setDiagnoses] = useState<Record<string, Diagnosis[]>>({});
   const [orderRowData, setOrderRowData] = useState<OrderRowData[]>([]);
   const { isLoading, withLoading } = useLoadingState(true);
 
   useEffect(() => {
     const fetchPendingOrders = withLoading(async () => {
-      const data = await getPendingOrder();
-
-      const tmpOrder: Record<string, Order[]> = {};
-      data.orders.forEach(order => {
-        const patientId = order.visit.patient.patient_id;
-        if (!tmpOrder[patientId]) {
-          tmpOrder[patientId] = [];
-        }
-        tmpOrder[patientId].push(order);
-      });
-      setOrders(tmpOrder);
-
-      const tmpDiagnosis: Record<string, Diagnosis[]> = {};
-      data.diagnoses.forEach(diagnosis => {
-        const patientId = diagnosis.consult?.patient?.patient_id;
-        if (!patientId) {
-          return;
-        }
-        if (!tmpDiagnosis[patientId]) {
-          tmpDiagnosis[patientId] = [];
-        }
-        tmpDiagnosis[patientId].push(diagnosis);
-      });
-      setDiagnoses(tmpDiagnosis);
+      const result = await fetchAllPatientMedicationOrders();
+      setOrderRowData(result);
     });
 
     fetchPendingOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const tmpOrderRowData: OrderRowData[] = [];
-    patients.forEach(patient => {
-      tmpOrderRowData.push({
-        patient: patient,
-        diagnoses: diagnoses[patient.patient_id] || [],
-        orders: orders[patient.patient_id] || [],
-      });
-    });
-
-    setOrderRowData(tmpOrderRowData.filter(x => x.orders.length > 0));
-  }, [patients, orders, diagnoses]);
-
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
       <div className="p-2">
         <h1>Orders</h1>
         <Suspense>
-          <PatientSearchInput setPatients={setPatients} />
+          <PatientSearchbar
+            data={orderRowData}
+            setFilteredItems={setOrderRowData}
+            filterFunction={query => item =>
+              item.patient.patient_id
+                .toLowerCase()
+                .includes(query.toLowerCase()) ||
+              item.patient.name.toLowerCase().includes(query.toLowerCase())
+            }
+            isLoading={isLoading}
+          />
         </Suspense>
         <div className="pt-4">
           <table className="w-full text-left">
             <thead className="border-b-2">
               <tr>
-                <th>Photo</th>
                 <th>
                   <p>ID / Full Name</p>
+                  <p>Photo</p>
+                </th>
+                <th>
                   <p>Visit On</p>
                 </th>
                 <th>Diagnoses</th>
@@ -87,28 +82,19 @@ export default function OrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {orderRowData.map((x, index) => (
-                <OrderRow
-                  key={x.patient?.identification_number || index}
-                  {...x}
-                  removeNonPendingOrder={id => {
-                    if (orders[x.patient.patient_id] == undefined) return;
-                    const newOrders = orders[x.patient.patient_id].filter(
-                      o => o.id != id
-                    );
-                    if (newOrders.length == 0) {
-                      const tmp = { ...orders };
-                      delete tmp[x.patient.patient_id];
-                      setOrders(tmp);
-                    } else {
-                      setOrders(prev => ({
-                        ...prev,
-                        [x.patient.patient_id]: newOrders,
-                      }));
-                    }
-                  }}
-                />
-              ))}
+              {orderRowData.length == 0 ? (
+                <tr>
+                  <td className="col-span-4">No Pending Orders</td>
+                </tr>
+              ) : (
+                orderRowData.map((x, index) => (
+                  <OrderRow
+                    key={x.patient?.patient_id || index}
+                    orderRowData={x}
+                    removeNonPendingOrder={() => {}}
+                  />
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -117,80 +103,106 @@ export default function OrdersPage() {
   );
 }
 
-type OrderRowData = {
-  patient: Patient;
-  diagnoses: Diagnosis[];
-  orders: Order[];
-};
 function OrderRow({
-  patient,
-  diagnoses,
-  orders,
+  orderRowData: { patient, data },
   removeNonPendingOrder,
-}: OrderRowData & { removeNonPendingOrder: (id: number) => void }) {
+}: {
+  orderRowData: OrderRowData;
+  removeNonPendingOrder: (id: number) => void;
+}) {
+  const onPatchError = (err: Error, medicine_name: string) => {
+    toast.error(() => (
+      <p>
+        {err.message}
+        <br />
+        <br />
+        <b>Patient: </b>
+        {patient.name}
+        <br />
+        <b>Medicine: </b>
+        {medicine_name}
+      </p>
+    ));
+  };
+
   return (
-    <tr>
-      <td className="px-0">
-        <Image
-          alt="Patient Image"
-          src={patient.picture}
-          className="h-24 w-20 object-cover"
-          height={80}
-          width={80}
-        />
-      </td>
-      <td>
-        <p className={'font-bold ' + VILLAGES[patient.village_prefix].color}>
-          {patient.patient_id}
-        </p>
-        <p className="font-semibold">{patient.name}</p>
-        <p className="text-nowrap text-gray-400">
-          {orders == undefined || orders[0] == undefined
-            ? 'Error Getting Date'
-            : new Date(orders[0].visit.date).toLocaleString()}
-        </p>
-      </td>
-      <td className="min-w-60 text-gray-700">
-        {diagnoses.map((d, i) => (
-          <li key={i} className="list-none text-sm">
-            <b>Diagnosis {i + 1}</b>
-            <p>Category: {d.category}</p>
-            <p>{d.details}</p>
-          </li>
-        ))}
-      </td>
-      <td className="p-0">
-        <div className="flex flex-col divide-y-2">
-          {orders.map((o, i) => (
-            <div
-              key={i}
-              className="flex justify-between p-1.5 text-sm text-gray-700 hover:bg-slate-100"
-            >
-              <div>
-                <p>
-                  <b>{o.medication_review.medicine.medicine_name}: </b>
-                  {Math.abs(o.medication_review.quantity_changed)}
-                </p>
-                <p>
-                  <b>Dosage Instruction: </b>
-                  {o.notes}
-                </p>
-              </div>
-              <ApproveRejectOrderButton
-                handleApproveOrder={async () => {
-                  await patchOrder(o.id.toString(), 'APPROVED');
-                  removeNonPendingOrder(o.id);
-                }}
-                handleCancelOrder={async () => {
-                  await patchOrder(o.id.toString(), 'CANCELLED');
-                  removeNonPendingOrder(o.id);
-                }}
-              />
+    <>
+      <tr>
+        {/* rowSpan is data.length + 1 because the current row has no data. */}
+        <td className="px-0" rowSpan={data.length + 1}>
+          <p
+            className={
+              'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+            }
+          >
+            {patient.patient_id}
+          </p>
+          <p className="font-semibold">{patient.name}</p>
+          <Image
+            alt="Patient Image"
+            src={patient.picture_url}
+            className="h-24 w-20 object-cover"
+            height={80}
+            width={80}
+          />
+        </td>
+      </tr>
+      {data.map(({ visit_id, visit_date, orders, diagnoses }) => (
+        <tr key={visit_id}>
+          <td>
+            <p className="text-nowrap">
+              {visit_date ? formatDate(visit_date, 'datetime') : 'No Date'}
+            </p>
+          </td>
+          <td className="min-w-60 text-gray-700">
+            {diagnoses.map((d, i) => (
+              <li key={i} className="list-none text-sm">
+                <b>Diagnosis {i + 1}</b>
+                <p>Category: {d.category}</p>
+                <p>{d.details}</p>
+              </li>
+            ))}
+          </td>
+          <td className="p-0">
+            <div className="flex flex-col divide-y-2">
+              {orders.map((o, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between p-1.5 text-sm text-gray-700 hover:bg-slate-100"
+                >
+                  <div>
+                    <p>
+                      <b>{o.medication_name}: </b>
+                      {Math.abs(o.quantity_changed)}
+                    </p>
+                    <p>
+                      <b>Dosage Instruction: </b>
+                      {o.notes}
+                    </p>
+                    <p>
+                      <b> Code: </b>
+                      {o.medication_code || 'N/A'}
+                    </p>
+                  </div>
+                  <ApproveRejectOrderButton
+                    handleApproveOrder={async () => {
+                      await patchOrder(o.id.toString(), 'APPROVED')
+                        .then(() => removeNonPendingOrder(o.id))
+                        .catch(err => onPatchError(err, o.medication_name));
+                    }}
+                    handleCancelOrder={async () => {
+                      await patchOrder(o.id.toString(), 'CANCELLED')
+                        .then(() => removeNonPendingOrder(o.id))
+                        .catch(err => onPatchError(err, o.medication_name));
+                    }}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </td>
-    </tr>
+          </td>
+        </tr>
+      ))}
+    </>
   );
 }
 

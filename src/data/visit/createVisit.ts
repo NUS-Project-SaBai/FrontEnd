@@ -1,12 +1,12 @@
 'use server';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { Patient } from '@/types/Patient';
-import moment from 'moment';
+import { formatDate } from '@/utils/formatDate';
 
 export async function createVisit(patient: Patient) {
-  axiosInstance.post(`/visits?patient=${patient.pk}`, {
-    patient: patient.pk,
-    visit_date: moment().format('DD MMMM YYYY HH:mm'),
+  await axiosInstance.post(`/visits/`, {
+    patient_id: patient.pk,
+    visit_date: formatDate(),
     status: 'started',
   });
 }

@@ -9,5 +9,6 @@ export async function searchFace(imgDetails: string): Promise<Patient[]> {
   await urlToFile(imgDetails, 'patient_screenshot.jpg', 'image/jpg').then(
     file => scanFormData.append('picture', file)
   );
-  return (await axiosInstance.post('/patients/search_face', scanFormData)).data;
+  return (await axiosInstance.post('/patients/search_face/', scanFormData))
+    .data;
 }

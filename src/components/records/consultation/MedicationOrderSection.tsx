@@ -1,10 +1,10 @@
 import { Button } from '@/components/Button';
+import { MedicationOrderForm } from '@/components/records/consultation/MedicationOrderForm';
+import { MedicationOrderTable } from '@/components/records/consultation/MedicationOrderTable';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
 import { useState } from 'react';
 import { Controller } from 'react-hook-form';
-import { MedicationOrderForm } from './MedicationOrderForm';
-import { MedicationOrderTable } from './MedicationOrderTable';
 
 export function MedicationOrderSection({
   patient,

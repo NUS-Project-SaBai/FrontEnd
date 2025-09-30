@@ -9,7 +9,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
+import { Modal } from '../Modal';
 
 export function PatientScanForm({
   setSelectedPatient,
@@ -17,6 +17,7 @@ export function PatientScanForm({
   setSelectedPatient: (patient: Patient) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
   const [imgDetails, setImgDetails] = useState<string | null>(null);
   const [scanSuggestionsList, setScanSuggestionsList] = useState<Patient[]>([]);
   const { isLoading, withLoading } = useLoadingState(false);
@@ -41,7 +42,14 @@ export function PatientScanForm({
     <>
       <Button text="Scan Face" onClick={() => setIsOpen(true)} colour="green" />
 
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+        title="Scan Face"
+        text="Close"
+        className="mx-auto my-8"
+      >
         <WebcamInput
           imageDetails={imgDetails}
           setImageDetails={setImgDetails}
@@ -57,7 +65,6 @@ export function PatientScanForm({
               onClick={onSearch}
             />
           )}
-          <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
         </div>
         <div className="flex w-full flex-col divide-y-2">
           {scanSuggestionsList.map((patient, index) => (
@@ -65,12 +72,12 @@ export function PatientScanForm({
               key={index}
               onClick={() => {
                 setSelectedPatient(patient);
-                setIsOpen(false);
+                closeModal();
               }}
               className="flex py-2 hover:cursor-pointer hover:bg-gray-300"
             >
               <Image
-                src={patient.picture}
+                src={patient.picture_url}
                 alt={'Patient Image'}
                 width={120}
                 height={120}
@@ -83,7 +90,7 @@ export function PatientScanForm({
             </div>
           ))}
         </div>
-      </ReactModal>
+      </Modal>
     </>
   );
 }

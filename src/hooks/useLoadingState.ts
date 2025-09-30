@@ -1,5 +1,9 @@
 import { useState } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WithLoadingType = <T, Args extends any[]>(
+  asyncFunc: (...args: Args) => Promise<T>
+) => (...args: Args) => Promise<T>;
 /**
  * Custom hook to manage loading states with a standardized UI
  * @function
@@ -9,10 +13,6 @@ import { useState } from 'react';
  * - withLoading: (asyncFunc) => async (...args) => ReturnType\<asyncFunc\>
  *                function wrapper to handle loading state automatically
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type WithLoadingType = <T, Args extends any[]>(
-  asyncFunc: (...args: Args) => Promise<T>
-) => (...args: Args) => Promise<T>;
 export function useLoadingState(initialState = false): {
   isLoading: boolean;
   withLoading: WithLoadingType;

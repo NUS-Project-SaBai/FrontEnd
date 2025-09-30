@@ -43,6 +43,19 @@ export function RHFInputField({
           className={inputClassStyle}
           {...register(name, {
             required: { message: `Empty Field: ${label}`, value: isRequired },
+            validate: {
+              // Check if file input exceeds max file size of 50 MB
+              maxFileSize: value => {
+                if (type === 'file' && value.length > 0) {
+                  const file = value[0];
+                  // 50 * 1024 * 1024 = 52428800 byte
+                  if (file.size > 52428800) {
+                    return `File size exceeds 50 MB: ${file.name}`;
+                  }
+                }
+                return true;
+              },
+            },
           })}
           id={name}
           name={name}

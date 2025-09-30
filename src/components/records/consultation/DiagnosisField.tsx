@@ -1,7 +1,7 @@
 'use client';
 
+import { Button } from '@/components/Button';
 import { Diagnosis } from '@/types/Diagnosis';
-import { Button } from '../../Button';
 const diagnosisOptions = [
   'Cardiovascular',
   'Dermatology',
@@ -22,14 +22,24 @@ const diagnosisOptions = [
 export function DiagnosisField({
   diagnosis,
   setDiagnosis,
+  error,
 }: {
-  diagnosis: Diagnosis[];
-  setDiagnosis: (diagnoses: Diagnosis[]) => void;
+  diagnosis: Omit<Diagnosis, 'consult'>[];
+  setDiagnosis: (diagnoses: Omit<Diagnosis, 'consult'>[]) => void;
+  error: string | undefined;
 }) {
   const EMPTY_DIAGNOSIS = { details: '', category: '' };
   return (
-    <div className="flex flex-col gap-1">
-      <p>Diagnosis</p>
+    <div
+      className={
+        'flex flex-col gap-1 ' +
+        (error ? 'rounded border-2 border-red-500' : '')
+      }
+    >
+      <p>
+        Diagnosis<span className="text-red-500">*</span>
+      </p>
+      {error && <p className="font-semibold text-red-500">{error}</p>}
       {diagnosis.map((val, index) => (
         <DiagnosisInputRow
           key={index}
@@ -61,13 +71,16 @@ function DiagnosisInputRow({
   onDiagnosisEdit,
 }: {
   diagnosisNumber: number;
-  diagnosis: Diagnosis;
+  diagnosis: Omit<Diagnosis, 'consult'>;
   onDiagnosisDelete: () => void;
-  onDiagnosisEdit: (curDiagnosis: Diagnosis) => void;
+  onDiagnosisEdit: (curDiagnosis: Omit<Diagnosis, 'consult'>) => void;
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label>Diagnosis {diagnosisNumber}</label>
+      <label>
+        Diagnosis {diagnosisNumber}
+        <span className="text-red-500">*</span>
+      </label>
       <textarea
         placeholder="Type your diagnosis here..."
         rows={3}

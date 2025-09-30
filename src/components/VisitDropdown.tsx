@@ -1,6 +1,6 @@
 'use client';
 import { Visit } from '@/types/Visit';
-import moment from 'moment';
+import { formatDate } from '@/utils/formatDate';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -31,8 +31,6 @@ export function VisitDropdown({ name, visits }: DropdownProps) {
     // If the visitId is not in the list of visits, set it to the first visit
     if (visits && !visits.some(v => v.id == visitId)) {
       setVisitId(visits[0].id);
-    } else {
-      setVisitId('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visits]);
@@ -57,7 +55,7 @@ export function VisitDropdown({ name, visits }: DropdownProps) {
         </option>
         {visits.map(({ date: label, id: value }) => (
           <option value={value} key={value}>
-            {moment(label).format('DD MMM YYYY HH:mm')}
+            {formatDate(label, 'datetime')}
           </option>
         ))}
       </select>

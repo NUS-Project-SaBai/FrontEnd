@@ -67,6 +67,7 @@ export function PatientForm({
                 village={field.value}
                 handleVillageChange={field.onChange}
                 required={true}
+                excludeALLOption
                 dropdownClassName={
                   fieldState.error && 'border-l-8 border-red-400'
                 }
@@ -115,7 +116,14 @@ export function PatientForm({
         {isSubmitting ? (
           <LoadingUI message="Submitting..." />
         ) : (
-          <Button colour="green" text="Submit" type="submit" />
+          <div className="mt-4 flex justify-center">
+            <Button
+              colour="green"
+              text="Submit"
+              type="submit"
+              data-modal-submit
+            />
+          </div>
         )}
         {closeForm && (
           <Button

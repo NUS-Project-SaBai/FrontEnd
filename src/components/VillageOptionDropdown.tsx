@@ -1,4 +1,4 @@
-import { VILLAGES } from '@/constants';
+import { VILLAGES, VILLAGES_AND_ALL } from '@/constants';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 
 export function VillageOptionDropdown({
@@ -6,14 +6,17 @@ export function VillageOptionDropdown({
   handleVillageChange,
   label = 'Village:',
   required = false,
+  excludeALLOption = false,
   dropdownClassName = '',
 }: {
   village: VillagePrefix;
   handleVillageChange: (villagePrefix: VillagePrefix) => void;
   label?: string;
   required?: boolean;
+  excludeALLOption?: boolean;
   dropdownClassName?: string;
 }) {
+  const options = excludeALLOption ? VILLAGES : VILLAGES_AND_ALL;
   return (
     <div className="text-sm font-semibold">
       <label htmlFor="village_prefix" className="block">
@@ -29,7 +32,7 @@ export function VillageOptionDropdown({
           'w-full rounded border-2 p-1 ' +
           (village == VillagePrefix.ALL
             ? 'text-gray-800'
-            : VILLAGES[village].color) +
+            : VILLAGES_AND_ALL[village].color) +
           ' ' +
           dropdownClassName
         }
@@ -37,7 +40,7 @@ export function VillageOptionDropdown({
         {/* <option value="ALL" className="text-gray-800">
           ALL
         </option> */}
-        {Object.values(VILLAGES).map(({ key, label, color }) => (
+        {Object.values(options).map(({ key, label, color }) => (
           <option key={key} value={key} className={'font-semibold ' + color}>
             {label}
           </option>

@@ -7,7 +7,7 @@ export async function createPatient(
 ): Promise<Patient | null> {
   try {
     return await axiosInstance
-      .post('/patients', formData)
+      .post('/patients/', formData)
       .then(val => patientFromJson(val.data))
       .catch(err => {
         console.log(err);

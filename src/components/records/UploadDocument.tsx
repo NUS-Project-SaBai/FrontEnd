@@ -1,17 +1,28 @@
 'use client';
+import { Button } from '@/components/Button';
+import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { LoadingUI } from '@/components/LoadingUI';
+import { Modal } from '@/components/Modal';
 import { postUpload } from '@/data/fileUpload/postUpload';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
-import { Button } from '../Button';
-import { RHFInputField } from '../inputs/RHFInputField';
 
-export function UploadDocument({ patient }: { patient: Patient }) {
+export function UploadDocument({
+  patient,
+  onUploadSuccess,
+}: {
+  patient: Patient;
+  onUploadSuccess: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
   const useFormReturn = useForm({});
+
+  const { isLoading, withLoading } = useLoadingState(false);
 
   return (
     <>
@@ -20,48 +31,56 @@ export function UploadDocument({ patient }: { patient: Patient }) {
         colour="green"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+        title="Upload Document"
+        text="Close"
+      >
         <FormProvider {...useFormReturn}>
           <form
-            onSubmit={e => {
+            onSubmit={async e => {
               e.preventDefault();
-              useFormReturn.handleSubmit(
-                vals => {
-                  const file = vals.file[0];
+              withLoading(
+                useFormReturn.handleSubmit(
+                  async vals => {
+                    const file = vals.file[0];
 
-                  const currentDate = moment().format('YYYY-MM-DD');
-                  const patientIdentifier = patient.patient_id;
-                  const documentName: string =
-                    vals.file_name == ''
-                      ? file.name
-                      : vals.file_name +
-                        file.name.slice(file.name.lastIndexOf('.'));
+                    const currentDate = DateTime.now().toFormat('yyyy-MM-dd');
+                    const patientIdentifier = patient.patient_id;
+                    const documentName: string =
+                      vals.file_name == ''
+                        ? file.name
+                        : vals.file_name +
+                          file.name.slice(file.name.lastIndexOf('.'));
 
-                  const labeledDocumentName = [
-                    patientIdentifier,
-                    currentDate,
-                    documentName,
-                  ].join('_');
+                    const labeledDocumentName = [
+                      patientIdentifier,
+                      currentDate,
+                      documentName,
+                    ].join('_');
 
-                  const formData = new FormData();
-                  formData.append('file', file, labeledDocumentName);
-                  formData.append('file_name', labeledDocumentName);
-                  formData.append('patient_pk', patient.pk.toString());
+                    const formData = new FormData();
+                    formData.append('file', file, labeledDocumentName);
+                    formData.append('file_name', labeledDocumentName);
+                    formData.append('patient_pk', patient.pk.toString());
 
-                  postUpload(formData)
-                    .then(() => {
+                    try {
+                      await postUpload(formData);
                       useFormReturn.reset();
-                      setIsOpen(false);
+                      closeModal();
                       toast.success(
                         'File uploaded successfully as \n' + labeledDocumentName
                       );
-                    })
-                    .catch(err => {
+                      onUploadSuccess();
+                    } catch (err) {
                       console.log(err);
                       toast.error('Error uploading file:\n' + err);
-                    });
-                },
-                () => toast.error('Invalid/Missing File/input')
+                    }
+                  },
+                  () => toast.error('Invalid/Missing File/input')
+                )
               )();
             }}
           >
@@ -72,15 +91,15 @@ export function UploadDocument({ patient }: { patient: Patient }) {
               isRequired={true}
             />
             <RHFInputField name="file_name" label="File Name" type="text" />
-            <Button
-              text="Close"
-              colour="red"
-              onClick={() => setIsOpen(false)}
-            />
-            <Button text="Upload" colour="green" type="submit" />
+            <Button text="Close" colour="red" onClick={closeModal} />
+            {isLoading ? (
+              <LoadingUI message="Uploading Document..." />
+            ) : (
+              <Button text="Upload" colour="green" type="submit" />
+            )}
           </form>
         </FormProvider>
-      </ReactModal>
+      </Modal>
     </>
   );
 }

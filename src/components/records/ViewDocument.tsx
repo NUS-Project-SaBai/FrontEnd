@@ -1,21 +1,49 @@
 'use client';
 
-import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
-import { Patient } from '@/types/Patient';
+import { Button } from '@/components/Button';
+import { Modal } from '@/components/Modal';
+import { patchUploadName } from '@/data/fileUpload/patchUploadName';
 import { Upload } from '@/types/Upload';
+import { formatDate } from '@/utils/formatDate';
+import axios from 'axios';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import ReactModal from 'react-modal';
-import { Button } from '../Button';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
-export function ViewDocument({ patient }: { patient: Patient }) {
+export function ViewDocument({
+  documents,
+  setDocuments,
+}: {
+  documents: Upload[];
+  setDocuments: React.Dispatch<React.SetStateAction<Upload[]>>;
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [documents, setDocuments] = useState<Upload[]>([]);
-  useEffect(() => {
-    getUploadByPatientId(patient.pk).then(data => {
-      setDocuments(data);
-    });
-  }, [patient.pk]);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [newFileName, setNewFileName] = useState('');
+
+  // handle the rename action
+  const handleRename = async (doc: Upload) => {
+    try {
+      const updated = await patchUploadName(doc.id, newFileName);
+      setDocuments(ds =>
+        ds.map(d => (d.id === doc.id && updated ? updated : d))
+      );
+      setEditingId(null);
+      setNewFileName('');
+      toast.success('Document renamed');
+    } catch (err: unknown) {
+      console.error('patchUploadName failed:', err);
+      let message = 'Unknown error';
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data as { error?: string } | undefined;
+        message = data?.error ?? err.message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error(`Failed to rename document: ${message}`);
+    }
+  };
+
   return (
     <>
       <Button
@@ -23,32 +51,91 @@ export function ViewDocument({ patient }: { patient: Patient }) {
         onClick={() => setIsOpen(true)}
         colour="blue"
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
-        <table className="w-full divide-y divide-gray-400 text-left">
-          <thead>
-            <tr>
-              <th>File Name</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {documents.map((doc, index) => (
-              <tr key={index}>
-                <Link
-                  href={doc.file_path || doc.offline_file || ''}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  <td>{doc.file_name}</td>
-                </Link>
-                <td>{new Date(doc.created_at).toLocaleString()}</td>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        ariaHideApp={false}
+        title="View Documents"
+        text="Close"
+      >
+        {documents.length === 0 ? (
+          <div className="px-2 py-4 text-center text-gray-500">
+            No documents found.
+          </div>
+        ) : (
+          <table className="w-full table-fixed divide-y divide-gray-400 text-left">
+            <colgroup>
+              <col className="w-1/2" />
+              <col className="w-1/4" />
+              <col className="w-1/4" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th className="px-2 py-1">File Name</th>
+                <th className="px-2 py-1">Created At</th>
+                <th className="px-2 py-1">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {documents.map(doc => (
+                <tr key={doc.id}>
+                  <td className="px-2 py-1">
+                    {editingId === doc.id ? (
+                      <input
+                        type="text"
+                        value={newFileName}
+                        onChange={e => setNewFileName(e.target.value)}
+                        className="w-full rounded border px-2 py-1"
+                      />
+                    ) : (
+                      <Link
+                        href={doc.file_path || doc.offline_file || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline"
+                      >
+                        {doc.file_name}
+                      </Link>
+                    )}
+                  </td>
+                  <td className="px-2 py-1">
+                    {formatDate(doc.created_at, 'datetime')}
+                  </td>
+                  <td className="px-2 py-1">
+                    {editingId === doc.id ? (
+                      <div className="flex space-x-2">
+                        <Button
+                          text="Save"
+                          colour="green"
+                          onClick={() => handleRename(doc)}
+                        />
+                        <Button
+                          text="Cancel"
+                          colour="red"
+                          onClick={() => {
+                            setEditingId(null);
+                            setNewFileName('');
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <Button
+                        text="Edit"
+                        colour="green"
+                        onClick={() => {
+                          setEditingId(doc.id);
+                          setNewFileName(doc.file_name);
+                        }}
+                      />
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
-      </ReactModal>
+      </Modal>
     </>
   );
 }

@@ -1,17 +1,26 @@
 'use client';
-import { Button } from '@/components/Button';
+import { fetchMedicationHistory } from '@/app/pharmacy/stock/api';
 import { LoadingUI } from '@/components/LoadingUI';
-import { getMedicationReviewById } from '@/data/medicationReview/getMedicationReview';
+import { Modal } from '@/components/Modal';
+import { getMedicationById } from '@/data/medication/getMedications';
 import { useLoadingState } from '@/hooks/useLoadingState';
-import { MedicationReview } from '@/types/MedicationReview';
+import { formatDate } from '@/utils/formatDate';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import ReactModal from 'react-modal';
 
+export type MedicationHistoryRowData = {
+  approval_name: string;
+  doctor_name: string; // '-' for no doctor
+  patient_name: string; // '-' for no patient
+  qty_changed: number;
+  qty_remaining: number;
+  date: string;
+};
 export function HistoryMedicationModal() {
   const [medicationHistory, setMedicationHistory] = useState<
-    MedicationReview[]
+    MedicationHistoryRowData[]
   >([]);
+  const [medicationName, setMedicationName] = useState<string | null>(null);
   const { isLoading, withLoading } = useLoadingState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -19,19 +28,17 @@ export function HistoryMedicationModal() {
 
   useEffect(() => {
     if (viewMedicationId !== null) {
-      const fetchMedicationHistory = withLoading(async () => {
+      withLoading(async () => {
         try {
-          const result = await getMedicationReviewById(
-            viewMedicationId.toString()
-          );
-          setMedicationHistory(result);
+          const result = fetchMedicationHistory(Number(viewMedicationId));
+          const medication = getMedicationById(Number(viewMedicationId));
+          setMedicationName((await medication).medicine_name);
+          setMedicationHistory(await result);
         } catch (error) {
           console.error('Error fetching medication history:', error);
           setMedicationHistory([]);
         }
-      });
-
-      fetchMedicationHistory();
+      })();
     } else {
       setMedicationHistory([]);
     }
@@ -41,14 +48,13 @@ export function HistoryMedicationModal() {
   const closeModal = () => router.back();
 
   return (
-    <ReactModal isOpen={viewMedicationId != null} ariaHideApp={false}>
-      <h2>
-        {`View Medication ${
-          medicationHistory.length === 0
-            ? ''
-            : medicationHistory[0]?.medicine.medicine_name
-        } History`}
-      </h2>
+    <Modal
+      isOpen={viewMedicationId != null}
+      onRequestClose={closeModal}
+      ariaHideApp={false}
+      title={`View Medication ${medicationName ?? ''} History`}
+      text="Close"
+    >
       {isLoading ? (
         <LoadingUI message="Loading medication history..." />
       ) : (
@@ -74,43 +80,41 @@ export function HistoryMedicationModal() {
               ) : (
                 medicationHistory
                   .sort((a, b) => (a.date > b.date ? -1 : 1))
-                  .map(history => (
-                    <MedicationHistoryRow key={history.id} history={history} />
+                  .map((history, i) => (
+                    <MedicationHistoryRow key={i} history={history} />
                   ))
               )}
             </tbody>
           </table>
         </>
       )}
-      <Button onClick={closeModal} text="Close" colour="red" />
-    </ReactModal>
+    </Modal>
   );
 }
 
-function MedicationHistoryRow({ history }: { history: MedicationReview }) {
-  const qty_changed = history.quantity_changed;
+function MedicationHistoryRow({
+  history,
+}: {
+  history: MedicationHistoryRowData;
+}) {
+  const {
+    approval_name,
+    doctor_name,
+    patient_name,
+    qty_changed,
+    qty_remaining,
+    date,
+  } = history;
   return (
     <tr>
-      <td>{history.approval.nickname}</td>
-      <td>
-        {history.order == undefined ||
-        history.order.consult == undefined ||
-        typeof history.order.consult == 'number'
-          ? '-'
-          : history.order.consult.doctor.nickname}
-      </td>
-      <td>
-        {history.order == undefined ||
-        history.order.consult == undefined ||
-        typeof history.order.consult == 'number'
-          ? '-'
-          : history.order.consult.patient.name}
-      </td>
+      <td>{approval_name}</td>
+      <td>{doctor_name}</td>
+      <td>{patient_name}</td>
       <td className={`${qty_changed >= 0 ? 'text-green-500' : 'text-red-500'}`}>
         {qty_changed >= 0 ? `+${qty_changed}` : qty_changed}
       </td>
-      <td>{history.quantity_remaining}</td>
-      <td>{new Date(history.date).toLocaleString()}</td>
+      <td>{qty_remaining}</td>
+      <td>{formatDate(date, 'datetime')}</td>
     </tr>
   );
 }

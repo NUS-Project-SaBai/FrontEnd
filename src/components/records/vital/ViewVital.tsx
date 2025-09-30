@@ -1,11 +1,11 @@
 'use client';
 import { Button } from '@/components/Button';
+import { Modal } from '@/components/Modal';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
 import { Consult } from '@/types/Consult';
 import { calculateDobDifference, Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
 import { useState } from 'react';
-import ReactModal from 'react-modal';
 
 export function ViewVital({
   patient,
@@ -13,10 +13,12 @@ export function ViewVital({
   vitals,
 }: {
   patient: Patient;
-  consults: Consult[];
+  consults: Pick<Consult, 'id' | 'date' | 'doctor' | 'referred_for'>[];
   vitals: Vital | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
+
   return (
     <>
       <Button
@@ -24,7 +26,13 @@ export function ViewVital({
         colour="indigo"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal isOpen={isOpen} ariaHideApp={false}>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+        title="Vitals"
+        text="Close"
+      >
         <h2>Vitals</h2>
         {vitals == null ? (
           <p>No vitals found for current visit</p>
@@ -38,8 +46,8 @@ export function ViewVital({
             gender={patient.gender}
           />
         )}
-        <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
-      </ReactModal>
+        <Button text="Close" onClick={closeModal} colour="red" />
+      </Modal>
     </>
   );
 }

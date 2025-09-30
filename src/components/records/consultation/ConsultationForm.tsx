@@ -3,10 +3,13 @@ import { Button } from '@/components/Button';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { DiagnosisField } from '@/components/records/consultation/DiagnosisField';
+import { MedicationOrderSection } from '@/components/records/consultation/MedicationOrderSection';
 import { createConsult } from '@/data/consult/createConsult';
+import { createReferral } from '@/data/referrals/createReferral';
+import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect } from 'react';
 import {
   Controller,
   FieldValues,
@@ -14,7 +17,6 @@ import {
   useForm,
 } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { MedicationOrderSection } from './MedicationOrderSection';
 
 export function ConsultationForm({
   visitId,
@@ -23,17 +25,34 @@ export function ConsultationForm({
   visitId: string;
   patient: Patient | null;
 }) {
-  const useFormReturn = useForm();
+  const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
+    'ConsultationForm',
+    {} as FieldValues,
+    [visitId]
+  );
+  const useFormReturn = useForm({ values: formDetails });
+  useEffect(() => {
+    const unsub = useFormReturn.subscribe({
+      formState: { values: true },
+      callback: ({ values }) => {
+        setFormDetails(values);
+      },
+    });
+    return () => {
+      unsub();
+      useFormReturn.reset({});
+    };
+  }, [visitId]);
   const { control, handleSubmit, reset } = useFormReturn;
 
   const submitConsultationFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // TODO: simplify backend to not require nesting of consult fields?
+    // TODO: and also to let it handle the creation of referral.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const jsonPayload: { [key: string]: any } = {
       consult: {
-        visit: visitId,
+        visit_id: visitId,
       },
     };
     handleSubmit(
@@ -59,17 +78,58 @@ export function ConsultationForm({
           }
         });
 
+        const referralPayload: {
+          [key: string]: Patient | Date | string | number | null;
+        } = {};
+        let consultID;
+
+        Object.entries(data).forEach(item => {
+          if (item[0] == 'referral_notes' || item[0] == 'referred_for') {
+            referralPayload[item[0]] = item[1];
+          }
+        });
+
         try {
           const result = await createConsult(jsonPayload);
           if (result == null) {
             toast.error('Error submitting consultation form');
           } else {
+            consultID = result.id;
             toast.success('Medical Consult Completed!');
-            reset();
+            reset({});
+            clearLocalStorageData();
           }
         } catch (error) {
           console.error('Error submitting consultation form:', error);
           toast.error('Unknown Error');
+        }
+
+        // only submit the form if 'referred_for' is filled in and is not 'Not Referred'
+        if ('referred_for' in referralPayload) {
+          if (referralPayload['referred_for'] !== '') {
+            if (!('referral_notes' in referralPayload)) {
+              referralPayload['referral_notes'] = 'No notes entered';
+            }
+
+            referralPayload['referral_state'] = 'New';
+            referralPayload['consult'] = Number(consultID);
+            referralPayload['referral_outcome'] = '';
+
+            try {
+              const result = createReferral(referralPayload);
+              result
+                .then(
+                  () => {
+                    toast.success('Referral submitted!');
+                  },
+                  () => console.log('error')
+                )
+                .catch(() => toast.error('Error submitting consultation form'));
+            } catch (error) {
+              console.error('Error submitting referral form:', error);
+              toast.error('Unknown Error');
+            }
+          }
         }
       },
 
@@ -92,20 +152,44 @@ export function ConsultationForm({
             label="Past Medical History"
             type="textarea"
             placeholder="Type your problems here..."
+            isRequired={true}
           />
           <RHFInputField
             name="consultation"
             label="Consultation"
             type="textarea"
             placeholder="Type your consultation here..."
+            isRequired={true}
           />
           <Controller
             name="diagnoses"
             control={control}
             defaultValue={[]}
-            render={({ field: { value, onChange } }) => (
-              <DiagnosisField diagnosis={value} setDiagnosis={onChange} />
+            render={({ field: { value, onChange }, fieldState }) => (
+              <DiagnosisField
+                diagnosis={value}
+                setDiagnosis={onChange}
+                error={fieldState.error?.message}
+              />
             )}
+            rules={{
+              validate: {
+                ensureFilled: (
+                  val: { details: string; category: string }[]
+                ) => {
+                  if (val.length === 0)
+                    return 'At least one diagnosis is required';
+                  if (
+                    val.some(
+                      d => d.details.trim() === '' || d.category.trim() === ''
+                    )
+                  ) {
+                    return 'All diagnoses must have details and category';
+                  }
+                  return true;
+                },
+              },
+            }}
           />
 
           <RHFInputField
@@ -117,6 +201,7 @@ export function ConsultationForm({
           <RHFDropdown
             name="referred_for"
             label="Referral for (optional)"
+            omitDefaultPrompt={true}
             options={[
               { value: '', label: 'Not Referred' },
               { value: 'Diagnostic', label: 'Diagnositic' },
@@ -132,12 +217,17 @@ export function ConsultationForm({
               },
             ]}
           />
-          <RHFInputField
-            name="referral_notes"
-            label="Referral Notes"
-            type="textarea"
-            placeholder="Type your referral notes here..."
-          />
+          {useFormReturn.watch('referred_for') === '' || (
+            <RHFInputField
+              name="referral_notes"
+              label="Referral Notes"
+              type="textarea"
+              placeholder="Type your referral notes here..."
+              isRequired={
+                useFormReturn.watch('referred_for') !== 'Not Referred'
+              }
+            />
+          )}
 
           <RHFInputField
             name="remarks"

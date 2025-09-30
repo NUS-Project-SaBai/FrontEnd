@@ -1,18 +1,20 @@
 'use client';
+import { Button } from '@/components/Button';
 import { createVisit } from '@/data/visit/createVisit';
 import { Patient } from '@/types/Patient';
 import { redirect, RedirectType } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Button } from '../../Button';
 
 export function PatientInfoActionBar({ patient }: { patient: Patient }) {
   const actions: Action[] = [
     {
       text: 'Create New Visit',
-      onClick: () => {
-        createVisit(patient);
-        window.location.reload();
+      onClick: async () => {
+        console.log('CLICKED');
+        await createVisit(patient);
+        console.log('POST CREATION');
         toast.success('Visit Created');
+        window.location.reload();
       },
     },
     {
