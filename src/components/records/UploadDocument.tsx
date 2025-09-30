@@ -2,6 +2,7 @@
 import { Button } from '@/components/Button';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { LoadingUI } from '@/components/LoadingUI';
+import { Modal } from '@/components/Modal';
 import { postUpload } from '@/data/fileUpload/postUpload';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
@@ -9,9 +10,14 @@ import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
 
-export function UploadDocument({ patient }: { patient: Patient }) {
+export function UploadDocument({
+  patient,
+  onUploadSuccess,
+}: {
+  patient: Patient;
+  onUploadSuccess: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
   const useFormReturn = useForm({});
@@ -25,10 +31,12 @@ export function UploadDocument({ patient }: { patient: Patient }) {
         colour="green"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal
+      <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
         ariaHideApp={false}
+        title="Upload Document"
+        text="Close"
       >
         <FormProvider {...useFormReturn}>
           <form
@@ -65,6 +73,7 @@ export function UploadDocument({ patient }: { patient: Patient }) {
                       toast.success(
                         'File uploaded successfully as \n' + labeledDocumentName
                       );
+                      onUploadSuccess();
                     } catch (err) {
                       console.log(err);
                       toast.error('Error uploading file:\n' + err);
@@ -90,7 +99,7 @@ export function UploadDocument({ patient }: { patient: Patient }) {
             )}
           </form>
         </FormProvider>
-      </ReactModal>
+      </Modal>
     </>
   );
 }

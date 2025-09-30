@@ -1,6 +1,7 @@
 'use client';
 import { Button } from '@/components/Button';
 import { LoadingUI } from '@/components/LoadingUI';
+import { Modal } from '@/components/Modal';
 import { MedicationForm } from '@/components/pharmacy/MedicationForm';
 import {
   getMedication,
@@ -13,7 +14,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import ReactModal from 'react-modal';
 
 export function EditMedicationModal({
   reloadAllMedications,
@@ -60,17 +60,18 @@ export function EditMedicationModal({
   });
 
   return (
-    <ReactModal
+    <Modal
       isOpen={editMedicationId != null}
       onRequestClose={closeModal}
       ariaHideApp={false}
+      title="Edit Medicine"
+      text="Close"
     >
       {isLoading ? (
         <LoadingUI message="Loading medication data..." />
       ) : editMedication ? (
         <FormProvider {...useFormReturn}>
           <MedicationForm
-            closeForm={closeModal}
             isSubmitting={isSubmitting}
             onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
@@ -130,6 +131,6 @@ export function EditMedicationModal({
           <Button onClick={closeModal} text="Close" colour="red" />
         </div>
       )}
-    </ReactModal>
+    </Modal>
   );
 }

@@ -9,7 +9,6 @@ export async function getVitalByVisit(visitId: string): Promise<Vital | null> {
 
   if (!data || data.length == 0) return null;
   data = data[0];
-  data.visit = data.visit.id;
   return data;
 }
 

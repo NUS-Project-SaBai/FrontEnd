@@ -2,6 +2,7 @@
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
 import { LoadingUI } from '@/components/LoadingUI';
+import { Modal } from '@/components/Modal';
 import { DiagnosesTable } from '@/components/records/consultation/DiagnosesTable';
 import { RecordConsultationTableRow } from '@/components/records/consultation/RecordConsultationTableRow';
 import { PrescriptionTable } from '@/components/records/prescription/PrescriptionTable';
@@ -12,7 +13,6 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
 import { useEffect, useState } from 'react';
-import ReactModal from 'react-modal';
 
 export function RecordConsultationTableModal({
   consults,
@@ -37,7 +37,7 @@ export function RecordConsultationTableModal({
         getDiagnosisByConsult(consultId).then(setDiagnosisArray),
       ]);
     })();
-  }, [consultId]);
+  }, [consultId, withLoading]);
 
   if (consults == null) {
     return <LoadingUI message="Loading Consultations..." />;
@@ -47,10 +47,12 @@ export function RecordConsultationTableModal({
 
   return (
     <>
-      <ReactModal
+      <Modal
         isOpen={consultId != null}
         onRequestClose={closeModal}
         ariaHideApp={false}
+        title="Consultation"
+        text="Close"
       >
         {isLoading ? (
           <LoadingUI message="Loading Consultation..." />
@@ -107,7 +109,7 @@ export function RecordConsultationTableModal({
             <Button onClick={closeModal} text="Close" colour="red" />
           </>
         )}
-      </ReactModal>
+      </Modal>
 
       <table className="rounded-table text-left">
         <thead className="bg-gray-50">

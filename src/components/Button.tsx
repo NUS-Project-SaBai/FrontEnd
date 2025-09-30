@@ -1,6 +1,12 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
-import { MouseEvent, ReactNode, useEffect, useState } from 'react';
+import {
+  ButtonHTMLAttributes,
+  MouseEvent,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 
 export function Button({
   text,
@@ -9,7 +15,7 @@ export function Button({
   colour = 'white',
   Icon = <></>,
   moreStyles = '',
-  ...others
+  ...props
 }: {
   text: string;
   onClick?: (e: MouseEvent) => void;
@@ -17,7 +23,7 @@ export function Button({
   colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';
   Icon?: ReactNode;
   moreStyles?: string;
-} & React.HTMLProps<HTMLButtonElement>) {
+} & ButtonHTMLAttributes<HTMLButtonElement>) {
   const [isLoading, setIsLoading] = useState(true);
   // makes the button interactive only when it is hydrated
   useEffect(() => {
@@ -46,7 +52,7 @@ export function Button({
       type={type}
       onClick={handleClick}
       disabled={isLoading}
-      {...others}
+      {...props}
     >
       {isLoading ? (
         <LoadingUI />

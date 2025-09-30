@@ -7,12 +7,10 @@ import { Medication } from '@/types/Medication';
 import { FormEventHandler } from 'react';
 
 export function MedicationForm({
-  closeForm,
   onSubmit,
   isSubmitting = false,
   editMedication = null,
 }: {
-  closeForm: () => void;
   onSubmit: FormEventHandler;
   isSubmitting?: boolean;
   editMedication?: Medication | null;
@@ -42,10 +40,10 @@ export function MedicationForm({
           label="Quantity to Add (Negative to subtract)"
           name="quantity_changed"
           type="number"
+          isRequired={true}
         />
         <RHFInputField label="Notes" name="notes" type="text" />
         <div className="flex">
-          <Button text="Close" colour="red" type="button" onClick={closeForm} />
           {isSubmitting ? (
             <LoadingUI message="Submitting medication..." />
           ) : (

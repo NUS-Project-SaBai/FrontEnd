@@ -1,11 +1,11 @@
 'use client';
 import { Button } from '@/components/Button';
+import { Modal } from '@/components/Modal';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
 import { Consult } from '@/types/Consult';
 import { calculateDobDifference, Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
 import { useState } from 'react';
-import ReactModal from 'react-modal';
 
 export function ViewVital({
   patient,
@@ -26,10 +26,12 @@ export function ViewVital({
         colour="indigo"
         onClick={() => setIsOpen(true)}
       />
-      <ReactModal
+      <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
         ariaHideApp={false}
+        title="Vitals"
+        text="Close"
       >
         <h2>Vitals</h2>
         {vitals == null ? (
@@ -45,7 +47,7 @@ export function ViewVital({
           />
         )}
         <Button text="Close" onClick={closeModal} colour="red" />
-      </ReactModal>
+      </Modal>
     </>
   );
 }

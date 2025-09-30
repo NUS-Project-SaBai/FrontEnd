@@ -25,7 +25,6 @@ export default function RecordPage() {
   } = useContext(PatientListContext);
   const { isLoading: isSubmitting, withLoading: submitWithLoading } =
     useLoadingState(false);
-  const patientModalState = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
   const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
@@ -108,7 +107,6 @@ export default function RecordPage() {
               <NewPatientModal
                 onSubmit={onPatientRegistrationFormSubmit}
                 isSubmitting={isSubmitting}
-                modalState={patientModalState}
               />
             </FormProvider>
             <PatientScanForm setSelectedPatient={setSelectedPatient} />
