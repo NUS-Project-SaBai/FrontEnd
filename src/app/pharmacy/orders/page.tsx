@@ -2,6 +2,7 @@
 import { Button } from '@/components/Button';
 import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
+import PatientPhoto from '@/components/PatientPhoto';
 import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { patchOrder } from '@/data/order/patchOrder';
@@ -9,7 +10,6 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { formatDate } from '@/utils/formatDate';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
-import Image from 'next/image';
 import { Suspense, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
@@ -137,9 +137,8 @@ function OrderRow({
             {patient.patient_id}
           </p>
           <p className="font-semibold">{patient.name}</p>
-          <Image
-            alt="Patient Image"
-            src={patient.picture_url}
+          <PatientPhoto
+            pictureUrl={patient.picture_url}
             className="h-24 w-20 object-cover"
             height={80}
             width={80}

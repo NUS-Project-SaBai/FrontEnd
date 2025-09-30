@@ -1,6 +1,6 @@
 import { Patient } from '@/types/Patient';
-import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useReducer } from 'react';
+import PatientPhoto from '../PatientPhoto';
 
 type ReducerState = {
   queryStr: string;
@@ -74,12 +74,7 @@ function SuggestionItem({
       onClick={onClick}
       className="grid grid-cols-2 items-center border-b-2 border-gray-200 p-1 hover:cursor-pointer hover:bg-blue-200"
     >
-      <Image
-        src={patient.picture_url}
-        alt="Patient Picture"
-        width={100}
-        height={100}
-      />
+      <PatientPhoto pictureUrl={patient.picture_url} />
       <div className="flex flex-col">
         <p className="font-semibold">{patient.patient_id}</p>
         <p>{patient.name}</p>

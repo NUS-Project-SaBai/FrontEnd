@@ -6,10 +6,10 @@ import { searchFace } from '@/data/patient/searchFace';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import ReactModal from 'react-modal';
+import PatientPhoto from '../PatientPhoto';
 
 export function PatientScanForm({
   setSelectedPatient,
@@ -76,9 +76,8 @@ export function PatientScanForm({
               }}
               className="flex py-2 hover:cursor-pointer hover:bg-gray-300"
             >
-              <Image
-                src={patient.picture_url}
-                alt={'Patient Image'}
+              <PatientPhoto
+                pictureUrl={patient.picture_url}
                 width={120}
                 height={120}
               />

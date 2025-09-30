@@ -9,7 +9,6 @@ import { useToggle } from '@/hooks/useToggle';
 import { Patient } from '@/types/Patient';
 import { ChevronDownIcon } from '@heroicons/react/16/solid';
 import { DateTime, Duration } from 'luxon';
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   Dispatch,
@@ -18,6 +17,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import PatientPhoto from '../PatientPhoto';
 
 export function PatientRecordTable() {
   const { patients, setPatients } = useContext(PatientListContext);
@@ -95,12 +95,7 @@ function PatientRecordRow({
             {patient.patient_id}
           </div>
           <div className="flex-[3]">
-            <Image
-              src={patient.picture_url ?? '/default-profile.webp'}
-              alt="Patient Photo"
-              height={100}
-              width={100}
-            />
+            <PatientPhoto pictureUrl={patient.picture_url} />
           </div>
           <div className="flex-[8]">{patient.name}</div>
           <div className="flex flex-row items-center gap-2">

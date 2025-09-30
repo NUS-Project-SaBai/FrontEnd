@@ -4,8 +4,8 @@ import { VILLAGES } from '@/constants';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
 import { formatDate } from '@/utils/formatDate';
-import Image from 'next/image';
 import Link from 'next/link';
+import PatientPhoto from '../PatientPhoto';
 
 export function ReferralCard({
   referral,
@@ -22,9 +22,8 @@ export function ReferralCard({
         {patient == null ? (
           <p>Loading patient</p>
         ) : (
-          <Image
-            src={patient.picture_url}
-            alt="Patient Picture"
+          <PatientPhoto
+            pictureUrl={patient.picture_url}
             width={180}
             height={180}
             className="justify-self-center"
