@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils'; // if you have a cn helper, else remove
-import * as React from 'react';
+import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 export type OptionData = { value: string; label: string };
@@ -42,7 +42,7 @@ export function RHFDropdown({
   } = useFormContext();
 
   // keep in sync if defaultValue prop changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (defaultValue !== undefined)
       setValue(name, defaultValue, { shouldValidate: true });
   }, [defaultValue, name, setValue]);
