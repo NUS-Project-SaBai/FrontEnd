@@ -10,38 +10,25 @@ import { Patient } from '@/types/Patient';
 import { ChevronDownIcon } from '@heroicons/react/16/solid';
 import { DateTime, Duration } from 'luxon';
 import Link from 'next/link';
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PatientPhoto from '../PatientPhoto';
 
-export function PatientRecordTable() {
-  const { patients, setPatients } = useContext(PatientListContext);
+export function PatientRecordTable({
+  displayedPatients,
+}: {
+  displayedPatients: Patient[];
+}) {
   return (
     <div className="flex-1">
-      {patients.map(patient => (
-        <PatientRecordRow
-          key={patient.pk}
-          patient={patient}
-          setPatients={setPatients}
-        />
+      {displayedPatients.map(patient => (
+        <PatientRecordRow key={patient.pk} patient={patient} />
       ))}
     </div>
   );
 }
 
-function PatientRecordRow({
-  patient,
-  setPatients,
-}: {
-  patient: Patient;
-  setPatients: Dispatch<SetStateAction<Patient[]>>;
-}) {
-  // const router = useRouter();
+function PatientRecordRow({ patient }: { patient: Patient }) {
+  const { setPatients } = useContext(PatientListContext);
   const { withLoading } = useLoadingState();
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, toggleExpanded] = useToggle(false);

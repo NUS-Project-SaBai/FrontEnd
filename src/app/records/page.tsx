@@ -1,7 +1,6 @@
 'use client';
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientSearchbar } from '@/components/PatientSearchbar';
-import { PatientInfo } from '@/components/records/patient/PatientInfo';
 import { PatientRecordTable } from '@/components/records/PatientRecordTable';
 import { NewPatientModal } from '@/components/registration/NewPatientModal';
 import { PatientScanForm } from '@/components/registration/PatientScanForm';
@@ -21,11 +20,14 @@ export default function RecordPage() {
     patients: allPatients,
     isLoading: patientsLoading,
     refresh: refreshPatientList,
-    setPatients,
   } = useContext(PatientListContext);
   const { isLoading: isSubmitting, withLoading: submitWithLoading } =
     useLoadingState(false);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [faceFilteredPatients, setFaceFilteredPatients] = useState<
+    Patient[] | null
+  >(null);
+  const [searchFilteredPatients, setSearchFilteredPatients] =
+    useState<Patient[]>(allPatients);
 
   const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
     'RegistrationForm',
@@ -89,6 +91,12 @@ export default function RecordPage() {
     )();
   };
 
+  const cancelFilteringByFace = () => {
+    setFaceFilteredPatients(null);
+  };
+
+  const filteringByFace = faceFilteredPatients !== null;
+
   return (
     <div className="flex h-full flex-col overflow-auto">
       <h1 className="-mb-2">Patients</h1>
@@ -96,8 +104,10 @@ export default function RecordPage() {
         <div className="flex gap-x-2">
           <Suspense>
             <PatientSearchbar
-              data={allPatients}
-              setFilteredItems={setPatients}
+              data={faceFilteredPatients ?? allPatients}
+              filteringByFace={filteringByFace}
+              cancelFilteringByFace={cancelFilteringByFace}
+              setFilteredItems={setSearchFilteredPatients}
               filterFunction={(query: string) => (item: Patient) =>
                 item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
                 item.name.toLowerCase().includes(query.toLowerCase())
@@ -111,7 +121,7 @@ export default function RecordPage() {
                 isSubmitting={isSubmitting}
               />
             </FormProvider>
-            <PatientScanForm setSelectedPatient={setSelectedPatient} />
+            <PatientScanForm setFilteredPatients={setFaceFilteredPatients} />
           </div>
         </div>
       </div>
@@ -120,8 +130,7 @@ export default function RecordPage() {
           isLoading={patientsLoading || isSubmitting}
           message="Loading Patients..."
         >
-          <PatientInfo patient={selectedPatient} />
-          <PatientRecordTable />
+          <PatientRecordTable displayedPatients={searchFilteredPatients} />
         </LoadingPage>
       </div>
     </div>

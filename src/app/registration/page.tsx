@@ -2,7 +2,7 @@
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientInfo } from '@/components/records/patient/PatientInfo';
 import { NewPatientModal } from '@/components/registration/NewPatientModal';
-import { PatientScanForm } from '@/components/registration/PatientScanForm';
+// import { PatientScanForm } from '@/components/registration/PatientScanForm';
 import { RegistrationAutosuggest } from '@/components/registration/RegistrationAutosuggest';
 import { createPatient } from '@/data/patient/createPatient';
 import { getPatient } from '@/data/patient/getPatient';
@@ -106,7 +106,7 @@ export default function RegistrationPage() {
                 isSubmitting={isSubmitting}
               />
             </FormProvider>
-            <PatientScanForm setSelectedPatient={setSelectedPatient} />
+            {/* <PatientScanForm setSelectedPatient={setSelectedPatient} /> */}
           </div>
         </div>
         <PatientInfo patient={selectedPatient} />

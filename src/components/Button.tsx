@@ -17,7 +17,7 @@ export function Button({
   moreStyles = '',
   ...props
 }: {
-  text: string;
+  text?: string;
   onClick?: (e: MouseEvent) => void;
   type?: 'submit' | 'button' | 'reset';
   colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';

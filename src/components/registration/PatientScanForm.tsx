@@ -6,20 +6,18 @@ import { searchFace } from '@/data/patient/searchFace';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Modal } from '../Modal';
-import PatientPhoto from '../PatientPhoto';
 
 export function PatientScanForm({
-  setSelectedPatient,
+  setFilteredPatients,
 }: {
-  setSelectedPatient: (patient: Patient) => void;
+  setFilteredPatients: Dispatch<SetStateAction<Patient[] | null>>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
   const [imgDetails, setImgDetails] = useState<string | null>(null);
-  const [scanSuggestionsList, setScanSuggestionsList] = useState<Patient[]>([]);
   const { isLoading, withLoading } = useLoadingState(false);
   const onSearch = withLoading(async () => {
     if (imgDetails == null) {
@@ -34,7 +32,8 @@ export function PatientScanForm({
         toast.error('Patient does not exist!');
         return;
       }
-      setScanSuggestionsList(data);
+      setFilteredPatients(data);
+      closeModal();
     } catch (error) {
       toast.error(`Error scanning face: ${error}`);
       console.error('Error scanning face:', error);
@@ -43,7 +42,6 @@ export function PatientScanForm({
   return (
     <>
       <Button text="Scan Face" onClick={() => setIsOpen(true)} colour="green" />
-
       <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
@@ -52,44 +50,23 @@ export function PatientScanForm({
         text="Close"
         className="mx-auto my-8"
       >
-        <WebcamInput
-          imageDetails={imgDetails}
-          setImageDetails={setImgDetails}
-        />
-        <div className="flex justify-center space-x-2">
-          {isLoading ? (
-            <LoadingUI message="Searching Face..." />
-          ) : (
-            <Button
-              text="Search"
-              colour="green"
-              Icon={<MagnifyingGlassIcon className="inline h-5 w-5" />}
-              onClick={onSearch}
-            />
-          )}
-        </div>
-        <div className="flex w-full flex-col divide-y-2">
-          {scanSuggestionsList.map((patient, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setSelectedPatient(patient);
-                closeModal();
-              }}
-              className="flex py-2 hover:cursor-pointer hover:bg-gray-300"
-            >
-              <PatientPhoto
-                pictureUrl={patient.picture_url}
-                width={120}
-                height={120}
+        <div className="flex flex-col space-y-2">
+          <WebcamInput
+            imageDetails={imgDetails}
+            setImageDetails={setImgDetails}
+          />
+          <div className="flex justify-center space-x-2">
+            {isLoading ? (
+              <LoadingUI message="Searching Face..." />
+            ) : (
+              <Button
+                text="Search"
+                colour="green"
+                Icon={<MagnifyingGlassIcon className="inline h-5 w-5" />}
+                onClick={onSearch}
               />
-              <div className="w-full items-center p-2">
-                <p>{patient.patient_id}</p>
-                <p>{patient.name}</p>
-                <p>{patient.confidence}</p>
-              </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
       </Modal>
     </>

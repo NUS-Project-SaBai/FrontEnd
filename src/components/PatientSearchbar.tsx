@@ -1,11 +1,11 @@
 'use client';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Dispatch, SetStateAction, useContext, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-//TODO: might want to use PatientsListContext here instead of passing data in
 /**
  * Search bar component to filter patients.
  *
@@ -17,10 +17,14 @@ export function PatientSearchbar<T>({
   data,
   setFilteredItems,
   filterFunction,
+  filteringByFace,
+  cancelFilteringByFace,
 }: {
   data: T[];
   filterFunction: (filterString: string) => (item: T) => boolean;
   setFilteredItems: Dispatch<SetStateAction<T[]>>;
+  filteringByFace?: boolean;
+  cancelFilteringByFace?: Dispatch<SetStateAction<boolean>>;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -60,16 +64,27 @@ export function PatientSearchbar<T>({
         <label htmlFor="patientSearch" className="block">
           Input Patient ID/Name to search
         </label>
-        <input
-          id="patientSearch"
-          className="h-[40px] w-full disabled:bg-gray-200"
-          defaultValue={searchParams.get('query')?.toString()}
-          // placeholder={isLoading ? 'Loading patients...' : ''}
-          // disabled={isLoading}
-          onChange={e => {
-            debouncedSearch(e.target.value);
-          }}
-        />
+        <div className="flex h-[40px] flex-grow flex-row items-center rounded-lg border-2 border-gray-300 disabled:bg-gray-200">
+          {cancelFilteringByFace && filteringByFace && (
+            <div className="mx-1 flex h-[30px] items-center rounded-full bg-gray-300 px-2">
+              Filtering by scanned face
+              <button className="hover">
+                <XMarkIcon
+                  onClick={() => cancelFilteringByFace(false)}
+                  className="ml-1 h-4 w-4"
+                />
+              </button>
+            </div>
+          )}
+          <input
+            id="patientSearch"
+            className="h-full flex-grow border-0"
+            defaultValue={searchParams.get('query')?.toString()}
+            onChange={e => {
+              debouncedSearch(e.target.value);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
