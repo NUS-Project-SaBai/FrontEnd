@@ -1,8 +1,8 @@
 import { Button } from '@/components/Button';
+import { PatientPhoto } from '@/components/PatientPhoto';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { Patient } from '@/types/Patient';
 import Link from 'next/link';
-import PatientPhoto from '../PatientPhoto';
 
 export function PatientGlassesTable({ patients }: { patients: Patient[] }) {
   return (

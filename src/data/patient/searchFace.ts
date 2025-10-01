@@ -15,7 +15,6 @@ export async function searchFace(
     '/patients/search_face/',
     scanFormData
   );
-  console.log(response.headers);
   return {
     data: response.data,
     isMockData: response?.headers['x-is-mock-data'] === 'True',

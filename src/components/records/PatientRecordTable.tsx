@@ -1,4 +1,5 @@
 import { Button } from '@/components/Button';
+import { PatientPhoto } from '@/components/PatientPhoto';
 import { PatientDetails } from '@/components/records/patient/PatientDetails';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { PatientListContext } from '@/context/PatientListContext';
@@ -11,7 +12,6 @@ import { ChevronDownIcon } from '@heroicons/react/16/solid';
 import { DateTime, Duration } from 'luxon';
 import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
-import PatientPhoto from '../PatientPhoto';
 
 export function PatientRecordTable({
   displayedPatients,

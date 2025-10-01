@@ -8,7 +8,7 @@ import Image from 'next/image';
  * @param imgProps - Additional image properties to be passed to the Image component.
  * @returns The PatientPhoto component.
  */
-export default function PatientPhoto({
+export function PatientPhoto({
   pictureUrl,
   ...imgProps
 }: { pictureUrl: string | null } & Partial<ImgProps>) {

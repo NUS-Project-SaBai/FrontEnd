@@ -5,7 +5,7 @@ import { Visit } from '@/types/Visit';
 export async function getVisitsByPatientId(
   patientId: string
 ): Promise<Visit[]> {
-  return (await axiosInstance.get(`/visits?patient=${patientId}`)).data;
+  return (await axiosInstance.get(`/visits/?patient=${patientId}`)).data;
 }
 
 export async function getVisitById(visitId: string): Promise<Visit | null> {

@@ -2,7 +2,7 @@
 import { Button } from '@/components/Button';
 import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
-import PatientPhoto from '@/components/PatientPhoto';
+import { PatientPhoto } from '@/components/PatientPhoto';
 import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { patchOrder } from '@/data/order/patchOrder';

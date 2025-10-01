@@ -30,7 +30,7 @@ export async function getConsultsByPatientID(
   if (!patientID) {
     return null;
   }
-  return (await axiosInstance.get(`/consults?patientID=${patientID}`)).data.map(
-    (val: Consult) => consultFromJson(val)
-  );
+  return (
+    await axiosInstance.get(`/consults/?patientID=${patientID}`)
+  ).data.map((val: Consult) => consultFromJson(val));
 }

@@ -1,6 +1,6 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
-import PatientPhoto from '@/components/PatientPhoto';
+import { PatientPhoto } from '@/components/PatientPhoto';
 import { UploadDocument } from '@/components/records/UploadDocument';
 import { ViewDocument } from '@/components/records/ViewDocument';
 import { VisitDropdown } from '@/components/VisitDropdown';

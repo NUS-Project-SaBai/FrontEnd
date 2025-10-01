@@ -1,11 +1,11 @@
 import { Button } from '@/components/Button';
+import { PatientPhoto } from '@/components/PatientPhoto';
 import { ReferralStateDropdown } from '@/components/referrals/ReferralStateDropdown';
 import { VILLAGES } from '@/constants';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
 import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
-import PatientPhoto from '../PatientPhoto';
 
 export function ReferralCard({
   referral,
