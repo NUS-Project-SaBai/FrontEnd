@@ -56,11 +56,14 @@ export default function RegistrationPage() {
 
   const onPatientRegistrationFormSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
+    const formData = new FormData();
 
     useFormReturn.handleSubmit(
       //onValid
       withLoadingSubmit(async fieldValues => {
+        Object.entries(fieldValues).map(([key, value]) =>
+          formData.append(key, value)
+        );
         formData.append(
           'picture',
           await urlToFile(
