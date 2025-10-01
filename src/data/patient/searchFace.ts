@@ -12,7 +12,7 @@ export async function searchFace(
     file => scanFormData.append('picture', file)
   );
   const response = await axiosInstance.post(
-    '/patients/search_face',
+    '/patients/search_face/',
     scanFormData
   );
   console.log(response.headers);
