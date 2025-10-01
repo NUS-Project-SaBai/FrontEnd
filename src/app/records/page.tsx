@@ -11,7 +11,14 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
 import { urlToFile } from '@/utils/urlToFile';
-import { FormEvent, Suspense, useContext, useEffect, useState } from 'react';
+import {
+  FormEvent,
+  Suspense,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -108,10 +115,12 @@ export default function RecordPage() {
               filteringByFace={filteringByFace}
               cancelFilteringByFace={cancelFilteringByFace}
               setFilteredItems={setSearchFilteredPatients}
-              filterFunction={(query: string) => (item: Patient) =>
-                item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
-                item.name.toLowerCase().includes(query.toLowerCase())
-              }
+              filterFunction={useCallback(
+                (query: string) => (item: Patient) =>
+                  item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
+                  item.name.toLowerCase().includes(query.toLowerCase()),
+                []
+              )}
             />
           </Suspense>
           <div className="flex h-[40px] gap-2 self-end">

@@ -10,7 +10,7 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { formatDate } from '@/utils/formatDate';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
 
@@ -37,12 +37,16 @@ type OrderRowData = {
 
 export default function OrdersPage() {
   const [orderRowData, setOrderRowData] = useState<OrderRowData[]>([]);
+  const [filteredOrderRowData, setFilteredOrderRowData] = useState<
+    OrderRowData[]
+  >([]);
   const { isLoading, withLoading } = useLoadingState(true);
 
   useEffect(() => {
     const fetchPendingOrders = withLoading(async () => {
       const result = await fetchAllPatientMedicationOrders();
       setOrderRowData(result);
+      setFilteredOrderRowData(result);
     });
 
     fetchPendingOrders();
@@ -56,13 +60,15 @@ export default function OrdersPage() {
         <Suspense>
           <PatientSearchbar
             data={orderRowData}
-            setFilteredItems={setOrderRowData}
-            filterFunction={query => item =>
-              item.patient.patient_id
-                .toLowerCase()
-                .includes(query.toLowerCase()) ||
-              item.patient.name.toLowerCase().includes(query.toLowerCase())
-            }
+            setFilteredItems={setFilteredOrderRowData}
+            filterFunction={useCallback(
+              (query: string) => (item: OrderRowData) =>
+                item.patient.patient_id
+                  .toLowerCase()
+                  .includes(query.toLowerCase()) ||
+                item.patient.name.toLowerCase().includes(query.toLowerCase()),
+              []
+            )}
           />
         </Suspense>
         <div className="pt-4">
@@ -81,12 +87,12 @@ export default function OrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {orderRowData.length == 0 ? (
+              {filteredOrderRowData.length == 0 ? (
                 <tr>
                   <td className="col-span-4">No Pending Orders</td>
                 </tr>
               ) : (
-                orderRowData.map((x, index) => (
+                filteredOrderRowData.map((x, index) => (
                   <OrderRow
                     key={x.patient?.patient_id || index}
                     orderRowData={x}

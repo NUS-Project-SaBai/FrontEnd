@@ -11,7 +11,9 @@ import { useDebouncedCallback } from 'use-debounce';
  *
  * @param data - The list of patient-related data to filter
  * @param setFilteredItems - Function to set the result of the filtered list.
- * @param filterFunction - This function receives the search query as a string and returns a function that takes a patient item and returns true if it matches the query.
+ * @param filterFunction - This function receives the search query as a string and returns a function
+ *                        that takes a patient item and returns true if it matches the query. It might
+ *                        need to be wrapped with useCallback to avoid unnecessary re-renders.
  */
 export function PatientSearchbar<T>({
   data,
