@@ -45,6 +45,7 @@ export function PatientForm({
             label="Gender"
             name="gender"
             options={genderDropdownOptions}
+            defaultValue={getValues('gender') || ''}
             isRequired={true}
           />
           <RHFInputField

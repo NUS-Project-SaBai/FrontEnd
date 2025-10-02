@@ -1,6 +1,13 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Diagnosis } from '@/types/Diagnosis';
 const diagnosisOptions = [
   'Cardiovascular',
@@ -89,23 +96,21 @@ function DiagnosisInputRow({
           onDiagnosisEdit({ ...diagnosis, details: e.target.value });
         }}
       />
-      <select
-        className="rounded-lg p-2"
+      <Select
         value={diagnosis.category}
-        onChange={e =>
-          onDiagnosisEdit({ ...diagnosis, category: e.target.value })
-        }
+        onValueChange={val => onDiagnosisEdit({ ...diagnosis, category: val })}
       >
-        <option disabled hidden value="">
-          Please select category...
-        </option>
-        {diagnosisOptions.map(option => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-
+        <SelectTrigger className="w-full rounded-md border-2 bg-white p-2 text-gray-900">
+          <SelectValue placeholder="Select category..." />
+        </SelectTrigger>
+        <SelectContent>
+          {diagnosisOptions.map(option => (
+            <SelectItem key={option} value={option}>
+              {option}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       <Button
         colour="red"
         text={`Delete Diagnosis ${diagnosisNumber}`}
