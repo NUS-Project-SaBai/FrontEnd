@@ -18,6 +18,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
     defaultValues: {
       ...patient,
       date_of_birth: patient.date_of_birth.split('T')[0],
+      picture: patient.picture_url || '',
     },
   });
   const router = useRouter();
@@ -41,20 +42,20 @@ export function EditPatient({ patient }: { patient: Patient }) {
             onSubmit={e => {
               e.preventDefault();
 
-              const formData = new FormData();
               useFormReturn.handleSubmit(
                 async fieldValues => {
+                  const formData = new FormData();
                   Object.entries(fieldValues).map(
                     ([key, value]) =>
                       value && formData.append(key, value.toString())
                   );
 
                   // only append picture if it's a new one
-                  if (fieldValues.picture_url.startsWith('data:')) {
+                  if (fieldValues.picture.startsWith('data:')) {
                     formData.append(
                       'picture',
                       await urlToFile(
-                        fieldValues.picture_url,
+                        fieldValues.picture,
                         'patient_screenshot.jpg',
                         'image/jpg'
                       )
