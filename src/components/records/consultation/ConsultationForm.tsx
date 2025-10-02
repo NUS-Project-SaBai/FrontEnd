@@ -203,7 +203,7 @@ export function ConsultationForm({
             label="Referral for (optional)"
             omitDefaultPrompt={true}
             options={[
-              { value: '', label: 'Not Referred' },
+              { value: 'Not Referred', label: 'Not Referred' },
               { value: 'Diagnostic', label: 'Diagnositic' },
               { value: 'Acute', label: 'Acute' },
               { value: 'Chronic', label: 'Chronic' },
