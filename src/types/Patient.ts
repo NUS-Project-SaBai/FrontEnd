@@ -19,6 +19,8 @@ export type Patient = {
   filter_string: string;
   patient_id: string;
   confidence: string;
+  last_visit_date: string;
+  last_visit_id: number;
 };
 
 /**

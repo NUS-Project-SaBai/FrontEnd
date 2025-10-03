@@ -2,7 +2,13 @@
 import { Button } from '@/components/Button';
 import { useToggle } from '@/hooks/useToggle';
 import Image from 'next/image';
-import { Dispatch, SetStateAction, useCallback, useRef } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import Webcam from 'react-webcam';
 
 const videoConstraints = {
@@ -14,9 +20,11 @@ const videoConstraints = {
 export function WebcamInput({
   imageDetails,
   setImageDetails,
+  cameraIsOpenCallback,
 }: {
   imageDetails: string | null;
   setImageDetails: Dispatch<SetStateAction<string | null>>;
+  cameraIsOpenCallback?: (isOpen: boolean) => void;
 }) {
   const [cameraIsOpen, toggleCameraOpen, setCameraIsOpen] = useToggle(false);
 
@@ -26,6 +34,10 @@ export function WebcamInput({
     setImageDetails(imgSrc);
     setCameraIsOpen(false);
   }, [setCameraIsOpen, setImageDetails]);
+
+  useEffect(() => {
+    if (cameraIsOpenCallback) cameraIsOpenCallback(cameraIsOpen);
+  }, [cameraIsOpen, cameraIsOpenCallback]);
 
   return (
     <div className="flex flex-col items-center">
@@ -55,10 +67,25 @@ export function WebcamInput({
         </div>
       )}
       <div className="mt-2 flex items-center justify-center">
-        {cameraIsOpen ? (
-          <Button colour="red" text="Cancel" onClick={toggleCameraOpen} />
+        {!cameraIsOpen ? (
+          imageDetails == null ? (
+            <Button
+              colour="green"
+              text="Take Photo"
+              onClick={toggleCameraOpen}
+            />
+          ) : (
+            <Button
+              colour="orange"
+              text="Retake Photo"
+              onClick={toggleCameraOpen}
+            />
+          )
         ) : (
-          <Button colour="green" text="Take Photo" onClick={toggleCameraOpen} />
+          // don't show cancel button when there is no image captured yet
+          imageDetails != null && (
+            <Button colour="red" text="Cancel" onClick={toggleCameraOpen} />
+          )
         )}
       </div>
     </div>

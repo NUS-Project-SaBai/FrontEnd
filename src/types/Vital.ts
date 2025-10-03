@@ -1,6 +1,9 @@
+import { Visit } from './Visit';
+
 //35 fields excluding id, visit_id.
 export type Vital = {
   id?: number;
+  visit?: Visit;
   visit_id?: number;
   height: string;
   weight: string;
@@ -40,6 +43,10 @@ export type Vital = {
   testicular_growth_age: string;
   others: string;
 };
+
+export function vitalFromJson(jsonObj: object): Vital | null {
+  return jsonObj as Vital;
+}
 
 /**
  * Returns the BMI of the patient based on the height and weight.

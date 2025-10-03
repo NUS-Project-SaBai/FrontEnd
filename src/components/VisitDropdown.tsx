@@ -60,6 +60,13 @@ export function VisitDropdown({
     if (visitId) params.set('visit', visitId);
     else params.delete('visit');
     router.replace(`${pathname}?${params.toString()}`);
+  }, [pathname, router, visitId]);
+
+  useEffect(() => {
+    // If the visitId is not in the list of visits, set it to the first visit
+    if (visits && !visits.some(v => v.id.toString() == visitId)) {
+      setVisitId(visits[0].id.toString());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitId, pathname]); // keep deps minimal to avoid loops
 

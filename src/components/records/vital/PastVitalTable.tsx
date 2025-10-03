@@ -187,16 +187,48 @@ export function PastVitalTable({
   ];
 
   return (
-    <>
-      <div className="grid gap-4 md:grid-cols-3">
-        <DisplayField label="Height" content={vital.height || '-'} />
-        <DisplayField label="Weight" content={vital.weight || '-'} />
-        <DisplayField
-          label="BMI"
-          content={displayBMI(vital.height, vital.weight)}
-        />
+    <div className="grid flex-1 gap-2 [grid-template-columns:repeat(auto-fit,minmax(175px,1fr))]">
+      <DisplayField label="Height" content={vital.height || '-'} />
+      <DisplayField label="Weight" content={vital.weight || '-'} />
+      <DisplayField
+        label="BMI"
+        content={displayBMI(vital.height, vital.weight)}
+      />
 
-        {vitalFields.map((field, index) =>
+      {vitalFields.map((field, index) =>
+        field.label == '' ? (
+          <div key={index}></div>
+        ) : (
+          <DisplayField
+            key={field.label}
+            label={field.label}
+            content={field.value?.toString() || '-'}
+            highlight={field.highlight}
+          />
+        )
+      )}
+      <h2 className="col-span-full">Child Vital</h2>
+      {childrenVitalFields.map((field, index) =>
+        field.label == '' ? (
+          <div key={index}></div>
+        ) : (
+          <DisplayField
+            key={field.label}
+            label={field.label}
+            content={field.value?.toString() || '-'}
+            highlight={field.highlight}
+          />
+        )
+      )}
+      <h2 className="col-span-full">Puberty Fields</h2>
+      {pubertyFields
+        .filter(
+          fields =>
+            !fields.ageToTest ||
+            !fields.gender ||
+            (fields.gender == gender && fields.ageToTest.includes(age.year))
+        )
+        .map((field, index) =>
           field.label == '' ? (
             <div key={index}></div>
           ) : (
@@ -208,40 +240,6 @@ export function PastVitalTable({
             />
           )
         )}
-        <h2 className="md:col-span-3">Child Vital</h2>
-        {childrenVitalFields.map((field, index) =>
-          field.label == '' ? (
-            <div key={index}></div>
-          ) : (
-            <DisplayField
-              key={field.label}
-              label={field.label}
-              content={field.value?.toString() || '-'}
-              highlight={field.highlight}
-            />
-          )
-        )}
-        <h2 className="md:col-span-3">Puberty Fields</h2>
-        {pubertyFields
-          .filter(
-            fields =>
-              !fields.ageToTest ||
-              !fields.gender ||
-              (fields.gender == gender && fields.ageToTest.includes(age.year))
-          )
-          .map((field, index) =>
-            field.label == '' ? (
-              <div key={index}></div>
-            ) : (
-              <DisplayField
-                key={field.label}
-                label={field.label}
-                content={field.value?.toString() || '-'}
-                highlight={field.highlight}
-              />
-            )
-          )}
-      </div>
-    </>
+    </div>
   );
 }

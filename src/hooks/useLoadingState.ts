@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type WithLoadingType = <T, Args extends any[]>(
@@ -24,19 +24,22 @@ export function useLoadingState(initialState = false): {
    * @param asyncFunc - The async function to wrap
    * @returns The wrapped function that handles loading state
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const withLoading: WithLoadingType = function <T, Args extends any[]>(
-    asyncFunc: (...args: Args) => Promise<T>
-  ) {
-    return async (...args: Args): Promise<T> => {
-      setIsLoading(true);
-      try {
-        return await asyncFunc(...args);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  };
+
+  // idk why, useCallback is required here to prevent infinite loops when included in useEffect dependencies in PatientListContext
+  const withLoading: WithLoadingType = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function <T, Args extends any[]>(asyncFunc: (...args: Args) => Promise<T>) {
+      return async (...args: Args): Promise<T> => {
+        setIsLoading(true);
+        try {
+          return await asyncFunc(...args);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+    },
+    []
+  );
 
   return {
     isLoading,

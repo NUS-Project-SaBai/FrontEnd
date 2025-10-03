@@ -8,7 +8,6 @@ import {
   BeakerIcon,
   ClipboardDocumentListIcon,
   EyeIcon,
-  IdentificationIcon,
   PencilIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
@@ -25,12 +24,7 @@ type NavItemData = {
 };
 const navItems: NavItemData[] = [
   {
-    name: 'Registration',
-    href: '/registration',
-    icon: IdentificationIcon,
-  },
-  {
-    name: 'Patient Records',
+    name: 'Patients',
     href: '/records',
     icon: ClipboardDocumentListIcon,
   },
@@ -60,7 +54,7 @@ export function SideMenu() {
   const { user } = useUser();
   const { village, setVillage } = useContext(VillageContext);
   return (
-    <div className="flex h-full flex-col bg-gray-900 text-gray-400">
+    <div className="flex h-full min-w-[205px] flex-col bg-gray-900 text-gray-400">
       <div className="flex items-center p-4">
         <Image alt="Sa'bai Logo" src="/sabaiLogo.png" width={32} height={32} />
         <h1 className="ml-2 text-2xl text-gray-500">Sa&apos;Bai</h1>
