@@ -16,9 +16,12 @@ export function PatientScanForm({
   setFilteredPatients: Dispatch<SetStateAction<Patient[] | null>>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const closeModal = () => setIsOpen(false);
+  const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [imgDetails, setImgDetails] = useState<string | null>(null);
   const { isLoading, withLoading } = useLoadingState(false);
+
+  const closeModal = () => setIsOpen(false);
+
   const onSearch = withLoading(async () => {
     if (imgDetails == null) {
       toast.error('Please take a photo first!');
@@ -39,6 +42,11 @@ export function PatientScanForm({
       console.error('Error scanning face:', error);
     }
   });
+
+  const cameraToggleCallback = (isOpen: boolean) => {
+    setCameraIsOpen(isOpen);
+  };
+
   return (
     <>
       <Button text="Scan Face" onClick={() => setIsOpen(true)} colour="green" />
@@ -54,17 +62,21 @@ export function PatientScanForm({
           <WebcamInput
             imageDetails={imgDetails}
             setImageDetails={setImgDetails}
+            cameraIsOpenCallback={cameraToggleCallback}
           />
           <div className="flex justify-center space-x-2">
             {isLoading ? (
               <LoadingUI message="Searching Face..." />
             ) : (
-              <Button
-                text="Search"
-                colour="green"
-                Icon={<MagnifyingGlassIcon className="inline h-5 w-5" />}
-                onClick={onSearch}
-              />
+              !cameraIsOpen &&
+              imgDetails != null && (
+                <Button
+                  text="Search"
+                  colour="green"
+                  Icon={<MagnifyingGlassIcon className="inline h-5 w-5" />}
+                  onClick={onSearch}
+                />
+              )
             )}
           </div>
         </div>

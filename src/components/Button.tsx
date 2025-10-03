@@ -20,7 +20,7 @@ export function Button({
   text?: string;
   onClick?: (e: MouseEvent) => void;
   type?: 'submit' | 'button' | 'reset';
-  colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';
+  colour?: 'green' | 'red' | 'orange' | 'blue' | 'white' | 'indigo';
   Icon?: ReactNode;
   moreStyles?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
