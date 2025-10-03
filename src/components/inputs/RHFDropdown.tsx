@@ -1,6 +1,15 @@
 'use client';
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { cn } from '@/lib/utils'; // if you have a cn helper, else remove
 import { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 export type OptionData = { value: string; label: string };
 
@@ -12,6 +21,7 @@ type RHFDropdownProps = {
   isRequired?: boolean;
   className?: string;
   omitDefaultPrompt?: boolean;
+  placeholder?: string; // custom placeholder for the trigger
 };
 
 export function RHFDropdown({
@@ -22,48 +32,71 @@ export function RHFDropdown({
   isRequired = false,
   className = '',
   omitDefaultPrompt = false,
+  placeholder = 'Please select an option',
 }: RHFDropdownProps) {
-  const { register, formState, setValue } = useFormContext();
-  // Update the form value whenever defaultValue changes
+  const {
+    control,
+    setValue,
+    formState: { errors, isSubmitted },
+    trigger,
+  } = useFormContext();
+
+  // keep in sync if defaultValue prop changes
   useEffect(() => {
-    if (defaultValue) {
-      setValue(name, defaultValue);
-    }
+    if (defaultValue !== undefined)
+      setValue(name, defaultValue, { shouldValidate: true });
   }, [defaultValue, name, setValue]);
+
+  const hasError = Boolean(errors[name] && isSubmitted);
+  const errorMessage = (errors[name]?.message as string) || '';
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="text-sm font-medium">
+      <label htmlFor={name} className="mb-1 block text-sm font-medium">
         {label}
-        {isRequired && <span className="text-red-500">*</span>}
+        {isRequired && <span className="text-red-500"> *</span>}
       </label>
-      <select
-        {...register(name, {
-          required: {
-            message: `Select Option for ${label}!`,
-            value: isRequired,
-          },
-        })}
+
+      <Controller
         name={name}
-        defaultValue={defaultValue}
-        className={
-          'block w-full rounded-md border-2 p-1 text-sm ' +
-          (formState?.errors[name] != undefined && formState?.isSubmitted
-            ? 'border-l-8 border-red-400'
-            : '')
-        }
-      >
-        {omitDefaultPrompt || (
-          <option hidden value="">
-            Please select an option
-          </option>
+        control={control}
+        rules={{
+          required: isRequired ? `Select Option for ${label}!` : false,
+        }}
+        defaultValue={defaultValue ?? ''}
+        render={({ field }) => (
+          <Select
+            value={field.value ?? ''}
+            onValueChange={val => {
+              field.onChange(val);
+              // optional: validate immediately on change
+              trigger(name);
+            }}
+          >
+            <SelectTrigger
+              id={name}
+              className={cn(
+                'w-full bg-white text-gray-900',
+                hasError && 'border-2 border-red-400 pl-1'
+              )}
+            >
+              <SelectValue
+                placeholder={omitDefaultPrompt ? undefined : placeholder}
+              />
+            </SelectTrigger>
+
+            <SelectContent className="border bg-white text-gray-900">
+              {options.map(({ value, label }) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         )}
-        {options.map(({ label, value }) => (
-          <option value={value} key={value}>
-            {label}
-          </option>
-        ))}
-      </select>
+      />
+
+      {hasError && <p className="mt-1 text-xs text-red-500">{errorMessage}</p>}
     </div>
   );
 }
