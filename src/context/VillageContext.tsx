@@ -1,22 +1,28 @@
 'use client';
-import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { createContext, useEffect, useState } from 'react';
 
+// Update to use string instead of VillagePrefix enum
 export const VillageContext = createContext({
-  village: VillagePrefix.ALL,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setVillage: (village: VillagePrefix) => {},
+  village: 'ALL' as string,
+
+  // Function to update village selection
+  setVillage: (village: string) => {
+    void village;
+  },
 });
 
 export function VillageProvider({ children }: { children: React.ReactNode }) {
-  const [village, setVillageState] = useState<VillagePrefix>(VillagePrefix.ALL);
+  // Change from VillagePrefix to string
+  const [village, setVillageState] = useState<string>('ALL');
+  // Load cached village selection from localStorage on mount
   useEffect(() => {
     const cachedVillage = localStorage.getItem('village');
     if (cachedVillage) {
-      setVillageState(cachedVillage as VillagePrefix);
+      setVillageState(cachedVillage);
     }
   }, []);
-  function setVillage(village: VillagePrefix) {
+  // Update village and persist to localStorage
+  function setVillage(village: string) {
     localStorage.setItem('village', village);
     setVillageState(village);
   }

@@ -1,8 +1,8 @@
 'use client';
-import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
+import { DynamicVillageDropdown } from '@/components/DynamicVillageDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { WithLoadingType } from '@/hooks/useLoadingState';
-import { VillagePrefix } from '@/types/VillagePrefixEnum';
+//import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Dispatch,
@@ -44,9 +44,10 @@ export function PatientSearchInputByReferral({
   useEffect(() => {
     let filteredList = fullReferralList;
 
-    if (village != VillagePrefix.ALL) {
+    // Filter by village if not "ALL"
+    if (village !== 'ALL') {
       filteredList = filteredList.filter(
-        r => r.patient.village_prefix == village
+        r => r.patient.village_prefix === village
       );
     }
 
@@ -71,7 +72,7 @@ export function PatientSearchInputByReferral({
 
   return (
     <div className="flex gap-x-2">
-      <VillageOptionDropdown
+      <DynamicVillageDropdown
         village={village}
         handleVillageChange={setVillage}
         label="Search by Village"

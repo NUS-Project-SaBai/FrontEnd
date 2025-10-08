@@ -1,5 +1,5 @@
 'use client';
-import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
+import { DynamicVillageDropdown } from '@/components/DynamicVillageDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { useUser } from '@auth0/nextjs-auth0';
 import {
@@ -7,6 +7,7 @@ import {
   ArrowTrendingUpIcon,
   BeakerIcon,
   ClipboardDocumentListIcon,
+  CogIcon,
   EyeIcon,
   IdentificationIcon,
   PencilIcon,
@@ -54,6 +55,12 @@ const navItems: NavItemData[] = [
     href: '/referrals',
     icon: ArrowTrendingUpIcon,
   },
+  // New page to edit visibility of villages
+  {
+    name: 'Settings',
+    href: '/settings',
+    icon: CogIcon,
+  },
 ];
 
 export function SideMenu() {
@@ -74,7 +81,7 @@ export function SideMenu() {
         </div>
       </nav>
       <div className="p-2">
-        <VillageOptionDropdown
+        <DynamicVillageDropdown
           village={village}
           handleVillageChange={setVillage}
         />
