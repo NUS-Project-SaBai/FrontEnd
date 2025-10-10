@@ -29,7 +29,6 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
           const thisVisitConsults = consults?.filter(
             v => v.visit.id == visit.id
           );
-          console.log(vitals);
           const vital =
             vitals?.find(vital => vital.visit_id == visit.id) ?? null;
 
