@@ -1,6 +1,12 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
-import { ButtonHTMLAttributes, ReactNode, useEffect, useState } from 'react';
+import {
+  ButtonHTMLAttributes,
+  MouseEvent,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 
 export function Button({
   text,
@@ -10,10 +16,10 @@ export function Button({
   Icon = <></>,
   ...props
 }: {
-  text: string;
-  onClick?: () => void;
+  text?: string;
+  onClick?: (e: MouseEvent) => void;
   type?: 'submit' | 'button' | 'reset';
-  colour?: 'green' | 'red' | 'blue' | 'white' | 'indigo';
+  colour?: 'green' | 'red' | 'orange' | 'blue' | 'white' | 'indigo';
   Icon?: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,10 +28,10 @@ export function Button({
     setIsLoading(false);
   }, []);
 
-  const handleClick = async () => {
+  const handleClick = async (e: MouseEvent) => {
     try {
       setIsLoading(true);
-      await onClick();
+      onClick(e);
     } finally {
       setIsLoading(false);
     }
@@ -35,8 +41,8 @@ export function Button({
     <button
       className={
         isLoading
-          ? 'm-0.5 rounded-md bg-gray-300 opacity-50 hover:cursor-default'
-          : `m-0.5 rounded-md border-2 p-2 shadow-sm hover:shadow hover:outline hover:outline-black ` +
+          ? 'rounded-md bg-gray-300 opacity-50 hover:cursor-default'
+          : `rounded-md p-2 shadow-sm hover:shadow hover:outline hover:outline-gray-400 ` +
             (colour == 'white'
               ? 'bg-white'
               : `bg-${colour}-500 border-0 text-white`)

@@ -1,7 +1,7 @@
 'use server';
 
 import { axiosInstance } from '@/lib/axiosInstance';
-import { Vital } from '@/types/Vital';
+import { Vital, vitalFromJson } from '@/types/Vital';
 
 export async function getVitalByVisit(visitId: string): Promise<Vital | null> {
   if (!visitId) return null;
@@ -10,4 +10,13 @@ export async function getVitalByVisit(visitId: string): Promise<Vital | null> {
   if (!data || data.length == 0) return null;
   data = data[0];
   return data;
+}
+
+export async function getVitalsByPatientID(
+  patientID: number
+): Promise<Vital[] | null> {
+  if (!patientID) return null;
+  return (await axiosInstance.get(`/vitals?patientID=${patientID}`)).data.map(
+    vitalFromJson
+  );
 }

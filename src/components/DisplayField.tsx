@@ -4,7 +4,7 @@ export function DisplayField({
   highlight = '',
 }: {
   label: string;
-  content: string;
+  content: string | React.JSX.Element;
   highlight?: 'bg-red-200' | 'bg-amber-200' | 'bg-green-200' | '';
 }) {
   return (
@@ -12,14 +12,14 @@ export function DisplayField({
       <label htmlFor={label} className="text-sm font-medium">
         {label}
       </label>
-      <p
+      <div
         className={
-          'w-full rounded-md p-1.5 text-gray-600 shadow-sm ' +
+          'min-h-[40px] w-full rounded-md p-1.5 text-gray-600 shadow-sm ' +
           (highlight || 'bg-gray-200')
         }
       >
         {content}
-      </p>
+      </div>
     </div>
   );
 }

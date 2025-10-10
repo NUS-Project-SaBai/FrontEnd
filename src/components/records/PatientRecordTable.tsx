@@ -1,68 +1,170 @@
 import { Button } from '@/components/Button';
+import { PatientPhoto } from '@/components/PatientPhoto';
+import { PatientDetails } from '@/components/records/patient/PatientDetails';
 import { VILLAGES_AND_ALL } from '@/constants';
+import { PatientListContext } from '@/context/PatientListContext';
+import { getPatientById } from '@/data/patient/getPatient';
+import { createVisit } from '@/data/visit/createVisit';
+import { useLoadingState } from '@/hooks/useLoadingState';
+import { useToggle } from '@/hooks/useToggle';
 import { Patient } from '@/types/Patient';
-import Image from 'next/image';
+import { ChevronDownIcon } from '@heroicons/react/16/solid';
+import { DateTime, Duration } from 'luxon';
 import Link from 'next/link';
+import { useContext, useEffect, useState } from 'react';
 
-export function PatientRecordTable({ patients }: { patients: Patient[] }) {
+export function PatientRecordTable({
+  displayedPatients,
+}: {
+  displayedPatients: Patient[];
+}) {
   return (
-    <table className="w-full divide-y-2 divide-gray-500 text-left">
-      <thead className="z-1 sticky top-[108px] bg-white">
-        <tr className="py-8">
-          <th className="w-[10%]">ID</th>
-          <th className="w-[20%]">Photo</th>
-          <th className="w-[40%]">Full Name</th>
-          <th className="w-[10%]">Record</th>
-          <th className="w-[10%]">Vitals</th>
-          <th className="w-[10%]">Consultation</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y">
-        {patients.map(patient => (
-          <PatientRecordRow key={patient.pk} patient={patient} />
-        ))}
-      </tbody>
-    </table>
+    <div className="flex-1">
+      {displayedPatients.map(patient => (
+        <PatientRecordRow key={patient.pk} patient={patient} />
+      ))}
+    </div>
   );
 }
 
 function PatientRecordRow({ patient }: { patient: Patient }) {
+  const { setPatients } = useContext(PatientListContext);
+  const { withLoading } = useLoadingState();
+  const [isHovered, setIsHovered] = useState(false);
+  const [isExpanded, toggleExpanded] = useToggle(false);
+  const [shouldFlash, setShouldFlash] = useState(false);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_forceUpdate, setForceUpdate] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setForceUpdate(prev => prev + 1); // Update state to trigger re-render
+    }, 10000); // Re-render every 10 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
+  const lastVisitLabel = getLastVisitLabel(patient.last_visit_date);
+
+  async function handleCreateVisit(patient: Patient) {
+    withLoading(async () =>
+      createVisit(patient).then(() => getPatientById(patient.pk.toString()))
+    )().then(freshPatient => {
+      setPatients(old => [
+        freshPatient,
+        ...old.filter(v => v.patient_id != freshPatient.patient_id),
+      ]);
+      setShouldFlash(true);
+      setTimeout(() => setShouldFlash(false), 1000); // 1 second flash
+    });
+  }
+
   return (
-    <tr>
-      <td
-        className={
-          'font-semibold ' + VILLAGES_AND_ALL[patient.village_prefix].color
-        }
+    <div>
+      <div
+        // onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
+        onClick={toggleExpanded}
+        className={`m-2 flex flex-col items-center rounded-md bg-white p-2 shadow transition-shadow duration-300 ${
+          isHovered ? 'shadow-md' : ''
+        } ${shouldFlash ? 'flash' : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        role="button"
       >
-        {patient.patient_id}
-      </td>
-      <td>
-        <Image
-          src={patient.picture_url}
-          alt={'Patient Photo'}
-          height={100}
-          width={100}
-        />
-      </td>
-      <td>{patient.name}</td>
-      <td>
-        {/* record */}
-        <Link href={`/records/patient-record?id=${patient.pk}`}>
-          <Button text="View" colour="indigo" />
-        </Link>
-      </td>
-      <td>
-        {/* vitals */}
-        <Link href={`/records/patient-vitals?id=${patient.pk}`}>
-          <Button text="Create" colour="green" />
-        </Link>
-      </td>
-      <td>
-        {/* consultation */}
-        <Link href={`/records/patient-consultation?id=${patient.pk}`}>
-          <Button text="Create" colour="green" />
-        </Link>
-      </td>
-    </tr>
+        <div className="flex w-full flex-row items-center p-1">
+          <div
+            className={
+              'flex-[2] font-semibold ' +
+              VILLAGES_AND_ALL[patient.village_prefix].color
+            }
+          >
+            {patient.patient_id}
+          </div>
+          <div className="flex-[3]">
+            <PatientPhoto pictureUrl={patient.picture_url} />
+          </div>
+          <div className="flex-[8]">{patient.name}</div>
+          <div className="flex flex-row items-center gap-2">
+            <Button
+              text="Create new visit"
+              colour="green"
+              onClick={e => {
+                e.stopPropagation();
+                handleCreateVisit(patient);
+              }}
+              onMouseEnter={e => {
+                e.stopPropagation();
+                setIsHovered(false);
+              }}
+              onMouseLeave={() => {
+                setIsHovered(true);
+              }}
+            />
+            <div className="flex flex-1 items-center gap-2 rounded-md border p-2">
+              <div className="w-[115px]">
+                <p>Last visit:</p>
+                <p>{lastVisitLabel}</p>
+              </div>
+              <Link
+                href={`/records/patient-vitals?id=${patient.pk}&visit=${patient.last_visit_id}`}
+                onClick={e => e.stopPropagation()}
+                onMouseEnter={e => {
+                  e.stopPropagation();
+                  setIsHovered(false);
+                }}
+                onMouseLeave={() => setIsHovered(true)}
+              >
+                <Button text="Vitals" colour="red" />
+              </Link>
+              <Link
+                href={`/records/patient-consultation?id=${patient.pk}&visit=${patient.last_visit_id}`}
+                onClick={e => e.stopPropagation()}
+                onMouseEnter={e => {
+                  e.stopPropagation();
+                  setIsHovered(false);
+                }}
+                onMouseLeave={() => setIsHovered(true)}
+              >
+                <Button text="Consultation" colour="indigo" />
+              </Link>
+            </div>
+            <button className="w-5">
+              <ChevronDownIcon />
+            </button>
+          </div>
+        </div>
+        {isExpanded && (
+          <div className="mt-2 flex w-full flex-row items-center">
+            <PatientDetails
+              patient={patient}
+              showFullDetailsButton
+              setIsHovered={setIsHovered}
+            />
+          </div>
+        )}
+      </div>
+    </div>
   );
+}
+
+function getLastVisitLabel(lastVisitDate: string): string {
+  if (!lastVisitDate) {
+    return 'Missing last visit date';
+  }
+  const lastVisitDateLuxon = DateTime.fromISO(lastVisitDate);
+  // Positive duration since last visit
+  const timeSinceLastVisit = Duration.fromMillis(
+    DateTime.now().diff(lastVisitDateLuxon).toMillis()
+  );
+  return timeSinceLastVisit < Duration.fromObject({ seconds: 5 })
+    ? 'Just now'
+    : timeSinceLastVisit < Duration.fromObject({ minutes: 10 })
+      ? lastVisitDateLuxon.toRelative() || 'Missing relative time?'
+      : timeSinceLastVisit < Duration.fromObject({ days: 10 })
+        ? lastVisitDateLuxon.toLocaleString({
+            ...DateTime.DATETIME_MED,
+            hour12: true,
+          })
+        : lastVisitDateLuxon.toLocaleString(DateTime.DATE_MED);
 }
