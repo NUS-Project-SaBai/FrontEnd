@@ -28,6 +28,7 @@ export function NewPatientModal({
         className="mx-auto my-8"
       >
         <PatientForm onSubmit={onSubmit} isSubmitting={isSubmitting} />
+        <Button colour="red" onClick={closeModal} text="Close" />
       </Modal>
     </>
   );

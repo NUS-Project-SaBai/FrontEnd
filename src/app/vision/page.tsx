@@ -6,7 +6,7 @@ import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { PatientGlassesTable } from '@/components/vision/PatientGlassesTable';
 import { PatientListContext } from '@/context/PatientListContext';
 import { Patient } from '@/types/Patient';
-import { Suspense, useContext, useState } from 'react';
+import { Suspense, useCallback, useContext, useState } from 'react';
 
 export default function VisionPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -19,11 +19,12 @@ export default function VisionPage() {
         <PatientSearchbar
           data={allPatients}
           setFilteredItems={setPatients}
-          filterFunction={query => item =>
-            item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
-            item.name.toLowerCase().includes(query.toLowerCase())
-          }
-          isLoading={isLoading}
+          filterFunction={useCallback(
+            (query: string) => (item: Patient) =>
+              item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
+              item.name.toLowerCase().includes(query.toLowerCase()),
+            []
+          )}
         />
       </Suspense>
       <LoadingPage isLoading={isLoading} message="Loading Patients...">

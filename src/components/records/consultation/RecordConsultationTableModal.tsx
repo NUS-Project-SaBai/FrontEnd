@@ -14,7 +14,7 @@ import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
 import { useEffect, useState } from 'react';
 
-export function RecordConsultationTable({
+export function RecordConsultationTableModal({
   consults,
 }: {
   consults: Pick<Consult, 'id' | 'date' | 'doctor' | 'referred_for'>[] | null;
@@ -37,7 +37,7 @@ export function RecordConsultationTable({
         getDiagnosisByConsult(consultId).then(setDiagnosisArray),
       ]);
     })();
-  }, [consultId]);
+  }, [consultId, withLoading]);
 
   if (consults == null) {
     return <LoadingUI message="Loading Consultations..." />;

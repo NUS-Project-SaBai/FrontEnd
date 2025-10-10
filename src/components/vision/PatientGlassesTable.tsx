@@ -1,7 +1,7 @@
 import { Button } from '@/components/Button';
+import { PatientPhoto } from '@/components/PatientPhoto';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { Patient } from '@/types/Patient';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export function PatientGlassesTable({ patients }: { patients: Patient[] }) {
@@ -36,12 +36,7 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
         {patient.patient_id}
       </td>
       <td>
-        <Image
-          src={patient.picture_url}
-          alt={'Patient Photo'}
-          height={100}
-          width={100}
-        />
+        <PatientPhoto pictureUrl={patient.picture_url} />
       </td>
       <td>{patient.name}</td>
       <td>

@@ -1,6 +1,6 @@
 'use server';
 import { axiosInstance } from '@/lib/axiosInstance';
-import { Consult } from '@/types/Consult';
+import { Consult, consultFromJson } from '@/types/Consult';
 
 export async function getConsultByVisitId(
   visitId: string
@@ -22,4 +22,15 @@ export async function getConsultByID(
   } catch {
     return null;
   }
+}
+
+export async function getConsultsByPatientID(
+  patientID: number
+): Promise<Consult[] | null> {
+  if (!patientID) {
+    return null;
+  }
+  return (
+    await axiosInstance.get(`/consults/?patientID=${patientID}`)
+  ).data.map((val: Consult) => consultFromJson(val));
 }

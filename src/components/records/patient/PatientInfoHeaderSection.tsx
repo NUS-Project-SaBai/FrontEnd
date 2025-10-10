@@ -1,16 +1,16 @@
 'use client';
 import { LoadingUI } from '@/components/LoadingUI';
-import { VisitDropdown } from '@/components/VisitDropdown';
+import { PatientPhoto } from '@/components/PatientPhoto';
 import { UploadDocument } from '@/components/records/UploadDocument';
 import { ViewDocument } from '@/components/records/ViewDocument';
+import { VisitDropdown } from '@/components/VisitDropdown';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
-import { getVisitByPatientId } from '@/data/visit/getVisit';
+import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { WithLoadingType } from '@/hooks/useLoadingState';
 import { Patient, getPatientAge } from '@/types/Patient';
 import { Upload } from '@/types/Upload';
 import { Visit } from '@/types/Visit';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 export function PatientInfoHeaderSection({
@@ -33,7 +33,7 @@ export function PatientInfoHeaderSection({
 
   useEffect(() => {
     if (showVisit) {
-      withLoading(getVisitByPatientId)(patient.pk.toString()).then(vs =>
+      withLoading(getVisitsByPatientId)(patient.pk.toString()).then(vs =>
         setVisits(vs)
       );
     }
@@ -45,12 +45,7 @@ export function PatientInfoHeaderSection({
 
   return (
     <div className="flex">
-      <Image
-        src={patient.picture_url}
-        alt="Patient Picture"
-        width={180}
-        height={180}
-      />
+      <PatientPhoto pictureUrl={patient.picture_url} width={180} height={180} />
       <div className="grid grid-cols-[2fr,3fr] grid-rows-2 gap-x-8 pl-8 text-2xl">
         <div>
           <p>ID:</p>
