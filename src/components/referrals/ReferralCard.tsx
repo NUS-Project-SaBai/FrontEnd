@@ -11,10 +11,12 @@ export function ReferralCard({
   referral,
   patient,
   date,
+  onGeneratePDF,
 }: {
   referral: Referral;
   patient: Patient;
   date: string;
+  onGeneratePDF: () => void;
 }) {
   return (
     <tr>
@@ -56,6 +58,9 @@ export function ReferralCard({
           <Link href={`./referrals/${referral.id}`}>
             <Button text="Details" colour="blue" />
           </Link>
+        </div>
+        <div className="grid items-center justify-center p-2">
+          <Button text="Generate PDF" onClick={() => onGeneratePDF()} />
         </div>
       </td>
       <td>
