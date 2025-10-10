@@ -22,17 +22,7 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
 
   return (
     <div className="flex flex-1 flex-col gap-2">
-      <div className="flex flex-1 flex-row gap-2">
-        {/* {visits == null ? (
-          <div className="w-fit text-nowrap text-lg">
-            <LoadingUI message="Loading Visits..." />
-          </div>
-        ) : visits.length == 0 ? (
-          <p>No Visits Found</p>
-        ) : (
-          <VisitDropdown name="visit_date" visits={visits} />
-        )} */}
-      </div>
+      <div className="flex flex-1 flex-row gap-2"></div>
       <div className="mx-2 flex flex-1 flex-col">
         <h1 className="py-0">Visits</h1>
         {visits.map(visit => {
@@ -116,7 +106,7 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
                   {thisVisitConsults.length > 0 ? (
                     <div className="flex-1 pb-4">
                       <h1 className="mb-2 text-2xl">Consultations</h1>
-                      {/* <PrescriptionConsultCol consults={thisVisitConsults} /> */}
+
                       <AllConsultationDetails consults={thisVisitConsults} />
                     </div>
                   ) : (

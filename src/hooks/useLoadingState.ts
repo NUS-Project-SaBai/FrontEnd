@@ -25,7 +25,8 @@ export function useLoadingState(initialState = false): {
    * @returns The wrapped function that handles loading state
    */
 
-  // idk why, useCallback is required here to prevent infinite loops when included in useEffect dependencies in PatientListContext
+  // useCallback is required here when withLoading is passed as a dependency to useEffect (e.g., in PatientListContext).
+  // Without useCallback, a new function would be created on every render, causing infinite loops or unnecessary re-executions.
   const withLoading: WithLoadingType = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function <T, Args extends any[]>(asyncFunc: (...args: Args) => Promise<T>) {
