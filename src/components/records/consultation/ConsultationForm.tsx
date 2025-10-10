@@ -177,7 +177,7 @@ export function ConsultationForm({
                 ensureFilled: (
                   val: { details: string; category: string }[]
                 ) => {
-                  if (val.length === 0)
+                  if (!val || val.length === 0)
                     return 'At least one diagnosis is required';
                   if (
                     val.some(
