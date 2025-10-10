@@ -88,10 +88,8 @@ export default function RecordPage() {
         clearLocalStorageData();
 
         toast.success('Patient Created!');
-        // TODO: implement check for recent visit
         createVisit(patient);
         toast.success('New Visit Created!');
-        // togglePatientFormOpen(); // can't trigger the modal to open with this configuration
         refreshPatientList();
       }),
       // onInvalid

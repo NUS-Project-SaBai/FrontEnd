@@ -10,7 +10,7 @@ export function PatientDetails({
   patient,
   showFullDetailsButton = false,
   showEditDetailsButton = false,
-  setIsHovered,
+  setIsHovered = () => {},
 }: {
   patient: Patient;
   showFullDetailsButton?: boolean;
@@ -64,9 +64,9 @@ export function PatientDetails({
             onClick={e => e.stopPropagation()}
             onMouseEnter={e => {
               e.stopPropagation();
-              if (setIsHovered) setIsHovered(false); //just to avoid error: Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+              setIsHovered(false);
             }}
-            onMouseLeave={() => setIsHovered && setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(true)}
           >
             <Button text="View full details" colour="indigo" />
           </Link>
