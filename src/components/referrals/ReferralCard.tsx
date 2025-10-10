@@ -53,14 +53,12 @@ export function ReferralCard({
           </div>
         </div>
       </td>
-      <td>
-        <div className="grid items-center justify-center p-2">
+      <td className="align-middle">
+        <div className="flex flex-col items-center justify-center space-y-2 p-3">
           <Link href={`./referrals/${referral.id}`}>
-            <Button text="Details" colour="blue" />
+            <Button text="View Referral Details" colour="blue" />
           </Link>
-        </div>
-        <div className="grid items-center justify-center p-2">
-          <Button text="Generate PDF" onClick={() => onGeneratePDF()} />
+          <Button text="Generate Consult PDF" onClick={() => onGeneratePDF()} />
         </div>
       </td>
       <td>
