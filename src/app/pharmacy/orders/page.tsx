@@ -10,7 +10,7 @@ import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { formatDate } from '@/utils/formatDate';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import Image from 'next/image';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
 
@@ -49,6 +49,14 @@ export default function OrdersPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Memoize filter function to prevent unnecessary re-renders in PatientSearchbar
+  const filterFunction = useCallback(
+    (query: string) => (item: OrderRowData) =>
+      item.patient.patient_id.toLowerCase().includes(query.toLowerCase()) ||
+      item.patient.name.toLowerCase().includes(query.toLowerCase()),
+    [] // Empty dependency array, filter logic never changes
+  );
+
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
       <div className="p-2">
@@ -57,12 +65,7 @@ export default function OrdersPage() {
           <PatientSearchbar
             data={orderRowData}
             setFilteredItems={setOrderRowData}
-            filterFunction={query => item =>
-              item.patient.patient_id
-                .toLowerCase()
-                .includes(query.toLowerCase()) ||
-              item.patient.name.toLowerCase().includes(query.toLowerCase())
-            }
+            filterFunction={filterFunction}
             isLoading={isLoading}
           />
         </Suspense>
