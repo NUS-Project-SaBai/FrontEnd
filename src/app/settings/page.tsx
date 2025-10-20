@@ -14,6 +14,7 @@
 
 'use client';
 import { axiosClientInstance } from '@/lib/axiosClientInstance';
+import { Village } from '@/types/VillageTypes';
 import {
   CheckIcon,
   EyeIcon,
@@ -24,13 +25,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
-
-interface Village {
-  id: number;
-  village_name: string;
-  colour_code: string;
-  is_hidden: boolean;
-}
 
 interface NewVillageForm {
   village_name: string;

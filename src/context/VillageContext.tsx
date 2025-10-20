@@ -1,14 +1,12 @@
 'use client';
+import { ALL_VILLAGES } from '@/types/VillageTypes';
 import { createContext, useEffect, useState } from 'react';
 
 // Update to use string instead of VillagePrefix enum
 export const VillageContext = createContext({
-  village: 'ALL' as string,
-
-  // Function to update village selection
-  setVillage: (village: string) => {
-    void village;
-  },
+  village: ALL_VILLAGES,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setVillage: (village: string) => {},
 });
 
 export function VillageProvider({ children }: { children: React.ReactNode }) {

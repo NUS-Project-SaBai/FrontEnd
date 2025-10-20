@@ -1,14 +1,8 @@
 // Custom React hook for fetching village data from API (only visible villages)
 import { axiosClientInstance } from '@/lib/axiosClientInstance';
+import { Village } from '@/types/VillageTypes';
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
-
-interface Village {
-  id: number;
-  village_name: string;
-  colour_code: string;
-  is_hidden: boolean;
-}
 
 export const useVillages = () => {
   const [villages, setVillages] = useState<Village[]>([]);

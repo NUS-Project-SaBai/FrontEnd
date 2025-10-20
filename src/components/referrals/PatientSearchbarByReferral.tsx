@@ -18,6 +18,8 @@ import {
   ReferralWithDetails,
 } from '@/data/referrals/getReferrals';
 
+import { ALL_VILLAGES } from '@/types/VillageTypes';
+
 export function PatientSearchInputByReferral({
   setReferrals,
   isLoading = false,
@@ -45,7 +47,7 @@ export function PatientSearchInputByReferral({
     let filteredList = fullReferralList;
 
     // Filter by village if not "ALL"
-    if (village !== 'ALL') {
+    if (village !== ALL_VILLAGES) {
       filteredList = filteredList.filter(
         r => r.patient.village_prefix === village
       );
