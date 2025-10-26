@@ -8,6 +8,8 @@ type RHFInputFieldProps = {
   type: HTMLInputTypeAttribute | 'textarea';
   placeholder?: string;
   isRequired?: boolean;
+  min?: string;
+  max?: string;
 };
 
 export function RHFInputField({
@@ -16,6 +18,8 @@ export function RHFInputField({
   type,
   placeholder = '',
   isRequired = false,
+  min,
+  max,
 }: RHFInputFieldProps) {
   const { register, formState } = useFormContext();
   const curFormErrorState = formState?.errors[name];
@@ -61,6 +65,8 @@ export function RHFInputField({
           name={name}
           type={type}
           placeholder={placeholder}
+          min={min}
+          max={max}
           onWheel={e => {
             // don't modify behaviour when the input is not focused
             if (e.target != document.activeElement) return;
