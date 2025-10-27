@@ -41,6 +41,46 @@ export function MedicationOrderForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOrder]);
 
+  const getInStockQuantityColour = (
+    medication: Medication | null
+  ): 'bg-red-200' | 'bg-amber-200' | 'bg-green-200' | '' => {
+    if (medication == null) {
+      return ''; // leave as grey
+    }
+
+    if (
+      medication.warning_quantity == null ||
+      medication.quantity >= medication.warning_quantity
+    ) {
+      return 'bg-green-200'; // highlight as green
+    }
+
+    if (medication.quantity < medication.warning_quantity) {
+      return 'bg-red-200'; // highlight as red
+    }
+
+    return '';
+  };
+
+  const getInStockQuantityText = (medication: Medication | null): string => {
+    if (medication == null) {
+      return '-';
+    }
+
+    if (
+      medication.warning_quantity == null ||
+      medication.quantity >= medication.warning_quantity
+    ) {
+      return medication.quantity.toString();
+    }
+
+    if (medication.quantity < medication.warning_quantity) {
+      return medication.quantity.toString() + ' (Low Quantity)';
+    }
+
+    return '-';
+  };
+
   const selectedMedicationId =
     useFormReturn.watch('medication').split(' ', 1)[0] || '';
 
@@ -110,12 +150,23 @@ export function MedicationOrderForm({
             <div className="grid grid-cols-2 gap-4">
               <DisplayField
                 label="In Stock"
+                highlight={
+                  medications == undefined || selectedMedicationId == ''
+                    ? ''
+                    : getInStockQuantityColour(
+                        medications.find(
+                          med => med.id.toString() == selectedMedicationId
+                        ) || null
+                      )
+                }
                 content={
                   medications == undefined || selectedMedicationId == ''
                     ? '-'
-                    : medications
-                        .find(med => med.id.toString() == selectedMedicationId)
-                        ?.quantity.toString() || '-'
+                    : getInStockQuantityText(
+                        medications.find(
+                          med => med.id.toString() == selectedMedicationId
+                        ) || null
+                      )
                 }
               />
               <RHFInputField
@@ -131,12 +182,6 @@ export function MedicationOrderForm({
               label="Dosage Instructions"
               placeholder="Dosage Instructions"
               isRequired={true}
-            />
-            <Button
-              type="button"
-              text="Cancel"
-              colour="red"
-              onClick={closeForm}
             />
             <Button type="submit" text="Submit" colour="green" />
           </form>

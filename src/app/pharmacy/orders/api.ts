@@ -21,6 +21,7 @@ export async function fetchAllPatientMedicationOrders(): Promise<
         medication_name: string;
         medication_code: string;
         quantity_changed: number;
+        is_low_stock: boolean;
         notes: string;
       }[];
       diagnoses: { category: string; details: string }[];
