@@ -30,17 +30,23 @@ export function MedicationForm({
           isRequired={true}
         />
         <RHFInputField label="Code" name="code" type="text" />
-        <DisplayField
-          label="Current Quantity"
-          content={
-            editMedication == null ? '-' : editMedication.quantity.toString()
-          }
-        />
+        {editMedication != null && (
+          <DisplayField
+            label="Current Quantity"
+            content={editMedication.quantity.toString()}
+          />
+        )}
         <RHFInputField
           label="Quantity to Add (Negative to subtract)"
           name="quantity_changed"
           type="number"
-          isRequired={true}
+          isRequired={editMedication == null} // Only required for adding new medicine
+        />
+        <RHFInputField
+          label="Warning Quantity (System will flag out when medication stock falls below this quantity)"
+          name="warning_quantity"
+          type="number"
+          isRequired={false}
         />
         <RHFInputField label="Notes" name="notes" type="text" />
         <div className="flex">
