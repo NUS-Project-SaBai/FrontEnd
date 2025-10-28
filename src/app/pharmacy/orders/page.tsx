@@ -24,7 +24,7 @@ type OrderRowData = {
   };
   data: {
     orders: {
-      id: number;
+      order_id: number;
       medication_name: string;
       medication_code: string;
       quantity_changed: number;
@@ -181,13 +181,7 @@ function OrderRow({
                 >
                   <div>
                     {o.is_low_stock && (
-                      <p
-                        style={{
-                          color: '#cc0000',
-                          fontWeight: 'bold',
-                          marginBottom: '6px',
-                        }}
-                      >
+                      <p className="mb-1.5 font-bold text-red-600">
                         Warning: Low Stock!
                       </p>
                     )}
@@ -206,13 +200,13 @@ function OrderRow({
                   </div>
                   <ApproveRejectOrderButton
                     handleApproveOrder={async () => {
-                      await patchOrder(o.id.toString(), 'APPROVED')
-                        .then(() => removeNonPendingOrder(o.id))
+                      await patchOrder(o.order_id.toString(), 'APPROVED')
+                        .then(() => removeNonPendingOrder(o.order_id))
                         .catch(err => onPatchError(err, o.medication_name));
                     }}
                     handleCancelOrder={async () => {
-                      await patchOrder(o.id.toString(), 'CANCELLED')
-                        .then(() => removeNonPendingOrder(o.id))
+                      await patchOrder(o.order_id.toString(), 'CANCELLED')
+                        .then(() => removeNonPendingOrder(o.order_id))
                         .catch(err => onPatchError(err, o.medication_name));
                     }}
                   />
