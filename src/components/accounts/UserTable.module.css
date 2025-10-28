@@ -1,0 +1,91 @@
+.container {
+  @apply overflow-x-auto rounded-lg border border-gray-200 shadow-sm;
+}
+
+.table {
+  @apply w-full text-left;
+}
+
+.thead {
+  @apply border-b-2 border-gray-200 bg-gray-50;
+}
+
+.th {
+  @apply px-3 py-2 text-xs font-semibold text-gray-700;
+}
+
+.thCenter {
+  @apply px-3 py-2 text-center text-xs font-semibold text-gray-700;
+}
+
+.tbody {
+  @apply divide-y divide-gray-200 bg-white;
+}
+
+.tr {
+  @apply transition-colors hover:bg-gray-50;
+}
+
+.td {
+  @apply px-3 py-2 text-xs text-gray-700;
+}
+
+.tdBold {
+  @apply px-3 py-2 text-xs font-medium text-gray-900;
+}
+
+.tdCenter {
+  @apply px-3 py-2 text-center;
+}
+
+.emptyState {
+  @apply px-4 py-8 text-center text-gray-500;
+}
+
+.badge {
+  @apply inline-flex rounded-full px-2 py-0.5 text-xs font-medium;
+}
+
+.badgeAdmin {
+  @apply bg-purple-100 text-purple-800;
+}
+
+.badgeMember {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.editButton {
+  @apply inline-flex items-center rounded-md p-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1;
+}
+
+.icon {
+  @apply h-6 w-6 p-0.5;
+}
+
+.stackedCell {
+  @apply flex flex-col gap-0.5;
+}
+
+.nicknameRow {
+  @apply flex items-center gap-2;
+}
+
+.primaryText {
+  @apply font-medium text-gray-900;
+}
+
+.secondaryText {
+  @apply text-xs text-gray-500;
+}
+
+.emailText {
+  @apply text-gray-700;
+}
+
+.actionButtons {
+  @apply flex items-center justify-center gap-1;
+}
+
+.hideButton {
+  @apply inline-flex items-center rounded-md p-1 text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1;
+}

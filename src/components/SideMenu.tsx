@@ -52,6 +52,7 @@ const navItems: NavItemData[] = [
 
 export function SideMenu() {
   const { user } = useUser();
+  const userRole: 'admin' | 'member' | undefined = user?.user_metadata?.role;
   const { village, setVillage } = useContext(VillageContext);
   return (
     <div className="flex h-full min-w-[205px] flex-col bg-gray-900 text-gray-400">
@@ -75,7 +76,17 @@ export function SideMenu() {
       </div>
 
       <div className="h-full" />
-      <div>
+
+      <div className="mt-auto">
+        {userRole === 'admin' && (
+          <NavItem
+            navItem={{
+              href: '/account-management',
+              name: 'Account Management',
+              icon: UserCircleIcon,
+            }}
+          />
+        )}
         <NavItem
           navItem={{
             href: '/auth/logout',
@@ -85,7 +96,7 @@ export function SideMenu() {
         />
         <div className="flex space-x-2 p-4">
           <UserCircleIcon className="h-6 w-6" />
-          <p>{user?.name}</p>
+          <p>{user?.nickname}</p>
         </div>
       </div>
     </div>

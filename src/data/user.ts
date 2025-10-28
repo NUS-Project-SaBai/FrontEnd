@@ -35,3 +35,30 @@ export async function createUser(
       };
     });
 }
+
+// PATCH /users/:id  (update user)
+export async function updateUser(
+  userId: string,
+  payload: Partial<Omit<User, 'id'>>
+): Promise<{ user: User | null; error: string | null }> {
+  return axiosInstance
+    .patch<User>(`/users/${userId}/`, payload)
+    .then(response => {
+      const { data } = response;
+      return { user: data, error: null };
+    })
+    .catch((error: AxiosError) => {
+      return {
+        user: null,
+        error:
+          error.response == undefined
+            ? error.message
+            : typeof error.response?.data === 'object' &&
+                error.response?.data !== null &&
+                'error' in error.response.data
+              ? ((error.response.data as { error?: string }).error ??
+                error.message)
+              : error.message,
+      };
+    });
+}
