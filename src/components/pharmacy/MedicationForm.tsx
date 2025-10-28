@@ -43,10 +43,16 @@ export function MedicationForm({
           isRequired={editMedication == null} // Only required for adding new medicine
         />
         <RHFInputField
-          label="Warning Quantity (System will flag out when medication stock falls below this quantity)"
+          label="Warning Quantity (System will flag out when medication stock falls below this quantity). To remove warning, leave blank or 0."
           name="warning_quantity"
           type="number"
           isRequired={false}
+          validate={{
+            min: val =>
+              val == null ||
+              val >= 0 ||
+              'Warning Quantity should be greater than or equal to 0',
+          }}
         />
         <RHFInputField label="Notes" name="notes" type="text" />
         <div className="flex">

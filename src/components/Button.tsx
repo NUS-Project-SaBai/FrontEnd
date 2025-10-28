@@ -96,7 +96,7 @@ export function Button({
   useEffect(() => setHydrated(true), []);
 
   const handleClick = async (e: MouseEvent<HTMLButtonElement>) => {
-    if (!onClick) return;
+    if (!onClick || !hydrated) return;
     const maybePromise = onClick(e);
     if (maybePromise instanceof Promise) {
       try {
