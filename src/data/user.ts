@@ -10,6 +10,16 @@ export async function getUsers(): Promise<User[]> {
   return data;
 }
 
+// GET /users by email
+export async function getUserByEmail(email: string): Promise<User[] | null> {
+  try {
+    return (await axiosInstance.get(`/users/?email=${email}`)).data;
+  } catch (error) {
+    console.error('Error fetching user by email:', error);
+    return null;
+  }
+}
+
 // POST /users  (payload without id/role)
 export async function createUser(
   payload: Omit<User, 'id' | 'role'>

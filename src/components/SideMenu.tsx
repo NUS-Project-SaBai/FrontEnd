@@ -1,7 +1,9 @@
 'use client';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import { getUserByEmail } from '@/data/user';
 import { useUser } from '@auth0/nextjs-auth0';
+
 import {
   ArrowLeftStartOnRectangleIcon,
   ArrowTrendingUpIcon,
@@ -14,7 +16,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 type HeroIconType = React.ComponentType<React.ComponentProps<'svg'>>;
 type NavItemData = {
@@ -52,7 +54,14 @@ const navItems: NavItemData[] = [
 
 export function SideMenu() {
   const { user } = useUser();
-  const userRole: 'admin' | 'member' | undefined = user?.user_metadata?.role;
+  const [userRole, setUserRole] = useState<string>('member');
+  useEffect(() => {
+    if (user?.email) {
+      getUserByEmail(user.email).then(user => {
+        setUserRole(user?.[0].role || 'member');
+      });
+    }
+  }, [user?.email]);
   const { village, setVillage } = useContext(VillageContext);
   return (
     <div className="flex h-full min-w-[205px] flex-col bg-gray-900 text-gray-400">
