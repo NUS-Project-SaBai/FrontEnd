@@ -3,5 +3,6 @@ export type Medication = {
   medicine_name: string;
   code: string;
   quantity: number;
+  warning_quantity: number | null;
   notes: string;
 };
