@@ -58,7 +58,7 @@ export default function AccountManagement() {
           console.error('Error fetching users:', error);
         }
       })(),
-    [withLoading]
+    []
   );
 
   useEffect(() => {
@@ -140,12 +140,10 @@ export default function AccountManagement() {
   // Handle updating an existing user
   const handleUpdateUser = withLoading(async (values: UserFormValues) => {
     try {
-      console.log('Updating user with values:', values);
       const { user, error } = await updateUser(
         modalState.user!.id.toString(),
         values
       );
-      console.log('Update user response:', { user, error });
       if (error) {
         toast.error(`Failed to update user: ${error}`);
         return;

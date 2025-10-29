@@ -86,16 +86,16 @@
   @apply flex items-center justify-center gap-2;
 }
 
-.blockButton,
-.unblockButton {
+.lockButton,
+.unlockButton {
   @apply inline-flex items-center rounded-md p-1 text-gray-600 transition-colors hover:outline-none hover:ring-2 hover:ring-offset-1;
 }
 
-.blockButton {
+.lockButton {
   /* Block button, so it is currently unlocked */
   @apply text-green-700 hover:bg-red-50 hover:text-red-600 hover:ring-red-500;
 }
 
-.unblockButton {
+.unlockButton {
   @apply text-red-700 hover:bg-green-50 hover:text-green-600 hover:ring-green-500;
 }

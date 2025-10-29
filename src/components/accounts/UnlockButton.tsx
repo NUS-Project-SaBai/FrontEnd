@@ -20,7 +20,7 @@ export function UnlockButton({
 
   return (
     <button
-      className={styles.unblockButton}
+      className={styles.unlockButton}
       onClick={handleClick}
       aria-label={`Unlock account for ${user.username}`}
       title={`Unlock ${user.nickname || user.username || 'user'} account`}

@@ -109,10 +109,14 @@ export function UserFormModal({
           placeholder="Password"
           label="Password"
           isRequired={isEditMode ? false : true}
-          minLength={{
-            value: 8,
-            message: 'Password must have at least 8 characters',
-          }}
+          minLength={
+            isEditMode
+              ? undefined
+              : {
+                  value: 8,
+                  message: 'Password must have at least 8 characters',
+                }
+          }
         />
 
         <div className="mt-2 flex gap-2">
