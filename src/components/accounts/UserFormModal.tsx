@@ -89,7 +89,7 @@ export function UserFormModal({
           name="role"
           label="Role"
           isRequired={true}
-          defaultValue="member"
+          defaultValue={user?.role || 'member'}
           options={[
             { value: 'member', label: 'Member' },
             { value: 'admin', label: 'Admin' },

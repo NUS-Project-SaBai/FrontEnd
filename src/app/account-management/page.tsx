@@ -67,7 +67,7 @@ export default function AccountManagement() {
 
   // Open modal for creating new user
   const handleAddUser = () => {
-    reset();
+    reset(EMPTY_USER);
     setModalState({
       isOpen: true,
       mode: 'create',
