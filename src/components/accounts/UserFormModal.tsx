@@ -32,7 +32,7 @@ export function UserFormModal({
   const isEditMode = mode === 'edit';
   const title = isEditMode ? 'Edit User' : 'Add New User';
 
-  const { reset } = useFormContext<UserFormData>();
+  const { reset, setValue } = useFormContext<UserFormData>();
   // Reset form with user data when modal opens in edit mode
   useEffect(() => {
     if (isOpen && user && isEditMode) {
@@ -61,9 +61,12 @@ export function UserFormModal({
         <RHFInputField
           name="username"
           type="text"
-          placeholder="Username"
-          label="Username"
+          placeholder="Username lowercase)"
+          label="Username (lowercase only)"
           isRequired={true}
+          onChange={e => {
+            setValue('username', e.target.value.toLowerCase());
+          }}
         />
 
         <RHFInputField
@@ -106,6 +109,10 @@ export function UserFormModal({
           placeholder="Password"
           label="Password"
           isRequired={isEditMode ? false : true}
+          minLength={{
+            value: 8,
+            message: 'Password must have at least 8 characters',
+          }}
         />
 
         <div className="mt-2 flex gap-2">
