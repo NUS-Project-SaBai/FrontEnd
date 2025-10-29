@@ -49,7 +49,7 @@ export default function AccountLockedPage() {
 
         {/* Footer */}
         <p className="mt-6 text-center text-sm text-gray-500">
-          Sa&apros;Bai Health System
+          Sa&#x27;Bai Health System
         </p>
       </div>
     </div>

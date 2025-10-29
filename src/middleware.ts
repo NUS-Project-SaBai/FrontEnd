@@ -12,6 +12,9 @@ export async function middleware(req: NextRequest) {
   const authRes = await auth0.middleware(req);
   // authentication routes — let the middleware handle it
   if (req.nextUrl.pathname.startsWith('/auth')) {
+    if (req.nextUrl.searchParams.get('error')) {
+      return NextResponse.redirect(new URL('/account-locked', req.url));
+    }
     return authRes;
   }
 
