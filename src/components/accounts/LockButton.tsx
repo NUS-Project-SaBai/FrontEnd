@@ -20,7 +20,7 @@ export function LockButton({
 
   return (
     <button
-      className={styles.blockButton}
+      className={styles.lockButton}
       onClick={handleClick}
       aria-label={`Lock account for ${user.username}`}
       title={`Lock ${user.nickname || user.username || 'user'} account`}
