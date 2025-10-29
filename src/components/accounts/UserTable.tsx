@@ -1,15 +1,19 @@
 import { User } from '@/types/User';
-import { EyeSlashIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { PencilIcon } from '@heroicons/react/24/outline';
+import { LockButton } from './LockButton';
+import { UnlockButton } from './UnlockButton';
 import styles from './UserTable.module.css';
 
 export function UserTable({
   users,
   onEditUser,
-  onHideUser,
+  onLockAccount,
+  onUnlockAccount,
 }: {
   users: User[];
   onEditUser: (user: User) => void;
-  onHideUser: (user: User) => void;
+  onLockAccount: (user: User) => void;
+  onUnlockAccount: (user: User) => void;
 }) {
   return (
     <div className={styles.container}>
@@ -84,14 +88,11 @@ export function UserTable({
                     >
                       <PencilIcon className={styles.icon} />
                     </button>
-                    <button
-                      onClick={() => onHideUser(u)}
-                      className={styles.hideButton}
-                      aria-label={`Hide user ${u.username}`}
-                      title="Hide user"
-                    >
-                      <EyeSlashIcon className={styles.icon} />
-                    </button>
+                    {u.is_locked ? (
+                      <UnlockButton user={u} onUnlock={onUnlockAccount} />
+                    ) : (
+                      <LockButton user={u} onLock={onLockAccount} />
+                    )}
                   </div>
                 </td>
               </tr>

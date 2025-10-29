@@ -22,7 +22,7 @@ export async function getUserByEmail(email: string): Promise<User[] | null> {
 
 // POST /users  (payload without id/role)
 export async function createUser(
-  payload: Omit<User, 'id' | 'role'>
+  payload: Omit<User, 'id' | 'role' | 'is_locked'>
 ): Promise<{ user: User | null; error: string | null }> {
   return axiosInstance
     .post<User>('/users/', payload)

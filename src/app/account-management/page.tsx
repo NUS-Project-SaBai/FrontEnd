@@ -5,13 +5,15 @@ import { UserTable } from '@/components/accounts/UserTable';
 import { Button } from '@/components/Button';
 import { LoadingPage } from '@/components/LoadingPage';
 import { createUser, getUsers, updateUser } from '@/data/user';
+import { lockUser } from '@/data/user/lockUser';
+import { unlockUser } from '@/data/user/unlockUser';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import type { User } from '@/types/User';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 
-type UserFormValues = Omit<User, 'id'> & {
+type UserFormValues = Omit<User, 'id' | 'is_locked'> & {
   password?: string;
 };
 
@@ -42,15 +44,16 @@ export default function AccountManagement() {
   });
   const { reset, handleSubmit } = useFormReturn;
   const fetchUsers = useCallback(
-    withLoading(async () => {
-      try {
-        const data = await getUsers();
-        setUsers(data);
-      } catch (error) {
-        toast.error('Failed to load users');
-        console.error('Error fetching users:', error);
-      }
-    }),
+    () =>
+      withLoading(async () => {
+        try {
+          const data = await getUsers();
+          setUsers(data);
+        } catch (error) {
+          toast.error('Failed to load users');
+          console.error('Error fetching users:', error);
+        }
+      })(),
     [withLoading]
   );
 
@@ -76,9 +79,30 @@ export default function AccountManagement() {
     });
   };
 
-  // Handle hiding/deactivating user
-  const handleHideUser = async () => {
-    throw new Error('Not implemented yet');
+  // Handle locking user account
+  const handleLockAccount = async (user: User) => {
+    lockUser(user.username)
+      .then(() => {
+        fetchUsers();
+        toast.success(`User ${user.username} account has been locked`);
+      })
+      .catch(error => {
+        console.error(`Failed to lock account for ${user.username}:`, error);
+        toast.error(`Failed to lock account for ${user.username}`);
+      });
+  };
+
+  // Handle unlocking user account
+  const handleUnlockAccount = async (user: User) => {
+    unlockUser(user.username)
+      .then(() => {
+        fetchUsers();
+        toast.success(`User ${user.username} account has been unlocked`);
+      })
+      .catch(error => {
+        console.error(`Failed to unlock account for ${user.username}:`, error);
+        toast.error(`Failed to unlock account for ${user.username}`);
+      });
   };
 
   // Close modal
@@ -155,7 +179,8 @@ export default function AccountManagement() {
         <UserTable
           users={users}
           onEditUser={handleEditUser}
-          onHideUser={handleHideUser}
+          onLockAccount={handleLockAccount}
+          onUnlockAccount={handleUnlockAccount}
         />
 
         <FormProvider {...useFormReturn}>

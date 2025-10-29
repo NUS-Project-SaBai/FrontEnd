@@ -35,8 +35,9 @@ export async function middleware(req: NextRequest) {
  * - _next/image (image optimization files)
  * - favicon.ico, sitemap.xml, robots.txt (metadata files)
  * - login
+ * - account-locked
  */
 export const config = {
   matcher:
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login|account-locked).*)',
 };

@@ -55,7 +55,7 @@
 }
 
 .editButton {
-  @apply inline-flex items-center rounded-md p-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1;
+  @apply mx-0.5 inline-flex items-center rounded-md p-1 text-gray-600 transition-colors hover:bg-slate-200 hover:text-blue-600 hover:ring-2 hover:ring-blue-500 hover:ring-offset-1;
 }
 
 .icon {
@@ -83,9 +83,19 @@
 }
 
 .actionButtons {
-  @apply flex items-center justify-center gap-1;
+  @apply flex items-center justify-center gap-2;
 }
 
-.hideButton {
-  @apply inline-flex items-center rounded-md p-1 text-gray-600 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1;
+.blockButton,
+.unblockButton {
+  @apply inline-flex items-center rounded-md p-1 text-gray-600 transition-colors hover:outline-none hover:ring-2 hover:ring-offset-1;
+}
+
+.blockButton {
+  /* Block button, so it is currently unlocked */
+  @apply text-green-700 hover:bg-red-50 hover:text-red-600 hover:ring-red-500;
+}
+
+.unblockButton {
+  @apply text-red-700 hover:bg-green-50 hover:text-green-600 hover:ring-green-500;
 }
