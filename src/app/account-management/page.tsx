@@ -32,6 +32,10 @@ const EMPTY_USER: UserFormValues = {
 };
 export default function AccountManagement() {
   const [users, setUsers] = useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'locked'>(
+    'all'
+  );
   const { isLoading, withLoading } = useLoadingState(true);
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -166,6 +170,26 @@ export default function AccountManagement() {
     }
   });
 
+  // Filter users based on search query and status
+  const filteredUsers = users.filter(user => {
+    // Status filter
+    if (statusFilter === 'active' && user.is_locked) return false;
+    if (statusFilter === 'locked' && !user.is_locked) return false;
+
+    // Search filter (case-insensitive)
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      const matchesUsername = user.username.toLowerCase().includes(query);
+      const matchesNickname = user.nickname?.toLowerCase().includes(query);
+      const matchesName = user.name?.toLowerCase().includes(query);
+      const matchesEmail = user.email.toLowerCase().includes(query);
+
+      return matchesUsername || matchesNickname || matchesName || matchesEmail;
+    }
+
+    return true;
+  });
+
   return (
     <LoadingPage isLoading={isLoading} message="Loading users...">
       <div className="p-6">
@@ -176,8 +200,34 @@ export default function AccountManagement() {
           <Button text="Add User" colour="green" onClick={handleAddUser} />
         </div>
 
+        {/* Search and Filter Bar */}
+        <div className="mb-4 flex gap-4">
+          <div className="flex-1">
+            <input
+              type="text"
+              placeholder="Search by name, username, or email..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="w-48">
+            <select
+              value={statusFilter}
+              onChange={e =>
+                setStatusFilter(e.target.value as 'all' | 'active' | 'locked')
+              }
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All Users</option>
+              <option value="active">Active</option>
+              <option value="locked">Locked</option>
+            </select>
+          </div>
+        </div>
+
         <UserTable
-          users={users}
+          users={filteredUsers}
           onEditUser={handleEditUser}
           onLockAccount={handleLockAccount}
           onUnlockAccount={handleUnlockAccount}
