@@ -43,7 +43,12 @@ export function ConsultationForm({
       useFormReturn.reset({});
     };
   }, [visitId]);
-  const { control, handleSubmit, reset } = useFormReturn;
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useFormReturn;
 
   const submitConsultationFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -237,7 +242,12 @@ export function ConsultationForm({
           />
           {/* TODO: try to remove prop drilling of patient */}
           <MedicationOrderSection patient={patient} />
-          <Button colour="green" text="Submit" type="submit" />
+          <Button
+            colour="green"
+            text={isSubmitting ? 'Submitting...' : 'Submit'}
+            type="submit"
+            disabled={isSubmitting}
+          />
         </form>
       </FormProvider>
     </div>
