@@ -68,7 +68,6 @@ export function PatientForm({
                 village={field.value}
                 handleVillageChange={field.onChange}
                 required={true}
-                excludeALLOption
                 dropdownClassName={
                   fieldState.error && 'border-l-8 border-red-400'
                 }
