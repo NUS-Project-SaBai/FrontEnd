@@ -82,15 +82,6 @@ export function EditMedicationModal({
                   const handleSubmission = withLoadingSubmit(async () => {
                     // stop if there is no id
                     if (editMedication?.id == null) return;
-                    // parse quantity change
-                    const quantityChange = Number(data.quantity_changed) || 0;
-                    // check if the new total would be negative
-                    if (editMedication.quantity + quantityChange < 0) {
-                      toast.error(
-                        `Cannot decrease by ${Math.abs(quantityChange)}. Current stock is only ${editMedication.quantity}.`
-                      );
-                      return;
-                    }
                     // check if the medicine name already exists on another medicine
                     const curMedName = data.medicine_name.trim().toLowerCase();
                     const matchingMedicine = (await getMedication()).filter(
