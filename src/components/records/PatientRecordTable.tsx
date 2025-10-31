@@ -48,6 +48,26 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
   const lastVisitLabel = getLastVisitLabel(patient.last_visit_date);
 
   async function handleCreateVisit(patient: Patient) {
+    // check if a last visit date exists
+    if (patient.last_visit_date) {
+      const lastVisit = DateTime.fromISO(patient.last_visit_date);
+      const now = DateTime.now();
+      const diff = now.diff(lastVisit);
+
+      // check if the difference is less than 3 hours
+      if (diff < Duration.fromObject({ hours: 3 })) {
+        const timeAgo = lastVisit.toRelative(); // e.g., "2 hours ago"
+        // show a confirmation dialog
+        const isConfirmed = window.confirm(
+          `A visit was created for this patient ${timeAgo}. Are you sure you want to create another one?`
+        );
+
+        // if the user cancels, stop the function
+        if (!isConfirmed) {
+          return;
+        }
+      }
+    }
     withLoading(async () =>
       createVisit(patient).then(() => getPatientById(patient.pk.toString()))
     )().then(freshPatient => {
