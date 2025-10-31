@@ -93,7 +93,7 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
         onMouseLeave={() => setIsHovered(false)}
         role="button"
       >
-        <div className="grid w-full grid-cols-[2fr_1fr_3fr_auto] items-center gap-1 p-1 md:gap-2">
+        <div className="grid w-full grid-cols-[2fr_3fr_auto] items-center gap-1 p-1 md:gap-2">
           <div>
             <p
               className={
@@ -106,28 +106,33 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
             <div className="min-w-5">{patient.name}</div>
             <PatientPhoto pictureUrl={patient.picture_url} />
           </div>
-          <Button
-            text="Create visit"
-            colour="green"
-            onClick={e => {
-              e.stopPropagation();
-              handleCreateVisit(patient);
-            }}
-            onMouseEnter={e => {
-              e.stopPropagation();
-              setIsHovered(false);
-            }}
-            onMouseLeave={() => {
-              setIsHovered(true);
-            }}
-          />
-          <div className="flex flex-col items-center gap-2 rounded-md border p-2 sm:flex-row">
-            <div className="w-[115px]">
-              <p>Last visit:</p>
-              <p>{lastVisitLabel}</p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <Button
+              text="Create visit"
+              colour="green"
+              onClick={e => {
+                e.stopPropagation();
+                handleCreateVisit(patient);
+              }}
+              onMouseEnter={e => {
+                e.stopPropagation();
+                setIsHovered(false);
+              }}
+              onMouseLeave={() => {
+                setIsHovered(true);
+              }}
+            />
+            <div className="flex flex-col items-center gap-2 rounded-md border p-2 sm:flex-row">
+              <div className="w-[115px]">
+                <p>Last visit:</p>
+                <p>{lastVisitLabel}</p>
+              </div>
+              <VitalsButton patient={patient} setIsHovered={setIsHovered} />
+              <ConsultationButton
+                patient={patient}
+                setIsHovered={setIsHovered}
+              />
             </div>
-            <VitalsButton patient={patient} setIsHovered={setIsHovered} />
-            <ConsultationButton patient={patient} setIsHovered={setIsHovered} />
           </div>
           <button className="w-5">
             {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
