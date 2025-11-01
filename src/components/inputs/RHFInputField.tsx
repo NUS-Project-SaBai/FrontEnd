@@ -24,10 +24,12 @@ export function RHFInputField({
 }: RHFInputFieldProps & RegisterOptions) {
   const { register, formState } = useFormContext();
   const curFormErrorState = formState?.errors[name];
-  const inputClassStyle =
+  // let inputClassStyle = "min-w-14 max-w-16 rounded-r-none lg:max-w-28 xl:max-w-38";
+  let inputClassStyle = 'w-[90%] rounded-m';
+  inputClassStyle +=
     curFormErrorState != undefined ? 'border-l-8 border-red-400' : '';
   return (
-    <div className="flex flex-col justify-end">
+    <div className="flex-col justify-end">
       <label htmlFor={name} className="text-sm font-medium">
         {label}
         {isRequired && <span className="text-red-500">*</span>}
