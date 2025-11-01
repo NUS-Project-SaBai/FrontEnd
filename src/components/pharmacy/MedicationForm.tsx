@@ -46,7 +46,7 @@ export function MedicationForm({
           label="Warning Quantity (System will flag out when medication stock falls below this quantity). To remove warning, leave blank or 0."
           name="warning_quantity"
           type="number"
-          isRequired={false}
+          isRequired={true}
           validate={{
             min: val =>
               val == null ||
