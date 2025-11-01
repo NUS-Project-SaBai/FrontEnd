@@ -106,7 +106,7 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
             <div className="min-w-5">{patient.name}</div>
             <PatientPhoto pictureUrl={patient.picture_url} />
           </div>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex flex-col justify-end gap-4 sm:flex-row sm:items-center">
             <Button
               text="Create visit"
               colour="green"
