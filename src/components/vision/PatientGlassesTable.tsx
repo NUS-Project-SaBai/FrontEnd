@@ -47,7 +47,9 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       </td>
       <td>
         {/* vitals */}
-        <Link href={`/vision/add-update-glasses?id=${patient.pk}`}>
+        <Link
+          href={`/vision/add-update-glasses?id=${patient.pk}&visit=${patient.last_visit_id}`}
+        >
           <Button text="Add/Edit" colour="green" />
         </Link>
       </td>
