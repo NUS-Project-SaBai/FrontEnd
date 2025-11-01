@@ -26,3 +26,19 @@ export async function fetchPatientConsultationInfo(visitId: number): Promise<{
     .get(`/patient_consult/?visit_id=${visitId}`)
     .then(res => res.data);
 }
+
+export type AllConsults = Awaited<
+  ReturnType<typeof fetchPatientConsultationInfo>
+>;
+
+export async function fetchAllConsultsByPatientId(
+  patientId: string
+): Promise<AllConsults[]> {
+  const visits = await axiosInstance
+    .get(`/visits/?patient=${patientId}`)
+    .then(res => res.data);
+  const consults = await Promise.all(
+    visits.map((v: { id: number }) => fetchPatientConsultationInfo(v.id))
+  );
+  return consults;
+}
