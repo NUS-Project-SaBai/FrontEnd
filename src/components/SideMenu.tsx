@@ -104,6 +104,15 @@ export function SideMenu() {
             </div>
           </div>
           <div>
+            {userRole === 'admin' && (
+              <NavItem
+                navItem={{
+                  href: '/account-management',
+                  name: 'Account Management',
+                  icon: UserCircleIcon,
+                }}
+              />
+            )}
             <NavItem
               navItem={{
                 href: '/auth/logout',
