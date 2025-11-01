@@ -56,6 +56,7 @@ export function EditMedicationModal({
       code: editMedication?.code || '',
       notes: editMedication?.notes || '',
       quantity_changed: null,
+      warning_quantity: editMedication?.warning_quantity || null,
     },
   });
 
@@ -81,6 +82,15 @@ export function EditMedicationModal({
                   const handleSubmission = withLoadingSubmit(async () => {
                     // stop if there is no id
                     if (editMedication?.id == null) return;
+                    // parse quantity change
+                    const quantityChange = Number(data.quantity_changed) || 0;
+                    // check if the new total would be negative
+                    if (editMedication.quantity + quantityChange < 0) {
+                      toast.error(
+                        `Cannot decrease by ${Math.abs(quantityChange)}. Current stock is only ${editMedication.quantity}.`
+                      );
+                      return;
+                    }
                     // check if the medicine name already exists on another medicine
                     const curMedName = data.medicine_name.trim().toLowerCase();
                     const matchingMedicine = (await getMedication()).filter(
@@ -99,6 +109,7 @@ export function EditMedicationModal({
                       medicine_name: data.medicine_name.trim(),
                       code: data.code.trim(),
                       quantityChange: Number(data.quantity_changed) || 0,
+                      warning_quantity: Number(data.warning_quantity) || null,
                       notes: data.notes as string,
                     };
 

@@ -36,9 +36,8 @@ export default function PharmacyStockPage() {
   return (
     <LoadingPage isLoading={isLoading} message="Loading Medications...">
       <div className="p-2">
-        <h2>Medication Stock</h2>
-        <div>
-          <label htmlFor="search">Search for Medicine</label>
+        <h1>Medication Stock</h1>
+        <div className="flex gap-x-2">
           <input
             id="search"
             type="search"
@@ -50,8 +49,8 @@ export default function PharmacyStockPage() {
               isLoading ? 'Loading Medicine...' : 'Search for Medicine'
             }
           />
+          <AddMedicationModal reloadAllMedications={fetchMedications} />
         </div>
-        <AddMedicationModal />
         <EditMedicationModal reloadAllMedications={fetchMedications} />
         <HistoryMedicationModal />
         <MedicationTable medications={filteredMedications} />

@@ -5,12 +5,21 @@ import { LoadingUI } from '@/components/LoadingUI';
 import { PatientPhoto } from '@/components/PatientPhoto';
 import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { VILLAGES_AND_ALL } from '@/constants';
+import { VillageContext } from '@/context/VillageContext';
 import { patchOrder } from '@/data/order/patchOrder';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { formatDate } from '@/utils/formatDate';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import clsx from 'clsx';
+import {
+  Suspense,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
 
@@ -23,10 +32,11 @@ type OrderRowData = {
   };
   data: {
     orders: {
-      id: number;
+      order_id: number;
       medication_name: string;
       medication_code: string;
       quantity_changed: number;
+      is_low_stock: boolean;
       notes: string;
     }[];
     diagnoses: { category: string; details: string }[];
@@ -41,14 +51,14 @@ export default function OrdersPage() {
     OrderRowData[]
   >([]);
   const { isLoading, withLoading } = useLoadingState(true);
+  const { village } = useContext(VillageContext);
 
+  const fetchPendingOrders = withLoading(async () => {
+    const result = await fetchAllPatientMedicationOrders();
+    setOrderRowData(result);
+    setFilteredOrderRowData(result);
+  });
   useEffect(() => {
-    const fetchPendingOrders = withLoading(async () => {
-      const result = await fetchAllPatientMedicationOrders();
-      setOrderRowData(result);
-      setFilteredOrderRowData(result);
-    });
-
     fetchPendingOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -59,7 +69,15 @@ export default function OrdersPage() {
         <h1>Orders</h1>
         <Suspense>
           <PatientSearchbar
-            data={orderRowData}
+            data={useMemo(
+              () =>
+                orderRowData.filter(
+                  x =>
+                    village == VillagePrefix.ALL ||
+                    x.patient.village_prefix == village
+                ),
+              [orderRowData, village]
+            )}
             setFilteredItems={setFilteredOrderRowData}
             filterFunction={useCallback(
               (query: string) => (item: OrderRowData) =>
@@ -96,7 +114,7 @@ export default function OrdersPage() {
                   <OrderRow
                     key={x.patient?.patient_id || index}
                     orderRowData={x}
-                    removeNonPendingOrder={() => {}}
+                    removeNonPendingOrder={fetchPendingOrders}
                   />
                 ))
               )}
@@ -172,9 +190,17 @@ function OrderRow({
               {orders.map((o, i) => (
                 <div
                   key={i}
-                  className="flex justify-between p-1.5 text-sm text-gray-700 hover:bg-slate-100"
+                  className={clsx(
+                    'flex justify-between p-1.5 text-sm text-gray-700 hover:bg-slate-100', // base styling
+                    o.is_low_stock && 'bg-red-100' // highlight if low stock
+                  )}
                 >
                   <div>
+                    {o.is_low_stock && (
+                      <p className="mb-1.5 font-bold text-red-600">
+                        Warning: Low Stock!
+                      </p>
+                    )}
                     <p>
                       <b>{o.medication_name}: </b>
                       {Math.abs(o.quantity_changed)}
@@ -190,13 +216,13 @@ function OrderRow({
                   </div>
                   <ApproveRejectOrderButton
                     handleApproveOrder={async () => {
-                      await patchOrder(o.id.toString(), 'APPROVED')
-                        .then(() => removeNonPendingOrder(o.id))
+                      await patchOrder(o.order_id.toString(), 'APPROVED')
+                        .then(() => removeNonPendingOrder(o.order_id))
                         .catch(err => onPatchError(err, o.medication_name));
                     }}
                     handleCancelOrder={async () => {
-                      await patchOrder(o.id.toString(), 'CANCELLED')
-                        .then(() => removeNonPendingOrder(o.id))
+                      await patchOrder(o.order_id.toString(), 'CANCELLED')
+                        .then(() => removeNonPendingOrder(o.order_id))
                         .catch(err => onPatchError(err, o.medication_name));
                     }}
                   />
@@ -222,7 +248,7 @@ function ApproveRejectOrderButton({
   return isUpdating ? (
     <LoadingUI message={actionStr} />
   ) : (
-    <div>
+    <div className="flex items-center gap-2">
       <Button
         text=""
         colour="green"

@@ -43,7 +43,13 @@ export function ConsultationForm({
       useFormReturn.reset({});
     };
   }, [visitId]);
-  const { control, handleSubmit, reset } = useFormReturn;
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useFormReturn;
+  const referredFor = useFormReturn.watch('referred_for');
 
   const submitConsultationFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -106,7 +112,7 @@ export function ConsultationForm({
 
         // only submit the form if 'referred_for' is filled in and is not 'Not Referred'
         if ('referred_for' in referralPayload) {
-          if (referralPayload['referred_for'] !== '') {
+          if (referralPayload['referred_for'] !== 'Not Referred') {
             if (!('referral_notes' in referralPayload)) {
               referralPayload['referral_notes'] = 'No notes entered';
             }
@@ -138,6 +144,8 @@ export function ConsultationForm({
       }
     )();
   };
+  const showReferralNotes = referredFor && referredFor !== 'Not Referred';
+
   return (
     <div className="h-full rounded-lg bg-blue-100 p-2 shadow-sm">
       <h3>Doctor&apos;s Consult Form</h3>
@@ -177,7 +185,7 @@ export function ConsultationForm({
                 ensureFilled: (
                   val: { details: string; category: string }[]
                 ) => {
-                  if (val.length === 0)
+                  if (!val || val.length === 0)
                     return 'At least one diagnosis is required';
                   if (
                     val.some(
@@ -203,6 +211,7 @@ export function ConsultationForm({
             label="Referral for (optional)"
             omitDefaultPrompt={true}
             options={[
+              //use empty string '' for "Not Referred"
               { value: 'Not Referred', label: 'Not Referred' },
               { value: 'Diagnostic', label: 'Diagnositic' },
               { value: 'Acute', label: 'Acute' },
@@ -217,18 +226,15 @@ export function ConsultationForm({
               },
             ]}
           />
-          {useFormReturn.watch('referred_for') === '' || (
+          {showReferralNotes && (
             <RHFInputField
               name="referral_notes"
               label="Referral Notes"
               type="textarea"
               placeholder="Type your referral notes here..."
-              isRequired={
-                useFormReturn.watch('referred_for') !== 'Not Referred'
-              }
+              isRequired={useFormReturn.watch('referred_for') !== ''}
             />
           )}
-
           <RHFInputField
             name="remarks"
             label="Remarks"
@@ -237,7 +243,12 @@ export function ConsultationForm({
           />
           {/* TODO: try to remove prop drilling of patient */}
           <MedicationOrderSection patient={patient} />
-          <Button colour="green" text="Submit" type="submit" />
+          <Button
+            colour="green"
+            text={isSubmitting ? 'Submitting...' : 'Submit'}
+            type="submit"
+            disabled={isSubmitting}
+          />
         </form>
       </FormProvider>
     </div>

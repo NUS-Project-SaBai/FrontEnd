@@ -1,6 +1,6 @@
 'use client';
 import { HTMLInputTypeAttribute } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { RegisterOptions, useFormContext } from 'react-hook-form';
 
 type RHFInputFieldProps = {
   name: string;
@@ -8,6 +8,8 @@ type RHFInputFieldProps = {
   type: HTMLInputTypeAttribute | 'textarea';
   placeholder?: string;
   isRequired?: boolean;
+  min?: string;
+  max?: string;
 };
 
 export function RHFInputField({
@@ -16,7 +18,10 @@ export function RHFInputField({
   type,
   placeholder = '',
   isRequired = false,
-}: RHFInputFieldProps) {
+  min,
+  max,
+  ...registerOptions
+}: RHFInputFieldProps & RegisterOptions) {
   const { register, formState } = useFormContext();
   const curFormErrorState = formState?.errors[name];
   const inputClassStyle =
@@ -33,10 +38,10 @@ export function RHFInputField({
           rows={4}
           {...register(name, {
             required: { message: `Empty Field: ${label}`, value: isRequired },
+            ...registerOptions,
           })}
           name={name}
           id={name}
-          placeholder={placeholder}
         />
       ) : (
         <input
@@ -56,11 +61,14 @@ export function RHFInputField({
                 return true;
               },
             },
+            ...registerOptions,
           })}
           id={name}
           name={name}
           type={type}
           placeholder={placeholder}
+          min={min}
+          max={max}
           onWheel={e => {
             // don't modify behaviour when the input is not focused
             if (e.target != document.activeElement) return;

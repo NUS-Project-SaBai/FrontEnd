@@ -6,11 +6,16 @@ import { createMedicine } from '@/data/medication/createMedication';
 import { getMedication } from '@/data/medication/getMedications';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-export function AddMedicationModal() {
+export function AddMedicationModal({
+  reloadAllMedications,
+}: {
+  reloadAllMedications: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
   const { isLoading: isSubmitting, withLoading } = useLoadingState(false);
@@ -54,6 +59,7 @@ export function AddMedicationModal() {
               medicine_name: data.medicine_name.toString().trim(),
               code: data.code.toString().trim(),
               quantity: data.quantity_changed as number,
+              warning_quantity: data.warning_quantity as number,
               notes: data.notes as string,
             };
 
@@ -61,6 +67,7 @@ export function AddMedicationModal() {
             toast.success(`Added Medicine: ${med.medicine_name}`);
             useFormReturn.reset({});
             clearLocalStorageData();
+            reloadAllMedications();
             closeModal();
           });
 
@@ -79,8 +86,9 @@ export function AddMedicationModal() {
   return (
     <>
       <Button
-        text="Add New Medicine"
+        text="Add"
         colour="green"
+        Icon={<PlusIcon className="h-5 w-5" />}
         onClick={() => setIsOpen(true)}
       />
       <Modal

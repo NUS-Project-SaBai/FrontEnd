@@ -12,6 +12,9 @@ export async function middleware(req: NextRequest) {
   const authRes = await auth0.middleware(req);
   // authentication routes — let the middleware handle it
   if (req.nextUrl.pathname.startsWith('/auth')) {
+    if (req.nextUrl.searchParams.get('error') == 'access_denied') {
+      return NextResponse.redirect(new URL('/account-locked', req.url));
+    }
     return authRes;
   }
 
@@ -35,8 +38,9 @@ export async function middleware(req: NextRequest) {
  * - _next/image (image optimization files)
  * - favicon.ico, sitemap.xml, robots.txt (metadata files)
  * - login
+ * - account-locked
  */
 export const config = {
   matcher:
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login|account-locked).*)',
 };

@@ -7,6 +7,7 @@ import { WebcamInput } from '@/components/inputs/WebcamInput';
 import { LoadingUI } from '@/components/LoadingUI';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -53,6 +54,8 @@ export function PatientForm({
             label="Date of Birth"
             type="date"
             isRequired={true}
+            min={DateTime.now().minus({ years: 150 }).toFormat('yyyy-MM-dd')}
+            max={DateTime.now().toFormat('yyyy-MM-dd')}
           />
           <Controller
             name="village_prefix"
@@ -68,7 +71,6 @@ export function PatientForm({
                 village={field.value}
                 handleVillageChange={field.onChange}
                 required={true}
-                excludeALLOption
                 dropdownClassName={
                   fieldState.error && 'border-l-8 border-red-400'
                 }

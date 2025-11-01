@@ -2,7 +2,10 @@
 import { axiosInstance } from '@/lib/axiosInstance';
 import { Medication } from '@/types/Medication';
 
-type PatchMedication = Pick<Medication, 'medicine_name' | 'notes'> & {
+type PatchMedication = Pick<
+  Medication,
+  'medicine_name' | 'notes' | 'warning_quantity'
+> & {
   quantityChange: number;
 };
 export async function patchMedicine(

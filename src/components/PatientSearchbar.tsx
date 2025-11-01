@@ -56,7 +56,7 @@ export function PatientSearchbar<T>({
   }, 500);
 
   return (
-    <div className="flex flex-grow gap-x-2">
+    <div className="flex flex-grow items-end gap-x-2">
       <VillageOptionDropdown
         village={village}
         handleVillageChange={setVillage}
@@ -64,7 +64,7 @@ export function PatientSearchbar<T>({
       />
       <div className="flex-grow">
         <label htmlFor="patientSearch" className="block">
-          Input Patient ID/Name to search
+          Type Patient ID/Name
         </label>
         <div className="flex h-[40px] flex-grow flex-row items-center rounded-lg border-2 border-gray-300 disabled:bg-gray-200">
           {cancelFilteringByFace && filteringByFace && (

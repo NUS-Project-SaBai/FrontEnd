@@ -2,6 +2,7 @@
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientSearchInputByReferral } from '@/components/referrals/PatientSearchbarByReferral';
 import { ReferralCard } from '@/components/referrals/ReferralCard';
+import { getPdfConsult } from '@/data/consult/getPdfConsult';
 import { ReferralWithDetails } from '@/data/referrals/getReferrals';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Suspense, useState } from 'react';
@@ -43,6 +44,16 @@ export default function ReferralPage() {
                 referral={referral.referral}
                 patient={referral.patient}
                 date={referral.date}
+                onGeneratePDF={() => {
+                  console.log('Generate referral pdf button pressed');
+                  getPdfConsult(referral.referral.consult).then(payload => {
+                    console.log('Referral payload: ', payload);
+                    if (payload == null) return;
+                    const url = URL.createObjectURL(payload);
+                    window.open(url, '_blank');
+                  });
+                  return;
+                }}
               />
             ))}
           </tbody>

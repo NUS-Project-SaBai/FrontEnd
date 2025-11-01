@@ -32,7 +32,7 @@ export function PatientDetails({
     {
       label: 'Age',
       value: (
-        <div className="text-lg">
+        <div className="lg:text-lg">
           <span className="font-bold">{age.year}</span>
           <span>Y </span>
           <span className="font-bold">{age.month}</span>
@@ -49,13 +49,9 @@ export function PatientDetails({
   ];
 
   return (
-    <div className="m-2 grid flex-1 gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(175px,1fr))]">
+    <div className="m-2 grid flex-1 gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
       {fieldArray.map(({ label, value }) => (
-        <DisplayField
-          key={label}
-          label={label}
-          content={value || 'NOT FILLED'}
-        />
+        <DisplayField key={label} label={label} content={value || '-'} />
       ))}
       {showFullDetailsButton && (
         <div className="h-full w-full content-end">

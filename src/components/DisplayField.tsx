@@ -14,7 +14,7 @@ export function DisplayField({
       </label>
       <div
         className={
-          'min-h-[40px] w-full rounded-md p-1.5 text-gray-600 shadow-sm ' +
+          'w-full rounded-md p-1.5 text-gray-600 shadow-sm ' +
           (highlight || 'bg-gray-200')
         }
       >
