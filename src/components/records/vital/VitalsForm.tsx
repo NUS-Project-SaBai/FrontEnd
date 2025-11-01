@@ -26,6 +26,9 @@ export function VitalsForm({
   const { handleSubmit, reset, watch } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
 
+  const gridStyle = (minWidth: number) =>
+    `m-2 grid flex-1 gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(${minWidth}px,1fr))]`;
+
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).
   const heightToUse =
@@ -58,10 +61,11 @@ export function VitalsForm({
     <FormProvider {...useFormReturn}>
       <form
         onSubmit={submitVitalsFormHandler}
-        className="rounded-lg bg-blue-50 p-4"
+        className="max-w-[1000px] rounded-lg bg-blue-50 p-4"
       >
         <h2>Height & Weight</h2>
-        <div className="flex flex-wrap justify-between gap-x-1">
+        {/* <div className="flex flex-wrap justify-start gap-x-1"> */}
+        <div className={gridStyle(100)}>
           <RHFUnitInputField
             name="height"
             label="Height"
@@ -82,7 +86,8 @@ export function VitalsForm({
           />
         </div>
         <h2>Blood Pressure</h2>
-        <div className="flex flex-wrap justify-between gap-x-1">
+        {/* <div className="flex flex-wrap justify-start gap-x-1"> */}
+        <div className={gridStyle(100)}>
           <RHFUnitInputField
             name="systolic"
             label="Systolic"
@@ -114,34 +119,40 @@ export function VitalsForm({
           placeholder={curVital.temperature}
         />
         <h2>Visual Acuity</h2>
-        <div className="grids-col-1 grid gap-2 md:grid-cols-2">
-          <RHFInputField
-            name="right_eye_degree"
-            label="Right Eye (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVital.right_eye_degree}
-          />
-          <RHFInputField
-            name="left_eye_degree"
-            label="Left Eye (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVital.left_eye_degree}
-          />
-          <RHFInputField
-            name="right_eye_pinhole"
-            label="Right Eye Pinhole (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVital.right_eye_pinhole}
-          />
-          <RHFInputField
-            name="left_eye_pinhole"
-            label="Left Eye Pinhole (Fraction eg. 6/6)"
-            type="text"
-            placeholder={curVital.left_eye_pinhole}
-          />
+        {/* <div className="grids-col-1 grid gap-2 md:grid-cols-2"> */}
+        <div className={gridStyle(150)}>
+          <div className="grid grid-cols-2">
+            <RHFInputField
+              name="right_eye_degree"
+              label="Right Eye (eg. 6/6)"
+              type="text"
+              placeholder={curVital.right_eye_degree}
+            />
+            <RHFInputField
+              name="left_eye_degree"
+              label="Left Eye (eg. 6/6)"
+              type="text"
+              placeholder={curVital.left_eye_degree}
+            />
+          </div>
+          <div className="grid grid-cols-2">
+            <RHFInputField
+              name="right_eye_pinhole"
+              label="Right Eye Pinhole (eg. 6/6)"
+              type="text"
+              placeholder={curVital.right_eye_pinhole}
+            />
+            <RHFInputField
+              name="left_eye_pinhole"
+              label="Left Eye Pinhole (eg. 6/6)"
+              type="text"
+              placeholder={curVital.left_eye_pinhole}
+            />
+          </div>
         </div>
         <h2>STAT Investigations</h2>
-        <div className="grids-col-1 grid gap-2 md:grid-cols-2">
+        {/* <div className="grids-col-1 grid gap-2 md:grid-cols-2"> */}
+        <div className={gridStyle(150)}>
           <RHFInputField
             name="urine_test"
             label="Urine Dip Test"
