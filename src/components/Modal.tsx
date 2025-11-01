@@ -46,6 +46,7 @@ export function Modal({
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
           padding: 0,
           margin: 'auto',
+          width: '90%',
           maxHeight: '90vh',
           overflow: 'hidden',
           display: 'flex',

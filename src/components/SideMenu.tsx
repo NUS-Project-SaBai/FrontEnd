@@ -1,7 +1,9 @@
 'use client';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import { getUserByEmail } from '@/data/user';
 import { useUser } from '@auth0/nextjs-auth0';
+
 import {
   ArrowLeftStartOnRectangleIcon,
   ArrowTrendingUpIcon,
@@ -14,7 +16,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 type HeroIconType = React.ComponentType<React.ComponentProps<'svg'>>;
 type NavItemData = {
@@ -52,6 +54,14 @@ const navItems: NavItemData[] = [
 
 export function SideMenu() {
   const { user } = useUser();
+  const [userRole, setUserRole] = useState<string>('member');
+  useEffect(() => {
+    if (user?.email) {
+      getUserByEmail(user.email).then(user => {
+        setUserRole(user?.[0].role || 'member');
+      });
+    }
+  }, [user?.email]);
   const { village, setVillage } = useContext(VillageContext);
   return (
     <div className="flex h-full min-w-[205px] flex-col bg-gray-900 text-gray-400">
@@ -75,7 +85,17 @@ export function SideMenu() {
       </div>
 
       <div className="h-full" />
-      <div>
+
+      <div className="mt-auto">
+        {userRole === 'admin' && (
+          <NavItem
+            navItem={{
+              href: '/account-management',
+              name: 'Account Management',
+              icon: UserCircleIcon,
+            }}
+          />
+        )}
         <NavItem
           navItem={{
             href: '/auth/logout',
@@ -85,7 +105,7 @@ export function SideMenu() {
         />
         <div className="flex space-x-2 p-4">
           <UserCircleIcon className="h-6 w-6" />
-          <p>{user?.name}</p>
+          <p>{user?.nickname}</p>
         </div>
       </div>
     </div>
