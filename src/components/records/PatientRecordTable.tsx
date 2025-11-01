@@ -8,9 +8,10 @@ import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { useToggle } from '@/hooks/useToggle';
 import { Patient } from '@/types/Patient';
-import { ChevronDownIcon } from '@heroicons/react/16/solid';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/16/solid';
 import { DateTime, Duration } from 'luxon';
 import Link from 'next/link';
+import type { Dispatch, SetStateAction } from 'react';
 import { useContext, useEffect, useState } from 'react';
 
 export function PatientRecordTable({
@@ -92,22 +93,22 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
         onMouseLeave={() => setIsHovered(false)}
         role="button"
       >
-        <div className="flex w-full flex-row items-center p-1">
-          <div
-            className={
-              'flex-[2] font-semibold ' +
-              VILLAGES_AND_ALL[patient.village_prefix].color
-            }
-          >
-            {patient.patient_id}
-          </div>
-          <div className="flex-[3]">
+        <div className="grid w-full grid-cols-[2fr_3fr_auto] items-center gap-1 p-1 md:gap-2">
+          <div>
+            <p
+              className={
+                'font-semibold ' +
+                VILLAGES_AND_ALL[patient.village_prefix].color
+              }
+            >
+              {patient.patient_id}
+            </p>
+            <div className="min-w-5">{patient.name}</div>
             <PatientPhoto pictureUrl={patient.picture_url} />
           </div>
-          <div className="flex-[8]">{patient.name}</div>
-          <div className="flex flex-row items-center gap-2">
+          <div className="flex flex-col justify-end gap-4 sm:flex-row sm:items-center">
             <Button
-              text="Create new visit"
+              text="Create visit"
               colour="green"
               onClick={e => {
                 e.stopPropagation();
@@ -121,38 +122,21 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
                 setIsHovered(true);
               }}
             />
-            <div className="flex flex-1 items-center gap-2 rounded-md border p-2">
+            <div className="flex flex-col items-center gap-2 rounded-md border p-2 sm:flex-row">
               <div className="w-[115px]">
                 <p>Last visit:</p>
                 <p>{lastVisitLabel}</p>
               </div>
-              <Link
-                href={`/records/patient-vitals?id=${patient.pk}&visit=${patient.last_visit_id}`}
-                onClick={e => e.stopPropagation()}
-                onMouseEnter={e => {
-                  e.stopPropagation();
-                  setIsHovered(false);
-                }}
-                onMouseLeave={() => setIsHovered(true)}
-              >
-                <Button text="Vitals" colour="red" />
-              </Link>
-              <Link
-                href={`/records/patient-consultation?id=${patient.pk}&visit=${patient.last_visit_id}`}
-                onClick={e => e.stopPropagation()}
-                onMouseEnter={e => {
-                  e.stopPropagation();
-                  setIsHovered(false);
-                }}
-                onMouseLeave={() => setIsHovered(true)}
-              >
-                <Button text="Consultation" colour="indigo" />
-              </Link>
+              <VitalsButton patient={patient} setIsHovered={setIsHovered} />
+              <ConsultationButton
+                patient={patient}
+                setIsHovered={setIsHovered}
+              />
             </div>
-            <button className="w-5">
-              <ChevronDownIcon />
-            </button>
           </div>
+          <button className="w-5">
+            {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
+          </button>
         </div>
         {isExpanded && (
           <div className="mt-2 flex w-full flex-row items-center">
@@ -187,4 +171,48 @@ function getLastVisitLabel(lastVisitDate: string): string {
             hour12: true,
           })
         : lastVisitDateLuxon.toLocaleString(DateTime.DATE_MED);
+}
+
+function VitalsButton({
+  patient,
+  setIsHovered,
+}: {
+  patient: Patient;
+  setIsHovered: Dispatch<SetStateAction<boolean>>;
+}) {
+  return (
+    <Link
+      href={`/records/patient-vitals?id=${patient.pk}&visit=${patient.last_visit_id}`}
+      onClick={e => e.stopPropagation()}
+      onMouseEnter={e => {
+        e.stopPropagation();
+        setIsHovered(false);
+      }}
+      onMouseLeave={() => setIsHovered(true)}
+    >
+      <Button text="Vitals" colour="red" />
+    </Link>
+  );
+}
+
+function ConsultationButton({
+  patient,
+  setIsHovered,
+}: {
+  patient: Patient;
+  setIsHovered: Dispatch<SetStateAction<boolean>>;
+}) {
+  return (
+    <Link
+      href={`/records/patient-consultation?id=${patient.pk}&visit=${patient.last_visit_id}`}
+      onClick={e => e.stopPropagation()}
+      onMouseEnter={e => {
+        e.stopPropagation();
+        setIsHovered(false);
+      }}
+      onMouseLeave={() => setIsHovered(true)}
+    >
+      <Button text="Consultation" colour="indigo" />
+    </Link>
+  );
 }

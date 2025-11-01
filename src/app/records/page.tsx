@@ -108,8 +108,8 @@ export default function RecordPage() {
   return (
     <div className="flex h-full flex-col overflow-auto">
       <h1 className="-mb-2">Patients</h1>
-      <div className="z-1 sticky top-0 bg-white p-2 drop-shadow-lg">
-        <div className="flex gap-x-2">
+      <div className="z-1 sticky top-0 w-full bg-white p-2 drop-shadow-lg">
+        <div className="flex w-full flex-col gap-2 sm:flex-row">
           <Suspense>
             <PatientSearchbar
               data={faceFilteredPatients ?? allPatients}
@@ -124,7 +124,7 @@ export default function RecordPage() {
               )}
             />
           </Suspense>
-          <div className="flex h-[40px] gap-2 self-end">
+          <div className="flex h-[40px] gap-2 sm:self-end">
             <FormProvider {...useFormReturn}>
               <NewPatientModal
                 onSubmit={onPatientRegistrationFormSubmit}

@@ -72,9 +72,9 @@ const COLOUR_MAP: Record<
 };
 
 const SIZE_MAP: Record<NonNullable<ButtonProps['size']>, string> = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-5 py-3 text-base',
+  sm: 'px-2 py-0.5 md:px-3 sm:py-1.5 text-sm',
+  md: 'px-3 py-1.5 md:px-4 md:py-2 text-sm',
+  lg: 'px-4 py-2 md:px-5 md:py-3 text-base',
 };
 
 export function Button({
