@@ -5,13 +5,21 @@ import { LoadingUI } from '@/components/LoadingUI';
 import { PatientPhoto } from '@/components/PatientPhoto';
 import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { VILLAGES_AND_ALL } from '@/constants';
+import { VillageContext } from '@/context/VillageContext';
 import { patchOrder } from '@/data/order/patchOrder';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { formatDate } from '@/utils/formatDate';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import clsx from 'clsx';
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import {
+  Suspense,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
 
@@ -43,14 +51,14 @@ export default function OrdersPage() {
     OrderRowData[]
   >([]);
   const { isLoading, withLoading } = useLoadingState(true);
+  const { village } = useContext(VillageContext);
 
+  const fetchPendingOrders = withLoading(async () => {
+    const result = await fetchAllPatientMedicationOrders();
+    setOrderRowData(result);
+    setFilteredOrderRowData(result);
+  });
   useEffect(() => {
-    const fetchPendingOrders = withLoading(async () => {
-      const result = await fetchAllPatientMedicationOrders();
-      setOrderRowData(result);
-      setFilteredOrderRowData(result);
-    });
-
     fetchPendingOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -61,7 +69,15 @@ export default function OrdersPage() {
         <h1>Orders</h1>
         <Suspense>
           <PatientSearchbar
-            data={orderRowData}
+            data={useMemo(
+              () =>
+                orderRowData.filter(
+                  x =>
+                    village == VillagePrefix.ALL ||
+                    x.patient.village_prefix == village
+                ),
+              [orderRowData, village]
+            )}
             setFilteredItems={setFilteredOrderRowData}
             filterFunction={useCallback(
               (query: string) => (item: OrderRowData) =>
@@ -98,7 +114,7 @@ export default function OrdersPage() {
                   <OrderRow
                     key={x.patient?.patient_id || index}
                     orderRowData={x}
-                    removeNonPendingOrder={() => {}}
+                    removeNonPendingOrder={fetchPendingOrders}
                   />
                 ))
               )}
