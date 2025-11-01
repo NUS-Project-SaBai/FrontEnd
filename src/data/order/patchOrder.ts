@@ -13,6 +13,8 @@ export async function patchOrder(
     })
     .then(val => val.data)
     .catch(err => {
-      return err.response?.data?.error || 'Failed to update order status';
+      throw new Error(
+        err.response?.data?.error || 'Failed to update order status'
+      );
     });
 }
