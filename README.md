@@ -5,7 +5,7 @@
    - For Mac/Linux: Refer to the GitHub on how to install [node version manager (GitHub)](https://github.com/nvm-sh/nvm)
    - For Windows: Refer to the Github [nvm-windows (Github)](https://github.com/coreybutler/nvm-windows/releases) and download nvm-setup.exe under "Assets"
 
-2. The latest version of `node.js` does not work with Project Sabai anymore at the time of writing. Instead, the latest working version seems to be `24.11.0`. If not, use `20.17.0` as specified in [package.json](package.json).
+2. At the time of writing, Project Sabai no longer works with the latest version of `node.js`. Instead, the latest working version seems to be `24.11.0`. If not, use `20.17.0` as specified in [package.json](package.json).
 
    ```bash
    # Install the latest version of node.js
