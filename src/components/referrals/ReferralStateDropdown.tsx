@@ -3,8 +3,15 @@ import { getConsultByID } from '@/data/consult/getConsult';
 import { patchReferral } from '@/data/referrals/patchReferral';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Referral } from '@/types/Referral';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 
 export function ReferralStateDropdown({ referral }: { referral: Referral }) {
   const referralState = [
@@ -24,23 +31,23 @@ export function ReferralStateDropdown({ referral }: { referral: Referral }) {
     const fetchConsults = async () => {
       getConsultByID(referral.consult.toString())
         .then(() => {
-          setReferralStatus(referral.referral_state);
+          setReferralStatus(referral.referral_state || 'None');
         })
         .catch(e => console.log(e));
     };
     fetchConsults();
-  }, []);
+  }, [referral.consult, referral.referral_state]);
 
-  function dropdownChanged(e: ChangeEvent<HTMLSelectElement>) {
+  function dropdownChanged(value: string) {
     const patch = withLoading(async () => {
       const payload = {
-        referral_state: e.target.value,
+        referral_state: value,
       };
       await patchReferral(payload, referral.id.toString());
     });
     patch()
       .then(() => {
-        setReferralStatus(e.target.value);
+        setReferralStatus(value);
         toast.success('Updated successfully!');
       })
       .catch(() => toast.error('Failed to update'));
@@ -53,19 +60,22 @@ export function ReferralStateDropdown({ referral }: { referral: Referral }) {
       ) : isLoading ? (
         <LoadingUI message="Updating" />
       ) : (
-        <select
-          name="status"
-          id="status"
-          defaultValue={referralStatus}
-          onChange={e => dropdownChanged(e)}
-          className="w-full rounded border-2 border-black p-1"
-        >
-          {referralState.map(status => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </select>
+        <Select value={referralStatus} onValueChange={dropdownChanged}>
+          <SelectTrigger
+            name="status"
+            id="status"
+            className="w-full rounded border-2 border-black bg-white text-gray-900"
+          >
+            <SelectValue placeholder="Select status..." />
+          </SelectTrigger>
+          <SelectContent>
+            {referralState.map(status => (
+              <SelectItem key={status} value={status}>
+                {status}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       )}
     </div>
   );
