@@ -20,9 +20,11 @@ export function PatientRecordTable({
   displayedPatients: Patient[];
 }) {
   return (
-    <div className="flex-1 content-center">
+    <div className="flex-1">
       {displayedPatients.length === 0 ? (
-        <div className="text-center">No patients found!</div>
+        <div className="flex h-full items-center justify-center">
+          <p>No patients found!</p>
+        </div>
       ) : (
         displayedPatients.map(patient => (
           <PatientRecordRow key={patient.pk} patient={patient} />
