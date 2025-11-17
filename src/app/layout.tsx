@@ -21,7 +21,7 @@ export default function RootLayout({
         <VillageProvider>
           <PatientListProvider>
             <body
-              className="vsc-initialized flex h-screen flex-col md:flex-row" /* add vsc-initialized to fix hydration error triggered by the Video Speed Controller Chrome extension https://stackoverflow.com/a/53400956/7577786 */
+              className="vsc-initialized flex h-screen flex-col overflow-hidden md:flex-row" /* add vsc-initialized to fix hydration error triggered by the Video Speed Controller Chrome extension https://stackoverflow.com/a/53400956/7577786 */
             >
               <SideMenu />
               <Toaster

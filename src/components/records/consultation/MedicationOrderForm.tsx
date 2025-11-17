@@ -84,6 +84,18 @@ export function MedicationOrderForm({
   const selectedMedicationId =
     useFormReturn.watch('medication').split(' ', 1)[0] || '';
 
+  //find the medicine selected (code to find is being repeated many times, can consider
+  //replacing with this const if safe)
+  const selectedMedication =
+    medications.find(med => med.id.toString() === selectedMedicationId) || null;
+
+  //watch the user input quantity
+  const quantityInputByUser = useFormReturn.watch('quantity');
+  const exceedsStockNow =
+    selectedMedication != null &&
+    !Number.isNaN(quantityInputByUser) &&
+    Number(quantityInputByUser) > selectedMedication.quantity;
+
   const onOrderSubmit: FormEventHandler = e => {
     e.preventDefault();
     e.stopPropagation();
@@ -169,12 +181,25 @@ export function MedicationOrderForm({
                       )
                 }
               />
-              <RHFInputField
-                name="quantity"
-                label="Quantity to Order"
-                type="number"
-                isRequired={true}
-              />
+              <div
+                className={
+                  exceedsStockNow ? 'rounded-md p-2 ring-2 ring-red-500' : 'p-2'
+                }
+              >
+                <RHFInputField
+                  name="quantity"
+                  label="Quantity to Order"
+                  type="number"
+                  isRequired={true}
+                />
+                {exceedsStockNow && (
+                  <p className="mt-1 text-sm text-red-600">
+                    Quantity exceeds available stock (
+                    {selectedMedication?.quantity ?? 0} in stock). You may need
+                    to wait a while for the order to go through.
+                  </p>
+                )}
+              </div>
             </div>
             <RHFInputField
               type="textarea"

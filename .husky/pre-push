@@ -1,15 +1,37 @@
 #!/bin/bash
-# Prevents force-pushing to master
+# Prevents force-pushing to main or dev
 
 printf "===\nPre-push Hook: Checking branch name\n"
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-PROTECTED_BRANCHES="^\(main\)"
+PROTECTED_BRANCHES="^\(main\|dev\)"
 
 if expr $BRANCH : $PROTECTED_BRANCHES >/dev/null; then
   printf "🚫 Cannot push to remote %s branch, please create your own branch and use PR.\n" $BRANCH && exit 1
 fi
 
-printf ">> Finish checking branch name\n==="
+printf ">> Finish checking branch name\n===\n"
+
+printf "Running TypeScript type checks...\n"
+pnpm exec tsc --noEmit
+if [ $? -ne 0 ]; then
+  printf "❌ TypeScript type check failed. Push aborted.\n"
+  exit 1
+fi
+
+printf "Running linting and formatting...\n"
+pnpm exec lint-staged
+LINT_EXIT_CODE=$?
+
+if [ $LINT_EXIT_CODE -ne 0 ]; then
+  printf "\n⚠️  Linting/formatting issues detected.\n"
+  read -p "Do you want to continue with the push? (y/N): " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    printf "❌ Push aborted.\n"
+    exit 1
+  fi
+  printf "✅ Continuing with push...\n"
+fi
 
 exit 0

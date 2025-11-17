@@ -21,9 +21,15 @@ export function PatientRecordTable({
 }) {
   return (
     <div className="flex-1">
-      {displayedPatients.map(patient => (
-        <PatientRecordRow key={patient.pk} patient={patient} />
-      ))}
+      {displayedPatients.length === 0 ? (
+        <div className="flex h-full items-center justify-center">
+          <p>No patients found!</p>
+        </div>
+      ) : (
+        displayedPatients.map(patient => (
+          <PatientRecordRow key={patient.pk} patient={patient} />
+        ))
+      )}
     </div>
   );
 }

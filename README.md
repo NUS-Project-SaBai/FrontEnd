@@ -1,40 +1,42 @@
-# Project SaBai Front-End
-
-## Installation
+# Frontend setup
 
 1. Installation of Node Version Manager
 
    - For Mac/Linux: Refer to the GitHub on how to install [node version manager (GitHub)](https://github.com/nvm-sh/nvm)
    - For Windows: Refer to the Github [nvm-windows (Github)](https://github.com/coreybutler/nvm-windows/releases) and download nvm-setup.exe under "Assets"
-   - `nvm install node` to install the latest version of node.js
-   - Verify that you have installed node correctly `node -v`
-   - Verify that you have `npm` by typing in `npm -v`
 
-2. Installation of pnpm <https://pnpm.io/installation>
-   Next, install PNPM by following the following instructions:
+2. At the time of writing, Project Sabai no longer works with the latest version of `node.js`. Instead, the latest working version seems to be `24.11.0`. If not, use `20.17.0` as specified in [package.json](package.json).
+
+   ```bash
+   # Install the latest version of node.js
+   nvm install 24.11.0
+   # Verify that you have installed node correctly
+   node -v
+   # Verify npm is installed
+   npm -v
+   ```
+
+3. Installation of pnpm <https://pnpm.io/installation>:
+
+   Next, install pnpm:
 
    ```bash
    # Installing pnpm
    npm install -g pnpm
    # Verify installation
    pnpm --version
+
    ```
 
-   Note: If you are converting from yarn to pnpm, then you will need to do the following
-
-   1. Delete the current `node_modules`
-   2. Run `pnpm i`
-
-3. Environmental Setup
+4. Environmental Setup
 
    Create a new `.env` and fill it with relevant details under the "FRONTEND" heading in the _"Key Credentials"_ document.
 
-4. Installation of project libraries
+5. Installation of project libraries
+
+   Note: If you are converting from yarn to pnpm, you will need to delete the existing `node_modules` folder.
 
    ```bash
-   git clone https://github.com/NUS-Project-SaBai/FrontEnd
-   # Change Directory into the FrontEnd folder
-   cd FrontEnd
    # Install the necessary libraries for the project
    pnpm i
    # Run the development server. Ensure backend server is already running
@@ -45,7 +47,7 @@
 
    Log into localhost with the credentials in the "Key Credentials" document.
 
-## Technology used
+# Technology used
 
 1. Node Version Manager [https://github.com/nvm-sh/nvm]
 2. Node.js [https://nodejs.org/en]
