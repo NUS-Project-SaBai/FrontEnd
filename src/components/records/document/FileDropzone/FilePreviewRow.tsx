@@ -32,7 +32,14 @@ export function FilePreviewRow({
   };
 
   return (
-    <tr key={`${fileItem.file.name}`} className="text-sm hover:bg-gray-50">
+    <tr
+      key={`${fileItem.file.name}`}
+      className={
+        fileItem.isDuplicated
+          ? 'bg-red-100 text-sm hover:bg-red-200'
+          : 'text-sm hover:bg-gray-50'
+      }
+    >
       <td>
         {isEditing ? (
           <div className="flex items-center gap-2">

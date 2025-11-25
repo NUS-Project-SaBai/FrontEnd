@@ -1,11 +1,13 @@
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import toast from 'react-hot-toast';
 import { FilePreviewTable } from './FilePreviewTable';
+import { useEffect } from 'react';
 
 export type FileItem = {
   file: FileWithPath;
   fileName: string;
   fileExt: string | undefined;
+  isDuplicated: boolean;
 };
 export function FileDropzone({
   files,
@@ -14,14 +16,26 @@ export function FileDropzone({
   files: FileItem[];
   setFiles: (file: FileItem[]) => void;
 }) {
+  const checkAndMarkDuplicates = (files: FileItem[]): FileItem[] => {
+    const nameCount: Record<string, number> = {};
+    files.forEach(file => {
+      const fullName = file.fileName + (file.fileExt ? '.' + file.fileExt : '');
+      nameCount[fullName] = (nameCount[fullName] || 0) + 1;
+    });
+    files.forEach(file => {
+      const fullName = file.fileName + (file.fileExt ? '.' + file.fileExt : '');
+      file.isDuplicated = nameCount[fullName] > 1;
+    });
+    return files;
+  };
   const { getRootProps, getInputProps } = useDropzone({
     onDrop(acceptedFiles) {
-      const duplicatedFiles = files.filter(file =>
-        acceptedFiles.some(newFile => newFile.name === file.fileName)
+      const duplicatedFiles = acceptedFiles.filter(file =>
+        files.some(f => f.fileName + '.' + f.fileExt === file.name)
       );
       if (duplicatedFiles.length > 0) {
         toast.error(
-          `Duplicate file names detected. Please rename them before uploading: \n\n ${duplicatedFiles.map(f => f.fileName).join(', ')}`,
+          `Duplicate file names detected. Please rename them before uploading: \n\n ${duplicatedFiles.map(f => f.name).join(', ')}`,
           { duration: 8000 }
         );
       }
@@ -32,21 +46,24 @@ export function FileDropzone({
           ? file.name.slice(0, file.name.lastIndexOf('.'))
           : file.name,
         fileExt: file.type.split('/')[1] || undefined,
+        isDuplicated: false,
       }));
 
-      setFiles([...files, ...newFileItems]);
+      setFiles(checkAndMarkDuplicates([...files, ...newFileItems]));
     },
   });
   const handleRename = (index: number, newName: string) => {
     setFiles(
-      files.map((item, i) =>
-        i === index ? { ...item, fileName: newName } : item
+      checkAndMarkDuplicates(
+        files.map((item, i) =>
+          i === index ? { ...item, fileName: newName } : item
+        )
       )
     );
   };
 
   const handleRemove = (index: number) => {
-    setFiles(files.filter((_, i) => i !== index));
+    setFiles(checkAndMarkDuplicates(files.filter((_, i) => i !== index)));
   };
 
   return (

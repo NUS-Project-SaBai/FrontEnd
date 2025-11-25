@@ -82,7 +82,11 @@ export function UploadDocument({
                       toast.error('Error uploading file:\n' + err);
                     }
                   },
-                  () => toast.error('Invalid/Missing File/input')
+                  errors => {
+                    toast.error(
+                      errors.files?.message || 'Invalid/Missing Files'
+                    );
+                  }
                 )
               )();
             }}
@@ -91,6 +95,24 @@ export function UploadDocument({
               {...useFormReturn.control}
               name="files"
               defaultValue={[]}
+              rules={{
+                validate: {
+                  duplicateCheck: val => {
+                    if (
+                      val.some((fileItem: FileItem) => fileItem.isDuplicated)
+                    ) {
+                      return 'Please ensure there are no duplicate file names.';
+                    }
+                    return true;
+                  },
+                  required: val => {
+                    if (val.length === 0) {
+                      return 'Please upload at least one file.';
+                    }
+                    return true;
+                  },
+                },
+              }}
               render={({ field: { value, onChange } }) => (
                 <FileDropzone files={value} setFiles={onChange} />
               )}
