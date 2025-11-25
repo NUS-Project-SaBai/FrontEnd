@@ -1,7 +1,6 @@
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import toast from 'react-hot-toast';
 import { FilePreviewTable } from './FilePreviewTable';
-import { useEffect } from 'react';
 
 export type FileItem = {
   file: FileWithPath;
@@ -29,6 +28,18 @@ export function FileDropzone({
     return files;
   };
   const { getRootProps, getInputProps } = useDropzone({
+    maxSize: 1048576 * 10, // 10 MB, don't allow too large files. Storage is limited.
+    onDropRejected(fileRejections, event) {
+      fileRejections.forEach(rejection => {
+        rejection.errors.forEach(err => {
+          if (err.code === 'file-too-large') {
+            toast.error(
+              `File "${rejection.file.name}" is too large!\nMaximum size is 10 MB.`
+            );
+          }
+        });
+      });
+    },
     onDrop(acceptedFiles) {
       const duplicatedFiles = acceptedFiles.filter(file =>
         files.some(f => f.fileName + '.' + f.fileExt === file.name)

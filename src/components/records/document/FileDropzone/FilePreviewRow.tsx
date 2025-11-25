@@ -69,7 +69,15 @@ export function FilePreviewRow({
         )}
       </td>
       <td className="whitespace-nowrap">
-        {(fileItem.file.size / 1024).toFixed(2)} KB
+        {(() => {
+          const bytes = fileItem.file.size;
+          const kb = bytes / 1024;
+          if (kb >= 1000) {
+            return `${(kb / 1024).toFixed(2)} MB`;
+          } else {
+            return `${kb.toFixed(2)} KB`;
+          }
+        })()}
       </td>
       <td>
         <div className="flex items-center justify-center gap-2">

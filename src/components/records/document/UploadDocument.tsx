@@ -48,34 +48,28 @@ export function UploadDocument({
               withLoading(
                 useFormReturn.handleSubmit(
                   async vals => {
-                    const file = vals.files[0];
-
                     const currentDate = DateTime.now().toFormat('yyyy-MM-dd');
                     const patientIdentifier = patient.patient_id;
-                    const documentName: string = '';
-                    // vals.file_name == ''
-                    //   ? file.name
-                    //   : vals.file_name +
-                    //     file.name.slice(file.name.lastIndexOf('.'));
-
-                    const labeledDocumentName = [
-                      patientIdentifier,
-                      currentDate,
-                      documentName,
-                    ].join('_');
+                    const commonPrefix = patientIdentifier + '_' + currentDate;
 
                     const formData = new FormData();
-                    formData.append('file', file.file, labeledDocumentName);
-                    formData.append('file_name', labeledDocumentName);
+                    vals.files.forEach(fileItem => {
+                      formData.append(
+                        'files',
+                        fileItem.file,
+                        commonPrefix +
+                          '_' +
+                          fileItem.fileName +
+                          (fileItem.fileExt ? '.' + fileItem.fileExt : '')
+                      );
+                    });
                     formData.append('patient_pk', patient.pk.toString());
 
                     try {
-                      await postUpload(formData);
+                      const message = await postUpload(formData);
                       useFormReturn.reset();
                       closeModal();
-                      toast.success(
-                        'File uploaded successfully as \n' + labeledDocumentName
-                      );
+                      toast.success(message);
                       onUploadSuccess();
                     } catch (err) {
                       console.log(err);
