@@ -4,6 +4,7 @@ import {
   PencilIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import { useState } from 'react';
 import { FileItem } from './FileDropzone';
 
@@ -48,9 +49,16 @@ export function FilePreviewRow({
             <p className="font-mono">.{fileItem.fileExt}</p>
           </div>
         ) : (
-          <p className="font-mono">
-            {fileItem.fileName}.{fileItem.fileExt}
-          </p>
+          <Link
+            title="Preview document in new tab"
+            href={URL.createObjectURL(fileItem.file)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <p className="font-mono text-blue-500 underline">
+              {fileItem.fileName}.{fileItem.fileExt}
+            </p>
+          </Link>
         )}
       </td>
       <td className="whitespace-nowrap">
