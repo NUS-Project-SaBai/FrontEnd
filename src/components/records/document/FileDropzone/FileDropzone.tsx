@@ -1,11 +1,11 @@
 import { FileWithPath, useDropzone } from 'react-dropzone';
-import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FilePreviewTable } from './FilePreviewTable';
 
 export type FileItem = {
   file: FileWithPath;
   fileName: string;
+  fileExt: string | undefined;
 };
 export function FileDropzone({
   files,
@@ -28,7 +28,10 @@ export function FileDropzone({
 
       const newFileItems = acceptedFiles.map(file => ({
         file,
-        fileName: file.name,
+        fileName: file.name.endsWith('.'.concat(file.type.split('/')[1]))
+          ? file.name.slice(0, file.name.lastIndexOf('.'))
+          : file.name,
+        fileExt: file.type.split('/')[1] || undefined,
       }));
 
       setFiles([...files, ...newFileItems]);

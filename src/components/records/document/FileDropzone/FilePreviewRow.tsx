@@ -5,21 +5,20 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { FileItem } from './FileDropzone';
 
 export function FilePreviewRow({
-  file,
-  displayName,
+  fileItem,
   onRename,
   onRemove,
 }: {
-  file: File;
-  displayName: string;
+  fileItem: FileItem;
   onRename: (newName: string) => void;
   onRemove: () => void;
 }) {
   const ICON_CLASS_STYLE = 'h-5 w-5';
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(displayName);
+  const [editName, setEditName] = useState(fileItem.fileName);
 
   const handleSave = () => {
     onRename(editName);
@@ -27,29 +26,36 @@ export function FilePreviewRow({
   };
 
   const handleCancel = () => {
-    setEditName(displayName);
+    setEditName(fileItem.fileName);
     setIsEditing(false);
   };
 
   return (
-    <tr key={`${file.name}`} className="text-sm hover:bg-gray-50">
+    <tr key={`${fileItem.file.name}`} className="text-sm hover:bg-gray-50">
       <td>
         {isEditing ? (
-          <input
-            type="text"
-            value={editName}
-            onChange={e => setEditName(e.target.value)}
-            className="w-full rounded border px-2 py-1 font-mono"
-            onKeyDown={e => {
-              if (e.key === 'Enter') handleSave();
-              if (e.key === 'Escape') handleCancel();
-            }}
-          />
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={editName}
+              onChange={e => setEditName(e.target.value)}
+              className="w-full rounded border px-2 py-1 font-mono"
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleSave();
+                if (e.key === 'Escape') handleCancel();
+              }}
+            />
+            <p className="font-mono">.{fileItem.fileExt}</p>
+          </div>
         ) : (
-          <p className="font-mono">{displayName}</p>
+          <p className="font-mono">
+            {fileItem.fileName}.{fileItem.fileExt}
+          </p>
         )}
       </td>
-      <td className="whitespace-nowrap">{(file.size / 1024).toFixed(2)} KB</td>
+      <td className="whitespace-nowrap">
+        {(fileItem.file.size / 1024).toFixed(2)} KB
+      </td>
       <td>
         <div className="flex items-center justify-center gap-2">
           {isEditing ? (

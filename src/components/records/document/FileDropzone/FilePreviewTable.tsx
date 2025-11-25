@@ -15,17 +15,16 @@ export function FilePreviewTable({
       <table className="w-full">
         <thead className="sticky top-0 z-10 bg-gray-100 text-left text-sm font-medium text-gray-700">
           <tr>
-            <th>File Name</th>
-            <th>Size</th>
-            <th>Actions</th>
+            <th className="w-8/12">File Name</th>
+            <th className="w-2/12">Size</th>
+            <th className="w-2/12">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
           {fileItems.map((item, index) => (
             <FilePreviewRow
               key={`${item.file.name}-${index}`}
-              file={item.file}
-              displayName={item.fileName}
+              fileItem={item}
               onRename={newName => onRename(index, newName)}
               onRemove={() => onRemove(index)}
             />
