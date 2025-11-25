@@ -1,7 +1,15 @@
-import { FileWithPath } from 'react-dropzone';
+import { FileItem } from './FileDropzone';
 import { FilePreviewRow } from './FilePreviewRow';
 
-export function FilePreviewTable({ files }: { files: FileWithPath[] }) {
+export function FilePreviewTable({
+  fileItems,
+  onRename,
+  onRemove,
+}: {
+  fileItems: FileItem[];
+  onRename: (index: number, newName: string) => void;
+  onRemove: (index: number) => void;
+}) {
   return (
     <div className="max-h-[calc(100vh-28rem)] overflow-y-auto rounded-lg border-2 border-gray-300">
       <table className="w-full">
@@ -13,8 +21,14 @@ export function FilePreviewTable({ files }: { files: FileWithPath[] }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {files.map((file, index) => (
-            <FilePreviewRow key={`${file.name}`} file={file} />
+          {fileItems.map((item, index) => (
+            <FilePreviewRow
+              key={`${item.file.name}-${index}`}
+              file={item.file}
+              displayName={item.fileName}
+              onRename={newName => onRename(index, newName)}
+              onRemove={() => onRemove(index)}
+            />
           ))}
         </tbody>
       </table>

@@ -1,30 +1,100 @@
-import { PencilIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowUturnLeftIcon,
+  CheckIcon,
+  PencilIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
-export function FilePreviewRow({ file }: { file: File }) {
+export function FilePreviewRow({
+  file,
+  displayName,
+  onRename,
+  onRemove,
+}: {
+  file: File;
+  displayName: string;
+  onRename: (newName: string) => void;
+  onRemove: () => void;
+}) {
   const ICON_CLASS_STYLE = 'h-5 w-5';
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(displayName);
+
+  const handleSave = () => {
+    onRename(editName);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditName(displayName);
+    setIsEditing(false);
+  };
 
   return (
     <tr key={`${file.name}`} className="text-sm hover:bg-gray-50">
       <td>
-        <p className="font-mono">{file.name}</p>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editName}
+            onChange={e => setEditName(e.target.value)}
+            className="w-full rounded border px-2 py-1 font-mono"
+            onKeyDown={e => {
+              if (e.key === 'Enter') handleSave();
+              if (e.key === 'Escape') handleCancel();
+            }}
+          />
+        ) : (
+          <p className="font-mono">{displayName}</p>
+        )}
       </td>
       <td className="whitespace-nowrap">{(file.size / 1024).toFixed(2)} KB</td>
       <td>
         <div className="flex items-center justify-center gap-2">
-          <button
-            type="button"
-            className="rounded p-2 text-blue-500 transition-colors hover:bg-blue-50"
-            aria-label="Edit file name"
-          >
-            <PencilIcon className={ICON_CLASS_STYLE} />
-          </button>
-          <button
-            type="button"
-            className="rounded p-2 text-red-500 transition-colors hover:bg-red-50"
-            aria-label="Remove file"
-          >
-            <XMarkIcon className={ICON_CLASS_STYLE} />
-          </button>
+          {isEditing ? (
+            <>
+              <button
+                type="button"
+                className="rounded p-2 text-green-500 transition-colors hover:bg-green-50"
+                aria-label="Save file name"
+                title="Save file name"
+                onClick={handleSave}
+              >
+                <CheckIcon className={ICON_CLASS_STYLE} />
+              </button>
+              <button
+                type="button"
+                className="rounded p-2 text-red-500 transition-colors hover:bg-red-50"
+                aria-label="Cancel edit"
+                title="Cancel edit"
+                onClick={handleCancel}
+              >
+                <ArrowUturnLeftIcon className={ICON_CLASS_STYLE} />
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="rounded p-2 text-blue-500 transition-colors hover:bg-blue-50"
+                aria-label="Edit file name"
+                title="Edit file name"
+                onClick={() => setIsEditing(true)}
+              >
+                <PencilIcon className={ICON_CLASS_STYLE} />
+              </button>
+              <button
+                type="button"
+                className="rounded p-2 text-red-500 transition-colors hover:bg-red-50"
+                aria-label="Remove file"
+                title="Remove file"
+                onClick={onRemove}
+              >
+                <XMarkIcon className={ICON_CLASS_STYLE} />
+              </button>
+            </>
+          )}
         </div>
       </td>
     </tr>

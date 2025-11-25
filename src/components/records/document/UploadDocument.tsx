@@ -2,7 +2,10 @@
 import { Button } from '@/components/Button';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
-import { FileDropzone } from '@/components/records/document/FileDropzone/FileDropzone';
+import {
+  FileDropzone,
+  FileItem,
+} from '@/components/records/document/FileDropzone/FileDropzone';
 import { postUpload } from '@/data/fileUpload/postUpload';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
@@ -20,7 +23,7 @@ export function UploadDocument({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
-  const useFormReturn = useForm({});
+  const useFormReturn = useForm<{ files: FileItem[] }>({});
 
   const { isLoading, withLoading } = useLoadingState(false);
 
@@ -45,15 +48,15 @@ export function UploadDocument({
               withLoading(
                 useFormReturn.handleSubmit(
                   async vals => {
-                    const file = vals.file[0];
+                    const file = vals.files[0];
 
                     const currentDate = DateTime.now().toFormat('yyyy-MM-dd');
                     const patientIdentifier = patient.patient_id;
-                    const documentName: string =
-                      vals.file_name == ''
-                        ? file.name
-                        : vals.file_name +
-                          file.name.slice(file.name.lastIndexOf('.'));
+                    const documentName: string = '';
+                    // vals.file_name == ''
+                    //   ? file.name
+                    //   : vals.file_name +
+                    //     file.name.slice(file.name.lastIndexOf('.'));
 
                     const labeledDocumentName = [
                       patientIdentifier,
@@ -62,7 +65,7 @@ export function UploadDocument({
                     ].join('_');
 
                     const formData = new FormData();
-                    formData.append('file', file, labeledDocumentName);
+                    formData.append('file', file.file, labeledDocumentName);
                     formData.append('file_name', labeledDocumentName);
                     formData.append('patient_pk', patient.pk.toString());
 
@@ -86,7 +89,7 @@ export function UploadDocument({
           >
             <Controller
               {...useFormReturn.control}
-              name="file_name"
+              name="files"
               defaultValue={[]}
               render={({ field: { value, onChange } }) => (
                 <FileDropzone files={value} setFiles={onChange} />

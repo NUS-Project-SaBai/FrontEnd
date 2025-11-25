@@ -1,28 +1,51 @@
 import { FileWithPath, useDropzone } from 'react-dropzone';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FilePreviewTable } from './FilePreviewTable';
+
+export type FileItem = {
+  file: FileWithPath;
+  fileName: string;
+};
 export function FileDropzone({
   files,
   setFiles,
 }: {
-  files: FileWithPath[];
-  setFiles: (file: FileWithPath[]) => void;
+  files: FileItem[];
+  setFiles: (file: FileItem[]) => void;
 }) {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    onDrop(acceptedFiles, fileRejections, event) {
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop(acceptedFiles) {
       const duplicatedFiles = files.filter(file =>
-        acceptedFiles.some(newFile => newFile.name === file.name)
+        acceptedFiles.some(newFile => newFile.name === file.fileName)
       );
       if (duplicatedFiles.length > 0) {
         toast.error(
-          `Duplicate file names detected. Please rename them before uploading: \n\n ${duplicatedFiles.map(f => f.name).join(', ')}`,
+          `Duplicate file names detected. Please rename them before uploading: \n\n ${duplicatedFiles.map(f => f.fileName).join(', ')}`,
           { duration: 8000 }
         );
       }
 
-      setFiles([...files, ...acceptedFiles]);
+      const newFileItems = acceptedFiles.map(file => ({
+        file,
+        fileName: file.name,
+      }));
+
+      setFiles([...files, ...newFileItems]);
     },
   });
+  const handleRename = (index: number, newName: string) => {
+    setFiles(
+      files.map((item, i) =>
+        i === index ? { ...item, fileName: newName } : item
+      )
+    );
+  };
+
+  const handleRemove = (index: number) => {
+    setFiles(files.filter((_, i) => i !== index));
+  };
+
   return (
     <section className="space-y-4">
       {files.length > 0 && (
@@ -30,7 +53,11 @@ export function FileDropzone({
           <h3 className="font-semibold text-gray-700">
             Selected Files ({files.length})
           </h3>
-          <FilePreviewTable files={files} />
+          <FilePreviewTable
+            fileItems={files}
+            onRename={handleRename}
+            onRemove={handleRemove}
+          />
         </div>
       )}
 
