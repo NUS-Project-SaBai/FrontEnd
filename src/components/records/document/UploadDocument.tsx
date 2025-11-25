@@ -96,7 +96,7 @@ export function UploadDocument({
               )}
             />
 
-            <div className="py-2">
+            <div className="flex gap-2 py-2">
               <Button text="Close" colour="red" onClick={closeModal} />
               {isLoading ? (
                 <LoadingUI message="Uploading Document..." />
