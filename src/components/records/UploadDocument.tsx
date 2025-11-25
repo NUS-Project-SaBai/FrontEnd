@@ -1,14 +1,14 @@
 'use client';
 import { Button } from '@/components/Button';
-import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
+import { FileDropzone } from '@/components/records/FileDropzone';
 import { postUpload } from '@/data/fileUpload/postUpload';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 export function UploadDocument({
@@ -84,13 +84,15 @@ export function UploadDocument({
               )();
             }}
           >
-            <RHFInputField
-              name="file"
-              label="File to Upload"
-              type="file"
-              isRequired={true}
+            <Controller
+              {...useFormReturn.control}
+              name="file_name"
+              defaultValue={[]}
+              render={({ field: { value, onChange } }) => (
+                <FileDropzone files={value} setFiles={onChange} />
+              )}
             />
-            <RHFInputField name="file_name" label="File Name" type="text" />
+
             <Button text="Close" colour="red" onClick={closeModal} />
             {isLoading ? (
               <LoadingUI message="Uploading Document..." />
