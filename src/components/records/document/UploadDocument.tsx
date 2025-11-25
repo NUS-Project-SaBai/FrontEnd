@@ -2,7 +2,7 @@
 import { Button } from '@/components/Button';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
-import { FileDropzone } from '@/components/records/FileDropzone';
+import { FileDropzone } from '@/components/records/document/FileDropzone/FileDropzone';
 import { postUpload } from '@/data/fileUpload/postUpload';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
@@ -93,12 +93,14 @@ export function UploadDocument({
               )}
             />
 
-            <Button text="Close" colour="red" onClick={closeModal} />
-            {isLoading ? (
-              <LoadingUI message="Uploading Document..." />
-            ) : (
-              <Button text="Upload" colour="green" type="submit" />
-            )}
+            <div className="py-2">
+              <Button text="Close" colour="red" onClick={closeModal} />
+              {isLoading ? (
+                <LoadingUI message="Uploading Document..." />
+              ) : (
+                <Button text="Upload" colour="green" type="submit" />
+              )}
+            </div>
           </form>
         </FormProvider>
       </Modal>

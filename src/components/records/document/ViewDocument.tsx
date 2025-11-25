@@ -63,12 +63,7 @@ export function ViewDocument({
             No documents found.
           </div>
         ) : (
-          <table className="w-full table-fixed divide-y divide-gray-400 text-left">
-            <colgroup>
-              <col className="w-1/2" />
-              <col className="w-1/4" />
-              <col className="w-1/4" />
-            </colgroup>
+          <table className="w-full table-fixed divide-y divide-gray-800 text-left">
             <thead>
               <tr>
                 <th className="px-2 py-1">File Name</th>

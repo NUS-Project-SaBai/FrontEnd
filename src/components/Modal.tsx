@@ -37,7 +37,8 @@ export function Modal({
       onRequestClose={onRequestClose}
       ariaHideApp={ariaHideApp}
       className={`${sizeClasses[size]} ${className}`}
-      overlayClassName="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center"
+      overlayClassName="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center overflow-y-auto"
+      shouldCloseOnOverlayClick={false}
       style={{
         content: {
           backgroundColor: 'white',

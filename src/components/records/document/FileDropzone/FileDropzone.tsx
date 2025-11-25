@@ -1,5 +1,6 @@
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import toast from 'react-hot-toast';
+import { FilePreviewTable } from './FilePreviewTable';
 export function FileDropzone({
   files,
   setFiles,
@@ -23,20 +24,25 @@ export function FileDropzone({
     },
   });
   return (
-    <section>
-      {files.map(file => (
-        <div key={file.name}>
-          <strong>File:</strong> {file.name} - {file.size} bytes
+    <section className="space-y-4">
+      {files.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="font-semibold text-gray-700">
+            Selected Files ({files.length})
+          </h3>
+          <FilePreviewTable files={files} />
         </div>
-      ))}
+      )}
+
       <div
         {...getRootProps()}
-        className="rounded-sm border-2 border-dashed border-gray-300 bg-gray-100 p-8 hover:cursor-pointer"
+        className="cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-4 text-center shadow-md transition-colors hover:border-gray-400 hover:bg-gray-100"
       >
         <input {...getInputProps({})} />
-        <p className="text-center text-gray-500">
-          Drag and drop files here, or click here to select file
+        <p className="text-gray-600">
+          Drag and drop files here, or click to select files
         </p>
+        <p className="mt-1 text-sm text-gray-500">Multiple files supported</p>
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 'use client';
 import { PatientPhoto } from '@/components/PatientPhoto';
-import { UploadDocument } from '@/components/records/UploadDocument';
-import { ViewDocument } from '@/components/records/ViewDocument';
+import { UploadDocument } from '@/components/records/document/UploadDocument';
+import { ViewDocument } from '@/components/records/document/ViewDocument';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { Patient } from '@/types/Patient';
