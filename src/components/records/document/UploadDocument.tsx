@@ -64,6 +64,9 @@ export function UploadDocument({
                       );
                     });
                     formData.append('patient_pk', patient.pk.toString());
+                    vals.files.forEach(fileItem => {
+                      formData.append('descriptions', fileItem.description);
+                    });
 
                     try {
                       const message = await postUpload(formData);

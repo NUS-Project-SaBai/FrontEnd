@@ -8,6 +8,7 @@ export type FileItem = {
   fileName: string;
   fileExt: string | undefined;
   isDuplicated: boolean;
+  description: string;
 };
 export function FileDropzone({
   files,
@@ -69,6 +70,7 @@ export function FileDropzone({
               : file.name,
           fileExt: file.type.split('/')[1] || undefined,
           isDuplicated: false,
+          description: '',
         }))
       );
 
@@ -81,6 +83,14 @@ export function FileDropzone({
         files.map((item, i) =>
           i === index ? { ...item, fileName: newName } : item
         )
+      )
+    );
+  };
+
+  const handleDescriptionChange = (index: number, newDescription: string) => {
+    setFiles(
+      files.map((item, i) =>
+        i === index ? { ...item, description: newDescription } : item
       )
     );
   };
@@ -99,6 +109,7 @@ export function FileDropzone({
           <FilePreviewTable
             fileItems={files}
             onRename={handleRename}
+            onDescriptionChange={handleDescriptionChange}
             onRemove={handleRemove}
           />
         </div>

@@ -4,10 +4,12 @@ import { FilePreviewRow } from './FilePreviewRow';
 export function FilePreviewTable({
   fileItems,
   onRename,
+  onDescriptionChange,
   onRemove,
 }: {
   fileItems: FileItem[];
   onRename: (index: number, newName: string) => void;
+  onDescriptionChange: (index: number, newDescription: string) => void;
   onRemove: (index: number) => void;
 }) {
   return (
@@ -26,6 +28,9 @@ export function FilePreviewTable({
               key={`${item.file.name}-${index}`}
               fileItem={item}
               onRename={newName => onRename(index, newName)}
+              onDescriptionChange={newDescription =>
+                onDescriptionChange(index, newDescription)
+              }
               onRemove={() => onRemove(index)}
             />
           ))}

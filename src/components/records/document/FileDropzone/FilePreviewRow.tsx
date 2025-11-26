@@ -11,23 +11,28 @@ import { FileItem } from './FileDropzone';
 export function FilePreviewRow({
   fileItem,
   onRename,
+  onDescriptionChange,
   onRemove,
 }: {
   fileItem: FileItem;
   onRename: (newName: string) => void;
+  onDescriptionChange: (newDescription: string) => void;
   onRemove: () => void;
 }) {
   const ICON_CLASS_STYLE = 'h-5 w-5';
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(fileItem.fileName);
+  const [editDescription, setEditDescription] = useState(fileItem.description);
 
   const handleSave = () => {
     onRename(editName);
+    onDescriptionChange(editDescription);
     setIsEditing(false);
   };
 
   const handleCancel = () => {
     setEditName(fileItem.fileName);
+    setEditDescription(fileItem.description);
     setIsEditing(false);
   };
 
@@ -40,32 +45,44 @@ export function FilePreviewRow({
           : 'text-sm hover:bg-gray-50'
       }
     >
-      <td>
+      <td className="py-3">
         {isEditing ? (
-          <div className="flex items-center gap-2">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={editName}
+                onChange={e => setEditName(e.target.value)}
+                className="w-full rounded border px-2 py-1 font-mono"
+              />
+              <p className="font-mono">.{fileItem.fileExt}</p>
+            </div>
             <input
               type="text"
-              value={editName}
-              onChange={e => setEditName(e.target.value)}
-              className="w-full rounded border px-2 py-1 font-mono"
-              onKeyDown={e => {
-                if (e.key === 'Enter') handleSave();
-                if (e.key === 'Escape') handleCancel();
-              }}
+              value={editDescription}
+              onChange={e => setEditDescription(e.target.value)}
+              className="w-full rounded border px-2 py-1 text-sm"
+              placeholder="Add description..."
             />
-            <p className="font-mono">.{fileItem.fileExt}</p>
           </div>
         ) : (
-          <Link
-            title="Preview document in new tab"
-            href={URL.createObjectURL(fileItem.file)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <p className="font-mono text-blue-500 underline">
-              {fileItem.fileName}.{fileItem.fileExt}
-            </p>
-          </Link>
+          <div className="space-y-1">
+            <Link
+              title="Preview document in new tab"
+              href={URL.createObjectURL(fileItem.file)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <p className="font-mono text-blue-500 underline">
+                {fileItem.fileName}.{fileItem.fileExt}
+              </p>
+            </Link>
+            {fileItem.description ? (
+              <p className="text-sm text-gray-700">{fileItem.description}</p>
+            ) : (
+              <p className="text-sm italic text-gray-400">No description</p>
+            )}
+          </div>
         )}
       </td>
       <td className="whitespace-nowrap">
@@ -86,8 +103,8 @@ export function FilePreviewRow({
               <button
                 type="button"
                 className="rounded p-2 text-green-500 transition-colors hover:bg-green-50"
-                aria-label="Save file name"
-                title="Save file name"
+                aria-label="Save changes"
+                title="Save changes"
                 onClick={handleSave}
               >
                 <CheckIcon className={ICON_CLASS_STYLE} />
@@ -107,8 +124,8 @@ export function FilePreviewRow({
               <button
                 type="button"
                 className="rounded p-2 text-blue-500 transition-colors hover:bg-blue-50"
-                aria-label="Edit file name"
-                title="Edit file name"
+                aria-label="Edit file"
+                title="Edit file"
                 onClick={() => setIsEditing(true)}
               >
                 <PencilIcon className={ICON_CLASS_STYLE} />

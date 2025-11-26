@@ -24,17 +24,21 @@ export function ViewDocument({
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newFileName, setNewFileName] = useState('');
+  const [newDescription, setNewDescription] = useState('');
 
-  // handle the rename action
-  const handleRename = async (documentId: number) => {
+  const handleEdits = async (documentId: number) => {
     try {
-      const updated = await patchUpload(documentId, { file_name: newFileName });
+      const updated = await patchUpload(documentId, {
+        file_name: newFileName,
+        description: newDescription,
+      });
       setDocuments(ds =>
         ds.map(d => (d.id === documentId && updated ? updated : d))
       );
       setEditingId(null);
       setNewFileName('');
-      toast.success('Document renamed');
+      setNewDescription('');
+      toast.success('Document updated');
     } catch (err: unknown) {
       console.error('patchUploadName failed:', err);
       let message = 'Unknown error';
@@ -44,7 +48,7 @@ export function ViewDocument({
       } else if (err instanceof Error) {
         message = err.message;
       }
-      toast.error(`Failed to rename document: ${message}`);
+      toast.error(`Failed to update document: ${message}`);
     }
   };
 
@@ -87,23 +91,44 @@ export function ViewDocument({
             <tbody className="divide-y divide-gray-200">
               {documents.map(doc => (
                 <tr key={doc.id}>
-                  <td className="px-2 py-1">
+                  <td className="px-2 py-3">
                     {editingId === doc.id ? (
-                      <input
-                        type="text"
-                        value={newFileName}
-                        onChange={e => setNewFileName(e.target.value)}
-                        className="w-full rounded border px-2 py-1"
-                      />
+                      <div className="space-y-2">
+                        <input
+                          type="text"
+                          value={newFileName}
+                          onChange={e => setNewFileName(e.target.value)}
+                          className="w-full rounded border px-2 py-1"
+                          placeholder="File name"
+                        />
+                        <input
+                          type="text"
+                          value={newDescription}
+                          onChange={e => setNewDescription(e.target.value)}
+                          className="w-full rounded border px-2 py-1 text-sm"
+                          placeholder="Add description..."
+                        />
+                      </div>
                     ) : (
-                      <Link
-                        href={doc.file_path || doc.offline_file || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 underline"
-                      >
-                        {doc.file_name}
-                      </Link>
+                      <div className="space-y-1">
+                        <Link
+                          href={doc.file_path || doc.offline_file || '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline"
+                        >
+                          {doc.file_name}
+                        </Link>
+                        {doc.description ? (
+                          <p className="text-sm text-gray-600">
+                            {doc.description}
+                          </p>
+                        ) : (
+                          <p className="text-sm italic text-gray-400">
+                            No description
+                          </p>
+                        )}
+                      </div>
                     )}
                   </td>
                   <td className="px-2 py-1">
@@ -115,7 +140,7 @@ export function ViewDocument({
                         <Button
                           text="Save"
                           colour="green"
-                          onClick={() => handleRename(doc.id)}
+                          onClick={() => handleEdits(doc.id)}
                         />
                         <Button
                           text="Cancel"
@@ -123,6 +148,7 @@ export function ViewDocument({
                           onClick={() => {
                             setEditingId(null);
                             setNewFileName('');
+                            setNewDescription('');
                           }}
                         />
                       </div>
@@ -134,6 +160,7 @@ export function ViewDocument({
                           onClick={() => {
                             setEditingId(doc.id);
                             setNewFileName(doc.file_name);
+                            setNewDescription(doc.description || '');
                           }}
                         />
                         <Button
