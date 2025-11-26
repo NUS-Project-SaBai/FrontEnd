@@ -12,13 +12,6 @@ fi
 
 printf ">> Finish checking branch name\n===\n"
 
-printf "Running TypeScript type checks...\n"
-pnpm exec tsc --noEmit
-if [ $? -ne 0 ]; then
-  printf "❌ TypeScript type check failed. Push aborted.\n"
-  exit 1
-fi
-
 printf "Running linting and formatting...\n"
 pnpm exec lint-staged
 LINT_EXIT_CODE=$?
@@ -32,6 +25,13 @@ if [ $LINT_EXIT_CODE -ne 0 ]; then
     exit 1
   fi
   printf "✅ Continuing with push...\n"
+fi
+
+printf "Running build checks...\n"
+pnpm build
+if [ $? -ne 0 ]; then
+  printf "❌ Build failed. Push aborted.\n"
+  exit 1
 fi
 
 exit 0
