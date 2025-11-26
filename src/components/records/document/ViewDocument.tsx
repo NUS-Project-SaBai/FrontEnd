@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { patchUploadName } from '@/data/fileUpload/patchUploadName';
 import { Upload } from '@/types/Upload';
@@ -13,9 +14,11 @@ import toast from 'react-hot-toast';
 export function ViewDocument({
   documents,
   setDocuments,
+  isLoading,
 }: {
   documents: Upload[];
   setDocuments: React.Dispatch<React.SetStateAction<Upload[]>>;
+  isLoading: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -58,7 +61,9 @@ export function ViewDocument({
         title="View Documents"
         text="Close"
       >
-        {documents.length === 0 ? (
+        {isLoading ? (
+          <LoadingUI message="Loading documents..." />
+        ) : documents.length === 0 ? (
           <div className="px-2 py-4 text-center text-gray-500">
             No documents found.
           </div>
