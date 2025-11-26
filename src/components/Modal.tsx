@@ -9,7 +9,7 @@ interface ModalProps {
   text: string;
   title: string;
   children: ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   className?: string;
   ariaHideApp?: boolean;
 }
@@ -29,6 +29,7 @@ export function Modal({
     md: 'max-w-2xl',
     lg: 'max-w-3xl',
     xl: 'max-w-4xl',
+    full: 'w-full h-full',
   };
 
   return (

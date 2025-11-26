@@ -125,7 +125,11 @@ export function Button({
     >
       {isLoading ? (
         // You can replace this with your own spinner or <LoadingUI />
-        <LoadingUI />
+        <LoadingUI
+          spinnerClassName={`h-3.5 w-3.5 border-blue-900`}
+          className="flex h-3 items-center space-x-1"
+          message="Saving...."
+        />
       ) : (
         <>
           {text && <span>{text}</span>}

@@ -3,7 +3,7 @@
 import { Button } from '@/components/Button';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
-import { patchUploadName } from '@/data/fileUpload/patchUploadName';
+import { patchUpload } from '@/data/fileUpload/patchUpload';
 import { Upload } from '@/types/Upload';
 import { formatDate } from '@/utils/formatDate';
 import axios from 'axios';
@@ -25,11 +25,11 @@ export function ViewDocument({
   const [newFileName, setNewFileName] = useState('');
 
   // handle the rename action
-  const handleRename = async (doc: Upload) => {
+  const handleRename = async (documentId: number) => {
     try {
-      const updated = await patchUploadName(doc.id, newFileName);
+      const updated = await patchUpload(documentId, { file_name: newFileName });
       setDocuments(ds =>
-        ds.map(d => (d.id === doc.id && updated ? updated : d))
+        ds.map(d => (d.id === documentId && updated ? updated : d))
       );
       setEditingId(null);
       setNewFileName('');
@@ -47,6 +47,8 @@ export function ViewDocument({
     }
   };
 
+  const handleDelete = async (docId: number) => {};
+
   return (
     <>
       <Button
@@ -57,6 +59,7 @@ export function ViewDocument({
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
+        size="full"
         ariaHideApp={false}
         title="View Documents"
         text="Close"
@@ -107,7 +110,7 @@ export function ViewDocument({
                         <Button
                           text="Save"
                           colour="green"
-                          onClick={() => handleRename(doc)}
+                          onClick={() => handleRename(doc.id)}
                         />
                         <Button
                           text="Cancel"
@@ -119,14 +122,23 @@ export function ViewDocument({
                         />
                       </div>
                     ) : (
-                      <Button
-                        text="Edit"
-                        colour="green"
-                        onClick={() => {
-                          setEditingId(doc.id);
-                          setNewFileName(doc.file_name);
-                        }}
-                      />
+                      <div className="flex space-x-2">
+                        <Button
+                          text="Edit"
+                          colour="green"
+                          onClick={() => {
+                            setEditingId(doc.id);
+                            setNewFileName(doc.file_name);
+                          }}
+                        />
+                        <Button
+                          text="Delete"
+                          colour="red"
+                          onClick={() => {
+                            deleteDocument(doc.id);
+                          }}
+                        />
+                      </div>
                     )}
                   </td>
                 </tr>
