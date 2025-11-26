@@ -1,3 +1,4 @@
+import { IconButton } from '@/components/IconButton';
 import {
   ArrowUturnLeftIcon,
   CheckIcon,
@@ -100,45 +101,33 @@ export function FilePreviewRow({
         <div className="flex items-center justify-center gap-2">
           {isEditing ? (
             <>
-              <button
-                type="button"
-                className="rounded p-2 text-green-500 transition-colors hover:bg-green-50"
-                aria-label="Save changes"
-                title="Save changes"
+              <IconButton
+                icon={<CheckIcon className={ICON_CLASS_STYLE} />}
+                colour="green"
+                label="Save changes"
                 onClick={handleSave}
-              >
-                <CheckIcon className={ICON_CLASS_STYLE} />
-              </button>
-              <button
-                type="button"
-                className="rounded p-2 text-red-500 transition-colors hover:bg-red-50"
-                aria-label="Cancel edit"
-                title="Cancel edit"
+              />
+              <IconButton
+                icon={<ArrowUturnLeftIcon className={ICON_CLASS_STYLE} />}
+                colour="red"
+                label="Cancel edit"
                 onClick={handleCancel}
-              >
-                <ArrowUturnLeftIcon className={ICON_CLASS_STYLE} />
-              </button>
+              />
             </>
           ) : (
             <>
-              <button
-                type="button"
-                className="rounded p-2 text-blue-500 transition-colors hover:bg-blue-50"
-                aria-label="Edit file"
-                title="Edit file"
+              <IconButton
+                icon={<PencilIcon className={ICON_CLASS_STYLE} />}
+                colour="blue"
+                label="Edit file"
                 onClick={() => setIsEditing(true)}
-              >
-                <PencilIcon className={ICON_CLASS_STYLE} />
-              </button>
-              <button
-                type="button"
-                className="rounded p-2 text-red-500 transition-colors hover:bg-red-50"
-                aria-label="Remove file"
-                title="Remove file"
+              />
+              <IconButton
+                icon={<XMarkIcon className={ICON_CLASS_STYLE} />}
+                colour="red"
+                label="Remove file"
                 onClick={onRemove}
-              >
-                <XMarkIcon className={ICON_CLASS_STYLE} />
-              </button>
+              />
             </>
           )}
         </div>

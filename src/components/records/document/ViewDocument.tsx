@@ -1,12 +1,19 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { IconButton } from '@/components/IconButton';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { deleteUpload } from '@/data/fileUpload/deleteUpload';
 import { patchUpload } from '@/data/fileUpload/patchUpload';
 import { Upload } from '@/types/Upload';
 import { formatDate } from '@/utils/formatDate';
+import {
+  CheckIcon,
+  PencilIcon,
+  TrashIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 import axios from 'axios';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -21,6 +28,7 @@ export function ViewDocument({
   setDocuments: React.Dispatch<React.SetStateAction<Upload[]>>;
   isLoading: boolean;
 }) {
+  const ICON_CLASS_STYLE = 'h-5 w-5';
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newFileName, setNewFileName] = useState('');
@@ -137,38 +145,44 @@ export function ViewDocument({
                   <td className="px-2 py-1">
                     {editingId === doc.id ? (
                       <div className="flex space-x-2">
-                        <Button
-                          text="Save"
-                          colour="green"
+                        <IconButton
+                          icon={<CheckIcon className={ICON_CLASS_STYLE} />}
+                          label="Save"
                           onClick={() => handleEdits(doc.id)}
+                          colour="green"
                         />
-                        <Button
-                          text="Cancel"
-                          colour="red"
+                        <IconButton
+                          icon={<XMarkIcon className={ICON_CLASS_STYLE} />}
+                          label="Cancel"
                           onClick={() => {
                             setEditingId(null);
                             setNewFileName('');
                             setNewDescription('');
                           }}
+                          colour="red"
                         />
                       </div>
                     ) : (
                       <div className="flex space-x-2">
-                        <Button
-                          text="Edit"
-                          colour="green"
+                        <IconButton
+                          icon={<PencilIcon className={ICON_CLASS_STYLE} />}
+                          label="Edit"
                           onClick={() => {
                             setEditingId(doc.id);
                             setNewFileName(doc.file_name);
                             setNewDescription(doc.description || '');
                           }}
+                          colour="blue"
                         />
-                        <Button
-                          text="Delete"
-                          colour="red"
+                        <IconButton
+                          icon={<TrashIcon className={ICON_CLASS_STYLE} />}
+                          label="Delete"
                           onClick={() => {
-                            handleDelete(doc.id);
+                            confirm(
+                              `Are you sure you want to delete ${doc.file_name}?`
+                            ) && handleDelete(doc.id);
                           }}
+                          colour="red"
                         />
                       </div>
                     )}
@@ -178,7 +192,6 @@ export function ViewDocument({
             </tbody>
           </table>
         )}
-        <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
       </Modal>
     </>
   );

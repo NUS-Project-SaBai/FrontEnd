@@ -5,6 +5,8 @@ import { VILLAGES } from '@/constants';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
 import { formatDate } from '@/utils/formatDate';
+import { EyeIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { ClipboardList } from 'lucide-react';
 import Link from 'next/link';
 
 export function ReferralCard({
@@ -55,15 +57,22 @@ export function ReferralCard({
       <td className="align-middle">
         <div className="flex flex-col items-center justify-center space-y-2 p-3">
           <Link href={`./referrals/${referral.id}`}>
-            <Button text="View Referral Details" colour="blue" />
+            <Button
+              text="Referral Details"
+              colour="green"
+              Icon={<PencilSquareIcon className="h-5 w-5" />}
+            />
           </Link>
-          <Button text="Generate Consult PDF" onClick={() => onGeneratePDF()} />
+          <Button
+            text="Consult PDF"
+            Icon={<ClipboardList className="h-5 w-5" />}
+            onClick={() => onGeneratePDF()}
+            colour="indigo"
+          />
         </div>
       </td>
-      <td>
-        <div className="grid items-center justify-center p-2">
-          <ReferralStateDropdown referral={referral} />
-        </div>
+      <td className="w-48">
+        <ReferralStateDropdown referral={referral} />
       </td>
     </tr>
   );

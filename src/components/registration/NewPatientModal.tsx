@@ -2,6 +2,7 @@ import { Button } from '@/components/Button';
 import { PatientForm } from '@/components/records/patient/PatientForm';
 import { FormEvent, useState } from 'react';
 import { Modal } from '../Modal';
+import { UserPlusIcon } from 'lucide-react';
 
 export function NewPatientModal({
   onSubmit,
@@ -10,14 +11,18 @@ export function NewPatientModal({
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   isSubmitting: boolean;
 }) {
+  const ICON_CLASS_STYLE = 'h-5 w-5';
+
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
+
   return (
     <>
       <Button
         colour="green"
         onClick={() => setIsOpen(true)}
         text={'New Patient'}
+        Icon={<UserPlusIcon className={ICON_CLASS_STYLE} />}
       />
       <Modal
         isOpen={isOpen}
@@ -28,7 +33,6 @@ export function NewPatientModal({
         className="mx-auto my-8"
       >
         <PatientForm onSubmit={onSubmit} isSubmitting={isSubmitting} />
-        <Button colour="red" onClick={closeModal} text="Close" />
       </Modal>
     </>
   );
