@@ -51,13 +51,13 @@ export function RHFInputField({
           {...register(name, {
             required: { message: `Empty Field: ${label}`, value: isRequired },
             validate: {
-              // Check if file input exceeds max file size of 50 MB
+              // Check if file input exceeds max file size of 20 MB
               maxFileSize: value => {
                 if (type === 'file' && value.length > 0) {
                   const file = value[0];
-                  // 50 * 1024 * 1024 = 52428800 byte
-                  if (file.size > 52428800) {
-                    return `File size exceeds 50 MB: ${file.name}`;
+                  // 20 * 1024 * 1024 = 20971520 byte
+                  if (file.size > 20971520) {
+                    return `File size exceeds 20 MB: ${file.name}`;
                   }
                 }
                 return true;
