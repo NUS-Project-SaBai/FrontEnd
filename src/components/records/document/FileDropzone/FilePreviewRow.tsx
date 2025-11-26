@@ -39,7 +39,6 @@ export function FilePreviewRow({
 
   return (
     <tr
-      key={`${fileItem.file.name}`}
       className={
         fileItem.isDuplicated
           ? 'bg-red-100 text-sm hover:bg-red-200'

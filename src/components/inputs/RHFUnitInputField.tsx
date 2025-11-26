@@ -41,9 +41,7 @@ export function RHFUnitInputField({
           }
         >
           <input
-            className={
-              'xl:max-w-38 w-[90%] min-w-14 rounded-r-none lg:max-w-28'
-            }
+            className={'w-full min-w-14 rounded-r-none lg:max-w-28 xl:max-w-36'}
             {...register(name, {
               pattern: {
                 value: typeValidation[type].regex,

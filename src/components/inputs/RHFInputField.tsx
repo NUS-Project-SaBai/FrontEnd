@@ -55,7 +55,7 @@ export function RHFInputField({
               maxFileSize: value => {
                 if (type === 'file' && value.length > 0) {
                   const file = value[0];
-                  // 20 * 1024 * 1024 = 20971520 byte
+                  // 20 * 1024 * 1024 = 20,971,520 bytes
                   if (file.size > 20971520) {
                     return `File size exceeds 20 MB: ${file.name}`;
                   }

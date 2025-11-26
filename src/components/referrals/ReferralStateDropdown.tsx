@@ -36,7 +36,7 @@ export function ReferralStateDropdown({ referral }: { referral: Referral }) {
         .catch(e => console.log(e));
     });
     fetchConsults();
-  }, [referral.consult, referral.referral_state]);
+  }, [referral.consult, referral.referral_state, withLoading]);
 
   function dropdownChanged(value: string) {
     const patch = withLoading(async () => {

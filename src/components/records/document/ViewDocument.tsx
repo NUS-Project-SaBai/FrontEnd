@@ -48,7 +48,7 @@ export function ViewDocument({
       setNewDescription('');
       toast.success('Document updated');
     } catch (err: unknown) {
-      console.error('patchUploadName failed:', err);
+      console.error('patchUpload failed:', err);
       let message = 'Unknown error';
       if (axios.isAxiosError(err)) {
         const data = err.response?.data as { error?: string } | undefined;
@@ -61,9 +61,14 @@ export function ViewDocument({
   };
 
   const handleDelete = async (docId: number) => {
-    deleteUpload(docId).then(() => {
+    try {
+      await deleteUpload(docId);
       setDocuments(ds => ds.filter(d => d.id !== docId));
-    });
+      toast.success('Document deleted');
+    } catch (error) {
+      toast.error('Failed to delete document');
+      console.error('Delete error:', error);
+    }
   };
 
   return (
@@ -178,9 +183,13 @@ export function ViewDocument({
                           icon={<TrashIcon className={ICON_CLASS_STYLE} />}
                           label="Delete"
                           onClick={() => {
-                            confirm(
-                              `Are you sure you want to delete ${doc.file_name}?`
-                            ) && handleDelete(doc.id);
+                            if (
+                              confirm(
+                                `Are you sure you want to delete ${doc.file_name}?`
+                              )
+                            ) {
+                              handleDelete(doc.id);
+                            }
                           }}
                           colour="red"
                         />

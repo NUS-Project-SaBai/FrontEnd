@@ -61,8 +61,6 @@ export function Button({
 
   const colorStyles = COLOUR_MAP[colour][variant];
   const sizeStyles = SIZE_MAP[size];
-  const baseStyles =
-    'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
 
   return (
     <button
@@ -78,7 +76,7 @@ export function Button({
         <LoadingUI
           spinnerClassName={`h-3.5 w-3.5 border-blue-900`}
           className="flex h-3 items-center space-x-1"
-          message="Saving...."
+          message="Loading...."
         />
       ) : (
         <>

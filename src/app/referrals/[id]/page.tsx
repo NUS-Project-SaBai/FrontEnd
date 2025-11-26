@@ -1,5 +1,4 @@
 'use client';
-import { Button } from '@/components/Button';
 import { IconButton } from '@/components/IconButton';
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
@@ -39,7 +38,8 @@ export default function ReferralDetailsPage() {
       setOriginalOutcome(data.referral.referral_outcome || '');
     });
     fetchReferral();
-  }, [id, withLoading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   function handleEdit() {
     if (referral) {
@@ -131,7 +131,7 @@ export default function ReferralDetailsPage() {
                             referral_outcome: item.target.value,
                           })
                         }
-                        className="w-full"
+                        className="w-full disabled:bg-gray-100 disabled:text-gray-700"
                       />
 
                       {editable ? (

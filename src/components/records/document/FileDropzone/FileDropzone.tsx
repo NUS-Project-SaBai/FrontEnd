@@ -68,7 +68,10 @@ export function FileDropzone({
             file.name.lastIndexOf('.') !== -1
               ? file.name.slice(0, file.name.lastIndexOf('.'))
               : file.name,
-          fileExt: file.type.split('/')[1] || undefined,
+          fileExt:
+            file.type && file.type.split('/')[1]
+              ? file.type.split('/')[1]
+              : undefined,
           isDuplicated: false,
           description: '',
         }))

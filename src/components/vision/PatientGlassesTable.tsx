@@ -1,5 +1,4 @@
 import { Button } from '@/components/Button';
-import { IconButton } from '@/components/IconButton';
 import { PatientPhoto } from '@/components/PatientPhoto';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { Patient } from '@/types/Patient';

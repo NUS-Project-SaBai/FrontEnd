@@ -18,7 +18,7 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function IconButton({
   icon,
   label,
-  onClick,
+  onClick = () => {},
   colour = 'blue',
   variant = 'ghost',
   className = '',
@@ -35,10 +35,10 @@ export function IconButton({
       aria-label={label}
       title={label}
       disabled={isLoading || props.disabled}
-      onClick={withLoading(async e => onClick && onClick(e))}
+      onClick={withLoading(async e => onClick(e))}
       {...props}
     >
-      {isLoading ? <LoaderCircle className="animate-spin" /> : icon}
+      {isLoading ? <LoaderCircle className={'animate-spin'} /> : icon}
     </button>
   );
 }
