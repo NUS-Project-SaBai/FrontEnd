@@ -91,9 +91,9 @@ export function ViewDocument({
           <table className="w-full table-fixed divide-y divide-gray-800 text-left">
             <thead>
               <tr>
-                <th className="px-2 py-1">File Name</th>
-                <th className="px-2 py-1">Created At</th>
-                <th className="px-2 py-1">Actions</th>
+                <th className="w-[60%] px-2 py-1">File Name</th>
+                <th className="w-[20%] px-2 py-1">Created At</th>
+                <th className="w-[15%] px-2 py-1">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -118,21 +118,21 @@ export function ViewDocument({
                         />
                       </div>
                     ) : (
-                      <div className="space-y-1">
+                      <div className="space-y-3.5">
                         <Link
                           href={doc.file_path || doc.offline_file || '#'}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 underline"
+                          className="py-1 text-blue-600 underline"
                         >
                           {doc.file_name}
                         </Link>
                         {doc.description ? (
-                          <p className="text-sm text-gray-600">
+                          <p className="py-1 text-sm text-gray-600">
                             {doc.description}
                           </p>
                         ) : (
-                          <p className="text-sm italic text-gray-400">
+                          <p className="py-1 text-sm italic text-gray-400">
                             No description
                           </p>
                         )}
@@ -144,7 +144,7 @@ export function ViewDocument({
                   </td>
                   <td className="px-2 py-1">
                     {editingId === doc.id ? (
-                      <div className="flex space-x-2">
+                      <div className="flex flex-col gap-2 md:flex-row">
                         <IconButton
                           icon={<CheckIcon className={ICON_CLASS_STYLE} />}
                           label="Save"
@@ -163,7 +163,7 @@ export function ViewDocument({
                         />
                       </div>
                     ) : (
-                      <div className="flex space-x-2">
+                      <div className="flex flex-col gap-2 md:flex-row">
                         <IconButton
                           icon={<PencilIcon className={ICON_CLASS_STYLE} />}
                           label="Edit"
