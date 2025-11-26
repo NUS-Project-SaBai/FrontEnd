@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
+import { deleteUpload } from '@/data/fileUpload/deleteUpload';
 import { patchUpload } from '@/data/fileUpload/patchUpload';
 import { Upload } from '@/types/Upload';
 import { formatDate } from '@/utils/formatDate';
@@ -47,7 +48,11 @@ export function ViewDocument({
     }
   };
 
-  const handleDelete = async (docId: number) => {};
+  const handleDelete = async (docId: number) => {
+    deleteUpload(docId).then(() => {
+      setDocuments(ds => ds.filter(d => d.id !== docId));
+    });
+  };
 
   return (
     <>
@@ -135,7 +140,7 @@ export function ViewDocument({
                           text="Delete"
                           colour="red"
                           onClick={() => {
-                            deleteDocument(doc.id);
+                            handleDelete(doc.id);
                           }}
                         />
                       </div>
