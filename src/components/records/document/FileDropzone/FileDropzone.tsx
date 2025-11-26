@@ -1,6 +1,7 @@
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import toast from 'react-hot-toast';
 import { FilePreviewTable } from './FilePreviewTable';
+import imageCompression from 'browser-image-compression';
 
 export type FileItem = {
   file: FileWithPath;
@@ -40,7 +41,7 @@ export function FileDropzone({
         });
       });
     },
-    onDrop(acceptedFiles) {
+    async onDrop(acceptedFiles) {
       const duplicatedFiles = acceptedFiles.filter(file =>
         files.some(f => f.fileName + '.' + f.fileExt === file.name)
       );
@@ -51,14 +52,25 @@ export function FileDropzone({
         );
       }
 
-      const newFileItems = acceptedFiles.map(file => ({
-        file,
-        fileName: file.name.endsWith('.'.concat(file.type.split('/')[1]))
-          ? file.name.slice(0, file.name.lastIndexOf('.'))
-          : file.name,
-        fileExt: file.type.split('/')[1] || undefined,
-        isDuplicated: false,
-      }));
+      const newFileItems = await Promise.all(
+        acceptedFiles.map(async file =>
+          file.type.split('/')[0] === 'image'
+            ? await imageCompression(file, {
+                maxSizeMB: 1.2,
+              })
+            : file
+        )
+      ).then(files =>
+        files.map(file => ({
+          file: file,
+          fileName:
+            file.name.lastIndexOf('.') !== -1
+              ? file.name.slice(0, file.name.lastIndexOf('.'))
+              : file.name,
+          fileExt: file.type.split('/')[1] || undefined,
+          isDuplicated: false,
+        }))
+      );
 
       setFiles(checkAndMarkDuplicates([...files, ...newFileItems]));
     },
