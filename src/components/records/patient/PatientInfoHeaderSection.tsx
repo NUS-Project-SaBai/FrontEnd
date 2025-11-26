@@ -23,7 +23,7 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
   );
   useEffect(() => {
     fetchDocuments();
-  }, [patient.pk]);
+  }, [patient.pk, fetchDocuments]);
 
   return (
     <div className="flex">

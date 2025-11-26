@@ -89,7 +89,7 @@ export function UploadDocument({
             }}
           >
             <Controller
-              {...useFormReturn.control}
+              control={useFormReturn.control}
               name="files"
               defaultValue={[]}
               rules={{

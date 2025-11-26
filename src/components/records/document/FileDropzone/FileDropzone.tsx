@@ -31,7 +31,7 @@ export function FileDropzone({
   };
   const { getRootProps, getInputProps } = useDropzone({
     maxSize: 1048576 * 10, // 10 MB, don't allow too large files. Storage is limited.
-    onDropRejected(fileRejections, event) {
+    onDropRejected(fileRejections) {
       fileRejections.forEach(rejection => {
         rejection.errors.forEach(err => {
           if (err.code === 'file-too-large') {
