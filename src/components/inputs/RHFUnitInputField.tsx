@@ -29,7 +29,7 @@ export function RHFUnitInputField({
     },
   };
   return (
-    <div className="flex-col justify-end p-1">
+    <div className="flex-col justify-end">
       <label htmlFor={name} className="text-sm font-medium">
         {label}
       </label>
@@ -41,10 +41,9 @@ export function RHFUnitInputField({
           }
         >
           <input
-            // className={
-            //   'min-w-14 max-w-16 rounded-r-none lg:max-w-28 xl:max-w-38'
-            // }
-            className="rounded-r-non w-[90%] rounded-sm"
+            className={
+              'xl:max-w-38 w-[90%] min-w-14 rounded-r-none lg:max-w-28'
+            }
             {...register(name, {
               pattern: {
                 value: typeValidation[type].regex,

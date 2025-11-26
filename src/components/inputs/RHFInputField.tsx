@@ -25,7 +25,7 @@ export function RHFInputField({
   const { register, formState } = useFormContext();
   const curFormErrorState = formState?.errors[name];
   // let inputClassStyle = "min-w-14 max-w-16 rounded-r-none lg:max-w-28 xl:max-w-38";
-  let inputClassStyle = 'w-[90%] rounded-m';
+  let inputClassStyle = 'w-full rounded-m';
   inputClassStyle +=
     curFormErrorState != undefined ? 'border-l-8 border-red-400' : '';
   return (
