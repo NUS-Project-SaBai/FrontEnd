@@ -33,16 +33,23 @@ export function FileRow({
   const { isLoading: isSubmitting, withLoading } = useLoadingState();
 
   const handleSave = withLoading(async () => {
-    await onSave(editName, editDescription);
     setIsEditing(false);
+    await onSave(editName, editDescription);
   });
 
   const handleDelete = withLoading(onDelete);
 
   const handleCancel = () => {
+    setIsEditing(false);
     setEditName(item.fileName);
     setEditDescription(item.description || '');
-    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSave();
+    }
   };
 
   return (
@@ -51,7 +58,7 @@ export function FileRow({
         item.isDuplicated
           ? 'bg-red-100 text-sm hover:bg-red-200'
           : 'text-sm hover:bg-gray-50'
-      } ${isSubmitting ? 'pointer-events-none opacity-50' : ''} `}
+      } ${isSubmitting ? 'bg-gray-50 opacity-50 hover:pointer-events-none' : ''} `}
     >
       <td className={showSize ? 'py-3' : 'px-2 py-3'}>
         {isEditing ? (
@@ -61,6 +68,7 @@ export function FileRow({
                 type="text"
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
+                onKeyDown={handleKeyDown}
                 className="w-full rounded border px-2 py-1 font-mono"
                 placeholder="File name"
               />
@@ -70,6 +78,7 @@ export function FileRow({
               type="text"
               value={editDescription}
               onChange={e => setEditDescription(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="w-full rounded border px-2 py-1 text-sm"
               placeholder="Add description..."
             />
