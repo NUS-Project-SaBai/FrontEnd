@@ -1,4 +1,4 @@
-type UploadFile = {
+export type UploadFile = {
   id: number;
   patient_pk: number;
   file_path?: string;

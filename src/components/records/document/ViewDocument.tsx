@@ -12,6 +12,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FileRow } from './FileRow/FileRow';
 import { FileRowItem } from './FileRow/FileRowItem';
+import { UploadFile } from '@/types/UploadFile';
 
 export function ViewDocument({
   documents,

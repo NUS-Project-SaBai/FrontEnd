@@ -6,7 +6,7 @@ import { VILLAGES_AND_ALL } from '@/constants';
 import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
-import { Upload } from '@/types/Upload';
+import { UploadFile } from '@/types/UploadFile';
 import { useCallback, useEffect, useState } from 'react';
 import { EditPatient } from './EditPatient';
 import { PatientDetails } from './PatientDetails';

@@ -1,7 +1,7 @@
 'use server';
 
 import { axiosInstance } from '@/lib/axiosInstance';
-import { Upload } from '@/types/Upload';
+import { UploadFile } from '@/types/UploadFile';
 
 export async function patchUpload(
   uploadId: number,
