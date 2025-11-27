@@ -75,7 +75,7 @@ export function UploadDocument({
                       toast.success(message);
                       onUploadSuccess();
                     } catch (err) {
-                      console.log(err);
+                      console.error(err);
                       toast.error('Error uploading file:\n' + err);
                     }
                   },

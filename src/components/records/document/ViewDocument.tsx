@@ -1,12 +1,19 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { IconButton } from '@/components/IconButton';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { deleteUpload } from '@/data/fileUpload/deleteUpload';
 import { patchUpload } from '@/data/fileUpload/patchUpload';
 import { Upload } from '@/types/Upload';
 import { formatDate } from '@/utils/formatDate';
+import {
+  CheckIcon,
+  PencilIcon,
+  TrashIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 import axios from 'axios';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -21,6 +28,7 @@ export function ViewDocument({
   setDocuments: React.Dispatch<React.SetStateAction<Upload[]>>;
   isLoading: boolean;
 }) {
+  const ICON_CLASS_STYLE = 'h-5 w-5';
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [newFileName, setNewFileName] = useState('');
@@ -40,7 +48,7 @@ export function ViewDocument({
       setNewDescription('');
       toast.success('Document updated');
     } catch (err: unknown) {
-      console.error('patchUploadName failed:', err);
+      console.error('patchUpload failed:', err);
       let message = 'Unknown error';
       if (axios.isAxiosError(err)) {
         const data = err.response?.data as { error?: string } | undefined;
@@ -53,9 +61,14 @@ export function ViewDocument({
   };
 
   const handleDelete = async (docId: number) => {
-    deleteUpload(docId).then(() => {
+    try {
+      await deleteUpload(docId);
       setDocuments(ds => ds.filter(d => d.id !== docId));
-    });
+      toast.success('Document deleted');
+    } catch (error) {
+      toast.error('Failed to delete document');
+      console.error('Delete error:', error);
+    }
   };
 
   return (
@@ -83,9 +96,9 @@ export function ViewDocument({
           <table className="w-full table-fixed divide-y divide-gray-800 text-left">
             <thead>
               <tr>
-                <th className="px-2 py-1">File Name</th>
-                <th className="px-2 py-1">Created At</th>
-                <th className="px-2 py-1">Actions</th>
+                <th className="w-[60%] px-2 py-1">File Name</th>
+                <th className="w-[20%] px-2 py-1">Created At</th>
+                <th className="w-[15%] px-2 py-1">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -110,21 +123,21 @@ export function ViewDocument({
                         />
                       </div>
                     ) : (
-                      <div className="space-y-1">
+                      <div className="space-y-3.5">
                         <Link
                           href={doc.file_path || doc.offline_file || '#'}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 underline"
+                          className="py-1 text-blue-600 underline"
                         >
                           {doc.file_name}
                         </Link>
                         {doc.description ? (
-                          <p className="text-sm text-gray-600">
+                          <p className="py-1 text-sm text-gray-600">
                             {doc.description}
                           </p>
                         ) : (
-                          <p className="text-sm italic text-gray-400">
+                          <p className="py-1 text-sm italic text-gray-400">
                             No description
                           </p>
                         )}
@@ -136,39 +149,49 @@ export function ViewDocument({
                   </td>
                   <td className="px-2 py-1">
                     {editingId === doc.id ? (
-                      <div className="flex space-x-2">
-                        <Button
-                          text="Save"
-                          colour="green"
+                      <div className="flex flex-col gap-2 md:flex-row">
+                        <IconButton
+                          icon={<CheckIcon className={ICON_CLASS_STYLE} />}
+                          label="Save"
                           onClick={() => handleEdits(doc.id)}
+                          colour="green"
                         />
-                        <Button
-                          text="Cancel"
-                          colour="red"
+                        <IconButton
+                          icon={<XMarkIcon className={ICON_CLASS_STYLE} />}
+                          label="Cancel"
                           onClick={() => {
                             setEditingId(null);
                             setNewFileName('');
                             setNewDescription('');
                           }}
+                          colour="red"
                         />
                       </div>
                     ) : (
-                      <div className="flex space-x-2">
-                        <Button
-                          text="Edit"
-                          colour="green"
+                      <div className="flex flex-col gap-2 md:flex-row">
+                        <IconButton
+                          icon={<PencilIcon className={ICON_CLASS_STYLE} />}
+                          label="Edit"
                           onClick={() => {
                             setEditingId(doc.id);
                             setNewFileName(doc.file_name);
                             setNewDescription(doc.description || '');
                           }}
+                          colour="blue"
                         />
-                        <Button
-                          text="Delete"
-                          colour="red"
+                        <IconButton
+                          icon={<TrashIcon className={ICON_CLASS_STYLE} />}
+                          label="Delete"
                           onClick={() => {
-                            handleDelete(doc.id);
+                            if (
+                              confirm(
+                                `Are you sure you want to delete ${doc.file_name}?`
+                              )
+                            ) {
+                              handleDelete(doc.id);
+                            }
                           }}
+                          colour="red"
                         />
                       </div>
                     )}
@@ -178,7 +201,6 @@ export function ViewDocument({
             </tbody>
           </table>
         )}
-        <Button text="Close" onClick={() => setIsOpen(false)} colour="red" />
       </Modal>
     </>
   );

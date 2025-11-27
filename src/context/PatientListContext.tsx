@@ -45,7 +45,7 @@ export function PatientListProvider({
           setPatients(tmp);
         })
       )(),
-    [village]
+    [village, withLoading]
   );
 
   useEffect(() => {
