@@ -12,7 +12,7 @@ import { EditPatient } from './EditPatient';
 import { PatientDetails } from './PatientDetails';
 
 export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
-  const [documents, setDocuments] = useState<Upload[]>([]);
+  const [documents, setDocuments] = useState<UploadFile[]>([]);
 
   const { isLoading: isLoadingDocuments, withLoading: withLoadingDocuments } =
     useLoadingState(false);
@@ -20,13 +20,15 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
     () =>
       withLoadingDocuments(async () =>
         getUploadByPatientId(patient.pk).then(data => {
-          setDocuments(data);
+          setDocuments(data.files);
         })
       )(),
     [patient.pk, withLoadingDocuments]
   );
   useEffect(() => {
-    fetchDocuments();
+    if (patient.pk) {
+      fetchDocuments();
+    }
   }, [patient.pk, fetchDocuments]);
 
   return (
@@ -52,7 +54,7 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
           </h1>
           <UploadDocument patient={patient} onUploadSuccess={fetchDocuments} />
           <ViewDocument
-            documents={documents}
+            documents={documents ?? []}
             setDocuments={setDocuments}
             isLoading={isLoadingDocuments}
           />
