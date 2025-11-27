@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && tsc --noEmit",
+    "lint": "tsc --noEmit && next lint",
+    "lint:strict": "tsc --noEmit && next lint --max-warnings 0",
     "prepare": "husky"
   },
   "dependencies": {

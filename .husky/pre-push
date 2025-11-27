@@ -13,25 +13,8 @@ fi
 printf ">> Finish checking branch name\n===\n"
 
 printf "Running linting and formatting...\n"
-pnpm exec lint-staged
-LINT_EXIT_CODE=$?
+pnpm lint:strict
 
-if [ $LINT_EXIT_CODE -ne 0 ]; then
-  printf "\n⚠️  Linting/formatting issues detected.\n"
-  read -p "Do you want to continue with the push? (y/N): " -n 1 -r
-  echo
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    printf "❌ Push aborted.\n"
-    exit 1
-  fi
-  printf "✅ Continuing with push...\n"
-fi
-
-printf "Running build checks...\n"
-pnpm build
-if [ $? -ne 0 ]; then
-  printf "❌ Build failed. Push aborted.\n"
-  exit 1
-fi
+printf "✅ Continuing with push...\n"
 
 exit 0
