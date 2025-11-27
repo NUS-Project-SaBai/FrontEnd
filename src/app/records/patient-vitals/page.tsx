@@ -1,7 +1,6 @@
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
 import { HeightWeightGraph } from '@/components/records/vital/HeightWeightGraph';
-// import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
 import { VitalsForm } from '@/components/records/vital/VitalsForm';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitById } from '@/data/visit/getVisit';
@@ -49,8 +48,6 @@ export default async function PatientVitalPage({
     visitDate
   );
 
-  // const gridStyle = (minWidth: number) => `m-2 grid flex-1 gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(${minWidth}px,1fr))]`;
-
   return (
     <div className="p-2">
       <h1>Patient Vitals</h1>
@@ -58,26 +55,7 @@ export default async function PatientVitalPage({
         <PatientInfoHeaderSection patient={patient} />
       </div>
       <div className="mb-4 mt-2 grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-        {/* <div className={gridStyle(200)}> */}
-        {/* <div>
-          <h2>Past Vitals</h2>
-          <PastVitalTable
-            vital={curVital}
-            age={patientVisitAge}
-            gender={patient.gender}
-          />
-          <h2>HeightWeightGraph</h2>
-          <HeightWeightGraph
-            age={patientVisitAge.year}
-            weight={parseFloat(curVital.weight)}
-            height={parseFloat(curVital.height)}
-            gender={patient.gender}
-          />
-        </div>
-        <div>
-          <VitalsForm patient={patient} visitId={visitId} curVital={curVital} />
-        </div> */}
-        <div>
+        <div className="order-2">
           <h2>Height-weight graph</h2>
           <HeightWeightGraph
             age={patientVisitAge.year}
@@ -86,7 +64,7 @@ export default async function PatientVitalPage({
             gender={patient.gender}
           />
         </div>
-        <div>
+        <div className="order-1 lg:order-3">
           <h2>Vitals</h2>
           <VitalsForm patient={patient} visitId={visitId} curVital={curVital} />
         </div>

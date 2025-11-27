@@ -1,6 +1,6 @@
-import { Button } from '@/components/Button';
+import { IconButton } from '@/components/IconButton';
 import { Medication } from '@/types/Medication';
-import { EyeIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 export function MedicationTable({
@@ -17,7 +17,7 @@ export function MedicationTable({
             <th>Quantity</th>
             <th>Warning Quantity</th>
             <th>Code</th>
-            <th>Actions</th>
+            <th className="text-center">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
@@ -41,6 +41,7 @@ export function MedicationTable({
   );
 }
 function MedicationItemRow({ medicine }: { medicine: Medication }) {
+  const ICON_CLASS_STYLE = 'h-6 w-6';
   const isBelowWarningQuantity: boolean =
     medicine.warning_quantity != null &&
     medicine.quantity < medicine.warning_quantity;
@@ -53,16 +54,26 @@ function MedicationItemRow({ medicine }: { medicine: Medication }) {
       <td>{medicine.warning_quantity || '-'}</td>
       <td>{medicine.code || 'N/A'}</td>
       <td>
-        <div className="flex gap-2">
+        <div className="flex justify-center gap-2">
           <Link href={'/pharmacy/stock?edit=' + medicine.id} prefetch={false}>
-            <Button colour="green" Icon={<PencilIcon className="h-5 w-5" />} />
+            <IconButton
+              icon={<PencilSquareIcon className={ICON_CLASS_STYLE} />}
+              colour="green"
+              variant="solid"
+              label="Edit medication"
+            />
           </Link>
           <Link
             href={'/pharmacy/stock?view=' + medicine.id}
             prefetch={false}
             shallow={true}
           >
-            <Button colour="blue" Icon={<EyeIcon className="h-5 w-5" />} />
+            <IconButton
+              icon={<EyeIcon className={ICON_CLASS_STYLE} />}
+              colour="indigo"
+              variant="solid"
+              label="View medication"
+            />
           </Link>
         </div>
       </td>

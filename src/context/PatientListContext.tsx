@@ -36,14 +36,15 @@ export function PatientListProvider({
   const { isLoading, withLoading } = useLoadingState(true);
 
   const refresh = useCallback(
-    withLoading(() =>
-      getPatient().then(data => {
-        const tmp = data.filter(
-          p => village === VillagePrefix.ALL || p.village_prefix === village
-        );
-        setPatients(tmp);
-      })
-    ),
+    () =>
+      withLoading(() =>
+        getPatient().then(data => {
+          const tmp = data.filter(
+            p => village === VillagePrefix.ALL || p.village_prefix === village
+          );
+          setPatients(tmp);
+        })
+      )(),
     [village, withLoading]
   );
 

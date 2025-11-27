@@ -9,6 +9,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Dispatch, SetStateAction, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Modal } from '../Modal';
+import { ScanFace } from 'lucide-react';
 
 export function PatientScanForm({
   setFilteredPatients,
@@ -49,7 +50,12 @@ export function PatientScanForm({
 
   return (
     <>
-      <Button text="Scan Face" onClick={() => setIsOpen(true)} colour="green" />
+      <Button
+        text="Scan Face"
+        onClick={() => setIsOpen(true)}
+        colour="green"
+        Icon={<ScanFace className="h-6 w-6" />}
+      />
       <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}

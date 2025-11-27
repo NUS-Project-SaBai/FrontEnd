@@ -22,7 +22,7 @@ export function useSaveOnWrite<T extends object>(
     if (savedData) {
       setFormDetails(JSON.parse(savedData));
     }
-  }, dependencies);
+  }, [storageKey]);
 
   // Save registration form data to localStorage whenever it changes
   useEffect(() => {

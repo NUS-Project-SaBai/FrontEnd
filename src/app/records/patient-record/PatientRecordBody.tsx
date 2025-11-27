@@ -37,7 +37,7 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
           const actionButtons = (
             <div className="flex gap-2 text-base">
               <Link
-                href={`/records/patient-vitals?id=${patient.pk}&visit=${visit.id}`}
+                href={`/records/patient-vitals/?id=${patient.pk}&visit=${visit.id}`}
               >
                 <Button text="Edit vitals" colour="red" />
               </Link>

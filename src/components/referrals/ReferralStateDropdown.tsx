@@ -28,15 +28,15 @@ export function ReferralStateDropdown({ referral }: { referral: Referral }) {
   const { isLoading, withLoading } = useLoadingState(false);
 
   useEffect(() => {
-    const fetchConsults = async () => {
-      getConsultByID(referral.consult.toString())
+    const fetchConsults = withLoading(async () => {
+      await getConsultByID(referral.consult.toString())
         .then(() => {
           setReferralStatus(referral.referral_state || 'None');
         })
         .catch(e => console.log(e));
-    };
+    });
     fetchConsults();
-  }, [referral.consult, referral.referral_state]);
+  }, [referral.consult, referral.referral_state, withLoading]);
 
   function dropdownChanged(value: string) {
     const patch = withLoading(async () => {
@@ -55,10 +55,8 @@ export function ReferralStateDropdown({ referral }: { referral: Referral }) {
 
   return (
     <div className="max-w-40">
-      {referralStatus == '' ? (
-        <p>Loading...</p>
-      ) : isLoading ? (
-        <LoadingUI message="Updating" />
+      {isLoading ? (
+        <LoadingUI message={referralStatus == '' ? 'Loading...' : 'Updating'} />
       ) : (
         <Select value={referralStatus} onValueChange={dropdownChanged}>
           <SelectTrigger

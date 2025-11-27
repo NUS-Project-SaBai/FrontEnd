@@ -1,5 +1,5 @@
 'use client';
-import { Button } from '@/components/Button';
+import { IconButton } from '@/components/IconButton';
 import { LoadingPage } from '@/components/LoadingPage';
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientPhoto } from '@/components/PatientPhoto';
@@ -243,25 +243,28 @@ function ApproveRejectOrderButton({
   handleApproveOrder: () => void;
   handleCancelOrder: () => void;
 }) {
+  const ICON_CLASS_STYLE = 'h-6 w-8';
   const { isLoading: isUpdating, withLoading } = useLoadingState(false);
   const [actionStr, setActionStr] = useState('');
   return isUpdating ? (
     <LoadingUI message={actionStr} />
   ) : (
     <div className="flex items-center gap-2">
-      <Button
-        text=""
+      <IconButton
+        icon={<CheckIcon className={ICON_CLASS_STYLE} />}
         colour="green"
-        Icon={<CheckIcon className="h-5 w-5" />}
+        variant="solid"
+        label="Approve Order"
         onClick={withLoading(async () => {
           setActionStr('Approving Order...');
-          await handleApproveOrder();
+          handleApproveOrder();
         })}
       />
-      <Button
-        text=""
+      <IconButton
+        icon={<XMarkIcon className={ICON_CLASS_STYLE} />}
         colour="red"
-        Icon={<XMarkIcon className="h-5 w-5" />}
+        variant="solid"
+        label="Cancel Order"
         onClick={withLoading(async () => {
           setActionStr('Cancelling Order...');
           await handleCancelOrder();

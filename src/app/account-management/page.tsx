@@ -58,7 +58,7 @@ export default function AccountManagement() {
           console.error('Error fetching users:', error);
         }
       })(),
-    []
+    [withLoading]
   );
 
   useEffect(() => {

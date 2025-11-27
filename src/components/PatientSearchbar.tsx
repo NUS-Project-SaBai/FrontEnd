@@ -5,6 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Dispatch, SetStateAction, useContext, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+import { IconButton } from './IconButton';
 
 /**
  * Search bar component to filter patients.
@@ -70,12 +71,13 @@ export function PatientSearchbar<T>({
           {cancelFilteringByFace && filteringByFace && (
             <div className="mx-1 flex h-[30px] items-center rounded-full bg-gray-300 px-2">
               Filtering by scanned face
-              <button className="hover">
-                <XMarkIcon
-                  onClick={() => cancelFilteringByFace(false)}
-                  className="ml-1 h-4 w-4"
-                />
-              </button>
+              <IconButton
+                icon={<XMarkIcon className="h-5 w-5" />}
+                onClick={() => cancelFilteringByFace(false)}
+                colour="red"
+                label="Clear face filter"
+                className="ml-1 rounded-full p-0.5"
+              />
             </div>
           )}
           <input

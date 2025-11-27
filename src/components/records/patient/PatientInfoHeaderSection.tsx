@@ -1,23 +1,33 @@
 'use client';
 import { PatientPhoto } from '@/components/PatientPhoto';
-import { UploadDocument } from '@/components/records/UploadDocument';
-import { ViewDocument } from '@/components/records/ViewDocument';
+import { UploadDocument } from '@/components/records/document/UploadDocument';
+import { ViewDocument } from '@/components/records/document/ViewDocument';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { Upload } from '@/types/Upload';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { EditPatient } from './EditPatient';
 import { PatientDetails } from './PatientDetails';
 
 export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
   const [documents, setDocuments] = useState<Upload[]>([]);
 
-  const fetchDocuments = () => {
-    getUploadByPatientId(patient.pk).then(data => {
-      setDocuments(data);
-    });
-  };
+  const { isLoading: isLoadingDocuments, withLoading: withLoadingDocuments } =
+    useLoadingState(false);
+  const fetchDocuments = useCallback(
+    () =>
+      withLoadingDocuments(async () =>
+        getUploadByPatientId(patient.pk).then(data => {
+          setDocuments(data);
+        })
+      )(),
+    [patient.pk, withLoadingDocuments]
+  );
+  useEffect(() => {
+    fetchDocuments();
+  }, [patient.pk, fetchDocuments]);
 
   return (
     <div className="flex">
@@ -41,7 +51,11 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
             <span>, {patient.name}</span>
           </h1>
           <UploadDocument patient={patient} onUploadSuccess={fetchDocuments} />
-          <ViewDocument documents={documents} setDocuments={setDocuments} />
+          <ViewDocument
+            documents={documents}
+            setDocuments={setDocuments}
+            isLoading={isLoadingDocuments}
+          />
           <EditPatient patient={patient} />
         </div>
         <PatientDetails patient={patient} />
