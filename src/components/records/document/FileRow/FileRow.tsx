@@ -5,7 +5,6 @@ import {
   CheckIcon,
   PencilIcon,
   TrashIcon,
-  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -33,8 +32,8 @@ export function FileRow({
   const { isLoading: isSubmitting, withLoading } = useLoadingState();
 
   const handleSave = withLoading(async () => {
-    setIsEditing(false);
     await onSave(editName, editDescription);
+    setIsEditing(false);
   });
 
   const handleDelete = withLoading(onDelete);
@@ -54,11 +53,11 @@ export function FileRow({
 
   return (
     <tr
-      className={` ${
+      className={`${
         item.isDuplicated
           ? 'bg-red-100 text-sm hover:bg-red-200'
           : 'text-sm hover:bg-gray-50'
-      } ${isSubmitting ? 'bg-gray-50 opacity-50 hover:pointer-events-none' : ''} `}
+      } ${isSubmitting ? 'bg-gray-50 opacity-50 hover:pointer-events-none' : ''}`}
     >
       <td className={showSize ? 'py-3' : 'px-2 py-3'}>
         {isEditing ? (
@@ -164,13 +163,7 @@ export function FileRow({
                 onClick={() => setIsEditing(true)}
               />
               <IconButton
-                icon={
-                  showSize ? (
-                    <XMarkIcon className={ICON_CLASS_STYLE} />
-                  ) : (
-                    <TrashIcon className={ICON_CLASS_STYLE} />
-                  )
-                }
+                icon={<TrashIcon className={ICON_CLASS_STYLE} />}
                 colour="red"
                 label={showSize ? 'Remove file' : 'Delete file'}
                 onClick={handleDelete}

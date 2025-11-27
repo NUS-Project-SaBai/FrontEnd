@@ -5,7 +5,7 @@ export type FileRowItem = {
   // File name without extension
   fileName: string;
 
-  // File extension (e.g., '.pdf', '.jpg')
+  // File extension, with the '.' dot (e.g., '.pdf', '.jpg')
   fileExt: string;
 
   // Optional description

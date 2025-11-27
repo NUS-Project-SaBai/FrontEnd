@@ -20,15 +20,13 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
     () =>
       withLoadingDocuments(async () =>
         getUploadByPatientId(patient.pk).then(data => {
-          setDocuments(data.files);
+          setDocuments(data?.files ?? []);
         })
       )(),
     [patient.pk, withLoadingDocuments]
   );
   useEffect(() => {
-    if (patient.pk) {
-      fetchDocuments();
-    }
+    fetchDocuments();
   }, [patient.pk, fetchDocuments]);
 
   return (
@@ -54,7 +52,7 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
           </h1>
           <UploadDocument patient={patient} onUploadSuccess={fetchDocuments} />
           <ViewDocument
-            documents={documents ?? []}
+            documents={documents}
             setDocuments={setDocuments}
             isLoading={isLoadingDocuments}
           />
