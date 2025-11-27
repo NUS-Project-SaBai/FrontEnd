@@ -59,7 +59,7 @@ export function UploadDocument({
                         fileItem.file,
                         commonPrefix +
                           '_' +
-                          fileItem.fileName +
+                          fileItem.file_name +
                           (fileItem.fileExt ? '.' + fileItem.fileExt : '')
                       );
                     });

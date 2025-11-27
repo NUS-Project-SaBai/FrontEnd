@@ -1,17 +1,36 @@
 import { FileItem } from './FileDropzone';
-import { FilePreviewRow } from './FilePreviewRow';
+import { FileRow } from '../FileRow/FileRow';
+import { FileRowItem } from '../FileRow/FileRowItem';
 
 export function FilePreviewTable({
   fileItems,
-  onRename,
-  onDescriptionChange,
+  onDocumentChange,
   onRemove,
 }: {
   fileItems: FileItem[];
-  onRename: (index: number, newName: string) => void;
-  onDescriptionChange: (index: number, newDescription: string) => void;
+  onDocumentChange: (
+    index: number,
+    updates: Partial<Pick<FileItem, 'file_name' | 'description'>>
+  ) => void;
   onRemove: (index: number) => void;
 }) {
+  const convertToFileRowItem = (item: FileItem, index: number): FileRowItem => {
+    const bytes = item.file.size;
+    const kb = bytes / 1024;
+    const sizeDisplay =
+      kb >= 1000 ? `${(kb / 1024).toFixed(2)} MB` : `${kb.toFixed(2)} KB`;
+
+    return {
+      id: `${item.file.name}-${index}`,
+      fileName: item.file_name,
+      fileExt: item.fileExt ? `.${item.fileExt}` : '',
+      description: item.description,
+      previewUrl: URL.createObjectURL(item.file),
+      size: sizeDisplay,
+      isDuplicated: item.isDuplicated,
+    };
+  };
+
   return (
     <div className="max-h-[calc(100vh-28rem)] overflow-y-auto rounded-lg border-2 border-gray-300">
       <table className="w-full">
@@ -24,14 +43,17 @@ export function FilePreviewTable({
         </thead>
         <tbody className="divide-y divide-gray-100">
           {fileItems.map((item, index) => (
-            <FilePreviewRow
+            <FileRow
               key={`${item.file.name}-${index}`}
-              fileItem={item}
-              onRename={newName => onRename(index, newName)}
-              onDescriptionChange={newDescription =>
-                onDescriptionChange(index, newDescription)
-              }
-              onRemove={() => onRemove(index)}
+              item={convertToFileRowItem(item, index)}
+              onSave={async (newName, newDescription) => {
+                onDocumentChange(index, {
+                  file_name: newName,
+                  description: newDescription,
+                });
+              }}
+              onDelete={async () => onRemove(index)}
+              showSize={true}
             />
           ))}
         </tbody>

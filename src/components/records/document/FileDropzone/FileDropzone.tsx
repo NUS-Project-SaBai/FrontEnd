@@ -5,7 +5,7 @@ import imageCompression from 'browser-image-compression';
 
 export type FileItem = {
   file: FileWithPath;
-  fileName: string;
+  file_name: string;
   fileExt: string | undefined;
   isDuplicated: boolean;
   description: string;
@@ -20,11 +20,13 @@ export function FileDropzone({
   const checkAndMarkDuplicates = (files: FileItem[]): FileItem[] => {
     const nameCount: Record<string, number> = {};
     files.forEach(file => {
-      const fullName = file.fileName + (file.fileExt ? '.' + file.fileExt : '');
+      const fullName =
+        file.file_name + (file.fileExt ? '.' + file.fileExt : '');
       nameCount[fullName] = (nameCount[fullName] || 0) + 1;
     });
     files.forEach(file => {
-      const fullName = file.fileName + (file.fileExt ? '.' + file.fileExt : '');
+      const fullName =
+        file.file_name + (file.fileExt ? '.' + file.fileExt : '');
       file.isDuplicated = nameCount[fullName] > 1;
     });
     return files;
@@ -44,7 +46,7 @@ export function FileDropzone({
     },
     async onDrop(acceptedFiles) {
       const duplicatedFiles = acceptedFiles.filter(file =>
-        files.some(f => f.fileName + '.' + f.fileExt === file.name)
+        files.some(f => f.file_name + '.' + f.fileExt === file.name)
       );
       if (duplicatedFiles.length > 0) {
         toast.error(
@@ -64,7 +66,7 @@ export function FileDropzone({
       ).then(files =>
         files.map(file => ({
           file: file,
-          fileName:
+          file_name:
             file.name.lastIndexOf('.') !== -1
               ? file.name.slice(0, file.name.lastIndexOf('.'))
               : file.name,
@@ -80,22 +82,13 @@ export function FileDropzone({
       setFiles(checkAndMarkDuplicates([...files, ...newFileItems]));
     },
   });
-  const handleRename = (index: number, newName: string) => {
-    setFiles(
-      checkAndMarkDuplicates(
-        files.map((item, i) =>
-          i === index ? { ...item, fileName: newName } : item
-        )
-      )
-    );
-  };
-
-  const handleDescriptionChange = (index: number, newDescription: string) => {
-    setFiles(
-      files.map((item, i) =>
-        i === index ? { ...item, description: newDescription } : item
-      )
-    );
+  const handleDocumentChange = (
+    index: number,
+    updates: Partial<Pick<FileItem, 'file_name' | 'description'>>
+  ) => {
+    const updatedFiles = [...files];
+    updatedFiles[index] = { ...updatedFiles[index], ...updates };
+    setFiles(checkAndMarkDuplicates(updatedFiles));
   };
 
   const handleRemove = (index: number) => {
@@ -111,8 +104,7 @@ export function FileDropzone({
           </h3>
           <FilePreviewTable
             fileItems={files}
-            onRename={handleRename}
-            onDescriptionChange={handleDescriptionChange}
+            onDocumentChange={handleDocumentChange}
             onRemove={handleRemove}
           />
         </div>
