@@ -6,5 +6,6 @@ export type Upload = {
   file_path?: string;
   offline_file?: string;
   file_name: string;
+  description: string;
   created_at: string;
 };

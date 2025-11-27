@@ -42,6 +42,7 @@ export function ConsultationForm({
       unsub();
       useFormReturn.reset({});
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitId]);
   const {
     control,

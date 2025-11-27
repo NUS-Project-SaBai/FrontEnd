@@ -16,7 +16,7 @@ export async function getVitalsByPatientID(
   patientID: number
 ): Promise<Vital[] | null> {
   if (!patientID) return null;
-  return (await axiosInstance.get(`/vitals?patientID=${patientID}`)).data.map(
+  return (await axiosInstance.get(`/vitals/?patientID=${patientID}`)).data.map(
     vitalFromJson
   );
 }

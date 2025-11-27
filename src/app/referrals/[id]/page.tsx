@@ -34,7 +34,7 @@ export default function ReferralDetailsPage() {
       setReferral(data.referral);
     });
     fetchReferral();
-  }, []);
+  }, [id, withLoading]);
 
   function saveOutcome(outcome: string) {
     const patch = async () => {

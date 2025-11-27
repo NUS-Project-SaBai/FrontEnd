@@ -3,11 +3,11 @@
 import { axiosInstance } from '@/lib/axiosInstance';
 import { Upload } from '@/types/Upload';
 
-export async function patchUploadName(
+export async function patchUpload(
   uploadId: number,
-  file_name: string
+  updatedUploadData: Partial<Upload>
 ): Promise<Upload | null> {
   return axiosInstance
-    .patch(`/files/${uploadId}/`, { file_name })
+    .patch(`/files/${uploadId}/`, { ...updatedUploadData })
     .then(r => r.data);
 }
