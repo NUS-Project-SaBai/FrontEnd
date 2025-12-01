@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
   const offlineUser = req.cookies.get('offlineUser');
 
   // if user is not authenticated, redirect them to login.
-  if (APP_CONFIG.OFFLINE && offlineUser == null) {
+  if (APP_CONFIG.OFFLINE && offlineUser == null && false) { // TODO: offline login page
     return NextResponse.redirect(new URL('/login', req.url));
   } else if (!APP_CONFIG.OFFLINE && !session) {
     return NextResponse.redirect(`${origin}/auth/login`);
