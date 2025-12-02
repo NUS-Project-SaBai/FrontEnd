@@ -21,6 +21,7 @@ export type Patient = {
   confidence: string;
   last_visit_date: string;
   last_visit_id: number;
+  to_get_report: boolean;
 };
 
 /**

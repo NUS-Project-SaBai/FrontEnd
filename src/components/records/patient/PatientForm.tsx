@@ -98,6 +98,11 @@ export function PatientForm({
             type="textarea"
             isRequired={true}
           />
+          <RHFBinaryOption
+            label="Receive Reports"
+            name="to_get_report"
+            defaultValue={getValues('to_get_report') || 'No'}
+          />
         </div>
         <Controller
           name={'picture'}
