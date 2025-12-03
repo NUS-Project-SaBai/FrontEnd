@@ -111,7 +111,7 @@ export function UploadDocument({
                 },
               }}
               render={({ field: { value, onChange } }) => (
-                <FileDropzone files={value} setFiles={onChange} />
+                <FileDropzone files={value || []} setFiles={onChange} />
               )}
             />
 
