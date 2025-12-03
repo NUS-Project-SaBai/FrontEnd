@@ -1,51 +1,84 @@
 'use client';
 
 import { Button } from '@/components/Button';
-import { IconButton } from '@/components/IconButton';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { deleteUpload } from '@/data/fileUpload/deleteUpload';
 import { patchUpload } from '@/data/fileUpload/patchUpload';
-import { Upload } from '@/types/Upload';
 import { formatDate } from '@/utils/formatDate';
-import {
-  CheckIcon,
-  PencilIcon,
-  TrashIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
-import Link from 'next/link';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { FileRow } from './FileRow/FileRow';
+import { FileRowItem } from './FileRow/FileRowItem';
+import { UploadFile } from '@/types/UploadFile';
 
 export function ViewDocument({
   documents,
   setDocuments,
   isLoading,
 }: {
-  documents: Upload[];
-  setDocuments: React.Dispatch<React.SetStateAction<Upload[]>>;
+  documents: UploadFile[];
+  setDocuments: React.Dispatch<React.SetStateAction<UploadFile[]>>;
   isLoading: boolean;
 }) {
-  const ICON_CLASS_STYLE = 'h-5 w-5';
   const [isOpen, setIsOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [newFileName, setNewFileName] = useState('');
-  const [newDescription, setNewDescription] = useState('');
 
-  const handleEdits = async (documentId: number) => {
+  const convertToFileRowItem = (doc: UploadFile): FileRowItem => {
+    const lastDot = doc.file_name.lastIndexOf('.');
+    const fileName =
+      lastDot > 0 ? doc.file_name.slice(0, lastDot) : doc.file_name;
+    const fileExt = lastDot > 0 ? doc.file_name.slice(lastDot) : '';
+
+    return {
+      id: doc.id,
+      fileName,
+      fileExt,
+      description: doc.description,
+      previewUrl: doc.file_path || doc.offline_file || '#',
+      createdAt: formatDate(doc.created_at, 'datetime'),
+    };
+  };
+
+  const handleSave = async (
+    documentId: number,
+    updates: Partial<Pick<UploadFile, 'file_name' | 'description'>>
+  ) => {
+    const original = documents.find(d => d.id === documentId);
+    if (!original) {
+      toast.error('Original document not found');
+      return;
+    }
+
+    const lastDot = original.file_name.lastIndexOf('.');
+    const fileExt = lastDot > 0 ? original.file_name.slice(lastDot) : '';
+    const trimmedName = updates.file_name
+      ? (updates.file_name.trim() + fileExt).trim()
+      : original.file_name;
+    const trimmedDesc =
+      updates.description !== undefined
+        ? updates.description.trim()
+        : original.description || '';
+    const originalName = original.file_name.trim();
+    const originalDesc = (original.description || '').trim();
+
+    // Skip API call if nothing changed
+    if (trimmedName === originalName && trimmedDesc === originalDesc) {
+      toast('No changes to save', {
+        icon: <InformationCircleIcon className="h-6 w-6 text-blue-500" />,
+      });
+      return;
+    }
+
     try {
       const updated = await patchUpload(documentId, {
-        file_name: newFileName,
-        description: newDescription,
+        file_name: trimmedName,
+        description: trimmedDesc,
       });
       setDocuments(ds =>
         ds.map(d => (d.id === documentId && updated ? updated : d))
       );
-      setEditingId(null);
-      setNewFileName('');
-      setNewDescription('');
       toast.success('Document updated');
     } catch (err: unknown) {
       console.error('patchUpload failed:', err);
@@ -60,7 +93,11 @@ export function ViewDocument({
     }
   };
 
-  const handleDelete = async (docId: number) => {
+  const handleDelete = async (docId: number, fileName: string) => {
+    if (!confirm(`Are you sure you want to delete ${fileName}?`)) {
+      return;
+    }
+
     try {
       await deleteUpload(docId);
       setDocuments(ds => ds.filter(d => d.id !== docId));
@@ -103,100 +140,15 @@ export function ViewDocument({
             </thead>
             <tbody className="divide-y divide-gray-200">
               {documents.map(doc => (
-                <tr key={doc.id}>
-                  <td className="px-2 py-3">
-                    {editingId === doc.id ? (
-                      <div className="space-y-2">
-                        <input
-                          type="text"
-                          value={newFileName}
-                          onChange={e => setNewFileName(e.target.value)}
-                          className="w-full rounded border px-2 py-1"
-                          placeholder="File name"
-                        />
-                        <input
-                          type="text"
-                          value={newDescription}
-                          onChange={e => setNewDescription(e.target.value)}
-                          className="w-full rounded border px-2 py-1 text-sm"
-                          placeholder="Add description..."
-                        />
-                      </div>
-                    ) : (
-                      <div className="space-y-3.5">
-                        <Link
-                          href={doc.file_path || doc.offline_file || '#'}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="py-1 text-blue-600 underline"
-                        >
-                          {doc.file_name}
-                        </Link>
-                        {doc.description ? (
-                          <p className="py-1 text-sm text-gray-600">
-                            {doc.description}
-                          </p>
-                        ) : (
-                          <p className="py-1 text-sm italic text-gray-400">
-                            No description
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </td>
-                  <td className="px-2 py-1">
-                    {formatDate(doc.created_at, 'datetime')}
-                  </td>
-                  <td className="px-2 py-1">
-                    {editingId === doc.id ? (
-                      <div className="flex flex-col gap-2 md:flex-row">
-                        <IconButton
-                          icon={<CheckIcon className={ICON_CLASS_STYLE} />}
-                          label="Save"
-                          onClick={() => handleEdits(doc.id)}
-                          colour="green"
-                        />
-                        <IconButton
-                          icon={<XMarkIcon className={ICON_CLASS_STYLE} />}
-                          label="Cancel"
-                          onClick={() => {
-                            setEditingId(null);
-                            setNewFileName('');
-                            setNewDescription('');
-                          }}
-                          colour="red"
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex flex-col gap-2 md:flex-row">
-                        <IconButton
-                          icon={<PencilIcon className={ICON_CLASS_STYLE} />}
-                          label="Edit"
-                          onClick={() => {
-                            setEditingId(doc.id);
-                            setNewFileName(doc.file_name);
-                            setNewDescription(doc.description || '');
-                          }}
-                          colour="blue"
-                        />
-                        <IconButton
-                          icon={<TrashIcon className={ICON_CLASS_STYLE} />}
-                          label="Delete"
-                          onClick={() => {
-                            if (
-                              confirm(
-                                `Are you sure you want to delete ${doc.file_name}?`
-                              )
-                            ) {
-                              handleDelete(doc.id);
-                            }
-                          }}
-                          colour="red"
-                        />
-                      </div>
-                    )}
-                  </td>
-                </tr>
+                <FileRow
+                  key={doc.id}
+                  item={convertToFileRowItem(doc)}
+                  onSave={async (fileName, description) =>
+                    handleSave(doc.id, { file_name: fileName, description })
+                  }
+                  onDelete={async () => handleDelete(doc.id, doc.file_name)}
+                  showCreatedAt={true}
+                />
               ))}
             </tbody>
           </table>
