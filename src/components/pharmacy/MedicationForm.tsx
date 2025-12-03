@@ -10,10 +10,12 @@ export function MedicationForm({
   onSubmit,
   isSubmitting = false,
   editMedication = null,
+  isDirty = true
 }: {
   onSubmit: FormEventHandler;
   isSubmitting?: boolean;
   editMedication?: Medication | null;
+  isDirty?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -40,12 +42,14 @@ export function MedicationForm({
           label="Quantity to Add (Negative to subtract)"
           name="quantity_changed"
           type="number"
+          valueAsNumber={true}
           isRequired={editMedication == null} // Only required for adding new medicine
         />
         <RHFInputField
           label="Warning Quantity (System will flag out when medication stock falls below this quantity). To remove warning, leave blank or 0."
           name="warning_quantity"
           type="number"
+          valueAsNumber={true}
           isRequired={true}
           validate={{
             min: val =>
@@ -58,9 +62,24 @@ export function MedicationForm({
         <div className="flex">
           {isSubmitting ? (
             <LoadingUI message="Submitting medication..." />
-          ) : (
+          ) : editMedication == null ? (
             <Button text="Submit" colour="green" type="submit" />
-          )}
+          ) : isDirty ? (
+            <Button text="Submit edit" colour="green" type="submit" />
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Button 
+                text="Submit edit" 
+                colour="red" // Note: Usually 'gray' is better for disabled states
+                type="submit" 
+                disabled={true} 
+              />
+              <p className="text-sm text-red-500 italic">
+                Make a change before submitting
+              </p>
+            </div>  
+          )
+          }
         </div>
       </form>
     </div>
