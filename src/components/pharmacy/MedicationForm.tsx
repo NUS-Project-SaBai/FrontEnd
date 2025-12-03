@@ -50,7 +50,7 @@ export function MedicationForm({
           name="warning_quantity"
           type="number"
           valueAsNumber={true}
-          isRequired={true}
+          isRequired={false}
           validate={{
             min: val =>
               val == null ||
