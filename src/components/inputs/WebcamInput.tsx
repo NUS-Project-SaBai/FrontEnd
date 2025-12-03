@@ -47,7 +47,7 @@ export function WebcamInput({
       {!cameraIsOpen && (
         <div className="relative flex h-64 w-64 items-center justify-center bg-gray-400">
           {imageDetails != null && (
-            <Image src={imageDetails} alt="" fill={true} />
+            <Image src={imageDetails} alt="" fill={true} unoptimized={true} />
           )}
         </div>
       )}
