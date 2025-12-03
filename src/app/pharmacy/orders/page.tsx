@@ -217,13 +217,24 @@ function OrderRow({
                   <ApproveRejectOrderButton
                     handleApproveOrder={async () => {
                       await patchOrder(o.order_id.toString(), 'APPROVED')
-                        .then(() => removeNonPendingOrder(o.order_id))
-                        .catch(err => onPatchError(err, o.medication_name));
+                        .then((r) => {
+                          if ('error' in r) {
+                            onPatchError(new Error(r.error), o.medication_name);
+                            return;
+                          }
+                          removeNonPendingOrder(o.order_id)
+                        })
                     }}
                     handleCancelOrder={async () => {
                       await patchOrder(o.order_id.toString(), 'CANCELLED')
-                        .then(() => removeNonPendingOrder(o.order_id))
-                        .catch(err => onPatchError(err, o.medication_name));
+
+                        .then((r) => {
+                          if ('error' in r) {
+                            onPatchError(new Error(r.error), o.medication_name);
+                            return;
+                          }
+                          removeNonPendingOrder(o.order_id)
+                        })
                     }}
                   />
                 </div>
