@@ -8,7 +8,8 @@ import { Switch } from '@/components/ui/switch';
 import { PatientListContext } from '@/context/PatientListContext';
 import {
   getAllPdfConsults,
-  getLatestPdfConsult,
+  getAllPdfConsultsByPatientId,
+  getLatestPdfConsultByPatientId,
 } from '@/data/consult/getPdfConsult';
 import { patchPatient } from '@/data/patient/patchPatient';
 import { Patient } from '@/types/Patient';
@@ -50,7 +51,7 @@ export default function ReceiveReportPage() {
             )
           );
           toast.success(
-            `Updated ${patient.pk} to ${val ? 'Receive' : 'Do not receive'}`
+            `Updated ${patient.patient_id} to ${val ? 'Receive' : 'Do not receive'}`
           );
         })
         .catch(err => {
@@ -71,9 +72,26 @@ export default function ReceiveReportPage() {
   return (
     <div className="p-4">
       <h1>Receive Report</h1>
-      <p className="mb-3 text-gray-600">
-        Manage patients who should receive reports.
-      </p>
+      <Button
+        text="Download All Reports"
+        title="Download all consult for those who want to receive report"
+        colour="blue"
+        className="absolute right-4 top-5"
+        onClick={() => {
+          getAllPdfConsults().then(blobfile => {
+            if (blobfile) {
+              const url = URL.createObjectURL(blobfile.fileBlob);
+              const downloadLink = document.createElement('a');
+              downloadLink.href = url;
+              downloadLink.download = blobfile.filename;
+              document.body.appendChild(downloadLink);
+              downloadLink.click();
+              document.body.removeChild(downloadLink);
+              URL.revokeObjectURL(url);
+            }
+          });
+        }}
+      />
 
       <div className="mb-3">
         <PatientSearchbar
@@ -136,7 +154,7 @@ export default function ReceiveReportPage() {
                       colour="blue"
                       text="Latest report"
                       onClick={() =>
-                        getLatestPdfConsult(patient.pk)
+                        getLatestPdfConsultByPatientId(patient.pk)
                           .then(blob => {
                             if (blob) {
                               const url = URL.createObjectURL(blob);
@@ -159,7 +177,7 @@ export default function ReceiveReportPage() {
                       colour="indigo"
                       text="All reports"
                       onClick={() =>
-                        getAllPdfConsults(patient.pk)
+                        getAllPdfConsultsByPatientId(patient.pk)
                           .then(blob => {
                             if (blob) {
                               const url = URL.createObjectURL(blob);
