@@ -6,13 +6,13 @@ import { VILLAGES_AND_ALL } from '@/constants';
 import { getUploadByPatientId } from '@/data/fileUpload/getUpload';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
-import { Upload } from '@/types/Upload';
+import { UploadFile } from '@/types/UploadFile';
 import { useCallback, useEffect, useState } from 'react';
 import { EditPatient } from './EditPatient';
 import { PatientDetails } from './PatientDetails';
 
 export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
-  const [documents, setDocuments] = useState<Upload[]>([]);
+  const [documents, setDocuments] = useState<UploadFile[]>([]);
 
   const { isLoading: isLoadingDocuments, withLoading: withLoadingDocuments } =
     useLoadingState(false);
@@ -20,7 +20,7 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
     () =>
       withLoadingDocuments(async () =>
         getUploadByPatientId(patient.pk).then(data => {
-          setDocuments(data);
+          setDocuments(data?.files ?? []);
         })
       )(),
     [patient.pk, withLoadingDocuments]
