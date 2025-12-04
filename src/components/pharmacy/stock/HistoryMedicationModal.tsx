@@ -1,5 +1,5 @@
 'use client';
-import { fetchMedicationHistory } from '@/app/pharmacy/stock/api';
+import { fetchMedicationHistory } from '@/app/(main)/pharmacy/stock/api';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { getMedicationById } from '@/data/medication/getMedications';

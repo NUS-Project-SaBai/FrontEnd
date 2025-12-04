@@ -85,7 +85,7 @@ export function SideMenu() {
         <aside
           className={
             (open ? 'scale-y-100' : 'scale-y-0 md:scale-y-100') +
-            ' fixed z-10 h-full w-full origin-top justify-between bg-gray-900 transition duration-200 md:static md:z-0 md:flex md:flex-col'
+            ' absolute z-10 h-full w-full origin-top justify-between bg-gray-900 transition duration-200 md:static md:z-0 md:flex md:flex-col'
           }
         >
           <div>
@@ -111,6 +111,7 @@ export function SideMenu() {
                   name: 'Account Management',
                   icon: UserCircleIcon,
                 }}
+                onClick={() => setOpen(false)}
               />
             )}
             <NavItem
