@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
   if (!APP_CONFIG.IS_PROD && !APP_CONFIG.APP_BASE_URL)
     throw new Error('Missing APP_BASE_URL in .env');
   const auth0 = new Auth0Client({
-    authorizationParameters: { audience: 'https://sabai.jp.auth0.com/api/v2/' },
+    authorizationParameters: { audience: APP_CONFIG.AUTH0_AUDIENCE },
     appBaseUrl: APP_CONFIG.APP_BASE_URL,
   });
   const authRes = await auth0.middleware(req);
@@ -17,11 +17,14 @@ export async function middleware(req: NextRequest) {
     }
     return authRes;
   }
+  if (req.nextUrl.pathname === '/logout') {
+    req.cookies.delete('offlineUser');
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
 
   const { origin } = new URL(req.url);
   const session = await auth0.getSession();
   const offlineUser = req.cookies.get('offlineUser');
-
   // if user is not authenticated, redirect them to login.
   if (APP_CONFIG.OFFLINE && offlineUser == null) {
     return NextResponse.redirect(new URL('/login', req.url));
@@ -42,5 +45,5 @@ export async function middleware(req: NextRequest) {
  */
 export const config = {
   matcher:
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login|account-locked).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login|account-locked|sabaiLogo.png|cambodia.jpg).*)',
 };

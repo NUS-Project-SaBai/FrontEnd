@@ -1,6 +1,7 @@
 'use client';
 
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
+import { APP_CONFIG } from '@/config';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { VillageContext } from '@/context/VillageContext';
 import { getUserByEmail } from '@/data/user';
@@ -40,7 +41,7 @@ export function SideMenu() {
   const { user } = useUser();
   const [userRole, setUserRole] = useState<string>('member');
   useEffect(() => {
-    if (user?.email) {
+    if (!APP_CONFIG.OFFLINE && user?.email) {
       getUserByEmail(user.email).then(user => {
         setUserRole(user?.[0].role || 'member');
       });
@@ -105,6 +106,7 @@ export function SideMenu() {
           </div>
           <div>
             {userRole === 'admin' && (
+              // Only admins can access, must not be offline mode.
               <NavItem
                 navItem={{
                   href: '/account-management',
@@ -116,7 +118,8 @@ export function SideMenu() {
             )}
             <NavItem
               navItem={{
-                href: '/auth/logout',
+                // for offline, logout is done by middleware
+                href: APP_CONFIG.OFFLINE ? '/logout' : '/auth/logout',
                 name: 'Logout',
                 icon: ArrowLeftStartOnRectangleIcon,
               }}
