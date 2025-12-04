@@ -4,6 +4,7 @@ import { ConsultationForm } from '@/components/records/consultation/Consultation
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
 import { PrescriptionConsultCol } from '@/components/records/PrescriptionConsultCol';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { getPatientById } from '@/data/patient/getPatient';
 import { Consult } from '@/types/Consult';
 import { calculateDobDifference, Patient } from '@/types/Patient';
@@ -76,29 +77,33 @@ function MainBody({
   }[];
 }) {
   return (
-    <div className="grid flex-grow grid-cols-2 gap-x-2">
-      <div>
-        <h2>Vitals</h2>
-        {vitals == null ? (
-          <p>No vitals found for current visit</p>
-        ) : (
-          <PastVitalTable
-            vital={vitals}
-            age={calculateDobDifference(
-              new Date(patient.date_of_birth),
-              visitDate
-            )}
-            gender={patient.gender}
+    <div className="grid h-screen min-h-0 flex-1 grid-cols-2">
+      <ScrollArea className="h-full">
+        <div>
+          <h2>Vitals</h2>
+          {vitals == null ? (
+            <p>No vitals found for current visit</p>
+          ) : (
+            <PastVitalTable
+              vital={vitals}
+              age={calculateDobDifference(
+                new Date(patient.date_of_birth),
+                visitDate
+              )}
+              gender={patient.gender}
+            />
+          )}
+          <PrescriptionConsultCol
+            consults={consults}
+            prescriptions={prescriptions}
           />
-        )}
-        <PrescriptionConsultCol
-          consults={consults}
-          prescriptions={prescriptions}
-        />
-      </div>
-      <div className="mb-2">
-        <ConsultationForm visitId={visitId} patient={patient} />
-      </div>
+        </div>
+      </ScrollArea>
+      <ScrollArea className="h-full">
+        <div className="mb-2">
+          <ConsultationForm visitId={visitId} patient={patient} />
+        </div>
+      </ScrollArea>
     </div>
   );
 }
