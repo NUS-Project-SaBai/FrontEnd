@@ -44,6 +44,33 @@ export type Vital = {
   others: string;
 };
 
+/*
+ Returns boolean true if the denominator is >= 12 (indicating worse vision)\
+ Checks if a visual acuity value indicates poor vision 6/12 or worse (eg. 6/12, 6/18, 6/24, etc.)
+ Supports standard "6/X" notation where X is the denominator.
+@param visualAcuity - The visual acuity value to check
+@returns boolean true if the visual acuity value indicates poor vision
+*/
+
+export function isVisualAcuityPoor(visualAcuity: string | undefined): boolean {
+  if (!visualAcuity) return false;
+
+  const match = visualAcuity.trim().match(/^(\d+)\s*\/\s*(\d+)$/);
+  if (!match) return false;
+
+  const numerator = parseFloat(match[1]);
+  const denominator = parseFloat(match[2]);
+
+  if (numerator !== 6) {
+    console.log(
+      `Non standard visual acutiy numerator detected: ${visualAcuity}`
+    );
+    return false;
+  }
+
+  return denominator >= 12;
+}
+
 export function vitalFromJson(jsonObj: object): Vital | null {
   return jsonObj as Vital;
 }
