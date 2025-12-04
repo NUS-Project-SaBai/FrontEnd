@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/Button';
-import { APP_CONFIG } from '@/config';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { APP_CONFIG } from '@/config';
 import { axiosClientInstance } from '@/lib/axiosClientInstance';
 import { User } from '@/types/User';
 import Image from 'next/image';
