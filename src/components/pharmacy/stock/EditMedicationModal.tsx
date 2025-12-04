@@ -60,7 +60,7 @@ export function EditMedicationModal({
     },
   });
 
-  const {isDirty}  = useFormReturn.formState;
+  const { isDirty } = useFormReturn.formState;
 
   return (
     <Modal
@@ -137,7 +137,6 @@ export function EditMedicationModal({
             }}
             editMedication={editMedication}
             isDirty = {isDirty}
-
           />
         </FormProvider>
       ) : (

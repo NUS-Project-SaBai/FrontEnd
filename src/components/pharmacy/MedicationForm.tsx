@@ -42,14 +42,12 @@ export function MedicationForm({
           label="Quantity to Add (Negative to subtract)"
           name="quantity_changed"
           type="number"
-          valueAsNumber={true}
           isRequired={editMedication == null} // Only required for adding new medicine
         />
-        <RHFInputField
+        {editMedication && <RHFInputField
           label="Warning Quantity (System will flag out when medication stock falls below this quantity). To remove warning, leave blank or 0."
           name="warning_quantity"
           type="number"
-          valueAsNumber={true}
           isRequired={false}
           validate={{
             min: val =>
@@ -57,20 +55,20 @@ export function MedicationForm({
               val >= 0 ||
               'Warning Quantity should be greater than or equal to 0',
           }}
-        />
+        />}
         <RHFInputField label="Notes" name="notes" type="text" />
         <div className="flex">
           {isSubmitting ? (
             <LoadingUI message="Submitting medication..." />
           ) : editMedication == null ? (
-            <Button text="Submit" colour="green" type="submit" />
+            <Button text="Submit" colour="green" type="submit"/> //used by AddMedicationModal
           ) : isDirty ? (
-            <Button text="Submit edit" colour="green" type="submit" />
+            <Button text="Submit edit" colour="green" type="submit" /> //EditMedicationModal, and got changes made
           ) : (
-            <div className="flex flex-col gap-2">
-              <Button 
+            <div className="flex flex-col gap-2">  
+              <Button               //EditMedicaitonModal, but got no changes
                 text="Submit edit" 
-                colour="red" // Note: Usually 'gray' is better for disabled states
+                colour="red" 
                 type="submit" 
                 disabled={true} 
               />
