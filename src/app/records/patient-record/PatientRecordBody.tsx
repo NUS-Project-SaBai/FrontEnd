@@ -2,6 +2,7 @@
 import { Button } from '@/components/Button';
 import AllConsultationDetails from '@/components/records/consultation/AllConsultationDetails';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { getConsultsByPatientID } from '@/data/consult/getConsult';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { getVitalsByPatientID } from '@/data/vital/getVital';
@@ -21,9 +22,9 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-2">
-      <div className="flex flex-1 flex-row gap-2"></div>
-      <div className="mx-2 flex flex-1 flex-col">
+    <div className="flex h-full min-h-0 flex-col gap-2">
+      <div className="flex flex-none flex-row gap-2"></div>
+      <div className="mx-2 flex min-h-0 flex-1 flex-col">
         <h1 className="py-0">Visits</h1>
         {visits.map(visit => {
           const thisVisitConsults = consults?.filter(
@@ -71,45 +72,48 @@ export async function PatientRecordBody({ patient }: { patient: Patient }) {
             <div
               key={visit.id}
               className={
-                'my-2 flex flex-1 flex-col ' +
+                'my-2 flex min-h-0 flex-1 flex-col ' +
                 (isLatestVisit ? '' : 'border-t-2 pt-4')
               }
             >
-              <div className="flex flex-1 gap-2">
+              <div className="flex flex-none gap-2">
                 <h2 className="text-lg font-bold">
                   {formatDate(visit.date, 'datetime')}
                 </h2>
                 {actionButtons}
               </div>
-              <div className="mt-2 grid flex-1 grid-cols-2 gap-2">
-                <div className="flex flex-1 rounded-lg border px-2">
+              <div className="mt-2 grid min-h-0 flex-1 grid-cols-2 gap-2">
+                <div className="flex min-h-0 flex-1 rounded-lg border px-2">
                   {vital ? (
-                    <div className="flex-1 pb-4">
-                      <h1 className="pb-0 text-2xl">Vitals</h1>
-                      <PastVitalTable
-                        vital={vital}
-                        gender={patient.gender}
-                        age={calculateDobDifference(
-                          new Date(patient.date_of_birth),
-                          consults.length == 0
-                            ? new Date()
-                            : new Date(consults[0].date)
-                        )}
-                      />
-                    </div>
+                    <ScrollArea className="h-full w-full">
+                      <div className="pb-4">
+                        <h1 className="pb-0 text-2xl">Vitals</h1>
+                        <PastVitalTable
+                          vital={vital}
+                          gender={patient.gender}
+                          age={calculateDobDifference(
+                            new Date(patient.date_of_birth),
+                            consults.length == 0
+                              ? new Date()
+                              : new Date(consults[0].date)
+                          )}
+                        />
+                      </div>
+                    </ScrollArea>
                   ) : (
                     <div className="flex-1 content-center text-center">
                       No vitals found
                     </div>
                   )}
                 </div>
-                <div className="flex flex-1 rounded-lg border px-2">
+                <div className="flex min-h-0 flex-1 rounded-lg border px-2">
                   {thisVisitConsults.length > 0 ? (
-                    <div className="flex-1 pb-4">
-                      <h1 className="mb-2 text-2xl">Consultations</h1>
-
-                      <AllConsultationDetails consults={thisVisitConsults} />
-                    </div>
+                    <ScrollArea className="h-full w-full">
+                      <div className="pb-4">
+                        <h1 className="mb-2 text-2xl">Consultations</h1>
+                        <AllConsultationDetails consults={thisVisitConsults} />
+                      </div>
+                    </ScrollArea>
                   ) : (
                     <div className="flex-1 content-center text-center">
                       No consults found

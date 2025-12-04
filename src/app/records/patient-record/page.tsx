@@ -22,11 +22,13 @@ export default async function PatientRecordPage({
   }
 
   return (
-    <div className="p-2">
+    <div className="flex h-full min-h-0 flex-col p-2">
       <h1>Patient Records</h1>
       <PatientInfoHeaderSection patient={patient} />
       <hr className="my-2 w-full border-t-2" />
-      <PatientRecordBody patient={patient} />
+      <div className="min-h-0 flex-1">
+        <PatientRecordBody patient={patient} />
+      </div>
     </div>
   );
 }
