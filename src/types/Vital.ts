@@ -52,9 +52,9 @@ export type Vital = {
  - "6/6" -> "6/6"
  - "6/12 + 1" -> "6/13"
  @param visualAcuity - The visual acuity value to normalize
- @returns The normalized visual acuity string in "6/X" format, or the original string if it cannot be normalized
+ @returns The normalized visual acuity string in "6/X" format
 */
-export function normalizeVisualAcuity(
+export function normalizeVisualAcuityValues(
   visualAcuity: string | undefined
 ): string {
   if (!visualAcuity) return '';
@@ -93,7 +93,7 @@ export function normalizeVisualAcuity(
 export function isVisualAcuityPoor(visualAcuity: string | undefined): boolean {
   if (!visualAcuity) return false;
 
-  const normalized = normalizeVisualAcuity(visualAcuity);
+  const normalized = normalizeVisualAcuityValues(visualAcuity);
   const match = normalized.match(/^(\d+)\s*\/\s*(\d+)$/);
 
   if (!match) return false;
