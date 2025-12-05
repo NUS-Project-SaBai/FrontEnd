@@ -42,12 +42,17 @@ export function MedicationTable({
 }
 function MedicationItemRow({ medicine }: { medicine: Medication }) {
   const ICON_CLASS_STYLE = 'h-6 w-6';
+
   const isBelowWarningQuantity: boolean =
     medicine.warning_quantity != null &&
     medicine.quantity < medicine.warning_quantity;
+  const isCriticallyLow: boolean = 
+    medicine.warning_quantity != null && 
+    medicine.quantity < (medicine.warning_quantity / 2)
+
   return (
     <tr
-      className={`${isBelowWarningQuantity ? 'bg-red-50' : 'bg-green-50'} transition-colors`}
+      className={`${isCriticallyLow? 'bg-red-100' :isBelowWarningQuantity ? 'bg-red-50' : 'bg-green-50'} transition-colors`}
     >
       <td>{medicine.medicine_name}</td>
       <td>{medicine.quantity}</td>

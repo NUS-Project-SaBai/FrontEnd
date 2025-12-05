@@ -59,7 +59,8 @@ export function AddMedicationModal({
               medicine_name: data.medicine_name.toString().trim(),
               code: data.code.toString().trim(),
               quantity: data.quantity_changed as number,
-              warning_quantity: data.warning_quantity as number,
+              //warning quantity is set to be 50% of input quantity
+              warning_quantity: Math.floor(data.quantity_changed / 2) as number, 
               notes: data.notes as string,
             };
 
