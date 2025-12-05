@@ -1,6 +1,7 @@
 'use client';
 
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
+import { APP_CONFIG } from '@/config';
 import { VILLAGES_AND_ALL } from '@/constants';
 import { VillageContext } from '@/context/VillageContext';
 import { getUserByEmail } from '@/data/user';
@@ -40,7 +41,7 @@ export function SideMenu() {
   const { user } = useUser();
   const [userRole, setUserRole] = useState<string>('member');
   useEffect(() => {
-    if (user?.email) {
+    if (!APP_CONFIG.OFFLINE && user?.email) {
       getUserByEmail(user.email).then(user => {
         setUserRole(user?.[0].role || 'member');
       });
@@ -85,7 +86,7 @@ export function SideMenu() {
         <aside
           className={
             (open ? 'scale-y-100' : 'scale-y-0 md:scale-y-100') +
-            ' fixed z-10 h-full w-full origin-top justify-between bg-gray-900 transition duration-200 md:static md:z-0 md:flex md:flex-col'
+            ' absolute z-10 h-full w-full origin-top justify-between bg-gray-900 transition duration-200 md:static md:z-0 md:flex md:flex-col'
           }
         >
           <div>
@@ -105,17 +106,20 @@ export function SideMenu() {
           </div>
           <div>
             {userRole === 'admin' && (
+              // Only admins can access, must not be offline mode.
               <NavItem
                 navItem={{
                   href: '/account-management',
                   name: 'Account Management',
                   icon: UserCircleIcon,
                 }}
+                onClick={() => setOpen(false)}
               />
             )}
             <NavItem
               navItem={{
-                href: '/auth/logout',
+                // for offline, logout is done by middleware
+                href: APP_CONFIG.OFFLINE ? '/logout' : '/auth/logout',
                 name: 'Logout',
                 icon: ArrowLeftStartOnRectangleIcon,
               }}

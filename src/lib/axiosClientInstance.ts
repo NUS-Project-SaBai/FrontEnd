@@ -3,6 +3,13 @@
 import { APP_CONFIG } from '@/config';
 import axios from 'axios';
 
+// Helper function to read cookies in client-side
+function getCookie(name: string): string | undefined {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift();
+}
+
 export const axiosClientInstance = axios.create({
   baseURL: APP_CONFIG.BACKEND_API_URL,
 });
@@ -10,8 +17,9 @@ export const axiosClientInstance = axios.create({
 // Client-side interceptor without Auth0 server code
 axiosClientInstance.interceptors.request.use(async config => {
   if (APP_CONFIG.OFFLINE) {
-    const offline_user = window.localStorage.getItem('offline_user');
-    config.headers['doctor'] = offline_user;
+    // Read from cookie to match server-side behavior
+    const offlineUser = getCookie('offlineUser');
+    config.headers['doctor'] = offlineUser;
     return config;
   }
   try {

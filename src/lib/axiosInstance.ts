@@ -2,6 +2,7 @@
 import { APP_CONFIG } from '@/config';
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
 import axios from 'axios';
+import { cookies } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
 export const axiosInstance = axios.create({
@@ -9,14 +10,14 @@ export const axiosInstance = axios.create({
 });
 axiosInstance.interceptors.request.use(async config => {
   if (APP_CONFIG.OFFLINE) {
-    const offline_user = window.localStorage.getItem('offline_user');
-    config.headers['doctor'] = offline_user;
+    const offlineUser = (await cookies()).get('offlineUser');
+    config.headers['doctor'] = offlineUser;
     return config;
   }
   try {
     const auth0 = new Auth0Client({
       authorizationParameters: {
-        audience: 'https://sabai.jp.auth0.com/api/v2/',
+        audience: APP_CONFIG.AUTH0_AUDIENCE,
       },
       appBaseUrl: APP_CONFIG.APP_BASE_URL,
     });

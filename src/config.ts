@@ -3,8 +3,9 @@ export const APP_CONFIG: {
   BACKEND_API_URL: string;
   APP_BASE_URL: string | undefined;
   IS_PROD: boolean;
+  AUTH0_AUDIENCE: string;
 } = {
-  OFFLINE: process.env.OFFLINE == 'true',
+  OFFLINE: process.env.NEXT_PUBLIC_OFFLINE == 'true',
   BACKEND_API_URL:
     process.env.NEXT_PUBLIC_BACKEND_API_URL ||
     process.env.BACKEND_API_URL || // TODO: remove this line when everyone is synced
@@ -13,4 +14,5 @@ export const APP_CONFIG: {
     process.env.APP_BASE_URL ||
     (process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : undefined),
   IS_PROD: process.env.IS_PROD == 'true',
+  AUTH0_AUDIENCE: 'https://sabai.jp.auth0.com/api/v2/',
 };

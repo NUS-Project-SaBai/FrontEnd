@@ -1,14 +1,5 @@
-import { SideMenu } from '@/components/SideMenu';
-import { PatientListProvider } from '@/context/PatientListContext';
-import { VillageProvider } from '@/context/VillageContext';
-import { Auth0Provider } from '@auth0/nextjs-auth0';
-import { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
 import './globals.css';
-
-export const metadata: Metadata = {
-  title: "Sa'Bai Biometrics",
-};
 
 export default function RootLayout({
   children,
@@ -17,22 +8,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Auth0Provider>
-        <VillageProvider>
-          <PatientListProvider>
-            <body
-              className="vsc-initialized flex h-screen flex-col overflow-hidden md:flex-row" /* add vsc-initialized to fix hydration error triggered by the Video Speed Controller Chrome extension https://stackoverflow.com/a/53400956/7577786 */
-            >
-              <SideMenu />
-              <Toaster
-                position="top-center"
-                toastOptions={{ duration: 4000 }}
-              />
-              <div className="flex-auto overflow-auto">{children}</div>
-            </body>
-          </PatientListProvider>
-        </VillageProvider>
-      </Auth0Provider>
+      <body>
+        {children}
+        <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
+      </body>
     </html>
   );
 }
