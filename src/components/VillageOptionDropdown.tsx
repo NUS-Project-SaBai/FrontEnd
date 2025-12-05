@@ -33,7 +33,7 @@ export function VillageOptionDropdown({
   const items = useMemo(() => Object.values(dict), [dict]);
   const hasValue = items.some(o => o.key === village);
 
-  // If current value isn't available (e.g. ALL excluded), pick first available
+  // If current value isn't available (e.parseg. ALL excluded), pick first available
   useEffect(() => {
     if (!items.length) return;
     if (!hasValue) handleVillageChange(items[0].key as VillagePrefix);

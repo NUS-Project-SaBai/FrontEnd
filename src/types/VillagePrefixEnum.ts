@@ -5,4 +5,5 @@ export enum VillagePrefix {
   TT = 'TT',
   TK = 'TK',
   SV = 'SV',
+  SB = 'SB',
 }
