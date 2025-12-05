@@ -7,7 +7,9 @@ export default function ClearLocalStorage() {
   const router = useRouter();
 
   useEffect(() => {
-    localStorage.clear();
+    if (confirm('Are you sure you want to clear local storage?')) {
+      localStorage.clear();
+    }
     router.back();
   }, [router]);
 
