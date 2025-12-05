@@ -51,7 +51,7 @@ export function SideMenu() {
 
   return (
     <>
-      <div className="flex-col bg-gray-900 text-gray-400 md:flex md:h-full md:w-52">
+      <div className="bg-gray-900 text-gray-400 md:flex md:h-full md:w-52 md:flex-col">
         <div className="flex">
           <div className="flex items-center px-4 py-2">
             <Image
@@ -85,7 +85,7 @@ export function SideMenu() {
         <aside
           className={
             (open ? 'scale-y-100' : 'scale-y-0 md:scale-y-100') +
-            ' fixed z-10 h-[100dvh] w-full origin-top justify-between overflow-y-auto bg-gray-900 transition duration-200 md:static md:left-auto md:top-auto md:z-0 md:flex md:flex-col'
+            ' fixed z-10 h-full w-full origin-top justify-between bg-gray-900 transition duration-200 md:static md:z-0 md:flex md:flex-col'
           }
         >
           <div>
