@@ -3,16 +3,41 @@ import { MedicationOrderForm } from '@/components/records/consultation/Medicatio
 import { MedicationOrderTable } from '@/components/records/consultation/MedicationOrderTable';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { Controller } from 'react-hook-form';
+
+type FormState = {
+  isOpen: boolean;
+  order: ConsultMedicationOrder | null;
+  index?: number;
+};
+
+type FormAction =
+  | { type: 'OPEN_FOR_ADD' }
+  | { type: 'OPEN_FOR_EDIT'; order: ConsultMedicationOrder; index: number }
+  | { type: 'CLOSE' };
+
+function formReducer(state: FormState, action: FormAction): FormState {
+  switch (action.type) {
+    case 'OPEN_FOR_ADD':
+      return { isOpen: true, order: null, index: undefined };
+    case 'OPEN_FOR_EDIT':
+      return { isOpen: true, order: action.order, index: action.index };
+    case 'CLOSE':
+      return { isOpen: false, order: null, index: undefined };
+  }
+}
 
 export function MedicationOrderSection({
   patient,
 }: {
   patient: Patient | null;
 }) {
-  const [selectedOrder, setSelectedOrder] =
-    useState<ConsultMedicationOrder | null>(null);
+  const [formState, dispatch] = useReducer(formReducer, {
+    isOpen: false,
+    order: null,
+    index: undefined,
+  });
   return (
     <Controller
       name="orders"
@@ -26,11 +51,13 @@ export function MedicationOrderSection({
             ) : (
               <MedicationOrderTable
                 consultOrders={value}
-                editConsultOrder={setSelectedOrder}
+                editConsultOrder={(order, index) => {
+                  dispatch({ type: 'OPEN_FOR_EDIT', order, index });
+                }}
                 deleteConsultOrder={consult => {
                   const tmp = [...value];
                   tmp.splice(
-                    tmp.findIndex(val => val.medication == consult.medication),
+                    tmp.findIndex(val => val.medicationId === consult.medicationId),
                     1
                   );
                   onChange(tmp);
@@ -41,20 +68,19 @@ export function MedicationOrderSection({
               text="Add Order"
               colour="green"
               onClick={() => {
-                setSelectedOrder({
-                  index: undefined,
-                  medication: '',
-                  quantity: undefined,
-                  notes: '',
-                });
+                dispatch({ type: 'OPEN_FOR_ADD' });
               }}
             />
           </div>
           <MedicationOrderForm
-            selectedOrder={selectedOrder}
+            isFormOpen={formState.isOpen}
+            selectedOrder={formState.order}
+            orderIndex={formState.index}
             orderList={value}
             setOrder={onChange}
-            closeForm={() => setSelectedOrder(null)}
+            closeForm={() => {
+              dispatch({ type: 'CLOSE' });
+            }}
             patient={patient}
           />
         </>
