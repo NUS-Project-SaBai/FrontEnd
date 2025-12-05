@@ -45,6 +45,44 @@ export type Vital = {
 };
 
 /*
+ Normalises visual acuity input to standard "6/X" format.
+ Handles notation like "6/20 + 2" where the addition value is added to the denominator.
+ Examples:
+ - "6/20 + 2" -> "6/22"
+ - "6/6" -> "6/6"
+ - "6/12 + 1" -> "6/13"
+ @param visualAcuity - The visual acuity value to normalize
+ @returns The normalized visual acuity string in "6/X" format, or the original string if it cannot be normalized
+*/
+export function normalizeVisualAcuity(
+  visualAcuity: string | undefined
+): string {
+  if (!visualAcuity) return '';
+
+  const trimmed = visualAcuity.trim();
+
+  //Match standard "6/X" format, already normalized
+  const standardFormat = trimmed.match(/^(\d+)\s*\/\s*(\d+)$/);
+  if (standardFormat) {
+    return trimmed;
+  }
+
+  //Handling of non-normalized notation like "6/20 + 2"
+  const matchWithAddition = trimmed.match(/^(\d+)\s*\/\s*(\d+)\s*\+\s*(\d+)$/);
+
+  if (matchWithAddition) {
+    //If regex finds a match, it returns the first 3 numbers and calculates new denominator
+    const numerator = parseFloat(matchWithAddition[1]);
+    const denominator = parseFloat(matchWithAddition[2]);
+    const addition = parseFloat(matchWithAddition[3]);
+    const newDenominator = denominator + addition;
+    return `${numerator}/${newDenominator}`;
+  }
+
+  return trimmed;
+}
+
+/*
  Returns boolean true if the denominator is >= 12 (indicating worse vision)\
  Checks if a visual acuity value indicates poor vision 6/12 or worse (eg. 6/12, 6/18, 6/24, etc.)
  Supports standard "6/X" notation where X is the denominator.
@@ -55,7 +93,9 @@ export type Vital = {
 export function isVisualAcuityPoor(visualAcuity: string | undefined): boolean {
   if (!visualAcuity) return false;
 
-  const match = visualAcuity.trim().match(/^(\d+)\s*\/\s*(\d+)$/);
+  const normalized = normalizeVisualAcuity(visualAcuity);
+  const match = normalized.match(/^(\d+)\s*\/\s*(\d+)$/);
+
   if (!match) return false;
 
   const numerator = parseFloat(match[1]);
