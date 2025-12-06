@@ -22,6 +22,7 @@ export function VisionForm({
 }) {
   const useFormReturn = useForm();
   const { handleSubmit, reset } = useFormReturn;
+  console.log(curVision.notes);
 
   curVision = curVision;
   curVitals = curVitals;
