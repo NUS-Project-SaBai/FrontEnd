@@ -92,18 +92,18 @@ export function PatientForm({
             name="sabai"
             defaultValue={getValues('sabai') || 'No'}
           />
-          <RHFInputField
-            name="drug_allergy"
-            label="Drug Allergies"
-            type="textarea"
-            isRequired={true}
-          />
           <RHFBinaryOption
             label="Receive Reports"
             name="to_get_report"
             defaultValue={getValues('to_get_report') || 'No'}
           />
         </div>
+        <RHFInputField
+          name="drug_allergy"
+          label="Drug Allergies"
+          type="textarea"
+          isRequired={true}
+        />
         <Controller
           name={'picture'}
           control={control}
