@@ -19,6 +19,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
       ...patient,
       date_of_birth: patient.date_of_birth.split('T')[0],
       picture: patient.picture_url || '',
+      to_get_report: patient.to_get_report ? 'Yes' : 'No',
     },
   });
   const router = useRouter();
@@ -26,7 +27,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
     <>
       <Button
         text="Edit Patient Details"
-        colour="green"
+        colour="orange"
         onClick={() => setIsOpen(true)}
       />
       <Modal
