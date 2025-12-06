@@ -1,7 +1,7 @@
 import { DisplayField } from '@/components/DisplayField';
 import { ALL_CHILD_AGES } from '@/components/records/vital/ChildVitalsFields';
 import { GenderType } from '@/types/Gender';
-import { displayBMI, Vital } from '@/types/Vital';
+import { displayBMI, isVisualAcuityPoor, Vital } from '@/types/Vital';
 
 type VitalFieldsDataType = {
   label: string;
@@ -41,8 +41,16 @@ export function PastVitalTable({
     },
     { label: 'Heart Rate', value: vital.heart_rate || '' },
     { label: 'Temperature', value: vital.temperature },
-    { label: 'Right Eye', value: vital.right_eye_degree },
-    { label: 'Left Eye', value: vital.left_eye_degree },
+    {
+      label: 'Right Eye',
+      value: vital.right_eye_degree,
+      highlight: isVisualAcuityPoor(vital.right_eye_degree) ? 'bg-red-200' : '',
+    },
+    {
+      label: 'Left Eye',
+      value: vital.left_eye_degree,
+      highlight: isVisualAcuityPoor(vital.left_eye_degree) ? 'bg-red-200' : '',
+    },
     { label: '', value: '' },
     { label: 'Right Eye Pinhole', value: vital.right_eye_pinhole },
     { label: 'Left Eye Pinhole', value: vital.left_eye_pinhole },

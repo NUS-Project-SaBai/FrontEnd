@@ -22,6 +22,7 @@ export function VisionForm({
 }) {
   const useFormReturn = useForm();
   const { handleSubmit, reset } = useFormReturn;
+  console.log(curVision.notes);
 
   curVision = curVision;
   curVitals = curVitals;
@@ -183,7 +184,7 @@ export function VisionForm({
             }
           />
         </div>
-        <Button text="Add/Update" colour="green" type="submit" />
+        <Button text="Update" colour="green" type="submit" />
       </form>
     </FormProvider>
   );

@@ -63,6 +63,9 @@ export function VitalsForm({
         onSubmit={submitVitalsFormHandler}
         className="max-w-[1000px] rounded-lg bg-blue-50 p-4"
       >
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Patient Vitals
+        </h2>
         <h2>Height & Weight</h2>
         <div className={gridStyle(100)}>
           <RHFUnitInputField

@@ -61,7 +61,7 @@ export default {
   },
   safelist: [
     {
-      pattern: /^text-(red|blue|green|yellow|purple|orange)-400$/,
+      pattern: /^text-(red|blue|green|yellow|purple|orange|cyan)-400$/,
     },
     {
       pattern: /^bg-(red|green|blue|white|indigo|orange)-?.+$/,

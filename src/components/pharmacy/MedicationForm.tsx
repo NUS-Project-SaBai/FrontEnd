@@ -10,10 +10,12 @@ export function MedicationForm({
   onSubmit,
   isSubmitting = false,
   editMedication = null,
+  isDirty = true
 }: {
   onSubmit: FormEventHandler;
   isSubmitting?: boolean;
   editMedication?: Medication | null;
+  isDirty?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -42,25 +44,40 @@ export function MedicationForm({
           type="number"
           isRequired={editMedication == null} // Only required for adding new medicine
         />
-        <RHFInputField
+        {editMedication && <RHFInputField
           label="Warning Quantity (System will flag out when medication stock falls below this quantity). To remove warning, leave blank or 0."
           name="warning_quantity"
           type="number"
-          isRequired={true}
+          isRequired={false}
           validate={{
             min: val =>
               val == null ||
               val >= 0 ||
               'Warning Quantity should be greater than or equal to 0',
           }}
-        />
+        />}
         <RHFInputField label="Notes" name="notes" type="text" />
         <div className="flex">
           {isSubmitting ? (
             <LoadingUI message="Submitting medication..." />
+          ) : editMedication == null ? (
+            <Button text="Submit" colour="green" type="submit"/> //used by AddMedicationModal
+          ) : isDirty ? (
+            <Button text="Submit edit" colour="green" type="submit" /> //EditMedicationModal, and got changes made
           ) : (
-            <Button text="Submit" colour="green" type="submit" />
-          )}
+            <div className="flex flex-col gap-2">  
+              <Button               //EditMedicaitonModal, but got no changes
+                text="Submit edit" 
+                colour="red" 
+                type="submit" 
+                disabled={true} 
+              />
+              <p className="text-sm text-red-500 italic">
+                Make a change before submitting
+              </p>
+            </div>  
+          )
+          }
         </div>
       </form>
     </div>
