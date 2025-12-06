@@ -30,6 +30,11 @@ export const VILLAGES: {
     label: 'Smong',
     color: 'text-purple-400',
   },
+  [VillagePrefix.SB]: {
+    key: VillagePrefix.SB,
+    label: 'SATBB',
+    color: 'text-cyan-400',
+  },
 };
 
 export const VILLAGES_AND_ALL: {
