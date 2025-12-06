@@ -12,6 +12,7 @@ import { fetchPatientConsultationInfo } from './api';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { VisitDropdown } from '@/components/VisitDropdown';
 import { DateTime } from 'luxon';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 export default async function PatientConsultationPage({
   searchParams,
@@ -123,32 +124,36 @@ function MainBody({
   return (
     <section className="grid gap-4 lg:gap-6 lg:grid-cols-2">
       {/* Vitals card */}
-      <div className="order-1 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Patient Vitals
-        </h2>
-        {vitals == null ? (
-          <p>No vitals found for current visit</p>
-        ) : (
-          <PastVitalTable
-            vital={vitals}
-            age={calculateDobDifference(
-              new Date(patient.date_of_birth),
-              visitDate
-            )}
-            gender={patient.gender}
-          />
-        )}
-        <div className="mt-6 border-t border-slate-200 pt-6">
-          <PrescriptionConsultCol
-            consults={consults}
-            prescriptions={prescriptions}
-          />
-        </div>
+      <div className="order-1 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 h-[calc(100vh-100px)] overflow-hidden">
+        <ScrollArea className="h-full">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+              Patient Vitals
+          </h2>
+          {vitals == null ? (
+            <p>No vitals found for current visit</p>
+          ) : (
+            <PastVitalTable
+              vital={vitals}
+              age={calculateDobDifference(
+                new Date(patient.date_of_birth),
+                visitDate
+              )}
+              gender={patient.gender}
+            />
+          )}
+          <div className="mt-6 border-t border-slate-200 pt-6">
+            <PrescriptionConsultCol
+              consults={consults}
+              prescriptions={prescriptions}
+            />
+          </div>
+        </ScrollArea>
       </div>
 
-      <div className="order-2 rounded-xl border border-slate-200 bg-white shadow-sm">
-        <ConsultationForm visitId={visitId} patient={patient} />
+      <div className="order-2 rounded-xl border border-slate-200 bg-white shadow-sm h-[calc(100vh-100px)] overflow-hidden">
+        <ScrollArea className="h-full">
+          <ConsultationForm visitId={visitId} patient={patient} />
+        </ScrollArea>
       </div>
     </section>
   );
