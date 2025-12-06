@@ -12,7 +12,7 @@ import { fetchPatientConsultationInfo } from './api';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { VisitDropdown } from '@/components/VisitDropdown';
 import { DateTime } from 'luxon';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default async function PatientConsultationPage({
   searchParams,
