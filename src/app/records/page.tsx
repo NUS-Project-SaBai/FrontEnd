@@ -79,6 +79,7 @@ export default function RecordPage() {
             'image/jpg'
           )
         );
+        formData.set('to_get_report', fieldValues.to_get_report === 'Yes' ? 'true' : 'false');
         const patient = await createPatient(formData);
         if (patient == null) {
           toast.error('Unknown error creating patient');
