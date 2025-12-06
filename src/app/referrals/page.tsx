@@ -44,35 +44,41 @@ export default function ReferralPage() {
       ) : referralWithDetails.length == 0 ? (
         <h2>No referrals</h2>
       ) : (
-            <CompactPatientTableGeneric
-              items={referralWithDetails}
-              getPatient={item => item.patient}
-              getKey={item => item.referral.id}
-              headers={{ id: 'ID', photo: 'Photo', name: 'Full Name', extra: 'Referral', actions: 'Actions' }}
-              extraColumn={item => (
-                <div className="flex flex-col gap-2">
-                  <p>Visited on: {formatDate(item.date, 'date')}</p>
-                  <ReferralStateDropdown referral={item.referral} />
-                </div>
-              )}
-              renderActions={item => (
-                <div className="flex flex-col items-center justify-center space-y-2 p-3">
-                  <Link href={`./referrals/${item.referral.id}`}>
-                    <Button
-                      text="Referral Details"
-                      colour="green"
-                      Icon={<PencilSquareIcon className="h-5 w-5" />}
-                    />
-                  </Link>
-                  <Button
-                    text="Consult PDF"
-                    Icon={<ClipboardList className="h-5 w-5" />}
-                    onClick={() => handleGeneratePDF(item)}
-                    colour="indigo"
-                  />
-                </div>
-              )}
-            />
+        <CompactPatientTableGeneric
+          items={referralWithDetails}
+          getPatient={item => item.patient}
+          getKey={item => item.referral.id}
+          headers={{
+            id: 'ID',
+            photo: 'Photo',
+            name: 'Full Name',
+            extra: 'Referral',
+            actions: 'Actions',
+          }}
+          extraColumn={item => (
+            <div className="flex flex-col gap-2">
+              <p>Visited on: {formatDate(item.date, 'date')}</p>
+              <ReferralStateDropdown referral={item.referral} />
+            </div>
+          )}
+          renderActions={item => (
+            <div className="flex flex-col items-center justify-center space-y-2 p-3">
+              <Link href={`./referrals/${item.referral.id}`}>
+                <Button
+                  text="Referral Details"
+                  colour="green"
+                  Icon={<PencilSquareIcon className="h-5 w-5" />}
+                />
+              </Link>
+              <Button
+                text="Consult PDF"
+                Icon={<ClipboardList className="h-5 w-5" />}
+                onClick={async () => handleGeneratePDF(item)}
+                colour="indigo"
+              />
+            </div>
+          )}
+        />
       )}
     </div>
   );

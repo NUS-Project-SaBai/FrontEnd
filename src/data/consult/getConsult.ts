@@ -17,7 +17,7 @@ export async function getConsultByID(
   if (!consultID) return null;
   try {
     return await (
-      await axiosInstance.get(`/consults/${consultID}`)
+      await axiosInstance.get(`/consults/${consultID}/`)
     ).data;
   } catch {
     return null;

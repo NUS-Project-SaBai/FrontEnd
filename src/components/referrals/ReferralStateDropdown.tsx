@@ -28,15 +28,8 @@ export function ReferralStateDropdown({ referral }: { referral: Referral }) {
   const { isLoading, withLoading } = useLoadingState(false);
 
   useEffect(() => {
-    const fetchConsults = withLoading(async () => {
-      await getConsultByID(referral.consult.toString())
-        .then(() => {
-          setReferralStatus(referral.referral_state || 'None');
-        })
-        .catch(e => console.log(e));
-    });
-    fetchConsults();
-  }, [referral.consult, referral.referral_state, withLoading]);
+    setReferralStatus(referral.referral_state || 'None');
+  }, [referral.referral_state]);
 
   function dropdownChanged(value: string) {
     const patch = withLoading(async () => {
