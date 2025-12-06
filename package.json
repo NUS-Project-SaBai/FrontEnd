@@ -13,6 +13,7 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.6.0",
     "@heroicons/react": "^2.2.0",
+    "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-select": "^2.2.6",
     "@types/react-autosuggest": "^10.1.11",
     "@types/react-modal": "^3.16.3",
