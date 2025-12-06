@@ -26,7 +26,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
     <>
       <Button
         text="Edit Patient Details"
-        colour="green"
+        colour="orange"
         onClick={() => setIsOpen(true)}
       />
       <Modal
