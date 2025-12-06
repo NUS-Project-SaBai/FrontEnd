@@ -47,7 +47,6 @@ export default async function PatientVitalPage({
   }
 
   const patientVisits = await getVisitsByPatientId(patientId);
-  console.log(patientVisits)
 
   const patientVisitAge = calculateDobDifference(
     new Date(patient.date_of_birth),
