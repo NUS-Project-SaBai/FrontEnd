@@ -98,7 +98,6 @@ export default async function PatientVitalPage({
         </section>
 
         {/* Main content: vitals + graph */}
-        
         <section className={cn(
                             "grid gap-4 lg:gap-6",
                             (patientVisitAge.year >= 2 && patientVisitAge.year <= 18)
@@ -107,13 +106,7 @@ export default async function PatientVitalPage({
                           )}>
 
           {/* Vitals card */}
-          <div className="order-1 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-            <div className="mb-4 flex items-center justify-between gap-2">
-              <h2 className="text-base font-semibold text-slate-900">
-                Vitals
-              </h2>
-            </div>
-
+          <div className="order-1 rounded-xl border border-slate-200 bg-white shadow-sm">
             <VitalsForm
               patient={patient}
               visitId={visitId}
@@ -123,10 +116,10 @@ export default async function PatientVitalPage({
 
           {/* Graph card */}
           {(patientVisitAge.year >= 2 && patientVisitAge.year <= 18)  &&
-            <div className="order-2 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-              <div className="mb-4 flex items-center justify-between gap-2">
-                <h2 className="text-base font-semibold text-slate-900">
-                  Height–weight trajectory
+            <div className="order-2 rounded-xl border border-slate-200 bg-white shadow-sm">
+              <div className="mb-4 flex items-center justify-between gap-2 p-4">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                  Patient Height–weight Trajectory Graph
                 </h2>
                 <p className="text-xs text-slate-500">
                   Age: {patientVisitAge.year} years
