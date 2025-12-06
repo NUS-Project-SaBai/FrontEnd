@@ -30,12 +30,15 @@ export default function ReceiveReportPage() {
   const [queryPatients, setQueryPatients] = useState<Patient[]>([]);
   const [onlyReceive, setOnlyReceive] = useState<boolean>(false);
   const [savingIds, setSavingIds] = useState<Set<number>>(new Set());
+  const [limit, setLimit] = useState<number>(50);
   const useFormReturn = useForm();
 
   const filteredPatients = useMemo(() => {
     const base = queryPatients.length ? queryPatients : allPatients;
-    return onlyReceive ? base.filter(p => p.to_get_report) : base;
-  }, [queryPatients, allPatients, onlyReceive]);
+    return onlyReceive
+      ? base.filter(p => p.to_get_report).slice(0, limit)
+      : base.slice(0, limit);
+  }, [queryPatients, allPatients, onlyReceive, limit]);
 
   const handleSetReceive = useCallback(
     (patient: Patient) => async (val: boolean) => {
@@ -75,8 +78,9 @@ export default function ReceiveReportPage() {
       <Button
         text="Download All Reports"
         title="Download all consult for those who want to receive report"
-        colour="blue"
-        className="absolute right-4 top-5"
+        colour="orange"
+        variant="solid"
+        className="absolute right-4 top-5 z-10 shadow-md"
         onClick={() => {
           getAllPdfConsults().then(blobfile => {
             if (blobfile) {
@@ -201,6 +205,13 @@ export default function ReceiveReportPage() {
             />
           </FormProvider>
         )}
+        <Button
+          text="Load More"
+          onClick={() => setLimit(prev => prev + 50)}
+          className="w-full"
+          colour="gray"
+          variant="solid"
+        />
       </LoadingPage>
     </div>
   );
