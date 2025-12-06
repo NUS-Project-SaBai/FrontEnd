@@ -23,6 +23,7 @@ import {
 } from 'react';
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
+import { Switch } from '@/components/ui/switch';
 
 type OrderRowData = {
   patient: {
@@ -54,6 +55,7 @@ export default function OrdersPage() {
   const { isLoading, withLoading } = useLoadingState(true);
 
   const isLoadingRef = useRef(isLoading);
+  const [isAutoRefreshEnabled, setIsAutoRefreshEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     isLoadingRef.current = isLoading;
@@ -87,7 +89,7 @@ export default function OrdersPage() {
     fetchPendingOrders();
 
     const intervalId = setInterval(() => {
-      if (!isLoadingRef.current) {
+      if (!isLoadingRef.current && isAutoRefreshEnabled) {
         silentRefresh();
       }
     }, 15000); //time for frequency of refresh
@@ -95,33 +97,56 @@ export default function OrdersPage() {
     //stop timer once user leaves tha page
     return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAutoRefreshEnabled]);
 
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
       <div className="p-2">
         <h1>Orders</h1>
         <Suspense>
-          <PatientSearchbar
-            data={useMemo(
-              () =>
-                orderRowData.filter(
-                  x =>
-                    village == VillagePrefix.ALL ||
-                    x.patient.village_prefix == village
-                ),
-              [orderRowData, village]
-            )}
-            setFilteredItems={setFilteredOrderRowData}
-            filterFunction={useCallback(
-              (query: string) => (item: OrderRowData) =>
-                item.patient.patient_id
-                  .toLowerCase()
-                  .includes(query.toLowerCase()) ||
-                item.patient.name.toLowerCase().includes(query.toLowerCase()),
-              []
-            )}
-          />
+          <div className="flex items-center justify-between">
+            {/* Left: Search */}
+            <div className="flex-1 max-w-full flex items-center">
+              <PatientSearchbar
+                data={useMemo(
+                  () =>
+                    orderRowData.filter(
+                      x =>
+                        village === VillagePrefix.ALL ||
+                        x.patient.village_prefix === village
+                    ),
+                  [orderRowData, village]
+                )}
+                setFilteredItems={setFilteredOrderRowData}
+                filterFunction={useCallback(
+                  (query: string) => (item: OrderRowData) =>
+                    item.patient.patient_id.toLowerCase().includes(query.toLowerCase()) ||
+                    item.patient.name.toLowerCase().includes(query.toLowerCase()),
+                  []
+                )}
+              />
+            </div>
+
+            {/* Right: Auto-Refresh Toggle */}
+            <label className="flex items-center gap-3 cursor-pointer pl-6">
+              <Switch
+                checked={isAutoRefreshEnabled}
+                onCheckedChange={setIsAutoRefreshEnabled}
+                id="auto-refresh"
+              />
+              <span className="text-sm text-muted-foreground">
+                Auto Refresh:{" "}
+                <span
+                  className={
+                    isAutoRefreshEnabled ? "text-green-500 font-medium" : "text-red-500 font-medium"
+                  }
+                >
+                  {isAutoRefreshEnabled ? "On" : "Off"}
+                </span>
+              </span>
+            </label>
+
+          </div>
         </Suspense>
         <div className="pt-4">
           <table className="w-full text-left">
