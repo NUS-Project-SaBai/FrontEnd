@@ -66,7 +66,7 @@ export default function ReceiveReportPage() {
           });
         });
     },
-    [allPatients]
+    [setPatients]
   );
 
   return (

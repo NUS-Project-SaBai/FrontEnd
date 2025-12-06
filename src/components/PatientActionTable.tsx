@@ -161,7 +161,7 @@ export function CompactPatientTableGeneric<T>({
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-300">
-        {items.map((item, index) => {
+        {items.map(item => {
           const patient = getPatient(item);
           const key = getKey ? getKey(item) : patient.pk;
           return (
