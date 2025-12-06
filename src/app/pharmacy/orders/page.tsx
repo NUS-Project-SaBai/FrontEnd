@@ -84,20 +84,26 @@ export default function OrdersPage() {
       // Suppress UI errors for background refreshes to avoid annoying the user
     }
   };
+
+  // 1) Initial fetch
   useEffect(() => {
-    //initial opening fetch
     fetchPendingOrders();
+  }, [fetchPendingOrders]);
+
+  // 2) Auto refresh interval
+  useEffect(() => {
+    // If auto refresh is off, don't start an interval
+    if (!isAutoRefreshEnabled) return;
 
     const intervalId = setInterval(() => {
-      if (!isLoadingRef.current && isAutoRefreshEnabled) {
+      if (!isLoadingRef.current) {
         silentRefresh();
       }
-    }, 15000); //time for frequency of refresh
+    }, 15000);
 
-    //stop timer once user leaves tha page
+    // Cleanup when disabled or unmounted
     return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAutoRefreshEnabled]);
+  }, [isAutoRefreshEnabled, silentRefresh, isLoadingRef]);
 
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
