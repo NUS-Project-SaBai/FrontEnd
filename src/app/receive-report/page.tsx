@@ -17,7 +17,7 @@ import {
   DocumentDuplicateIcon,
   DocumentIcon,
 } from '@heroicons/react/24/outline';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { Suspense, useCallback, useContext, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -98,16 +98,18 @@ export default function ReceiveReportPage() {
       />
 
       <div className="mb-3">
-        <PatientSearchbar
-          data={allPatients}
-          setFilteredItems={setQueryPatients}
-          filterFunction={useCallback(
-            (query: string) => (item: Patient) =>
-              item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
-              item.name.toLowerCase().includes(query.toLowerCase()),
-            []
-          )}
-        />
+        <Suspense>
+          <PatientSearchbar
+            data={allPatients}
+            setFilteredItems={setQueryPatients}
+            filterFunction={useCallback(
+              (query: string) => (item: Patient) =>
+                item.patient_id.toLowerCase().includes(query.toLowerCase()) ||
+                item.name.toLowerCase().includes(query.toLowerCase()),
+              []
+            )}
+          />
+        </Suspense>
       </div>
 
       <div className="mb-3 flex items-center gap-2">
