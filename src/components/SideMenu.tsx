@@ -12,6 +12,7 @@ import {
   Bars3Icon,
   BeakerIcon,
   ClipboardDocumentListIcon,
+  DocumentTextIcon,
   EyeIcon,
   PencilIcon,
   UserCircleIcon,
@@ -32,6 +33,11 @@ const navItems: NavItemData[] = [
   { name: 'Patients', href: '/records', icon: ClipboardDocumentListIcon },
   { name: 'Pharmacy Orders', href: '/pharmacy/orders', icon: PencilIcon },
   { name: 'Pharmacy Stock', href: '/pharmacy/stock', icon: BeakerIcon },
+  {
+    name: 'Receive Report',
+    href: '/receive-report',
+    icon: DocumentTextIcon,
+  },
   { name: 'Vision', href: '/vision', icon: EyeIcon },
   { name: 'Referrals', href: '/referrals', icon: ArrowTrendingUpIcon },
 ];

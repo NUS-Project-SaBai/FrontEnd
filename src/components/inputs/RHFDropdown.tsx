@@ -33,7 +33,8 @@ export function RHFDropdown({
   className = '',
   omitDefaultPrompt = false,
   placeholder = 'Please select an option',
-}: RHFDropdownProps) {
+  ...props
+}: RHFDropdownProps & Partial<React.ComponentProps<typeof Select>>) {
   const {
     control,
     setValue,
@@ -72,6 +73,7 @@ export function RHFDropdown({
               // optional: validate immediately on change
               trigger(name);
             }}
+            {...props}
           >
             <SelectTrigger
               id={name}

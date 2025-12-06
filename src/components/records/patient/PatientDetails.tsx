@@ -46,6 +46,7 @@ export function PatientDetails({
     { label: 'BS2', value: patient.bs2 },
     { label: 'Sabai Card', value: patient.sabai },
     { label: 'Allergies', value: patient.drug_allergy },
+    { label: 'Receive Reports?', value: patient.to_get_report ? 'Yes' : 'No' },
   ];
 
   return (
