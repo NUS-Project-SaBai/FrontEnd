@@ -18,6 +18,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import toast from 'react-hot-toast';
@@ -51,6 +52,12 @@ export default function OrdersPage() {
     OrderRowData[]
   >([]);
   const { isLoading, withLoading } = useLoadingState(true);
+
+  const isLoadingRef = useRef(isLoading);
+
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
   const { village } = useContext(VillageContext);
 
   const fetchPendingOrders = withLoading(async () => {
@@ -58,8 +65,35 @@ export default function OrdersPage() {
     setOrderRowData(result);
     setFilteredOrderRowData(result);
   });
+
+  const silentRefresh = async () => {
+    try {
+      // Call API directly without loading
+      const result = await fetchAllPatientMedicationOrders();
+      
+      // Update the main data state
+      setOrderRowData(result);
+      setFilteredOrderRowData(result);
+
+      //could have to handle SearchBar here if SearchBar component
+      //does not handle re-filetering
+    } catch (error) {
+      console.error("Background refresh failed", error);
+      // Suppress UI errors for background refreshes to avoid annoying the user
+    }
+  };
   useEffect(() => {
+    //initial opening fetch
     fetchPendingOrders();
+
+    const intervalId = setInterval(() => {
+      if (!isLoadingRef.current) {
+        silentRefresh();
+      }
+    }, 15000); //time for frequency of refresh
+
+    //stop timer once user leaves tha page
+    return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
