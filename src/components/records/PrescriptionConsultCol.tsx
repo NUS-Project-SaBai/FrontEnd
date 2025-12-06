@@ -26,14 +26,18 @@ export function PrescriptionConsultCol({
     <div>
       {showConsult && (
         <div>
-          <p className="font-bold">Consults</p>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Patient Previous Consults
+          </h2>
           <RecordConsultationTableModal consults={consults} />
         </div>
       )}
 
       {showPrescription && (
         <div>
-          <p className="font-bold">Prescriptions</p>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Patient Previous Prescriptions
+          </h2>
           {consults == null ? (
             <LoadingUI message="Loading Prescriptions..." />
           ) : (
