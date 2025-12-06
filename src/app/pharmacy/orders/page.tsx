@@ -103,7 +103,7 @@ export default function OrdersPage() {
 
     // Cleanup when disabled or unmounted
     return () => clearInterval(intervalId);
-  }, [isAutoRefreshEnabled, silentRefresh, isLoadingRef]);
+  }, [isAutoRefreshEnabled]);
 
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
