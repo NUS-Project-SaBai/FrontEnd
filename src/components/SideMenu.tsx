@@ -51,7 +51,7 @@ export function SideMenu() {
 
   return (
     <>
-      <div className="flex-col bg-gray-900 text-gray-400 md:flex md:h-full md:w-52">
+      <div className="bg-gray-900 text-gray-400 md:flex md:h-full md:w-52 md:flex-col">
         <div className="flex">
           <div className="flex items-center px-4 py-2">
             <Image
