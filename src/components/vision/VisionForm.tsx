@@ -184,7 +184,7 @@ export function VisionForm({
             }
           />
         </div>
-        <Button text="Add/Update" colour="green" type="submit" />
+        <Button text="Update" colour="green" type="submit" />
       </form>
     </FormProvider>
   );

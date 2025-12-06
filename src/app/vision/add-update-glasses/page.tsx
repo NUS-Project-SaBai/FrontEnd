@@ -85,7 +85,7 @@ export default async function PatientVisionPage({
         </section>
         
       <div className="order-1 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-        <h2 className="mb-2 text-lg font-semibold">Add/Update Glasses</h2>
+        <h2 className="mb-2 text-lg font-semibold">Update Glasses</h2>
         <VisionForm
           visitId={visitId}
           curVision={curVision}
