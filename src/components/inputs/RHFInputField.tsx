@@ -4,7 +4,7 @@ import { RegisterOptions, useFormContext } from 'react-hook-form';
 
 type RHFInputFieldProps = {
   name: string;
-  label: string;
+  label?: string;
   type: HTMLInputTypeAttribute | 'textarea';
   placeholder?: string;
   isRequired?: boolean;

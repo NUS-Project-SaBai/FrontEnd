@@ -64,7 +64,7 @@ export function VitalsForm({
         className="max-w-[1000px] rounded-lg bg-blue-50 p-4"
       >
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Patient Vitals
+          Patient Vitals
         </h2>
         <h2>Height & Weight</h2>
         <div className={gridStyle(100)}>
@@ -182,13 +182,15 @@ export function VitalsForm({
             label="Diabetes?"
             defaultValue={curVital.diabetes_mellitus}
           />
-          <RHFInputField
-            name="others"
-            label="Others"
-            placeholder={curVital.others}
-            type="text"
-          />
         </div>
+        <h2>Other notes</h2>
+        <RHFInputField
+          name="others"
+          // label="Others"
+          placeholder={curVital.others}
+          type="textarea"
+        />
+        <div className='h-4'/>
         <ChildVitalsFields patient={patient} curVital={curVital} />
         <Button text="Update" colour="green" type="submit" />
       </form>
