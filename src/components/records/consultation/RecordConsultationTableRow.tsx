@@ -24,6 +24,7 @@ export function RecordConsultationTableRow({
     <tr>
       <td>{consult.doctor.nickname}</td>
       <td>{consult.referred_for || 'Not Referred'}</td>
+      <td>{formatDate(consult.date)}</td>
       <td>
         <div className="flex flex-wrap gap-2">
           <IconButton
@@ -49,7 +50,6 @@ export function RecordConsultationTableRow({
           />
         </div>
       </td>
-      <td>{formatDate(consult.date)}</td>
     </tr>
   );
 }

@@ -30,5 +30,8 @@ export function formatDate(
  */
 
 export function canEditConsult(consultDate: string): boolean {
-  c;
+  const consultDateTime = DateTime.fromISO(consultDate);
+  const now = DateTime.now();
+  const diff = now.diff(consultDateTime, 'hours').hours;
+  return diff < 24;
 }

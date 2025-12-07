@@ -11,7 +11,6 @@ import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { createReferral } from '@/data/referrals/createReferral';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
-import { Diagnosis } from '@/types/Diagnosis';
 import { Patient } from '@/types/Patient';
 import { FormEvent, useEffect, useRef } from 'react';
 import {
@@ -75,26 +74,7 @@ export function ConsultationForm({
         const formData = {
           past_medical_history: consult.past_medical_history || '',
           consultation: consult.consultation || '',
-          diagnoses: (diagnoses || []).map(
-            (d: Diagnosis & { id?: number; pk?: number }) => {
-              const diagnosis: {
-                id?: number;
-                details: string;
-                category: string;
-              } = {
-                details: d.details || '',
-                category: d.category || '',
-              };
-              // Preserve ID if it exists (for existing diagnoses)
-              if (d.id !== undefined && d.id !== null) {
-                diagnosis.id = d.id;
-              } else if (d.pk !== undefined && d.pk !== null) {
-                diagnosis.id = d.pk;
-              }
-              console.log('Mapped diagnosis:', diagnosis);
-              return diagnosis;
-            }
-          ),
+          diagnoses: diagnoses || [],
           plan: consult.plan || '',
           referred_for: consult.referred_for || 'Not Referred',
           referral_notes: consult.referral_notes || '',
@@ -176,9 +156,7 @@ export function ConsultationForm({
           }>) || [];
 
         // Include diagnoses in the payload instead of removing them
-        const { diagnoses: _, ...restOfData } = data;
-
-        Object.entries(restOfData).forEach(([k, v]) => {
+        Object.entries(data).forEach(([k, v]) => {
           switch (k) {
             case 'orders':
               jsonPayload[k] =
