@@ -90,7 +90,7 @@ function DiagnosisInputRow({
       </label>
       <textarea
         placeholder="Type your diagnosis here..."
-        rows={3}
+        rows={6}
         value={diagnosis.details}
         onChange={e => {
           onDiagnosisEdit({ ...diagnosis, details: e.target.value });

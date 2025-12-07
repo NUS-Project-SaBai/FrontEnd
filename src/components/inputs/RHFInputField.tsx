@@ -10,6 +10,7 @@ type RHFInputFieldProps = {
   isRequired?: boolean;
   min?: string;
   max?: string;
+  rows?: number;
 };
 
 export function RHFInputField({
@@ -20,6 +21,7 @@ export function RHFInputField({
   isRequired = false,
   min,
   max,
+  rows = 4,
   ...registerOptions
 }: RHFInputFieldProps & RegisterOptions) {
   const { register, formState } = useFormContext();
@@ -37,7 +39,7 @@ export function RHFInputField({
       {type == 'textarea' ? (
         <textarea
           className={inputClassStyle}
-          rows={4}
+          rows={rows}
           placeholder={placeholder}
           {...register(name, {
             required: { message: `Empty Field: ${label}`, value: isRequired },
