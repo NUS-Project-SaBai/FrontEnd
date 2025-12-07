@@ -16,6 +16,7 @@ export type Vital = {
   urine_test: string;
   blood_glucose_non_fasting?: number;
   blood_glucose_fasting?: number;
+  hbA1c?: number;
   left_eye_degree: string;
   right_eye_degree: string;
   left_eye_pinhole: string;
