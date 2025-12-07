@@ -140,7 +140,7 @@ export function MedicationOrderForm({
             <DisplayField
               label="Patient Allergies"
               content={
-                patient === null
+                !patient
                   ? 'Error Getting Patient Allergies'
                   : patient.drug_allergy || '-'
               }

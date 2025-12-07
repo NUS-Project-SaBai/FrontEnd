@@ -22,3 +22,13 @@ export function formatDate(
       : dt.toFormat('dd MMM yyyy HH:mm');
   }
 }
+
+/**
+ * Checks if a consultation can still be edited (24 hours interval since creation)
+ * @param consultDate - Date string of the consultation
+ * returns true if the consultation can be edited (less than 24 hours)
+ */
+
+export function canEditConsult(consultDate: string): boolean {
+  c;
+}

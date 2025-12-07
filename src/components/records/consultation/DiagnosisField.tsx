@@ -31,8 +31,10 @@ export function DiagnosisField({
   setDiagnosis,
   error,
 }: {
-  diagnosis: Omit<Diagnosis, 'consult'>[];
-  setDiagnosis: (diagnoses: Omit<Diagnosis, 'consult'>[]) => void;
+  diagnosis: Array<Omit<Diagnosis, 'consult'> & { id?: number }>;
+  setDiagnosis: (
+    diagnoses: Array<Omit<Diagnosis, 'consult'> & { id?: number }>
+  ) => void;
   error: string | undefined;
 }) {
   const EMPTY_DIAGNOSIS = { details: '', category: '' };
@@ -57,7 +59,13 @@ export function DiagnosisField({
           }}
           onDiagnosisEdit={curDiagnosis => {
             const newDiagnosis = [...diagnosis];
-            newDiagnosis[index] = curDiagnosis;
+            // Preserve the ID when editing if it exists
+            newDiagnosis[index] = {
+              ...curDiagnosis,
+              ...(diagnosis[index].id !== undefined && {
+                id: diagnosis[index].id,
+              }),
+            };
             setDiagnosis(newDiagnosis);
           }}
         />
