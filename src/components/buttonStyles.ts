@@ -8,16 +8,14 @@ export type ButtonVariant =
   | 'orange'
   | 'blue'
   | 'white'
-  | 'indigo';
+  | 'indigo'
+  | 'gray';
 export type ButtonStyle = 'solid' | 'outline' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 type TailwindClass = string;
 
-export const COLOUR_MAP: Record<
-  ButtonVariant,
-  Record<ButtonStyle, TailwindClass>
-> = {
+export const COLOUR_MAP: Record<ButtonVariant, Record<ButtonStyle, TailwindClass>> = {
   green: {
     solid:
       'bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-600',
@@ -58,6 +56,13 @@ export const COLOUR_MAP: Record<
     outline:
       'border border-gray-300 text-gray-800 hover:bg-gray-50 focus-visible:ring-gray-400',
     ghost: 'text-gray-800 hover:bg-gray-100 focus-visible:ring-gray-400',
+  },
+  gray: {
+    solid:
+      'bg-gray-600 text-white hover:bg-gray-700 focus-visible:ring-gray-600',
+    outline:
+      'border border-gray-600 text-gray-700 hover:bg-gray-50 focus-visible:ring-gray-600',
+    ghost: 'text-gray-700 hover:bg-gray-50 focus-visible:ring-gray-600',
   },
 } as const;
 

@@ -19,7 +19,8 @@ export function RHFBinaryOption({
   optionValue2 = 'No',
   defaultValue = '',
   isRequired = false,
-}: RHFBinaryOptionProps) {
+  ...props
+}: RHFBinaryOptionProps & Partial<React.ComponentProps<typeof RHFDropdown>>) {
   const yesNoOptions: OptionData[] = [
     { label: optionLabel1, value: optionValue1 },
     { label: optionLabel2, value: optionValue2 },
@@ -31,6 +32,7 @@ export function RHFBinaryOption({
       options={yesNoOptions}
       defaultValue={defaultValue}
       isRequired={isRequired}
+      {...props}
     />
   );
 }
