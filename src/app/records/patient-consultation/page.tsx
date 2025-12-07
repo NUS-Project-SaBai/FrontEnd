@@ -43,7 +43,7 @@ export default async function PatientConsultationPage({
 
   return (
     <div className="min-h-screen bg-slate-50 py-6 ">
-      <div className="mx-4 max-w space-y-6">
+      <div className="mx-4 max-w space-y-3">
         <h1>Patient Consultation</h1>
         
         {/* Patient info */}
