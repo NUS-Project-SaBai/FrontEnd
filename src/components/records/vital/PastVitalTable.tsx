@@ -51,10 +51,8 @@ export function PastVitalTable({
       value: vital.left_eye_degree,
       highlight: isVisualAcuityPoor(vital.left_eye_degree) ? 'bg-red-200' : '',
     },
-    { label: '', value: '' },
     { label: 'Right Eye Pinhole', value: vital.right_eye_pinhole },
     { label: 'Left Eye Pinhole', value: vital.left_eye_pinhole },
-    { label: '', value: '' },
     { label: 'Urine Dip Test', value: vital.urine_test },
     { label: 'Hemocue Hb Count', value: vital.hemocue_count },
     {
@@ -81,6 +79,7 @@ export function PastVitalTable({
               ? 'bg-amber-200'
               : '',
     },
+    { label: 'HbA1c', value: vital.hbA1c || '' },
     { label: 'Diabetes Mellitus?', value: vital.diabetes_mellitus },
     { label: 'Others', value: vital.others },
   ];

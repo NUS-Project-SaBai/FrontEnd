@@ -149,7 +149,7 @@ export function VitalsForm({
           />
         </div>
         <h2>STAT Investigations</h2>
-        <div className={gridStyle(150)}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RHFInputField
             name="urine_test"
             label="Urine Dip Test"
@@ -176,6 +176,13 @@ export function VitalsForm({
             unit="mmol/L"
             type="number"
             placeholder={curVital.blood_glucose_fasting?.toString()}
+          />
+          <RHFUnitInputField
+            name="hbA1c"
+            label="HbA1c"
+            unit="%"
+            type="number"
+            placeholder={curVital.hbA1c?.toString()}
           />
           <RHFBinaryOption
             name="diabetes_mellitus"
