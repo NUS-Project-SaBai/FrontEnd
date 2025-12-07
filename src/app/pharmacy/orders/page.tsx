@@ -86,6 +86,7 @@ export default function OrdersPage() {
   // Initial fetch
   useEffect(() => {
     fetchPendingOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Auto refresh interval
@@ -99,7 +100,6 @@ export default function OrdersPage() {
       }
     }, 15000);
 
-    // Cleanup when disabled or unmounted
     return () => clearInterval(intervalId);
   }, [isAutoRefreshEnabled]);
 
