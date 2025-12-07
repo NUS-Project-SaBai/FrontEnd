@@ -62,7 +62,7 @@ export function PatientForm({
             defaultValue={village}
             rules={{
               validate: {
-                required: value => value != 'ALL',
+                required: value => value && value != 'ALL',
               },
             }}
             render={({ field, fieldState }) => (
