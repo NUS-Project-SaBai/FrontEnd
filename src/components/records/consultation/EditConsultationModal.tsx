@@ -75,7 +75,7 @@ export function EditConsultationModal({
       ) : consult == null ? (
         <p>No Consult Found</p>
       ) : (
-        <div className="max-h-[calc(90vh-120px)] overflow-y-auto">
+        <div className="">
           <ConsultationForm
             key={consultId}
             visitId={consult.visit.id.toString()}

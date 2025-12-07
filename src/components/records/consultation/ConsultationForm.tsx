@@ -227,6 +227,14 @@ export function ConsultationForm({
               ? await patchConsults(editConsultId, jsonPayload)
               : await createConsult(jsonPayload);
 
+              if (result != null && 'error' in result) {
+                toast.error(
+                  isEditing
+                    ? `Error updating consultation: ${result.error}`
+                    : `Error submitting consultation form: ${result.error}`
+                );
+                return;
+              }
           if (result == null) {
             toast.error(
               isEditing

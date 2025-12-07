@@ -2,6 +2,7 @@
 
 import { axiosInstance } from '@/lib/axiosInstance';
 import { Consult } from '@/types/Consult';
+import { AxiosError } from 'axios';
 
 export async function patchConsults(
   id: number,
@@ -12,7 +13,11 @@ export async function patchConsults(
       .patch(`/consults/${id}/`, formData)
       .then(res => res.data);
   } catch (error) {
-    console.error('Error patching consult:', error);
-    return null;
+    if (error instanceof AxiosError) {
+      return error?.response?.data;
+    } else {
+      console.error('Unexpected error:', error);
+      return null;
+    }
   }
 }
