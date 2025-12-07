@@ -190,15 +190,14 @@ export function VitalsForm({
             defaultValue={curVital.diabetes_mellitus}
           />
         </div>
+        <ChildVitalsFields patient={patient} curVital={curVital} />
         <h2>Other notes</h2>
         <RHFInputField
           name="others"
-          // label="Others"
           placeholder={curVital.others}
           type="textarea"
         />
         <div className='h-4'/>
-        <ChildVitalsFields patient={patient} curVital={curVital} />
         <Button text="Update" colour="green" type="submit" />
       </form>
     </FormProvider>
