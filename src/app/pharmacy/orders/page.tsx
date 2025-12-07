@@ -77,20 +77,18 @@ export default function OrdersPage() {
       setOrderRowData(result);
       setFilteredOrderRowData(result);
 
-      //could have to handle SearchBar here if SearchBar component
-      //does not handle re-filetering
     } catch (error) {
       console.error("Background refresh failed", error);
       // Suppress UI errors for background refreshes to avoid annoying the user
     }
   };
 
-  // 1) Initial fetch
+  // Initial fetch
   useEffect(() => {
     fetchPendingOrders();
-  }, [fetchPendingOrders]);
+  }, []);
 
-  // 2) Auto refresh interval
+  // Auto refresh interval
   useEffect(() => {
     // If auto refresh is off, don't start an interval
     if (!isAutoRefreshEnabled) return;
@@ -133,25 +131,27 @@ export default function OrdersPage() {
               />
             </div>
 
-            {/* Right: Auto-Refresh Toggle */}
-            <label className="flex items-center gap-3 cursor-pointer pl-6">
-              <Switch
-                checked={isAutoRefreshEnabled}
-                onCheckedChange={setIsAutoRefreshEnabled}
-                id="auto-refresh"
-              />
+            {/* Auto-Refresh Toggle */}
+            <label className="flex flex-col gap-1 cursor-pointer pl-6 items-center">
               <span className="text-sm text-muted-foreground">
                 Auto Refresh:{" "}
                 <span
                   className={
-                    isAutoRefreshEnabled ? "text-green-500 font-medium" : "text-red-500 font-medium"
+                    isAutoRefreshEnabled
+                      ? "text-green-500 font-medium"
+                      : "text-red-500 font-medium"
                   }
                 >
                   {isAutoRefreshEnabled ? "On" : "Off"}
                 </span>
               </span>
-            </label>
 
+              <Switch
+                checked={isAutoRefreshEnabled}
+                onCheckedChange={setIsAutoRefreshEnabled}
+                id="auto-refresh"
+              />
+            </label>
           </div>
         </Suspense>
         <div className="pt-4">
