@@ -2,12 +2,17 @@
 import { axiosInstance } from '@/lib/axiosInstance';
 
 export async function getPdfConsult(consultId: number): Promise<Blob | null> {
-  if (!consultId) {
-    return null;
-  }
+  if (!consultId) return null;
 
-  return new Blob(
-    [(await axiosInstance.get(`/consults/${consultId}/pdf`)).data],
-    { type: 'application/pdf' }
+  const response = await axiosInstance.get(
+    `/consults/${consultId}/pdf`,
+    {
+      responseType: "arraybuffer",
+      transformResponse: r => r,       // disable axios parsing
+      decompress: false,               // avoid compressed transforms
+      transitional: { silentJSONParsing: false, forcedJSONParsing: false },
+    }
   );
+
+  return new Blob([response.data], { type: "application/pdf" });
 }

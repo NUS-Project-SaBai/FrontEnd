@@ -126,9 +126,9 @@ export function RecordConsultationTableModal({
               consult={consult}
               openConsultModal={setConsultId}
               onGeneratePDF={() => {
-                getPdfConsult(consult.id).then(payload => {
-                  if (payload == null) return;
-                  const url = URL.createObjectURL(payload);
+                getPdfConsult(consult.id).then(blob => {
+                  if (!blob) return;
+                  const url = URL.createObjectURL(blob);
                   window.open(url, '_blank');
                 });
               }}
