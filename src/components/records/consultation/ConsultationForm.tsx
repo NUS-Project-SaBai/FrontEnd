@@ -225,6 +225,10 @@ export function ConsultationForm({
                 value: 'GlassessFitting',
                 label: 'GlassessFitting [Within clinic]',
               },
+              {
+                value: "Others",
+                label: "Others"
+              }
             ]}
           />
           {showReferralNotes && (
