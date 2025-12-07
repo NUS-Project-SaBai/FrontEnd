@@ -61,7 +61,7 @@ export function VitalsForm({
     <FormProvider {...useFormReturn}>
       <form
         onSubmit={submitVitalsFormHandler}
-        className="max-w-[1000px] rounded-lg bg-blue-50 p-4"
+        className="rounded-lg bg-blue-50 p-4"
       >
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
           Patient Vitals
