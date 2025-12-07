@@ -1,9 +1,8 @@
 import { LoadingUI } from '@/components/LoadingUI';
-import { getConsultByID } from '@/data/consult/getConsult';
 import { patchReferral } from '@/data/referrals/patchReferral';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Referral } from '@/types/Referral';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   Select,
@@ -24,19 +23,10 @@ export function ReferralStateDropdown({ referral }: { referral: Referral }) {
     'CompletedFailure',
   ];
 
-  const [referralStatus, setReferralStatus] = useState<string>('');
+  const [referralStatus, setReferralStatus] = useState<string>(
+    referral.referral_state || 'None'
+  );
   const { isLoading, withLoading } = useLoadingState(false);
-
-  useEffect(() => {
-    const fetchConsults = withLoading(async () => {
-      await getConsultByID(referral.consult.toString())
-        .then(() => {
-          setReferralStatus(referral.referral_state || 'None');
-        })
-        .catch(e => console.log(e));
-    });
-    fetchConsults();
-  }, [referral.consult, referral.referral_state, withLoading]);
 
   function dropdownChanged(value: string) {
     const patch = withLoading(async () => {
