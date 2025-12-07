@@ -121,12 +121,12 @@ export function SideMenu() {
               }}
               onClick={() => setOpen(false)}
             />
-            <div className="flex items-center space-x-2 p-4">
-              <UserCircleIcon className="h-6 w-6" />
-              <div>
-                <p>{user?.nickname}</p>
-                <p>@{user?.name}</p>
+            <div className="flex flex-col space-y-2 p-2 break-all">
+              <div className='flex flex-row space-x-2'>
+                <UserCircleIcon className="h-6 w-6" />
+                <div>{user?.nickname}</div>
               </div>
+              <div className='text-xs'>{user?.name}</div>
             </div>
           </div>
         </aside>
@@ -147,7 +147,7 @@ function NavItem({
     <Link href={href} prefetch={false} onClick={onClick}>
       <div
         className={
-          'flex gap-x-2 rounded px-4 py-2 hover:bg-gray-800 hover:text-gray-200 ' +
+          'flex gap-x-2 rounded px-2 py-2 hover:bg-gray-800 hover:text-gray-200 ' +
           (isCurrentUrl && 'bg-gray-800 text-gray-200')
         }
       >
