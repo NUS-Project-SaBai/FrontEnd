@@ -45,7 +45,7 @@ export function RecordConsultationTableModal({
 
   const handleEditComplete = () => {
     setEditConsultId(null);
-    // Refresh the page or reload data after edit
+    // Force page reload to refresh all consultation data
     window.location.reload();
   };
 

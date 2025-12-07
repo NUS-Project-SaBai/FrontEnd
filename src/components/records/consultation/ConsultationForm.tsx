@@ -7,12 +7,16 @@ import { MedicationOrderSection } from '@/components/records/consultation/Medica
 import { createConsult } from '@/data/consult/createConsult';
 import { getConsultByID } from '@/data/consult/getConsult';
 import { patchConsults } from '@/data/consult/patchConsults';
+import { createDiagnosis } from '@/data/diagnosis/createDiagnosis';
+import { deleteDiagnosis } from '@/data/diagnosis/deleteDiagnosis';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
+import { patchDiagnosis } from '@/data/diagnosis/patchDiagnosis';
 import { createReferral } from '@/data/referrals/createReferral';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
 import { FormEvent, useEffect, useRef } from 'react';
+
 import {
   Controller,
   FieldValues,
@@ -48,7 +52,6 @@ export function ConsultationForm({
       return;
     }
 
-    // Prevent re-loading if we've already loaded this consult or are currently loading
     if (loadedConsultIdRef.current === editConsultId || isLoadingRef.current) {
       return;
     }
@@ -135,6 +138,24 @@ export function ConsultationForm({
   const referredFor = useFormReturn.watch('referred_for');
   const isEditing = editConsultId != null;
 
+  // Helper function to process and validate diagnoses
+  const processDiagnoses = (
+    diagnoses: Array<{
+      id?: number;
+      details: string;
+      category: string;
+    }>,
+    includeId = false
+  ) => {
+    return diagnoses
+      .filter(d => d?.details?.trim() && d?.category?.trim())
+      .map(d => ({
+        ...(includeId && d.id !== undefined ? { id: d.id } : {}),
+        details: d.details.trim(),
+        category: d.category.trim(),
+      }));
+  };
+
   const submitConsultationFormHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -168,6 +189,8 @@ export function ConsultationForm({
                       notes: order.notes,
                     }));
               break;
+            case 'diagnoses':
+              break;
             default:
               if (isEditing) {
                 jsonPayload[k] = v;
@@ -178,22 +201,8 @@ export function ConsultationForm({
           }
         });
 
-        // Include diagnoses in the payload
-        if (diagnosesData && diagnosesData.length > 0) {
-          const validDiagnoses = diagnosesData
-            .filter(d => d?.details?.trim() && d?.category?.trim())
-            .map(d => ({
-              details: d.details.trim(),
-              category: d.category.trim(),
-            }));
-
-          if (isEditing) {
-            // For editing, diagnoses go at root level
-            jsonPayload['diagnoses'] = validDiagnoses;
-          } else {
-            // For new consults, diagnoses go inside the consult object
-            jsonPayload['consult']['diagnoses'] = validDiagnoses;
-          }
+        if (!isEditing && diagnosesData && diagnosesData.length > 0) {
+          jsonPayload['diagnoses'] = processDiagnoses(diagnosesData);
         }
 
         console.log(
@@ -230,23 +239,59 @@ export function ConsultationForm({
           consultID = result.id;
           const targetConsultId = isEditing ? editConsultId : consultID;
 
-          // Verify using getConsultByID and getDiagnosisByConsult
-          const [verifyConsult, verifyDiagnoses] = await Promise.all([
-            getConsultByID(targetConsultId.toString()),
-            getDiagnosisByConsult(targetConsultId),
-          ]);
+          // Handle diagnoses separately
+          const validDiagnoses = processDiagnoses(diagnosesData, isEditing);
 
-          console.log('Verification - Consult:', verifyConsult);
-          console.log(
-            'Verification - Diagnoses count:',
-            verifyDiagnoses.length
-          );
-          console.log('Verification - Diagnoses:', verifyDiagnoses);
+          if (isEditing) {
+            // Sync diagnoses manually when editing
+            const existingDiagnoses =
+              await getDiagnosisByConsult(targetConsultId);
 
-          if (verifyDiagnoses.length !== (diagnosesData?.length || 0)) {
-            console.warn(
-              `Diagnosis count mismatch: Expected ${diagnosesData?.length || 0}, got ${verifyDiagnoses.length}`
-            );
+            // Update or create diagnoses
+            for (const diagnosis of validDiagnoses) {
+              if (diagnosis.id) {
+                // Update existing diagnosis
+                await patchDiagnosis(diagnosis.id, {
+                  details: diagnosis.details,
+                  category: diagnosis.category,
+                });
+              } else {
+                // Create new diagnosis
+                await createDiagnosis({
+                  consult_id: targetConsultId,
+                  details: diagnosis.details,
+                  category: diagnosis.category,
+                });
+              }
+            }
+
+            // Delete diagnoses that were removed
+            const currentDiagnosisIds = validDiagnoses
+              .filter(d => d.id !== undefined)
+              .map(d => d.id as number);
+            for (const existingDiag of existingDiagnoses) {
+              if (
+                existingDiag.id &&
+                !currentDiagnosisIds.includes(existingDiag.id)
+              ) {
+                await deleteDiagnosis(existingDiag.id);
+              }
+            }
+          } else if (validDiagnoses.length > 0) {
+            // For new consults, verify diagnoses were created
+            const verifyDiagnoses =
+              await getDiagnosisByConsult(targetConsultId);
+
+            if (verifyDiagnoses.length !== validDiagnoses.length) {
+              // Create missing diagnoses
+              for (const diagnosis of validDiagnoses) {
+                await createDiagnosis({
+                  consult_id: targetConsultId,
+                  details: diagnosis.details,
+                  category: diagnosis.category,
+                });
+              }
+            }
           }
 
           toast.success(
