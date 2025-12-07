@@ -6,6 +6,7 @@ export async function getPdfConsult(consultId: number): Promise<Blob | null> {
 
   const response = await axiosInstance.get(
     `/consults/${consultId}/pdf`,
+    // fix from repeated ChatGPT prompts
     {
       responseType: "arraybuffer",
       transformResponse: r => r,       // disable axios parsing
