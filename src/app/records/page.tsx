@@ -107,7 +107,7 @@ export default function RecordPage() {
   const filteringByFace = faceFilteredPatients !== null;
 
   return (
-    <div className="flex h-full flex-col overflow-auto">
+    <div className="flex h-full flex-col">
       <h1 className="-mb-2">Patients</h1>
       <div className="z-1 sticky top-0 w-full bg-white p-2 drop-shadow-lg">
         <div className="flex w-full flex-col gap-2 sm:flex-row">
@@ -136,7 +136,7 @@ export default function RecordPage() {
           </div>
         </div>
       </div>
-      <div className="flex flex-1 p-2">
+      <div className="flex flex-1 p-2 overflow-auto">
         <LoadingPage
           isLoading={patientsLoading || isSubmitting}
           message="Loading Patients..."
