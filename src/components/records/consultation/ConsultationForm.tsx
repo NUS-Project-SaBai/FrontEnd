@@ -13,6 +13,7 @@ import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { patchDiagnosis } from '@/data/diagnosis/patchDiagnosis';
 import { createReferral } from '@/data/referrals/createReferral';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
+import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
 import { FormEvent, useEffect, useRef } from 'react';
 
@@ -150,10 +151,10 @@ export function ConsultationForm({
     const jsonPayload: { [key: string]: any } = isEditing
       ? {}
       : {
-        consult: {
-          visit_id: visitId,
-        },
-      };
+          consult: {
+            visit_id: visitId,
+          },
+        };
     handleSubmit(
       async (data: FieldValues) => {
         // Get diagnoses data
@@ -168,15 +169,14 @@ export function ConsultationForm({
         Object.entries(data).forEach(([k, v]) => {
           switch (k) {
             case 'orders':
-              // REMOVE ORDERS FROM THE PAYLOAD FOR NOW
-              // jsonPayload[k] =
-              //   v == undefined
-              //     ? []
-              //     : v.map((order: ConsultMedicationOrder) => ({
-              //         medicine: order.medication.split(' ', 1)[0],
-              //         quantity: order.quantity,
-              //         notes: order.notes,
-              //       }));
+              jsonPayload[k] =
+                v == undefined
+                  ? []
+                  : v.map((order: ConsultMedicationOrder) => ({
+                      medicine: order.medication.split(' ', 1)[0],
+                      quantity: order.quantity,
+                      notes: order.notes,
+                    }));
               break;
             case 'diagnoses':
               break;
@@ -418,9 +418,9 @@ export function ConsultationForm({
                 label: 'GlassesFitting [Within clinic]',
               },
               {
-                value: "Others",
-                label: "Others"
-              }
+                value: 'Others',
+                label: 'Others',
+              },
             ]}
           />
           {showReferralNotes && (
@@ -440,12 +440,16 @@ export function ConsultationForm({
             placeholder="Type your remarks here..."
           />
           {/* We don't want to edit this section when editing the consultation */}
-          {isEditing ?
+          {isEditing ? (
             <div className="rounded-lg bg-gray-50 p-2 shadow">
               <h2>Order</h2>
-              <p className='py-2'>Medicine orders not supported yet for consultation edit</p>
-            </div> : <MedicationOrderSection patient={patient} isEditable={!isEditing} />
-          }
+              <p className="py-2">
+                Medicine orders not supported yet for consultation edit
+              </p>
+            </div>
+          ) : (
+            <MedicationOrderSection patient={patient} isEditable={!isEditing} />
+          )}
           <Button
             colour="green"
             text={
