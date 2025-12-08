@@ -166,19 +166,19 @@ export function MedicationOrderForm({
                   medications == undefined || selectedMedicationId == ''
                     ? ''
                     : getInStockQuantityColour(
-                        medications.find(
-                          med => med.id.toString() == selectedMedicationId
-                        ) || null
-                      )
+                      medications.find(
+                        med => med.id.toString() == selectedMedicationId
+                      ) || null
+                    )
                 }
                 content={
                   medications == undefined || selectedMedicationId == ''
                     ? '-'
                     : getInStockQuantityText(
-                        medications.find(
-                          med => med.id.toString() == selectedMedicationId
-                        ) || null
-                      )
+                      medications.find(
+                        med => med.id.toString() == selectedMedicationId
+                      ) || null
+                    )
                 }
               />
               <div
@@ -208,7 +208,7 @@ export function MedicationOrderForm({
               placeholder="Dosage Instructions"
               isRequired={true}
             />
-            <Button type="submit" text="Submit" colour="green" />
+            <Button type="submit" text="Add order" colour="green" className='my-2'/>
           </form>
         </FormProvider>
       </div>
