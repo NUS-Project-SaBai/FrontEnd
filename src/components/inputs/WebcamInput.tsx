@@ -3,8 +3,6 @@ import { Button } from '@/components/Button';
 import { useToggle } from '@/hooks/useToggle';
 import Image from 'next/image';
 import {
-  Dispatch,
-  SetStateAction,
   useCallback,
   useEffect,
   useRef,
@@ -23,7 +21,7 @@ export function WebcamInput({
   cameraIsOpenCallback,
 }: {
   imageDetails: string | null;
-  setImageDetails: Dispatch<SetStateAction<string | null>>;
+  setImageDetails: (picture: string | null) => void;
   cameraIsOpenCallback?: (isOpen: boolean) => void;
 }) {
   const [cameraIsOpen, toggleCameraOpen, setCameraIsOpen] = useToggle(false);

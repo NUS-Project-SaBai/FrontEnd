@@ -104,6 +104,10 @@ export default function RecordPage() {
     setFaceFilteredPatients(null);
   };
 
+  function setRegistrationFace(picture: string | null) {
+    setFormDetails(old => ({ ...old, picture }))
+  }
+
   const filteringByFace = faceFilteredPatients !== null;
 
   return (
@@ -132,7 +136,8 @@ export default function RecordPage() {
                 isSubmitting={isSubmitting}
               />
             </FormProvider>
-            <PatientScanForm setFilteredPatients={setFaceFilteredPatients} />
+            <PatientScanForm setFilteredPatients={setFaceFilteredPatients}
+              setRegistrationFace={setRegistrationFace} />
           </div>
         </div>
       </div>
