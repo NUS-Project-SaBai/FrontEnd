@@ -69,11 +69,6 @@ export function ConsultationForm({
           return;
         }
 
-        console.log('Loading consult for edit - Consult ID:', editConsultId);
-        console.log('Loaded consult:', consult);
-        console.log('Loaded diagnoses:', diagnoses);
-        console.log('Number of diagnoses:', diagnoses?.length);
-
         const formData = {
           past_medical_history: consult.past_medical_history || '',
           consultation: consult.consultation || '',
@@ -90,12 +85,6 @@ export function ConsultationForm({
               notes: p.notes || '',
             })) || [],
         };
-
-        console.log('Form data with diagnoses:', formData);
-        console.log(
-          'Number of diagnoses in form data:',
-          formData.diagnoses.length
-        );
 
         loadedConsultIdRef.current = editConsultId;
         useFormReturn.reset(formData);
@@ -205,11 +194,6 @@ export function ConsultationForm({
         if (!isEditing && diagnosesData && diagnosesData.length > 0) {
           jsonPayload['diagnoses'] = processDiagnoses(diagnosesData);
         }
-
-        console.log(
-          'Final payload being sent:',
-          JSON.stringify(jsonPayload, null, 2)
-        );
 
         const referralPayload: {
           [key: string]: Patient | Date | string | number | null;
