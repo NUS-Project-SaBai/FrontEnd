@@ -7,14 +7,10 @@ import { MedicationOrderSection } from '@/components/records/consultation/Medica
 import { createConsult } from '@/data/consult/createConsult';
 import { getConsultByID } from '@/data/consult/getConsult';
 import { patchConsults } from '@/data/consult/patchConsults';
-import { createDiagnosis } from '@/data/diagnosis/createDiagnosis';
-import { deleteDiagnosis } from '@/data/diagnosis/deleteDiagnosis';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
-import { patchDiagnosis } from '@/data/diagnosis/patchDiagnosis';
-import { createReferral } from '@/data/referrals/createReferral';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
-import { FormEvent, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import {
   Controller,
@@ -40,22 +36,20 @@ export function ConsultationForm({
     {} as FieldValues,
     [visitId, editConsultId]
   );
+
+  //form needs to be updated by external data
   const useFormReturn = useForm({ values: formDetails });
-  const loadedConsultIdRef = useRef<number | null>(null);
-  const isLoadingRef = useRef(false);
+
+  const isEditing = editConsultId != null;
+  const referredFor = useFormReturn.watch('referred_for');
 
   useEffect(() => {
-    if (editConsultId == null) {
-      loadedConsultIdRef.current = null;
-      isLoadingRef.current = false;
+    let isMounted = true;
+
+    if (!editConsultId) {
       return;
     }
 
-    if (loadedConsultIdRef.current === editConsultId || isLoadingRef.current) {
-      return;
-    }
-
-    isLoadingRef.current = true;
     const loadData = async () => {
       try {
         const [consult, diagnoses] = await Promise.all([
@@ -63,7 +57,7 @@ export function ConsultationForm({
           getDiagnosisByConsult(editConsultId),
         ]);
 
-        if (consult == null) {
+        if (!consult) {
           toast.error('Failed to load consultation data');
           return;
         }
@@ -85,18 +79,20 @@ export function ConsultationForm({
             })) || [],
         };
 
-        loadedConsultIdRef.current = editConsultId;
-        useFormReturn.reset(formData);
         setFormDetails(formData);
-        isLoadingRef.current = false;
       } catch (error) {
+        if (!isMounted) return;
         console.error('Error loading consult data:', error);
         toast.error('Failed to load consultation data');
-        isLoadingRef.current = false;
       }
     };
 
     loadData();
+
+    //cleanup function
+    return () => {
+      isMounted = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editConsultId]);
 
@@ -112,229 +108,57 @@ export function ConsultationForm({
     return () => {
       unsub();
       if (editConsultId == null) {
-        useFormReturn.reset({});
+        setFormDetails({} as FieldValues);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visitId, editConsultId]);
+
   const {
     control,
     handleSubmit,
-    reset,
     formState: { isSubmitting },
   } = useFormReturn;
-  const referredFor = useFormReturn.watch('referred_for');
-  const isEditing = editConsultId != null;
 
-  // Helper function to process and validate diagnoses
-  const processDiagnoses = (
-    diagnoses: Array<{
-      id?: number;
-      details: string;
-      category: string;
-    }>,
-    includeId = false
-  ) => {
-    return diagnoses
-      .filter(d => d?.details?.trim() && d?.category?.trim())
-      .map(d => ({
-        ...(includeId && d.id !== undefined ? { id: d.id } : {}),
-        details: d.details.trim(),
-        category: d.category.trim(),
-      }));
-  };
+  const onValidSubmit = async (data: FieldValues) => {
+    try {
+      const payload = isEditing ? data : { ...data, visit_id: visitId };
 
-  const submitConsultationFormHandler = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const jsonPayload: { [key: string]: any } = isEditing
-      ? {}
-      : {
-        consult: {
-          visit_id: visitId,
-        },
-      };
-    handleSubmit(
-      async (data: FieldValues) => {
-        // Get diagnoses data
-        const diagnosesData =
-          (data.diagnoses as Array<{
-            id?: number;
-            details: string;
-            category: string;
-          }>) || [];
+      const result = isEditing
+        ? await patchConsults(editConsultId, payload)
+        : await createConsult(payload);
 
-        // Include diagnoses in the payload instead of removing them
-        Object.entries(data).forEach(([k, v]) => {
-          switch (k) {
-            case 'orders':
-              // REMOVE ORDERS FROM THE PAYLOAD FOR NOW
-              // jsonPayload[k] =
-              //   v == undefined
-              //     ? []
-              //     : v.map((order: ConsultMedicationOrder) => ({
-              //         medicine: order.medication.split(' ', 1)[0],
-              //         quantity: order.quantity,
-              //         notes: order.notes,
-              //       }));
-              break;
-            case 'diagnoses':
-              break;
-            default:
-              if (isEditing) {
-                jsonPayload[k] = v;
-              } else {
-                jsonPayload['consult'][k] = v;
-              }
-              break;
-          }
-        });
-
-        if (!isEditing && diagnosesData && diagnosesData.length > 0) {
-          jsonPayload['diagnoses'] = processDiagnoses(diagnosesData);
-        }
-
-        const referralPayload: {
-          [key: string]: Patient | Date | string | number | null;
-        } = {};
-        let consultID;
-
-        Object.entries(data).forEach(item => {
-          if (item[0] == 'referral_notes' || item[0] == 'referred_for') {
-            referralPayload[item[0]] = item[1];
-          }
-        });
-
-        try {
-          const result =
-            isEditing && editConsultId
-              ? await patchConsults(editConsultId, jsonPayload)
-              : await createConsult(jsonPayload);
-
-          if (result != null && 'error' in result) {
-            toast.error(
-              isEditing
-                ? `Error updating consultation: ${result.error}`
-                : `Error submitting consultation form: ${result.error}`
-            );
-            return;
-          }
-          if (result == null) {
-            toast.error(
-              isEditing
-                ? 'Error updating consultation'
-                : 'Error submitting consultation form'
-            );
-            return;
-          }
-
-          consultID = result.id;
-          const targetConsultId = isEditing ? editConsultId : consultID;
-
-          // Handle diagnoses separately
-          const validDiagnoses = processDiagnoses(diagnosesData, isEditing);
-
-          if (isEditing) {
-            // Sync diagnoses manually when editing
-            const existingDiagnoses =
-              await getDiagnosisByConsult(targetConsultId);
-
-            // Update or create diagnoses
-            for (const diagnosis of validDiagnoses) {
-              if (diagnosis.id) {
-                // Update existing diagnosis
-                await patchDiagnosis(diagnosis.id, {
-                  details: diagnosis.details,
-                  category: diagnosis.category,
-                });
-              } else {
-                // Create new diagnosis
-                await createDiagnosis({
-                  consult_id: targetConsultId,
-                  details: diagnosis.details,
-                  category: diagnosis.category,
-                });
-              }
-            }
-
-            // Delete diagnoses that were removed
-            const currentDiagnosisIds = validDiagnoses
-              .filter(d => d.id !== undefined)
-              .map(d => d.id as number);
-            for (const existingDiag of existingDiagnoses) {
-              if (
-                existingDiag.id &&
-                !currentDiagnosisIds.includes(existingDiag.id)
-              ) {
-                await deleteDiagnosis(existingDiag.id);
-              }
-            }
-          } else if (validDiagnoses.length > 0) {
-            // For new consults, verify diagnoses were created
-            const verifyDiagnoses =
-              await getDiagnosisByConsult(targetConsultId);
-
-            if (verifyDiagnoses.length !== validDiagnoses.length) {
-              // Create missing diagnoses
-              for (const diagnosis of validDiagnoses) {
-                await createDiagnosis({
-                  consult_id: targetConsultId,
-                  details: diagnosis.details,
-                  category: diagnosis.category,
-                });
-              }
-            }
-          }
-
-          toast.success(
-            isEditing
-              ? 'Medical Consult Updated!'
-              : 'Medical Consult Completed!'
-          );
-          reset({});
-          clearLocalStorageData();
-          if (isEditing && onEditComplete) {
-            onEditComplete();
-          }
-        } catch (error) {
-          console.error('Error submitting consultation form:', error);
-          toast.error('Unknown Error');
-        }
-
-        // only submit the form if 'referred_for' is filled in and is not 'Not Referred'
-        if ('referred_for' in referralPayload) {
-          if (referralPayload['referred_for'] !== 'Not Referred') {
-            if (!('referral_notes' in referralPayload)) {
-              referralPayload['referral_notes'] = 'No notes entered';
-            }
-
-            referralPayload['referral_state'] = 'New';
-            referralPayload['consult'] = Number(consultID);
-            referralPayload['referral_outcome'] = '';
-
-            try {
-              const result = createReferral(referralPayload);
-              result
-                .then(
-                  () => {
-                    toast.success('Referral submitted!');
-                  },
-                  () => console.log('error')
-                )
-                .catch(() => toast.error('Error submitting consultation form'));
-            } catch (error) {
-              console.error('Error submitting referral form:', error);
-              toast.error('Unknown Error');
-            }
-          }
-        }
-      },
-
-      () => {
-        toast.error('Missing Input');
+      if ((result != null && 'error' in result) || result == null) {
+        toast.error(
+          isEditing
+            ? `Error updating consultation: ${result?.error}`
+            : `Error submitting consultation form: ${result?.error}`
+        );
+        return;
       }
-    )();
+
+      toast.success(
+        isEditing ? 'Medical Consult Updated!' : 'Medical Consult Completed!'
+      );
+
+      if (isEditing && onEditComplete) {
+        onEditComplete();
+      }
+    } catch (error) {
+      console.error('Submit error:', error);
+      toast.error('Unknown Error');
+    }
   };
+
+  const onInvalidSubmit = () => {
+    toast.error('Missing Input - Please check required fields');
+  };
+
+  const submitConsultationFormHandler = handleSubmit(
+    onValidSubmit,
+    onInvalidSubmit
+  );
+
   const showReferralNotes = referredFor && referredFor !== 'Not Referred';
   return (
     <div className="h-full rounded-lg bg-blue-100 p-2 shadow-sm">
@@ -418,9 +242,9 @@ export function ConsultationForm({
                 label: 'GlassesFitting [Within clinic]',
               },
               {
-                value: "Others",
-                label: "Others"
-              }
+                value: 'Others',
+                label: 'Others',
+              },
             ]}
           />
           {showReferralNotes && (
@@ -440,12 +264,16 @@ export function ConsultationForm({
             placeholder="Type your remarks here..."
           />
           {/* We don't want to edit this section when editing the consultation */}
-          {isEditing ?
+          {isEditing ? (
             <div className="rounded-lg bg-gray-50 p-2 shadow">
               <h2>Order</h2>
-              <p className='py-2'>Medicine orders not supported yet for consultation edit</p>
-            </div> : <MedicationOrderSection patient={patient} isEditable={!isEditing} />
-          }
+              <p className="py-2">
+                Medicine orders not supported yet for consultation edit
+              </p>
+            </div>
+          ) : (
+            <MedicationOrderSection patient={patient} isEditable={!isEditing} />
+          )}
           <Button
             colour="green"
             text={
