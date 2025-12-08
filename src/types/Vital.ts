@@ -109,7 +109,7 @@ export function isVisualAcuityPoor(visualAcuity: string | undefined): boolean {
     return false;
   }
 
-  return denominator >= 12;
+  return denominator >= 15;
 }
 
 export function vitalFromJson(jsonObj: object): Vital | null {
