@@ -16,7 +16,7 @@ export function DisplayField({
       </label>
       <div
         className={
-          'w-full rounded-md p-1.5 text-gray-600 shadow-sm ' +
+          'w-full rounded-md p-1.5 text-grey-600 shadow-sm whitespace-pre-wrap ' +
           (highlight || 'bg-gray-200')
         }
       >
