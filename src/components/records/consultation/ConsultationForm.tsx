@@ -162,7 +162,7 @@ export function ConsultationForm({
             type="textarea"
             placeholder="Type your problems here..."
             isRequired={true}
-            rows={10}
+            textAreaRows={10}
           />
           <RHFInputField
             name="consultation"
@@ -170,7 +170,7 @@ export function ConsultationForm({
             type="textarea"
             placeholder="Type your consultation here..."
             isRequired={true}
-            rows={10}
+            textAreaRows={10}
           />
           <Controller
             name="diagnoses"
@@ -208,7 +208,7 @@ export function ConsultationForm({
             label="Plan"
             type="textarea"
             placeholder="Type your plan here..."
-            rows={6}
+            textAreaRows={6}
           />
           <RHFDropdown
             name="referred_for"
@@ -237,7 +237,7 @@ export function ConsultationForm({
               type="textarea"
               placeholder="Type your referral notes here..."
               isRequired={useFormReturn.watch('referred_for') !== ''}
-              rows={8}
+              textAreaRows={8}
             />
           )}
           <RHFInputField
