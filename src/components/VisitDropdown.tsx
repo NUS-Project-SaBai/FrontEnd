@@ -48,6 +48,7 @@ export function VisitDropdown({
 
   useEffect(() => {
     setVisitId(items[0].value)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Ensure selected visit exists; if not, default to first (if any)
