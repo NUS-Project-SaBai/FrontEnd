@@ -3,8 +3,6 @@ import { Button } from '@/components/Button';
 import { useToggle } from '@/hooks/useToggle';
 import Image from 'next/image';
 import {
-  Dispatch,
-  SetStateAction,
   useCallback,
   useEffect,
   useRef,
