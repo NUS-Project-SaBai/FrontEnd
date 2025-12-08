@@ -82,8 +82,6 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
     }
     )().then(freshPatient => {
       setPatients(old => {
-        console.log(old)
-        console.log(freshPatient)
         return [
           freshPatient,
           ...old.filter(v => v.patient_id != freshPatient.patient_id),
