@@ -150,10 +150,10 @@ export function ConsultationForm({
     const jsonPayload: { [key: string]: any } = isEditing
       ? {}
       : {
-          consult: {
-            visit_id: visitId,
-          },
-        };
+        consult: {
+          visit_id: visitId,
+        },
+      };
     handleSubmit(
       async (data: FieldValues) => {
         // Get diagnoses data
@@ -440,7 +440,12 @@ export function ConsultationForm({
             placeholder="Type your remarks here..."
           />
           {/* We don't want to edit this section when editing the consultation */}
-          <MedicationOrderSection patient={patient} isEditable={!isEditing} />
+          {isEditing ?
+            <div className="rounded-lg bg-gray-50 p-2 shadow">
+              <h2>Order</h2>
+              <p className='py-2'>Medicine orders not supported yet for consultation edit</p>
+            </div> : <MedicationOrderSection patient={patient} isEditable={!isEditing} />
+          }
           <Button
             colour="green"
             text={
