@@ -54,8 +54,8 @@ export default async function PatientVitalPage({
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-6 md:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl space-y-6">
+    <div className="min-h-screen bg-slate-50 px-4 py-6">
+      <div className="mx-4 max-w space-y-6">
         <h1>Patient Vitals</h1>
 
         {/* Patient info */}

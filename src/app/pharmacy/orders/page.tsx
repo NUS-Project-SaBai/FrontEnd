@@ -18,10 +18,12 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
+import { Switch } from '@/components/ui/switch';
 
 type OrderRowData = {
   patient: {
@@ -51,6 +53,13 @@ export default function OrdersPage() {
     OrderRowData[]
   >([]);
   const { isLoading, withLoading } = useLoadingState(true);
+
+  const isLoadingRef = useRef(isLoading);
+  const [isAutoRefreshEnabled, setIsAutoRefreshEnabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
   const { village } = useContext(VillageContext);
 
   const fetchPendingOrders = withLoading(async () => {
@@ -58,36 +67,92 @@ export default function OrdersPage() {
     setOrderRowData(result);
     setFilteredOrderRowData(result);
   });
+
+  const silentRefresh = async () => {
+    try {
+      // Call API directly without loading
+      const result = await fetchAllPatientMedicationOrders();
+      
+      // Update the main data state
+      setOrderRowData(result);
+      setFilteredOrderRowData(result);
+
+    } catch (error) {
+      console.error("Background refresh failed", error);
+      // Suppress UI errors for background refreshes to avoid annoying the user
+    }
+  };
+
+  // Initial fetch
   useEffect(() => {
     fetchPendingOrders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Auto refresh interval
+  useEffect(() => {
+    // If auto refresh is off, don't start an interval
+    if (!isAutoRefreshEnabled) return;
+
+    const intervalId = setInterval(() => {
+      if (!isLoadingRef.current) {
+        silentRefresh();
+      }
+    }, 15000);
+
+    return () => clearInterval(intervalId);
+  }, [isAutoRefreshEnabled]);
 
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
       <div className="p-2">
         <h1>Orders</h1>
         <Suspense>
-          <PatientSearchbar
-            data={useMemo(
-              () =>
-                orderRowData.filter(
-                  x =>
-                    village == VillagePrefix.ALL ||
-                    x.patient.village_prefix == village
-                ),
-              [orderRowData, village]
-            )}
-            setFilteredItems={setFilteredOrderRowData}
-            filterFunction={useCallback(
-              (query: string) => (item: OrderRowData) =>
-                item.patient.patient_id
-                  .toLowerCase()
-                  .includes(query.toLowerCase()) ||
-                item.patient.name.toLowerCase().includes(query.toLowerCase()),
-              []
-            )}
-          />
+          <div className="flex items-center justify-between">
+            {/* Left: Search */}
+            <div className="flex-1 max-w-full flex items-center">
+              <PatientSearchbar
+                data={useMemo(
+                  () =>
+                    orderRowData.filter(
+                      x =>
+                        village === VillagePrefix.ALL ||
+                        x.patient.village_prefix === village
+                    ),
+                  [orderRowData, village]
+                )}
+                setFilteredItems={setFilteredOrderRowData}
+                filterFunction={useCallback(
+                  (query: string) => (item: OrderRowData) =>
+                    item.patient.patient_id.toLowerCase().includes(query.toLowerCase()) ||
+                    item.patient.name.toLowerCase().includes(query.toLowerCase()),
+                  []
+                )}
+              />
+            </div>
+
+            {/* Auto-Refresh Toggle */}
+            <label className="flex flex-col gap-1 cursor-pointer pl-6 items-center">
+              <span className="text-sm text-muted-foreground">
+                Auto Refresh:{" "}
+                <span
+                  className={
+                    isAutoRefreshEnabled
+                      ? "text-green-500 font-medium"
+                      : "text-red-500 font-medium"
+                  }
+                >
+                  {isAutoRefreshEnabled ? "On" : "Off"}
+                </span>
+              </span>
+
+              <Switch
+                checked={isAutoRefreshEnabled}
+                onCheckedChange={setIsAutoRefreshEnabled}
+                id="auto-refresh"
+              />
+            </label>
+          </div>
         </Suspense>
         <div className="pt-4">
           <table className="w-full text-left">

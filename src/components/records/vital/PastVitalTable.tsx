@@ -33,9 +33,9 @@ export function PastVitalTable({
         vital.systolic == undefined || vital.diastolic == undefined
           ? undefined
           : vital.systolic > 140 ||
-              vital.diastolic > 90 ||
-              vital.systolic < 90 ||
-              vital.diastolic < 60
+            vital.diastolic > 90 ||
+            vital.systolic < 90 ||
+            vital.diastolic < 60
             ? 'bg-red-200'
             : undefined,
     },
@@ -80,8 +80,7 @@ export function PastVitalTable({
               : '',
     },
     { label: 'HbA1c', value: vital.hbA1c || '' },
-    { label: 'Diabetes Mellitus?', value: vital.diabetes_mellitus },
-    { label: 'Others', value: vital.others },
+    { label: 'Diabetes Mellitus?', value: vital.diabetes_mellitus }
   ];
   //Note: The UI display for scoliosis instances are labelled spine
   const childrenVitalFields: VitalFieldsDataType[] = [
@@ -247,6 +246,12 @@ export function PastVitalTable({
             />
           )
         )}
+      <h2 className="col-span-full">Others</h2>
+      <DisplayField
+        key="Others"
+        content={vital.others?.toString() || '-'}
+        spanFull
+      />
     </div>
   );
 }
