@@ -13,6 +13,7 @@ import { DateTime, Duration } from 'luxon';
 import Link from 'next/link';
 import type { Dispatch, SetStateAction } from 'react';
 import { useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export function PatientRecordTable({
   displayedPatients,
@@ -75,13 +76,19 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
         }
       }
     }
-    withLoading(async () =>
-      createVisit(patient).then(() => getPatientById(patient.pk.toString()))
+    withLoading(async () => {
+      toast.loading("Creating visit...");
+      return createVisit(patient).then(() => getPatientById(patient.pk.toString()))
+    }
     )().then(freshPatient => {
-      setPatients(old => [
-        freshPatient,
-        ...old.filter(v => v.patient_id != freshPatient.patient_id),
-      ]);
+      setPatients(old => {
+        return [
+          freshPatient,
+          ...old.filter(v => v.patient_id != freshPatient.patient_id),
+        ]
+      });
+      toast.dismiss();
+      toast.success("New visit created")
       setShouldFlash(true);
       setTimeout(() => setShouldFlash(false), 1000); // 1 second flash
     });
@@ -92,9 +99,8 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       <div
         // onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
         onClick={toggleExpanded}
-        className={`m-2 flex flex-col items-center rounded-md bg-white p-2 shadow transition-shadow duration-300 ${
-          isHovered ? 'shadow-md' : ''
-        } ${shouldFlash ? 'flash' : ''}`}
+        className={`m-2 flex flex-col items-center rounded-md bg-white p-2 shadow transition-shadow duration-300 ${isHovered ? 'shadow-md' : ''
+          } ${shouldFlash ? 'flash' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         role="button"
@@ -173,9 +179,9 @@ function getLastVisitLabel(lastVisitDate: string): string {
       ? lastVisitDateLuxon.toRelative() || 'Missing relative time?'
       : timeSinceLastVisit < Duration.fromObject({ days: 10 })
         ? lastVisitDateLuxon.toLocaleString({
-            ...DateTime.DATETIME_MED,
-            hour12: true,
-          })
+          ...DateTime.DATETIME_MED,
+          hour12: true,
+        })
         : lastVisitDateLuxon.toLocaleString(DateTime.DATE_MED);
 }
 
