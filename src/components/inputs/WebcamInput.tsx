@@ -23,7 +23,7 @@ export function WebcamInput({
   cameraIsOpenCallback,
 }: {
   imageDetails: string | null;
-  setImageDetails: Dispatch<SetStateAction<string | null>>;
+  setImageDetails: (picture: string | null) => void;
   cameraIsOpenCallback?: (isOpen: boolean) => void;
 }) {
   const [cameraIsOpen, toggleCameraOpen, setCameraIsOpen] = useToggle(false);
