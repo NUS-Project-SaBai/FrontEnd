@@ -8,8 +8,10 @@ import { Controller } from 'react-hook-form';
 
 export function MedicationOrderSection({
   patient,
+  isEditable = true,
 }: {
   patient: Patient | null;
+  isEditable: boolean;
 }) {
   const [selectedOrder, setSelectedOrder] =
     useState<ConsultMedicationOrder | null>(null);
@@ -27,6 +29,7 @@ export function MedicationOrderSection({
               <MedicationOrderTable
                 consultOrders={value}
                 editConsultOrder={setSelectedOrder}
+                isEditable={isEditable}
                 deleteConsultOrder={consult => {
                   const tmp = [...value];
                   tmp.splice(
@@ -37,18 +40,20 @@ export function MedicationOrderSection({
                 }}
               />
             )}
-            <Button
-              text="Add Order"
-              colour="green"
-              onClick={() => {
-                setSelectedOrder({
-                  index: undefined,
-                  medication: '',
-                  quantity: undefined,
-                  notes: '',
-                });
-              }}
-            />
+            {isEditable && (
+              <Button
+                text="Add Order"
+                colour="green"
+                onClick={() => {
+                  setSelectedOrder({
+                    index: undefined,
+                    medication: '',
+                    quantity: undefined,
+                    notes: '',
+                  });
+                }}
+              />
+            )}
           </div>
           <MedicationOrderForm
             selectedOrder={selectedOrder}

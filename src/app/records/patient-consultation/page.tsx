@@ -145,6 +145,7 @@ function MainBody({
             <PrescriptionConsultCol
               consults={consults}
               prescriptions={prescriptions}
+              patient={patient}
             />
           </div>
         </ScrollArea>
