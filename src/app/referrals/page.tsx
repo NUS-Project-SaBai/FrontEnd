@@ -45,9 +45,7 @@ export default function ReferralPage() {
                 patient={referral.patient}
                 date={referral.date}
                 onGeneratePDF={() => {
-                  console.log('Generate referral pdf button pressed');
                   getPdfConsult(referral.referral.consult).then(payload => {
-                    console.log('Referral payload: ', payload);
                     if (payload == null) return;
                     const url = URL.createObjectURL(payload);
                     window.open(url, '_blank');

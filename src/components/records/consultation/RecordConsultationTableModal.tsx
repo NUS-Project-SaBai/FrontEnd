@@ -4,6 +4,7 @@ import { DisplayField } from '@/components/DisplayField';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { DiagnosesTable } from '@/components/records/consultation/DiagnosesTable';
+import { EditConsultationModal } from '@/components/records/consultation/EditConsultationModal';
 import { RecordConsultationTableRow } from '@/components/records/consultation/RecordConsultationTableRow';
 import { PrescriptionTable } from '@/components/records/prescription/PrescriptionTable';
 import { getConsultByID } from '@/data/consult/getConsult';
@@ -12,32 +13,51 @@ import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { Consult } from '@/types/Consult';
 import { Diagnosis } from '@/types/Diagnosis';
+import { Patient } from '@/types/Patient';
 import { useEffect, useState } from 'react';
 
 export function RecordConsultationTableModal({
   consults,
+  patient,
 }: {
   consults: Pick<Consult, 'id' | 'date' | 'doctor' | 'referred_for'>[] | null;
+  patient: Patient;
 }) {
-  const [consultId, setConsultId] = useState<number | null>(null);
+  const [viewConsultId, setViewConsultId] = useState<number | null>(null);
+  const [editConsultId, setEditConsultId] = useState<number | null>(null);
   const [consult, setConsult] = useState<Consult | null>(null);
   const [diagnosisArray, setDiagnosisArray] = useState<Diagnosis[]>([]);
   const { isLoading, withLoading } = useLoadingState(true);
-  const closeModal = () => {
-    setConsultId(null);
+
+  const closeViewModal = () => {
+    setViewConsultId(null);
     setConsult(null);
     setDiagnosisArray([]);
   };
 
+  const closeEditModal = () => {
+    setEditConsultId(null);
+  };
+
+  const handleEditClick = (consultId: number) => {
+    setEditConsultId(consultId);
+  };
+
+  const handleEditComplete = () => {
+    setEditConsultId(null);
+    // Force page reload to refresh all consultation data
+    window.location.reload();
+  };
+
   useEffect(() => {
-    if (consultId == null) return;
+    if (viewConsultId == null) return;
     withLoading(async () => {
       await Promise.all([
-        getConsultByID(consultId.toString()).then(setConsult),
-        getDiagnosisByConsult(consultId).then(setDiagnosisArray),
+        getConsultByID(viewConsultId.toString()).then(setConsult),
+        getDiagnosisByConsult(viewConsultId).then(setDiagnosisArray),
       ]);
     })();
-  }, [consultId, withLoading]);
+  }, [viewConsultId, withLoading]);
 
   if (consults == null) {
     return <LoadingUI message="Loading Consultations..." />;
@@ -47,9 +67,10 @@ export function RecordConsultationTableModal({
 
   return (
     <>
+      {/* View Modal */}
       <Modal
-        isOpen={consultId != null}
-        onRequestClose={closeModal}
+        isOpen={viewConsultId != null}
+        onRequestClose={closeViewModal}
         ariaHideApp={false}
         title="Consultation"
         text="Close"
@@ -106,7 +127,7 @@ export function RecordConsultationTableModal({
                 />
               </div>
             </div>
-            <Button onClick={closeModal} text="Close" colour="red" />
+            <Button onClick={closeViewModal} text="Close" colour="red" />
           </>
         )}
       </Modal>
@@ -116,6 +137,7 @@ export function RecordConsultationTableModal({
           <tr>
             <th>Doctor</th>
             <th>Referral Type</th>
+            <th>Date</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -124,7 +146,8 @@ export function RecordConsultationTableModal({
             <RecordConsultationTableRow
               key={consult.id}
               consult={consult}
-              openConsultModal={setConsultId}
+              openConsultModal={setViewConsultId}
+              onEditConsult={handleEditClick}
               onGeneratePDF={() => {
                 getPdfConsult(consult.id).then(blob => {
                   if (!blob) return;
@@ -136,6 +159,15 @@ export function RecordConsultationTableModal({
           ))}
         </tbody>
       </table>
+
+      {/* Edit Modal */}
+      <EditConsultationModal
+        consultId={editConsultId}
+        patient={patient}
+        isOpen={editConsultId != null}
+        onRequestClose={closeEditModal}
+        onEditComplete={handleEditComplete}
+      />
     </>
   );
 }
