@@ -7,6 +7,7 @@ import { WebcamInput } from '@/components/inputs/WebcamInput';
 import { LoadingUI } from '@/components/LoadingUI';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -59,7 +60,7 @@ export function PatientForm({
           />
           <Controller
             name="village_prefix"
-            defaultValue={village}
+            defaultValue={village === VillagePrefix.ALL ? null : village}
             rules={{
               validate: {
                 required: value => value && value != 'ALL',
@@ -74,6 +75,7 @@ export function PatientForm({
                 dropdownClassName={
                   fieldState.error && 'border-l-8 border-red-400'
                 }
+                excludeALLOption
               />
             )}
           />

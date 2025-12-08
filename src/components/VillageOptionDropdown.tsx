@@ -65,14 +65,14 @@ export function VillageOptionDropdown({
       </label>
 
       <Select
-        value={hasValue ? village : items[0].key}
+        value={hasValue ? village : ""}
         onValueChange={val => handleVillageChange(val as VillagePrefix)}
       >
         <SelectTrigger
           id="village_prefix"
           className={`w-full rounded border-2 bg-white p-1 ${triggerTextColor} ${dropdownClassName}`}
         >
-          <SelectValue />
+          <SelectValue placeholder={"Select village or set current village"}/>
         </SelectTrigger>
 
         <SelectContent className="border bg-white text-gray-900">
