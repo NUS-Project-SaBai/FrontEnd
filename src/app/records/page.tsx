@@ -85,7 +85,7 @@ export default function RecordPage() {
           toast.error('Unknown error creating patient');
           return;
         }
-        useFormReturn.reset({});
+        useFormReturn.reset({ village_prefix: fieldValues.village_prefix });
         clearLocalStorageData();
 
         toast.success('Patient Created!');

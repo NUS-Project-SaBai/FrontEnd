@@ -61,11 +61,7 @@ export function PatientForm({
           <Controller
             name="village_prefix"
             defaultValue={village === VillagePrefix.ALL ? null : village}
-            rules={{
-              validate: {
-                required: value => value && value != 'ALL',
-              },
-            }}
+            rules={{ required: true }}
             render={({ field, fieldState }) => (
               <VillageOptionDropdown
                 label="Village"
