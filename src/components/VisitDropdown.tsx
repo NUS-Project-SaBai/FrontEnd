@@ -46,6 +46,10 @@ export function VisitDropdown({
     searchParams.get('visit') ?? ''
   );
 
+  useEffect(() => {
+    setVisitId(items[0].value)
+  }, [])
+
   // Ensure selected visit exists; if not, default to first (if any)
   useEffect(() => {
     if (!items.length) return;

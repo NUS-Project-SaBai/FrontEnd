@@ -1,3 +1,4 @@
+// 'use client'
 import { LoadingUI } from '@/components/LoadingUI';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
 import { HeightWeightGraph } from '@/components/records/vital/HeightWeightGraph';
