@@ -86,7 +86,7 @@ export function ConsultationForm({
             consult.prescriptions?.map((p, index: number) => ({
               index,
               medication: p.medication_review?.medicine?.medicine_name || '',
-              quantity: p.medication_review?.quantity_changed,
+              quantity: -p.medication_review?.quantity_changed,
               notes: p.notes || '',
             })) || [],
         };
@@ -180,14 +180,15 @@ export function ConsultationForm({
         Object.entries(data).forEach(([k, v]) => {
           switch (k) {
             case 'orders':
-              jsonPayload[k] =
-                v == undefined
-                  ? []
-                  : v.map((order: ConsultMedicationOrder) => ({
-                      medicine: order.medication.split(' ', 1)[0],
-                      quantity: order.quantity,
-                      notes: order.notes,
-                    }));
+              // REMOVE ORDERS FROM THE PAYLOAD FOR NOW
+              // jsonPayload[k] =
+              //   v == undefined
+              //     ? []
+              //     : v.map((order: ConsultMedicationOrder) => ({
+              //         medicine: order.medication.split(' ', 1)[0],
+              //         quantity: order.quantity,
+              //         notes: order.notes,
+              //       }));
               break;
             case 'diagnoses':
               break;
@@ -227,14 +228,14 @@ export function ConsultationForm({
               ? await patchConsults(editConsultId, jsonPayload)
               : await createConsult(jsonPayload);
 
-              if (result != null && 'error' in result) {
-                toast.error(
-                  isEditing
-                    ? `Error updating consultation: ${result.error}`
-                    : `Error submitting consultation form: ${result.error}`
-                );
-                return;
-              }
+          if (result != null && 'error' in result) {
+            toast.error(
+              isEditing
+                ? `Error updating consultation: ${result.error}`
+                : `Error submitting consultation form: ${result.error}`
+            );
+            return;
+          }
           if (result == null) {
             toast.error(
               isEditing
