@@ -17,6 +17,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
@@ -110,6 +111,12 @@ export default function RecordPage() {
 
   const filteringByFace = faceFilteredPatients !== null;
 
+  const searchablePatients = useMemo(() => {
+    if (!faceFilteredPatients) return allPatients
+    const pks = faceFilteredPatients?.map((v) => v.pk)
+    return allPatients.filter((v) => pks?.includes(v.pk))
+  }, [allPatients, faceFilteredPatients]);
+
   return (
     <div className="flex h-full flex-col">
       <h1 className="-mb-2">Patients</h1>
@@ -117,7 +124,7 @@ export default function RecordPage() {
         <div className="flex w-full flex-col gap-2 sm:flex-row">
           <Suspense>
             <PatientSearchbar
-              data={faceFilteredPatients ?? allPatients}
+              data={searchablePatients}
               filteringByFace={filteringByFace}
               cancelFilteringByFace={cancelFilteringByFace}
               setFilteredItems={setSearchFilteredPatients}

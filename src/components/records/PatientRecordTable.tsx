@@ -81,12 +81,16 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       return createVisit(patient).then(() => getPatientById(patient.pk.toString()))
     }
     )().then(freshPatient => {
-      setPatients(old => [
-        freshPatient,
-        ...old.filter(v => v.patient_id != freshPatient.patient_id),
-      ]);
+      setPatients(old => {
+        console.log(old)
+        console.log(freshPatient)
+        return [
+          freshPatient,
+          ...old.filter(v => v.patient_id != freshPatient.patient_id),
+        ]
+      });
       toast.dismiss();
-      toast.success("Visit created")
+      toast.success("New visit created")
       setShouldFlash(true);
       setTimeout(() => setShouldFlash(false), 1000); // 1 second flash
     });
