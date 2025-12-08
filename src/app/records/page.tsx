@@ -85,7 +85,7 @@ export default function RecordPage() {
           toast.error('Unknown error creating patient');
           return;
         }
-        useFormReturn.reset({});
+        useFormReturn.reset({ village_prefix: fieldValues.village_prefix });
         clearLocalStorageData();
 
         toast.success('Patient Created!');
@@ -103,6 +103,10 @@ export default function RecordPage() {
   const cancelFilteringByFace = () => {
     setFaceFilteredPatients(null);
   };
+
+  function setRegistrationFace(picture: string | null) {
+    setFormDetails(old => ({ ...old, picture }))
+  }
 
   const filteringByFace = faceFilteredPatients !== null;
 
@@ -132,7 +136,8 @@ export default function RecordPage() {
                 isSubmitting={isSubmitting}
               />
             </FormProvider>
-            <PatientScanForm setFilteredPatients={setFaceFilteredPatients} />
+            <PatientScanForm setFilteredPatients={setFaceFilteredPatients}
+              setRegistrationFace={setRegistrationFace} />
           </div>
         </div>
       </div>
