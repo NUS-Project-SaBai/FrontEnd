@@ -24,6 +24,7 @@ import {
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
 import { Switch } from '@/components/ui/switch';
+import Link from 'next/link';
 
 type OrderRowData = {
   patient: {
@@ -218,20 +219,23 @@ function OrderRow({
       <tr>
         {/* rowSpan is data.length + 1 because the current row has no data. */}
         <td className="px-0" rowSpan={data.length + 1}>
-          <p
-            className={
-              'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
-            }
-          >
-            {patient.patient_id}
-          </p>
-          <p className="font-semibold">{patient.name}</p>
-          <PatientPhoto
-            pictureUrl={patient.picture_url}
-            className="h-24 w-20 object-cover"
-            height={80}
-            width={80}
-          />
+          {/* Hacky regex workaround cuz backend send patient_id with village prefix and padded zeroes*/}
+          <Link href={`/records/patient-record?id=${patient.patient_id.replace(/^..0+/, "")}`}>
+            <p
+              className={
+                'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+              }
+            >
+              {patient.patient_id}
+            </p>
+            <p className="font-semibold">{patient.name}</p>
+            <PatientPhoto
+              pictureUrl={patient.picture_url}
+              className="h-24 w-20 object-cover"
+              height={80}
+              width={80}
+            />
+          </Link>
         </td>
       </tr>
       {data.map(({ visit_id, visit_date, orders, diagnoses }) => (
