@@ -220,7 +220,12 @@ function OrderRow({
         {/* rowSpan is data.length + 1 because the current row has no data. */}
         <td className="px-0" rowSpan={data.length + 1}>
           {/* Hacky regex workaround cuz backend send patient_id with village prefix and padded zeroes*/}
-          <Link href={`/records/patient-record?id=${patient.patient_id.replace(/^..0+/, "")}`}>
+          <Link 
+            href={`/records/patient-record?id=${patient.patient_id.replace(/^..0+/, "")}`}
+            className="block rounded-lg border border-gray-200 p-4 
+              transition-all hover:shadow-md hover:-translate-y-0.5 hover:bg-gray-50 cursor-pointer
+              flex flex-col items-center bg-slate-50"
+            >
             <p
               className={
                 'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
