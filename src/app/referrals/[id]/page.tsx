@@ -126,7 +126,7 @@ export default function ReferralDetailsPage() {
                   Referral Outcome
                 </td>
                 {referral == undefined ? (
-                  <p>No Referral Found</p>
+                  <td>No Referral Found</td>
                 ) : (
                   <td className="w-full">
                     <div className="flex gap-2">
