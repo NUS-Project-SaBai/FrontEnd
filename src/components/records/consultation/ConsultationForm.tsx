@@ -456,8 +456,8 @@ export function ConsultationForm({
             type="textarea"
             placeholder="Type your remarks here..."
           />
-          {/* TODO: try to remove prop drilling of patient */}
-          <MedicationOrderSection patient={patient} />
+          {/* We don't want to edit this section when editing the consultation */}
+          <MedicationOrderSection patient={patient} isEditable={!isEditing} />
           <Button
             colour="green"
             text={
