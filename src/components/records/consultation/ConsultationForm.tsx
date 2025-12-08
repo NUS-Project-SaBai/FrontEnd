@@ -13,7 +13,6 @@ import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { patchDiagnosis } from '@/data/diagnosis/patchDiagnosis';
 import { createReferral } from '@/data/referrals/createReferral';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
-import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
 import { FormEvent, useEffect, useRef } from 'react';
 
