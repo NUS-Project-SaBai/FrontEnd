@@ -4,12 +4,13 @@ import { RegisterOptions, useFormContext } from 'react-hook-form';
 
 type RHFInputFieldProps = {
   name: string;
-  label: string;
+  label?: string;
   type: HTMLInputTypeAttribute | 'textarea';
   placeholder?: string;
   isRequired?: boolean;
   min?: string;
   max?: string;
+  textAreaRows?: number;
 };
 
 export function RHFInputField({
@@ -20,6 +21,7 @@ export function RHFInputField({
   isRequired = false,
   min,
   max,
+  textAreaRows = 4,
   ...registerOptions
 }: RHFInputFieldProps & RegisterOptions) {
   const { register, formState } = useFormContext();
@@ -37,7 +39,7 @@ export function RHFInputField({
       {type == 'textarea' ? (
         <textarea
           className={inputClassStyle}
-          rows={4}
+          rows={textAreaRows}
           placeholder={placeholder}
           {...register(name, {
             required: { message: `Empty Field: ${label}`, value: isRequired },

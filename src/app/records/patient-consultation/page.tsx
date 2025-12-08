@@ -124,8 +124,8 @@ function MainBody({
   return (
     <section className="grid gap-4 lg:gap-6 lg:grid-cols-2">
       {/* Vitals card */}
-      <div className="order-1 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 h-[calc(100vh-100px)] overflow-hidden">
-        <ScrollArea className="h-full">
+      <div className="order-1 rounded-xl border border-slate-200 bg-white shadow-sm h-[calc(100vh-100px)] overflow-hidden">
+        <ScrollArea className="h-full p-6">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
               Patient Vitals
           </h2>
