@@ -11,7 +11,7 @@ export function DisplayField({
 }) {
   return (
     <div className={`w-full self-end ${spanFull ? "col-span-full" : ""}`}>
-      <label htmlFor={label} className="text-sm font-medium">
+      <label htmlFor={label} className="text-sm font-medium bold font" >
         {label}
       </label>
       <div
