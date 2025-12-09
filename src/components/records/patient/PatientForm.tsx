@@ -13,7 +13,11 @@ import { EMPTY_VITAL } from '@/types/Vital';
 import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ALL_CHILD_AGES, allPubertyFields, ChildPubertySection, ChildVitalsFields } from '../vital/ChildVitalsFields';
+import {
+  ALL_CHILD_AGES,
+  allPubertyFields,
+  ChildPubertySection,
+} from '../vital/ChildVitalsFields';
 
 export function PatientForm({
   onSubmit,

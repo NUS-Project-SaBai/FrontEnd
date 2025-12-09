@@ -103,7 +103,7 @@ export default function RecordPage() {
             }
             return acc;
           },
-          {} as Record<string, any>
+          {} as Record<string, string | number | boolean>
         );
 
         const vitalsInfoFromRegistration = {
