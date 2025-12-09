@@ -38,8 +38,7 @@ export function WebcamInput({
     if (imageDetails) setCameraIsOpen(false);
     // open camera automatically if there is no image
     else setCameraIsOpen(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageDetails])
+  }, [imageDetails, setCameraIsOpen])
 
   useEffect(() => {
     if (cameraIsOpenCallback) cameraIsOpenCallback(cameraIsOpen);
