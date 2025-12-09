@@ -18,7 +18,7 @@ export default function MainLayout({
       <VillageProvider>
         <PatientListProvider>
           <div
-            className="vsc-initialized flex h-svh flex-col overflow-hidden md:flex-row" /* add vsc-initialized to fix hydration error triggered by the Video Speed Controller Chrome extension https://stackoverflow.com/a/53400956/7577786 */
+            className="vsc-initialized flex h-screen flex-col overflow-hidden md:flex-row" /* add vsc-initialized to fix hydration error triggered by the Video Speed Controller Chrome extension https://stackoverflow.com/a/53400956/7577786 */
           >
             <SideMenu />
             <div className="flex-auto overflow-auto">{children}</div>
