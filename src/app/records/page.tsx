@@ -90,7 +90,6 @@ export default function RecordPage() {
         clearLocalStorageData();
 
         toast.success('Patient Created!');
-        createVisit(patient);
         toast.success('New Visit Created!');
         refreshPatientList();
       }),
