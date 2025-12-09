@@ -30,7 +30,7 @@ export function WebcamInput({
   const webcamCapture = useCallback(() => {
     const imgSrc = webcamRef?.current?.getScreenshot() || null;
     setImageDetails(imgSrc);
-  }, [setCameraIsOpen, setImageDetails]);
+  }, [setImageDetails]);
 
   useEffect(() => {
     // close camera if image is already available (either photo just taken, or 
@@ -38,6 +38,7 @@ export function WebcamInput({
     if (imageDetails) setCameraIsOpen(false);
     // open camera automatically if there is no image
     else setCameraIsOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageDetails])
 
   useEffect(() => {
