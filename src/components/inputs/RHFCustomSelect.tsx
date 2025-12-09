@@ -56,7 +56,6 @@ export function RHFCustomSelect({
         }}
         defaultValue={defaultValue}
         render={({ field }) => {
-          console.log("field.value", field.value)
           return (
             <div className='flex flex-row flex-wrap gap-4'>
               {options.map(v => {
