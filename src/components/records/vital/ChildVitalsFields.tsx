@@ -47,8 +47,13 @@ const allChildVitalsFields: InputFieldData[] = [
   {
     name: 'scoliosis',
     label: 'Spine',
-    type: 'text',
+    type: 'dropdown',
     age: ALL_CHILD_AGES,
+    defaultValue: 'Normal',
+     options: [
+      { label: 'Normal', value: 'Normal' },
+      { label: 'Abnormal' , value: 'Abnormal' },
+    ]
   },
   {
     name: 'pallor',
