@@ -2,12 +2,14 @@
 import { Button } from '@/components/Button';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { LoadingPage } from '@/components/LoadingPage';
 import { DiagnosisField } from '@/components/records/consultation/DiagnosisField';
 import { MedicationOrderSection } from '@/components/records/consultation/MedicationOrderSection';
 import { createConsult } from '@/data/consult/createConsult';
 import { getConsultByID } from '@/data/consult/getConsult';
 import { patchConsults } from '@/data/consult/patchConsults';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
+import { useLoadingState } from '@/hooks/useLoadingState';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
@@ -33,6 +35,7 @@ export function ConsultationForm({
   editConsultId?: number | null;
   onEditComplete?: () => void;
 }) {
+  const { isLoading, withLoading } = useLoadingState(true);
   const [formDetails, setFormDetails, clearFormLocalStorage] = useSaveOnWrite(
     'ConsultationForm',
     {} as FieldValues,
@@ -60,7 +63,7 @@ export function ConsultationForm({
       return;
     }
 
-    const loadData = async () => {
+    const loadData = withLoading(async () => {
       try {
         const [consult, diagnoses] = await Promise.all([
           getConsultByID(editConsultId.toString()),
@@ -89,13 +92,14 @@ export function ConsultationForm({
             })) || [],
         };
 
+        useFormReturn.reset(formData);
         debouncedSaveFormDetails(formData);
       } catch (error) {
         if (!isMounted) return;
         console.error('Error loading consult data:', error);
         toast.error('Failed to load consultation data');
       }
-    };
+    });
 
     loadData();
 
@@ -182,157 +186,166 @@ export function ConsultationForm({
 
   const showReferralNotes = referredFor && referredFor !== 'Not Referred';
   return (
-    <div className="h-full rounded-lg bg-blue-100 p-2 shadow-sm">
-      <h3>{isEditing ? 'Edit Consultation' : "Doctor's Consult Form"}</h3>
-      <FormProvider {...useFormReturn}>
-        <form
-          onSubmit={submitConsultationFormHandler}
-          className="flex flex-col gap-y-2"
-        >
-          {/* TODO: Check that the required field is filled up. */}
-          <RHFInputField
-            name="past_medical_history"
-            label="Past Medical History"
-            type="textarea"
-            placeholder="Type your problems here..."
-            isRequired={true}
-            textAreaRows={10}
-          />
-          <RHFInputField
-            name="consultation"
-            label="Consultation"
-            type="textarea"
-            placeholder="Type your consultation here..."
-            isRequired={true}
-            textAreaRows={10}
-          />
-          <Controller
-            name="diagnoses"
-            control={control}
-            defaultValue={[]}
-            render={({ field: { value, onChange }, fieldState }) => (
-              <DiagnosisField
-                diagnosis={value}
-                setDiagnosis={onChange}
-                error={fieldState.error?.message}
+    <LoadingPage isLoading={isLoading}>
+      <div className="h-full rounded-lg bg-blue-100 p-2 shadow-sm">
+        <h3>{isEditing ? 'Edit Consultation' : "Doctor's Consult Form"}</h3>
+        <FormProvider {...useFormReturn}>
+          <form
+            onSubmit={submitConsultationFormHandler}
+            className="flex flex-col gap-y-2"
+          >
+            {/* TODO: Check that the required field is filled up. */}
+            <RHFInputField
+              name="past_medical_history"
+              label="Past Medical History"
+              type="textarea"
+              placeholder="Type your problems here..."
+              isRequired={true}
+              textAreaRows={10}
+            />
+            <RHFInputField
+              name="consultation"
+              label="Consultation"
+              type="textarea"
+              placeholder="Type your consultation here..."
+              isRequired={true}
+              textAreaRows={10}
+            />
+            <Controller
+              name="diagnoses"
+              control={control}
+              defaultValue={[]}
+              render={({ field: { value, onChange }, fieldState }) => (
+                <DiagnosisField
+                  diagnosis={value}
+                  setDiagnosis={onChange}
+                  error={fieldState.error?.message}
+                />
+              )}
+              rules={{
+                validate: {
+                  ensureFilled: (
+                    val: Array<{
+                      id?: number;
+                      details: string;
+                      category: string;
+                    }>
+                  ) => {
+                    if (!val || val.length === 0)
+                      return 'At least one diagnosis is required';
+                    if (
+                      val.some(
+                        d => d.details.trim() === '' || d.category.trim() === ''
+                      )
+                    ) {
+                      return 'All diagnoses must have details and category';
+                    }
+                    return true;
+                  },
+                },
+              }}
+            />
+
+            <RHFInputField
+              name="plan"
+              label="Plan"
+              type="textarea"
+              placeholder="Type your plan here..."
+              textAreaRows={6}
+            />
+            <RHFDropdown
+              name="referred_for"
+              label="Referral for (optional)"
+              omitDefaultPrompt={true}
+              options={[
+                //use empty string '' for "Not Referred"
+                { value: 'Not Referred', label: 'Not Referred' },
+                { value: 'Diagnostic', label: 'Diagnositic' },
+                { value: 'Acute', label: 'Acute' },
+                { value: 'Chronic', label: 'Chronic' },
+                {
+                  value: 'AdvancedVision',
+                  label: 'AdvancedVision [Within clinic]',
+                },
+                {
+                  value: 'GlassesFitting',
+                  label: 'GlassesFitting [Within clinic]',
+                },
+                {
+                  value: 'Others',
+                  label: 'Others',
+                },
+              ]}
+            />
+            {showReferralNotes && (
+              <RHFInputField
+                name="referral_notes"
+                label="Referral Notes"
+                type="textarea"
+                placeholder="Type your referral notes here..."
+                isRequired={useFormReturn.watch('referred_for') !== ''}
+                textAreaRows={8}
               />
             )}
-            rules={{
-              validate: {
-                ensureFilled: (
-                  val: Array<{ id?: number; details: string; category: string }>
-                ) => {
-                  if (!val || val.length === 0)
-                    return 'At least one diagnosis is required';
-                  if (
-                    val.some(
-                      d => d.details.trim() === '' || d.category.trim() === ''
-                    )
-                  ) {
-                    return 'All diagnoses must have details and category';
-                  }
-                  return true;
-                },
-              },
-            }}
-          />
-
-          <RHFInputField
-            name="plan"
-            label="Plan"
-            type="textarea"
-            placeholder="Type your plan here..."
-            textAreaRows={6}
-          />
-          <RHFDropdown
-            name="referred_for"
-            label="Referral for (optional)"
-            omitDefaultPrompt={true}
-            options={[
-              //use empty string '' for "Not Referred"
-              { value: 'Not Referred', label: 'Not Referred' },
-              { value: 'Diagnostic', label: 'Diagnositic' },
-              { value: 'Acute', label: 'Acute' },
-              { value: 'Chronic', label: 'Chronic' },
-              {
-                value: 'AdvancedVision',
-                label: 'AdvancedVision [Within clinic]',
-              },
-              {
-                value: 'GlassesFitting',
-                label: 'GlassesFitting [Within clinic]',
-              },
-              {
-                value: 'Others',
-                label: 'Others',
-              },
-            ]}
-          />
-          {showReferralNotes && (
             <RHFInputField
-              name="referral_notes"
-              label="Referral Notes"
+              name="remarks"
+              label="Remarks"
               type="textarea"
-              placeholder="Type your referral notes here..."
-              isRequired={useFormReturn.watch('referred_for') !== ''}
-              textAreaRows={8}
+              placeholder="Type your remarks here..."
             />
-          )}
-          <RHFInputField
-            name="remarks"
-            label="Remarks"
-            type="textarea"
-            placeholder="Type your remarks here..."
-          />
-          {/* We don't want to edit this section when editing the consultation */}
-          {isEditing ? (
-            <div className="rounded-lg bg-gray-50 p-2 shadow">
-              <h2>Order</h2>
-              <p className="py-2">
-                Medicine orders not supported yet for consultation edit
-              </p>
-            </div>
-          ) : (
-            <MedicationOrderSection patient={patient} isEditable={!isEditing} />
-          )}
-          <Button
-            colour="green"
-            text={
-              isSubmitting
-                ? isEditing
-                  ? 'Editing...'
-                  : 'Submitting...'
-                : isEditing
-                  ? 'Edit'
-                  : 'Submit'
-            }
-            type="submit"
-            onClick={() => {
-              if (isEditing) {
-                toast.success('Editing...');
-              } else {
-                toast.success('Submitting...');
-              }
-            }}
-            disabled={isSubmitting}
-          />
-          {isEditing && (
+            {/* We don't want to edit this section when editing the consultation */}
+            {isEditing ? (
+              <div className="rounded-lg bg-gray-50 p-2 shadow">
+                <h2>Order</h2>
+                <p className="py-2">
+                  Medicine orders not supported yet for consultation edit
+                </p>
+              </div>
+            ) : (
+              <MedicationOrderSection
+                patient={patient}
+                isEditable={!isEditing}
+              />
+            )}
             <Button
-              colour="red"
-              text="Cancel"
-              type="button"
+              colour="green"
+              text={
+                isSubmitting
+                  ? isEditing
+                    ? 'Editing...'
+                    : 'Submitting...'
+                  : isEditing
+                    ? 'Edit'
+                    : 'Submit'
+              }
+              type="submit"
               onClick={() => {
-                clearFormLocalStorage();
-                toast.success('Edit cancelled!');
-                if (onEditComplete) {
-                  onEditComplete();
+                if (isEditing) {
+                  toast.success('Editing...');
+                } else {
+                  toast.success('Submitting...');
                 }
               }}
               disabled={isSubmitting}
             />
-          )}
-        </form>
-      </FormProvider>
-    </div>
+            {isEditing && (
+              <Button
+                colour="red"
+                text="Cancel"
+                type="button"
+                onClick={() => {
+                  clearFormLocalStorage();
+                  toast.success('Edit cancelled!');
+                  if (onEditComplete) {
+                    onEditComplete();
+                  }
+                }}
+                disabled={isSubmitting}
+              />
+            )}
+          </form>
+        </FormProvider>
+      </div>
+    </LoadingPage>
   );
 }
