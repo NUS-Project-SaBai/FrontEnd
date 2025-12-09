@@ -11,7 +11,7 @@ type RHFDropdownProps = {
   options: OptionData[];
   defaultValue?: string | number | null;
   isRequired?: boolean;
-  unselectedValue?: string| number;
+  unselectedValue?: string | number;
   className?: string;
   optionClassName?: string;
 };
@@ -52,7 +52,7 @@ export function RHFSelect({
         name={name}
         control={control}
         rules={{
-          required: isRequired ? `Select option for ${label}!` : false,
+          required: isRequired ? `Select one option` : false,
         }}
         defaultValue={defaultValue}
         render={({ field }) => {
@@ -61,7 +61,7 @@ export function RHFSelect({
             <div className='flex flex-row flex-wrap gap-4'>
               {options.map(v => {
                 function handleChange(v: string | number) {
-                  if (field.value === v) field.onChange(unselectedValue)
+                  if (field.value === v) field.onChange(isRequired ? null : unselectedValue)
                   else field.onChange(v)
                 }
                 const value = typeof v === "object" ? v.value : v
