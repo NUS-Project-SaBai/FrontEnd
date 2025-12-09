@@ -9,6 +9,15 @@ import { useMemo } from 'react';
 export const ALL_CHILD_AGES = [
   2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
 ];
+
+export const PUBERTY_AGES_12_19 = [
+  12, 13, 14, 15, 16, 17, 18, 19
+];
+
+export const PUBERTY_AGES_12_17 = [
+  12, 13, 14, 15, 16, 17
+];
+
 type InputFieldData =
   | {
       type: 'dropdown';
@@ -93,71 +102,72 @@ const allPubertyFields: InputFieldData[] = [
     type: 'yesNoOption',
     name: 'pubarche',
     label: 'Pubarche',
-    age: [13, 14, 15, 16, 17, 18],
+    age: PUBERTY_AGES_12_19
   },
   {
     type: 'number',
     name: 'pubarche_age',
     label: 'Pubarche Age',
-    age: [13, 14, 15, 16, 17, 18],
+    age: PUBERTY_AGES_12_19
   },
   {
     type: 'yesNoOption',
     name: 'thelarche',
-    label: 'Thelarche',
-    age: [13, 14, 15, 16, 17, 18],
+    label: 'Thelarche (F)',
+    age: PUBERTY_AGES_12_19,
     gender: 'Female',
   },
   {
     type: 'number',
     name: 'thelarche_age',
-    label: 'Thelarche Age',
-    age: [13, 14, 15, 16, 17, 18],
+    label: 'Thelarche Age (F)',
+    age: PUBERTY_AGES_12_19,
     gender: 'Female',
   },
   {
     type: 'yesNoOption',
     name: 'menarche',
-    label: 'Menarche',
-    age: [13, 14, 15, 16, 17, 18],
+    label: 'Menarche (F)',
+    age: PUBERTY_AGES_12_19,
     gender: 'Female',
   },
   {
     type: 'text',
     name: 'menarche_age',
-    label: 'Menarche Age',
-    age: [13, 14, 15, 16, 17, 18],
+    label: 'Menarche Age (F)',
+    age: PUBERTY_AGES_12_19,
     gender: 'Female',
   },
   {
     type: 'yesNoOption',
     name: 'voice_change',
-    label: 'Voice Change',
-    age: [13, 14, 15, 16],
+    label: 'Voice Change (M)',
+    age: PUBERTY_AGES_12_17,
     gender: 'Male',
   },
   {
     type: 'number',
     name: 'voice_change_age',
-    label: 'Voice Change Age',
-    age: [13, 14, 15, 16],
+    label: 'Voice Change Age (M)',
+    age: PUBERTY_AGES_12_17,
     gender: 'Male',
   },
   {
     type: 'yesNoOption',
     name: 'testicular_growth',
-    label: 'Testicular Growth >= 4ml',
-    age: [13, 14, 15, 16],
+    label: 'Testicular Growth >= 4ml (M)',
+    age: PUBERTY_AGES_12_17,
     gender: 'Male',
   },
   {
     type: 'number',
     name: 'testicular_growth_age',
-    label: 'Testicular Growth Age',
-    age: [13, 14, 15, 16],
+    label: 'Testicular Growth Age (M)',
+    age: PUBERTY_AGES_12_17,
     gender: 'Male',
   },
 ];
+
 export function ChildVitalsFields({
   patient,
   curVital,
