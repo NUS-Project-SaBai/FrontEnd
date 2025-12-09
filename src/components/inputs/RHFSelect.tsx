@@ -9,9 +9,9 @@ type RHFDropdownProps = {
   name: string;
   label: string;
   options: OptionData[];
-  selectableNumber: number,
   defaultValue?: string | number | null;
   isRequired?: boolean;
+  unselectedValue?: string| number;
   className?: string;
   optionClassName?: string;
 };
@@ -22,6 +22,7 @@ export function RHFSelect({
   options,
   defaultValue,
   isRequired = false,
+  unselectedValue,
   className = '',
   optionClassName = ''
 }: RHFDropdownProps) {
@@ -54,27 +55,30 @@ export function RHFSelect({
           required: isRequired ? `Select option for ${label}!` : false,
         }}
         defaultValue={defaultValue}
-        render={({ field }) => (
-          <div className='flex flex-row flex-wrap gap-4'>
-            {options.map(v => {
-              function handleChange(v: string | number) {
-                if (field.value === v) field.onChange(null)
-                else field.onChange(v)
+        render={({ field }) => {
+          console.log("field.value", field.value)
+          return (
+            <div className='flex flex-row flex-wrap gap-4'>
+              {options.map(v => {
+                function handleChange(v: string | number) {
+                  if (field.value === v) field.onChange(unselectedValue)
+                  else field.onChange(v)
+                }
+                const value = typeof v === "object" ? v.value : v
+                const label = typeof v === "object" ? v.label : v
+                return <Option
+                  key={value}
+                  value={value}
+                  label={label}
+                  className={optionClassName}
+                  selected={field.value === value}
+                  onChange={handleChange}
+                />
               }
-              const value = typeof v === "object" ? v.value : v
-              const label = typeof v === "object" ? v.label : v
-              return <Option
-                key={value}
-                value={value}
-                label={label}
-                className={optionClassName}
-                selected={field.value === value}
-                onChange={handleChange}
-              />
-            }
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )
+        }}
       />
 
       {hasError && <p className="mt-1 text-xs text-red-500">{errorMessage}</p>}
@@ -97,7 +101,7 @@ function Option({
 }) {
   const borderColour = selected ? "border-2 border-black" : "border-2 border-gray-300";
   return <button
-    className={`flex flex-col items-center justify-center p-2 bg-gray-100 rounded-sm ${borderColour} ${className}`}
+    className={`flex flex-col items-center justify-center px-2 py-1 bg-gray-100 rounded-sm ${borderColour} ${className}`}
     onClick={(e) => {
       e.preventDefault();
       onChange(value)
