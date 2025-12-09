@@ -63,7 +63,7 @@ export default function RecordPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onPatientRegistrationFormSubmit = (event: FormEvent) => {
+  const onPatientRegistrationFormSubmit = (event: FormEvent, closeModal: () => void) => {
     event.preventDefault();
     const formData = new FormData();
 
@@ -94,6 +94,7 @@ export default function RecordPage() {
         createVisit(patient);
         toast.success('New Visit Created!');
         refreshPatientList();
+        closeModal()
       }),
       // onInvalid
       () => {
