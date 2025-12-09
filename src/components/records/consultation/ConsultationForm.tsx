@@ -9,6 +9,7 @@ import { getConsultByID } from '@/data/consult/getConsult';
 import { patchConsults } from '@/data/consult/patchConsults';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
+import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
 import { useEffect } from 'react';
 
@@ -19,6 +20,7 @@ import {
   useForm,
 } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useDebouncedCallback } from 'use-debounce';
 
 export function ConsultationForm({
   visitId,
@@ -31,7 +33,7 @@ export function ConsultationForm({
   editConsultId?: number | null;
   onEditComplete?: () => void;
 }) {
-  const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
+  const [formDetails, setFormDetails, clearFormLocalStorage] = useSaveOnWrite(
     'ConsultationForm',
     {} as FieldValues,
     [visitId, editConsultId]
@@ -42,6 +44,14 @@ export function ConsultationForm({
 
   const isEditing = editConsultId != null;
   const referredFor = useFormReturn.watch('referred_for');
+
+  // Debounce localStorage saves to prevent excessive writes
+  const debouncedSaveFormDetails = useDebouncedCallback(
+    (values: FieldValues) => {
+      setFormDetails(values);
+    },
+    500
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -79,7 +89,7 @@ export function ConsultationForm({
             })) || [],
         };
 
-        setFormDetails(formData);
+        debouncedSaveFormDetails(formData);
       } catch (error) {
         if (!isMounted) return;
         console.error('Error loading consult data:', error);
@@ -102,13 +112,13 @@ export function ConsultationForm({
     const unsub = useFormReturn.subscribe({
       formState: { values: true },
       callback: ({ values }) => {
-        setFormDetails(values);
+        debouncedSaveFormDetails(values);
       },
     });
     return () => {
       unsub();
       if (editConsultId == null) {
-        setFormDetails({} as FieldValues);
+        debouncedSaveFormDetails({} as FieldValues);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,6 +133,15 @@ export function ConsultationForm({
   const onValidSubmit = async (data: FieldValues) => {
     try {
       const payload = isEditing ? data : { ...data, visit_id: visitId };
+      // REMOVE ORDERS FROM THE PAYLOAD FOR NOW
+      payload['orders'] =
+        payload['orders'] == undefined
+          ? []
+          : payload['orders'].map((order: ConsultMedicationOrder) => ({
+              medicine: order.medication.split(' ', 1)[0],
+              quantity: order.quantity,
+              notes: order.notes,
+            }));
 
       const result = isEditing
         ? await patchConsults(editConsultId, payload)
@@ -144,6 +163,8 @@ export function ConsultationForm({
       if (isEditing && onEditComplete) {
         onEditComplete();
       }
+      useFormReturn.reset({});
+      clearFormLocalStorage();
     } catch (error) {
       console.error('Submit error:', error);
       toast.error('Unknown Error');
@@ -301,7 +322,7 @@ export function ConsultationForm({
               text="Cancel"
               type="button"
               onClick={() => {
-                clearLocalStorageData();
+                clearFormLocalStorage();
                 toast.success('Edit cancelled!');
                 if (onEditComplete) {
                   onEditComplete();
