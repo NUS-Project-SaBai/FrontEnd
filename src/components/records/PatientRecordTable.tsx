@@ -41,7 +41,6 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, toggleExpanded] = useToggle(false);
   const [shouldFlash, setShouldFlash] = useState(false);
-  const [isCreatingVisit, setIsCreatingVisit] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_forceUpdate, setForceUpdate] = useState(0);
@@ -124,12 +123,9 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
             <Button
               text="Create visit"
               colour="green"
-              disabled={isCreatingVisit}
               onClick={e => {
-                // setIsCreatingVisit(true);
                 e.stopPropagation();
                 return handleCreateVisit(patient);
-                // setIsCreatingVisit(false);
               }}
               onMouseEnter={e => {
                 e.stopPropagation();
