@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
-import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
+import { RHFSelect } from '@/components/inputs/RHFSelect';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { ChildVitalsFields } from '@/components/records/vital/ChildVitalsFields';
@@ -184,10 +184,17 @@ export function VitalsForm({
             type="number"
             placeholder={curVital.hbA1c?.toString()}
           />
-          <RHFBinaryOption
+          {/* <RHFBinaryOption
             name="diabetes_mellitus"
             label="Diabetes?"
             defaultValue={curVital.diabetes_mellitus}
+          /> */}
+          <RHFSelect
+            name="diabetes_mellitus"
+            label="Diabetes?"
+            defaultValue={[curVital.diabetes_mellitus]}
+            options={["Yes", "No"]}
+            selectableNumber={1}
           />
         </div>
         <ChildVitalsFields patient={patient} curVital={curVital} />
@@ -197,7 +204,7 @@ export function VitalsForm({
           placeholder={curVital.others}
           type="textarea"
         />
-        <div className='h-4'/>
+        <div className='h-4' />
         <Button text="Update" colour="green" type="submit" />
       </form>
     </FormProvider>
