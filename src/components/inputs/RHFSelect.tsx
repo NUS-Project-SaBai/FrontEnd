@@ -10,7 +10,7 @@ type RHFDropdownProps = {
   label: string;
   options: OptionData[];
   selectableNumber: number,
-  defaultValue?: string[] | null;
+  defaultValue?: string | number | null;
   isRequired?: boolean;
   className?: string;
   optionClassName?: string;
@@ -20,7 +20,6 @@ export function RHFSelect({
   name,
   label,
   options,
-  selectableNumber = 1,
   defaultValue,
   isRequired = false,
   className = '',
@@ -29,8 +28,7 @@ export function RHFSelect({
   const {
     control,
     setValue,
-    formState: { errors, isSubmitted },
-    trigger,
+    formState: { errors, isSubmitted }
   } = useFormContext();
 
   // keep in sync if defaultValue prop changes
@@ -60,18 +58,8 @@ export function RHFSelect({
           <div className='flex flex-row flex-wrap gap-4'>
             {options.map(v => {
               function handleChange(v: string | number) {
-                console.log(v)
-                const values = field.value as (string | number)[]
-                // if (values.includes(v)) {
-                //   field.onChange(values.filter(v => v != v))
-                // } else if (selectableNumber === 1) {
-                //   field.onChange([v])
-                //   field.
-                // } else if (selectableNumber === values.length) {
-                //   // some feedback that you can't select more
-                // }
-                field.onChange([v])
-                console.log("field", field)
+                if (field.value === v) field.onChange(null)
+                else field.onChange(v)
               }
               const value = typeof v === "object" ? v.value : v
               const label = typeof v === "object" ? v.label : v
@@ -80,7 +68,7 @@ export function RHFSelect({
                 value={value}
                 label={label}
                 className={optionClassName}
-                selected={field.value.includes(value)}
+                selected={field.value === value}
                 onChange={handleChange}
               />
             }
@@ -110,7 +98,6 @@ function Option({
   const borderColour = selected ? "border-2 border-black" : "border-2 border-gray-300";
   return <button
     className={`flex flex-col items-center justify-center p-2 bg-gray-100 rounded-sm ${borderColour} ${className}`}
-    // className={`flex flex-col items-center justify-center p-2 bg-gray-100 rounded-sm `}
     onClick={(e) => {
       e.preventDefault();
       onChange(value)
@@ -118,5 +105,4 @@ function Option({
   >
     <div>{label}</div>
   </button>
-  // return <div>{label}</div>
 }

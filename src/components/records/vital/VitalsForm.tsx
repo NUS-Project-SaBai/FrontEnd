@@ -192,7 +192,7 @@ export function VitalsForm({
           <RHFSelect
             name="diabetes_mellitus"
             label="Diabetes?"
-            defaultValue={[curVital.diabetes_mellitus]}
+            defaultValue={curVital.diabetes_mellitus}
             options={["Yes", "No"]}
             selectableNumber={1}
           />
