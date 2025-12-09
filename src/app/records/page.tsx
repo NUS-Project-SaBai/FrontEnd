@@ -6,7 +6,6 @@ import { NewPatientModal } from '@/components/registration/NewPatientModal';
 import { PatientScanForm } from '@/components/registration/PatientScanForm';
 import { PatientListContext } from '@/context/PatientListContext';
 import { createPatient } from '@/data/patient/createPatient';
-import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
