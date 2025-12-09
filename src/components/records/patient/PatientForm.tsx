@@ -7,6 +7,7 @@ import { WebcamInput } from '@/components/inputs/WebcamInput';
 import { LoadingUI } from '@/components/LoadingUI';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -59,12 +60,8 @@ export function PatientForm({
           />
           <Controller
             name="village_prefix"
-            defaultValue={village}
-            rules={{
-              validate: {
-                required: value => value != 'ALL',
-              },
-            }}
+            defaultValue={village === VillagePrefix.ALL ? null : village}
+            rules={{ required: true }}
             render={({ field, fieldState }) => (
               <VillageOptionDropdown
                 label="Village"
@@ -74,6 +71,7 @@ export function PatientForm({
                 dropdownClassName={
                   fieldState.error && 'border-l-8 border-red-400'
                 }
+                excludeALLOption
               />
             )}
           />
@@ -92,13 +90,18 @@ export function PatientForm({
             name="sabai"
             defaultValue={getValues('sabai') || 'No'}
           />
-          <RHFInputField
-            name="drug_allergy"
-            label="Drug Allergies"
-            type="textarea"
-            isRequired={true}
+          <RHFBinaryOption
+            label="Receive Reports"
+            name="to_get_report"
+            defaultValue={getValues('to_get_report') || 'No'}
           />
         </div>
+        <RHFInputField
+          name="drug_allergy"
+          label="Drug Allergies"
+          type="textarea"
+          isRequired={true}
+        />
         <Controller
           name={'picture'}
           control={control}

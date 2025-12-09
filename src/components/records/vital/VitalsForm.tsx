@@ -61,8 +61,11 @@ export function VitalsForm({
     <FormProvider {...useFormReturn}>
       <form
         onSubmit={submitVitalsFormHandler}
-        className="max-w-[1000px] rounded-lg bg-blue-50 p-4"
+        className="rounded-lg bg-blue-50 p-4"
       >
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          Patient Vitals
+        </h2>
         <h2>Height & Weight</h2>
         <div className={gridStyle(100)}>
           <RHFUnitInputField
@@ -146,7 +149,7 @@ export function VitalsForm({
           />
         </div>
         <h2>STAT Investigations</h2>
-        <div className={gridStyle(150)}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RHFInputField
             name="urine_test"
             label="Urine Dip Test"
@@ -174,19 +177,27 @@ export function VitalsForm({
             type="number"
             placeholder={curVital.blood_glucose_fasting?.toString()}
           />
+          <RHFUnitInputField
+            name="hbA1c"
+            label="HbA1c"
+            unit="%"
+            type="number"
+            placeholder={curVital.hbA1c?.toString()}
+          />
           <RHFBinaryOption
             name="diabetes_mellitus"
             label="Diabetes?"
             defaultValue={curVital.diabetes_mellitus}
           />
-          <RHFInputField
-            name="others"
-            label="Others"
-            placeholder={curVital.others}
-            type="text"
-          />
         </div>
         <ChildVitalsFields patient={patient} curVital={curVital} />
+        <h2>Other notes</h2>
+        <RHFInputField
+          name="others"
+          placeholder={curVital.others}
+          type="textarea"
+        />
+        <div className='h-4'/>
         <Button text="Update" colour="green" type="submit" />
       </form>
     </FormProvider>

@@ -5,17 +5,20 @@ import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
-import { MedicationStockDisplay } from '@/components/records/consultation/MedicationStockDisplay';
-import { getMedication } from '@/data/medication/getMedications';
-import { useLoadingState } from '@/hooks/useLoadingState';
-import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
-import { Medication } from '@/types/Medication';
-import { Patient } from '@/types/Patient';
 import {
   createOrder,
   findMedicationById,
   hasDuplicateOrder,
 } from '@/components/records/consultation/utils/medicationOrderLogic';
+import {
+  getInStockQuantityColour,
+  getInStockQuantityText,
+} from '@/components/records/consultation/utils/medicationUtils';
+import { getMedication } from '@/data/medication/getMedications';
+import { useLoadingState } from '@/hooks/useLoadingState';
+import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
+import { Medication } from '@/types/Medication';
+import { Patient } from '@/types/Patient';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -70,6 +73,9 @@ export function MedicationOrderForm({
 
   //watch the user input quantity
   const quantityInputByUser = useFormReturn.watch('quantity');
+  const exceedsStockNow =
+    selectedMedication != null &&
+    quantityInputByUser > selectedMedication.quantity;
 
   const onOrderSubmit: FormEventHandler = e => {
     e.preventDefault();
@@ -130,7 +136,7 @@ export function MedicationOrderForm({
             <DisplayField
               label="Patient Allergies"
               content={
-                patient === null
+                !patient
                   ? 'Error Getting Patient Allergies'
                   : patient.drug_allergy || '-'
               }
@@ -151,10 +157,49 @@ export function MedicationOrderForm({
                 isRequired={true}
               />
             )}
-            <MedicationStockDisplay
-              medication={selectedMedication}
-              quantityInputByUser={quantityInputByUser}
-            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <DisplayField
+                label="In Stock"
+                highlight={
+                  medications == undefined || selectedMedicationId == ''
+                    ? ''
+                    : getInStockQuantityColour(
+                        medications.find(
+                          med => med.id.toString() == selectedMedicationId
+                        ) || null
+                      )
+                }
+                content={
+                  medications == undefined || selectedMedicationId == ''
+                    ? '-'
+                    : getInStockQuantityText(
+                        medications.find(
+                          med => med.id.toString() == selectedMedicationId
+                        ) || null
+                      )
+                }
+              />
+              <div
+                className={
+                  exceedsStockNow ? 'rounded-md p-2 ring-2 ring-red-500' : 'p-2'
+                }
+              >
+                <RHFInputField
+                  name="quantity"
+                  label="Quantity to Order"
+                  type="number"
+                  isRequired={true}
+                />
+                {exceedsStockNow && (
+                  <p className="mt-1 text-sm text-red-600">
+                    Quantity exceeds available stock (
+                    {selectedMedication?.quantity ?? 0} in stock). You may need
+                    to wait a while for the order to go through.
+                  </p>
+                )}
+              </div>
+            </div>
             <RHFInputField
               type="textarea"
               name="notes"
@@ -162,7 +207,12 @@ export function MedicationOrderForm({
               placeholder="Dosage Instructions"
               isRequired={true}
             />
-            <Button type="submit" text="Submit" colour="green" />
+            <Button
+              type="submit"
+              text="Add order"
+              colour="green"
+              className="my-2"
+            />
           </form>
         </FormProvider>
       </div>

@@ -1,7 +1,7 @@
 import { DisplayField } from '@/components/DisplayField';
 import { ALL_CHILD_AGES } from '@/components/records/vital/ChildVitalsFields';
 import { GenderType } from '@/types/Gender';
-import { displayBMI, Vital } from '@/types/Vital';
+import { displayBMI, isVisualAcuityPoor, Vital } from '@/types/Vital';
 
 type VitalFieldsDataType = {
   label: string;
@@ -33,20 +33,26 @@ export function PastVitalTable({
         vital.systolic == undefined || vital.diastolic == undefined
           ? undefined
           : vital.systolic > 140 ||
-              vital.diastolic > 90 ||
-              vital.systolic < 90 ||
-              vital.diastolic < 60
+            vital.diastolic > 90 ||
+            vital.systolic < 90 ||
+            vital.diastolic < 60
             ? 'bg-red-200'
             : undefined,
     },
     { label: 'Heart Rate', value: vital.heart_rate || '' },
     { label: 'Temperature', value: vital.temperature },
-    { label: 'Right Eye', value: vital.right_eye_degree },
-    { label: 'Left Eye', value: vital.left_eye_degree },
-    { label: '', value: '' },
+    {
+      label: 'Right Eye',
+      value: vital.right_eye_degree,
+      highlight: isVisualAcuityPoor(vital.right_eye_degree) ? 'bg-red-200' : '',
+    },
+    {
+      label: 'Left Eye',
+      value: vital.left_eye_degree,
+      highlight: isVisualAcuityPoor(vital.left_eye_degree) ? 'bg-red-200' : '',
+    },
     { label: 'Right Eye Pinhole', value: vital.right_eye_pinhole },
     { label: 'Left Eye Pinhole', value: vital.left_eye_pinhole },
-    { label: '', value: '' },
     { label: 'Urine Dip Test', value: vital.urine_test },
     { label: 'Hemocue Hb Count', value: vital.hemocue_count },
     {
@@ -73,8 +79,8 @@ export function PastVitalTable({
               ? 'bg-amber-200'
               : '',
     },
-    { label: 'Diabetes Mellitus?', value: vital.diabetes_mellitus },
-    { label: 'Others', value: vital.others },
+    { label: 'HbA1c', value: vital.hbA1c || '' },
+    { label: 'Diabetes Mellitus?', value: vital.diabetes_mellitus }
   ];
   //Note: The UI display for scoliosis instances are labelled spine
   const childrenVitalFields: VitalFieldsDataType[] = [
@@ -240,6 +246,12 @@ export function PastVitalTable({
             />
           )
         )}
+      <h2 className="col-span-full">Others</h2>
+      <DisplayField
+        key="Others"
+        content={vital.others?.toString() || '-'}
+        spanFull
+      />
     </div>
   );
 }

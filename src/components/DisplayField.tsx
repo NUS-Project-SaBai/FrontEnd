@@ -2,19 +2,21 @@ export function DisplayField({
   label,
   content,
   highlight = '',
+  spanFull = false,
 }: {
-  label: string;
+  label?: string;
   content: string | React.JSX.Element;
   highlight?: 'bg-red-200' | 'bg-amber-200' | 'bg-green-200' | '';
+  spanFull?: boolean
 }) {
   return (
-    <div className="w-full self-end">
-      <label htmlFor={label} className="text-sm font-medium">
+    <div className={`w-full self-end ${spanFull ? "col-span-full" : ""}`}>
+      <label htmlFor={label} className="text-sm font-bold" >
         {label}
       </label>
       <div
         className={
-          'w-full rounded-md p-1.5 text-gray-600 shadow-sm ' +
+          'w-full rounded-md p-1.5 text-grey-600 shadow-sm whitespace-pre-wrap ' +
           (highlight || 'bg-gray-200')
         }
       >

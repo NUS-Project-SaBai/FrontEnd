@@ -16,6 +16,7 @@ export type Vital = {
   urine_test: string;
   blood_glucose_non_fasting?: number;
   blood_glucose_fasting?: number;
+  hbA1c?: number;
   left_eye_degree: string;
   right_eye_degree: string;
   left_eye_pinhole: string;
@@ -43,6 +44,73 @@ export type Vital = {
   testicular_growth_age: string;
   others: string;
 };
+
+/*
+ Normalises visual acuity input to standard "6/X" format.
+ Handles notation like "6/20 + 2" where the addition value is added to the denominator.
+ Examples:
+ - "6/20 + 2" -> "6/22"
+ - "6/6" -> "6/6"
+ - "6/12 + 1" -> "6/13"
+ @param visualAcuity - The visual acuity value to normalize
+ @returns The normalized visual acuity string in "6/X" format
+*/
+export function normalizeVisualAcuityValues(
+  visualAcuity: string | undefined
+): string {
+  if (!visualAcuity) return '';
+
+  const trimmed = visualAcuity.trim();
+
+  //Match standard "6/X" format, already normalized
+  const standardFormat = trimmed.match(/^(\d+)\s*\/\s*(\d+)$/);
+  if (standardFormat) {
+    return trimmed;
+  }
+
+  //Handling of non-normalized notation like "6/20 + 2"
+  const matchWithAddition = trimmed.match(/^(\d+)\s*\/\s*(\d+)\s*\+\s*(\d+)$/);
+
+  if (matchWithAddition) {
+    //If regex finds a match, it returns the first 3 numbers and calculates new denominator
+    const numerator = parseFloat(matchWithAddition[1]);
+    const denominator = parseFloat(matchWithAddition[2]);
+    const addition = parseFloat(matchWithAddition[3]);
+    const newDenominator = denominator + addition;
+    return `${numerator}/${newDenominator}`;
+  }
+
+  return trimmed;
+}
+
+/*
+ Returns boolean true if the denominator is >= 12 (indicating worse vision)\
+ Checks if a visual acuity value indicates poor vision 6/12 or worse (eg. 6/12, 6/18, 6/24, etc.)
+ Supports standard "6/X" notation where X is the denominator.
+@param visualAcuity - The visual acuity value to check
+@returns boolean true if the visual acuity value indicates poor vision
+*/
+
+export function isVisualAcuityPoor(visualAcuity: string | undefined): boolean {
+  if (!visualAcuity) return false;
+
+  const normalized = normalizeVisualAcuityValues(visualAcuity);
+  const match = normalized.match(/^(\d+)\s*\/\s*(\d+)$/);
+
+  if (!match) return false;
+
+  const numerator = parseFloat(match[1]);
+  const denominator = parseFloat(match[2]);
+
+  if (numerator !== 6) {
+    console.log(
+      `Non standard visual acutiy numerator detected: ${visualAcuity}`
+    );
+    return false;
+  }
+
+  return denominator >= 15;
+}
 
 export function vitalFromJson(jsonObj: object): Vital | null {
   return jsonObj as Vital;

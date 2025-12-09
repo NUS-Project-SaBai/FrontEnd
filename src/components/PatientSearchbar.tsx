@@ -69,8 +69,8 @@ export function PatientSearchbar<T>({
         </label>
         <div className="flex h-[40px] flex-grow flex-row items-center rounded-lg border-2 border-gray-300 disabled:bg-gray-200">
           {cancelFilteringByFace && filteringByFace && (
-            <div className="mx-1 flex h-[30px] items-center rounded-full bg-gray-300 px-2">
-              Filtering by scanned face
+            <div className="mx-1 flex h-[30px] items-center rounded-full bg-gray-300 px-2 leading-none text-sm">
+              Facial recognition
               <IconButton
                 icon={<XMarkIcon className="h-5 w-5" />}
                 onClick={() => cancelFilteringByFace(false)}

@@ -30,8 +30,10 @@ function formReducer(state: FormState, action: FormAction): FormState {
 
 export function MedicationOrderSection({
   patient,
+  isEditable = true,
 }: {
   patient: Patient | null;
+  isEditable: boolean;
 }) {
   const [formState, dispatch] = useReducer(formReducer, {
     isOpen: false,
@@ -50,6 +52,7 @@ export function MedicationOrderSection({
               <p className="py-2">No orders yet</p>
             ) : (
               <MedicationOrderTable
+                isEditable={isEditable}
                 consultOrders={value}
                 editConsultOrder={(order, index) => {
                   dispatch({ type: 'OPEN_FOR_EDIT', order, index });
@@ -57,20 +60,24 @@ export function MedicationOrderSection({
                 deleteConsultOrder={consult => {
                   const tmp = [...value];
                   tmp.splice(
-                    tmp.findIndex(val => val.medicationId === consult.medicationId),
+                    tmp.findIndex(
+                      val => val.medicationId === consult.medicationId
+                    ),
                     1
                   );
                   onChange(tmp);
                 }}
               />
             )}
-            <Button
-              text="Add Order"
-              colour="green"
-              onClick={() => {
-                dispatch({ type: 'OPEN_FOR_ADD' });
-              }}
-            />
+            {isEditable && (
+              <Button
+                text="Add Order"
+                colour="green"
+                onClick={() => {
+                  dispatch({ type: 'OPEN_FOR_ADD' });
+                }}
+              />
+            )}
           </div>
           <MedicationOrderForm
             isFormOpen={formState.isOpen}

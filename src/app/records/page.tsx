@@ -17,6 +17,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
@@ -48,6 +49,7 @@ export default function RecordPage() {
   });
 
   useEffect(() => {
+    refreshPatientList();
     const unsub = useFormReturn.subscribe({
       formState: { values: true },
       callback: ({ values }) => {
@@ -65,7 +67,7 @@ export default function RecordPage() {
     event.preventDefault();
     const formData = new FormData();
 
-    useFormReturn.handleSubmit(
+    return useFormReturn.handleSubmit(
       //onValid
       submitWithLoading(async fieldValues => {
         Object.entries(fieldValues).map(([key, value]) =>
@@ -79,12 +81,13 @@ export default function RecordPage() {
             'image/jpg'
           )
         );
+        formData.set('to_get_report', fieldValues.to_get_report === 'Yes' ? 'true' : 'false');
         const patient = await createPatient(formData);
         if (patient == null) {
           toast.error('Unknown error creating patient');
           return;
         }
-        useFormReturn.reset({});
+        useFormReturn.reset({ village_prefix: fieldValues.village_prefix });
         clearLocalStorageData();
 
         toast.success('Patient Created!');
@@ -103,16 +106,26 @@ export default function RecordPage() {
     setFaceFilteredPatients(null);
   };
 
+  function setRegistrationFace(picture: string | null) {
+    setFormDetails(old => ({ ...old, picture }))
+  }
+
   const filteringByFace = faceFilteredPatients !== null;
 
+  const searchablePatients = useMemo(() => {
+    if (!faceFilteredPatients) return allPatients
+    const pks = faceFilteredPatients?.map((v) => v.pk)
+    return allPatients.filter((v) => pks?.includes(v.pk))
+  }, [allPatients, faceFilteredPatients]);
+
   return (
-    <div className="flex h-full flex-col overflow-auto">
+    <div className="flex h-full flex-col">
       <h1 className="-mb-2">Patients</h1>
       <div className="z-1 sticky top-0 w-full bg-white p-2 drop-shadow-lg">
         <div className="flex w-full flex-col gap-2 sm:flex-row">
           <Suspense>
             <PatientSearchbar
-              data={faceFilteredPatients ?? allPatients}
+              data={searchablePatients}
               filteringByFace={filteringByFace}
               cancelFilteringByFace={cancelFilteringByFace}
               setFilteredItems={setSearchFilteredPatients}
@@ -131,11 +144,12 @@ export default function RecordPage() {
                 isSubmitting={isSubmitting}
               />
             </FormProvider>
-            <PatientScanForm setFilteredPatients={setFaceFilteredPatients} />
+            <PatientScanForm setFilteredPatients={setFaceFilteredPatients}
+              setRegistrationFace={setRegistrationFace} />
           </div>
         </div>
       </div>
-      <div className="flex flex-1 p-2">
+      <div className="flex flex-1 p-2 overflow-auto">
         <LoadingPage
           isLoading={patientsLoading || isSubmitting}
           message="Loading Patients..."

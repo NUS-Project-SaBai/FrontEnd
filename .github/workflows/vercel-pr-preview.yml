@@ -1,8 +1,6 @@
 name: preview
 on:
   pull_request:
-    branches-ignore:
-      - main
   workflow_dispatch:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

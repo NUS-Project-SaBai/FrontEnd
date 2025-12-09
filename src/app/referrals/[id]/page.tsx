@@ -19,7 +19,7 @@ export default function ReferralDetailsPage() {
   const { isLoading, withLoading } = useLoadingState(true);
   const [date, setDate] = useState<string>();
   const [patient, setPatient] = useState<Patient>();
-  const [referral, setReferral] = useState<Referral>();
+  const [referral, setReferral] = useState<Referral & {doctorNickname: string}>();
   const [editable, setEditable] = useState<boolean>(false);
   const [originalOutcome, setOriginalOutcome] = useState<string>('');
 
@@ -34,7 +34,7 @@ export default function ReferralDetailsPage() {
       const data = await getReferral(id.toString());
       setDate(data.date);
       setPatient(data.patient);
-      setReferral(data.referral);
+      setReferral({...data.referral, doctorNickname: data.doctor.nickname});
       setOriginalOutcome(data.referral.referral_outcome || '');
     });
     fetchReferral();
@@ -88,6 +88,16 @@ export default function ReferralDetailsPage() {
           <table>
             <tbody className="divide-y divide-gray-400">
               <tr>
+                <td className="whitespace-nowrap">Referral By</td>
+                <td>
+                  <div>
+                    {referral != undefined && (
+                      referral.doctorNickname ?? "Unkown"
+                    )}
+                  </div>
+                </td>
+              </tr>
+              <tr>
                 <td className="whitespace-nowrap">Referral State</td>
                 <td>
                   <div>
@@ -116,7 +126,7 @@ export default function ReferralDetailsPage() {
                   Referral Outcome
                 </td>
                 {referral == undefined ? (
-                  <p>No Referral Found</p>
+                  <td>No Referral Found</td>
                 ) : (
                   <td className="w-full">
                     <div className="flex gap-2">

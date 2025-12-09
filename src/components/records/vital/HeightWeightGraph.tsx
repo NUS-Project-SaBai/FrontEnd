@@ -146,7 +146,7 @@ export function HeightWeightGraph({
   }
   return (
     <div>
-      <canvas ref={canvasRef} width={600} height={800} />
+      <canvas ref={canvasRef} width={600} height={800} className="w-full h-auto max-w-full"/>
     </div>
   );
 }
