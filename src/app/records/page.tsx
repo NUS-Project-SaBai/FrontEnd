@@ -17,6 +17,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
@@ -85,7 +86,7 @@ export default function RecordPage() {
           toast.error('Unknown error creating patient');
           return;
         }
-        useFormReturn.reset({});
+        useFormReturn.reset({ village_prefix: fieldValues.village_prefix });
         clearLocalStorageData();
 
         toast.success('Patient Created!');
@@ -104,7 +105,17 @@ export default function RecordPage() {
     setFaceFilteredPatients(null);
   };
 
+  function setRegistrationFace(picture: string | null) {
+    setFormDetails(old => ({ ...old, picture }))
+  }
+
   const filteringByFace = faceFilteredPatients !== null;
+
+  const searchablePatients = useMemo(() => {
+    if (!faceFilteredPatients) return allPatients
+    const pks = faceFilteredPatients?.map((v) => v.pk)
+    return allPatients.filter((v) => pks?.includes(v.pk))
+  }, [allPatients, faceFilteredPatients]);
 
   return (
     <div className="flex h-full flex-col">
@@ -113,7 +124,7 @@ export default function RecordPage() {
         <div className="flex w-full flex-col gap-2 sm:flex-row">
           <Suspense>
             <PatientSearchbar
-              data={faceFilteredPatients ?? allPatients}
+              data={searchablePatients}
               filteringByFace={filteringByFace}
               cancelFilteringByFace={cancelFilteringByFace}
               setFilteredItems={setSearchFilteredPatients}
@@ -132,7 +143,8 @@ export default function RecordPage() {
                 isSubmitting={isSubmitting}
               />
             </FormProvider>
-            <PatientScanForm setFilteredPatients={setFaceFilteredPatients} />
+            <PatientScanForm setFilteredPatients={setFaceFilteredPatients}
+              setRegistrationFace={setRegistrationFace} />
           </div>
         </div>
       </div>

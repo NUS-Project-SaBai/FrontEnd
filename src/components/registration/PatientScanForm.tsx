@@ -13,8 +13,10 @@ import { ScanFace } from 'lucide-react';
 
 export function PatientScanForm({
   setFilteredPatients,
+  setRegistrationFace
 }: {
   setFilteredPatients: Dispatch<SetStateAction<Patient[] | null>>;
+  setRegistrationFace: (picture: string | null) => void
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
@@ -48,6 +50,11 @@ export function PatientScanForm({
     setCameraIsOpen(isOpen);
   };
 
+  function setScannedFace(picture: string | null) {
+    setImgDetails(picture);
+    setRegistrationFace(picture);
+  }
+
   return (
     <>
       <Button
@@ -67,7 +74,7 @@ export function PatientScanForm({
         <div className="flex flex-col space-y-2">
           <WebcamInput
             imageDetails={imgDetails}
-            setImageDetails={setImgDetails}
+            setImageDetails={setScannedFace}
             cameraIsOpenCallback={cameraToggleCallback}
           />
           <div className="flex justify-center space-x-2">

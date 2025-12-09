@@ -46,6 +46,11 @@ export function VisitDropdown({
     searchParams.get('visit') ?? ''
   );
 
+  useEffect(() => {
+    setVisitId(items[0].value)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // Ensure selected visit exists; if not, default to first (if any)
   useEffect(() => {
     if (!items.length) return;
