@@ -24,7 +24,7 @@ export function WebcamInput({
   setImageDetails: (picture: string | null) => void;
   cameraIsOpenCallback?: (isOpen: boolean) => void;
 }) {
-  const [cameraIsOpen, toggleCameraOpen, setCameraIsOpen] = useToggle(false);
+  const [cameraIsOpen, toggleCameraOpen, setCameraIsOpen] = useToggle(true);
 
   const webcamRef = useRef<Webcam>(null);
   const webcamCapture = useCallback(() => {
