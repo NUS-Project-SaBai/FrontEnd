@@ -258,15 +258,19 @@ export function ChildPubertySection({
   return (
     <div>
       <h2>Puberty Fields</h2>
-      <div className="grids-col-1 grid gap-2 md:grid-cols-2">
-        {pubertyFields.map(field => (
-          <VitalFieldRenderer
-            key={field.name}
-            field={field}
-            curVital={curVital}
-          />
-        ))}
-      </div>{' '}
+      {pubertyFields.length === 0 ? (
+        <p>No Puberty Fields, Ensure gender and age is correct</p>
+      ) : (
+        <div className="grids-col-1 grid gap-2 md:grid-cols-2">
+          {pubertyFields.map(field => (
+            <VitalFieldRenderer
+              key={field.name}
+              field={field}
+              curVital={curVital}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

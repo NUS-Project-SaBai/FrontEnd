@@ -8,6 +8,7 @@ import { WebcamInput } from '@/components/inputs/WebcamInput';
 import { LoadingUI } from '@/components/LoadingUI';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import { getPatientAge } from '@/types/Patient';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
 import { EMPTY_VITAL } from '@/types/Vital';
 import { DateTime } from 'luxon';
@@ -34,7 +35,8 @@ export function PatientForm({
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
   ];
-  const gender = watch("gender");
+  const gender = watch('gender');
+  const age = getPatientAge({ date_of_birth: watch('date_of_birth') }).year;
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -119,7 +121,7 @@ export function PatientForm({
 
         <hr className="border-t-2 border-t-gray-300 py-3" />
         <div className="grid grid-cols-2 pb-4 md:grid-cols-3"></div>
-        {watch('age_group') && ALL_CHILD_AGES.includes(watch('age_group')) ? (
+        {age && ALL_CHILD_AGES.includes(age) ? (
           <>
             <RHFDropdown
               name="scoliosis"
@@ -144,7 +146,7 @@ export function PatientForm({
               pubertyFields={allPubertyFields.filter(
                 field =>
                   (field.gender == undefined || field.gender == gender) &&
-                  field.age.includes(watch('age_group'))
+                  field.age.includes(age)
               )}
             />
           </>
