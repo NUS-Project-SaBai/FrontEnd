@@ -34,7 +34,7 @@ export function PatientForm({
   return (
     <>
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 py-5">
+        <div className="grid grid-cols-2 gap-4 py-5 md:grid-cols-3">
           <RHFInputField
             name="name"
             label="Name (english + local if possible)"
@@ -100,35 +100,55 @@ export function PatientForm({
             defaultValue={getValues('to_get_report') || 'No'}
           />
           <RHFUnitInputField
-                      name="temperature"
-                      label="Temperature"
-                      unit="°C"
-                      type="number"
-                    />
-          <RHFDropdown name = 'scoliosis'
-              label = 'Spine'
-              defaultValue= 'Normal'
-               options={[
-                { label: 'Normal', value: 'Normal' },
-                { label: 'Abnormal', value: 'Abnormal'}
-              ]}/>
-              <RHFDropdown name = 'pallor'
-              label = 'Pallor'
-              defaultValue= 'No'
-               options={[
-                { label: 'Yes', value: 'Yes' },
-                { label: 'No', value: 'No'}
-              ]}/>
+            name="temperature"
+            label="Temperature"
+            unit="°C"
+            type="number"
+          />
+          <RHFInputField
+            name="drug_allergy"
+            label="Drug Allergies"
+            type="textarea"
+            isRequired={true}
+          />
         </div>
-        <hr className = 'py-3 border-t-2 border-t-gray-300'/>
-        <ChildPubertySection curVital={EMPTY_VITAL} pubertyFields={allPubertyFields.filter(
-          field => field.gender == undefined || field.gender == gender)}/>
-        <RHFInputField
-          name="drug_allergy"
-          label="Drug Allergies"
-          type="textarea"
-          isRequired={true}
-        />
+
+        <hr className="border-t-2 border-t-gray-300 py-3" />
+        <div className="grid grid-cols-2 pb-4 md:grid-cols-3"></div>
+        {watch('age_group') && ALL_CHILD_AGES.includes(watch('age_group')) ? (
+          <>
+            <RHFDropdown
+              name="scoliosis"
+              label="Spine"
+              defaultValue="Normal"
+              options={[
+                { label: 'Normal', value: 'Normal' },
+                { label: 'Abnormal', value: 'Abnormal' },
+              ]}
+            />
+            <RHFDropdown
+              name="pallor"
+              label="Pallor"
+              defaultValue="No"
+              options={[
+                { label: 'Yes', value: 'Yes' },
+                { label: 'No', value: 'No' },
+              ]}
+            />
+            <ChildPubertySection
+              curVital={EMPTY_VITAL}
+              pubertyFields={allPubertyFields.filter(
+                field =>
+                  (field.gender == undefined || field.gender == gender) &&
+                  field.age.includes(watch('age_group'))
+              )}
+            />
+          </>
+        ) : (
+          <p className="w-full p-2 font-semibold text-gray-600">
+            No child section
+          </p>
+        )}
         <Controller
           name={'picture'}
           control={control}
