@@ -2,6 +2,7 @@
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { PatientRecordTable } from '@/components/records/PatientRecordTable';
+import { allPubertyFields } from '@/components/records/vital/ChildVitalsFields';
 import { NewPatientModal } from '@/components/registration/NewPatientModal';
 import { PatientScanForm } from '@/components/registration/PatientScanForm';
 import { PatientListContext } from '@/context/PatientListContext';
@@ -68,9 +69,6 @@ export default function RecordPage() {
     useFormReturn.handleSubmit(
       //onValid
       submitWithLoading(async fieldValues => {
-        Object.entries(fieldValues).map(([key, value]) =>
-          formData.append(key, value)
-        );
         formData.append(
           'picture',
           await urlToFile(
@@ -79,12 +77,50 @@ export default function RecordPage() {
             'image/jpg'
           )
         );
-        formData.set('to_get_report', fieldValues.to_get_report === 'Yes' ? 'true' : 'false');
+
+        const patientInfoFromRegistration = {
+          name: fieldValues.name,
+          identification_number: fieldValues.identification_number,
+          contact_no: fieldValues.contact_no,
+          date_of_birth: fieldValues.date_of_birth,
+          village_prefix: fieldValues.village_prefix,
+          poor: fieldValues.poor,
+          bs2: fieldValues.bs2,
+          sabai: fieldValues.sabai,
+          to_get_report: fieldValues.to_get_report === 'Yes' ? 'true' : 'false',
+          drug_allergy: fieldValues.drug_allergy,
+          gender: fieldValues.gender,
+        };
+
+        const pubertyData = allPubertyFields.reduce(
+          (acc, field) => {
+            const key = field.name;
+            const value = fieldValues[key];
+
+            if (value !== undefined && value !== '') {
+              acc[key] = value;
+            }
+            return acc;
+          },
+          {} as Record<string, any>
+        );
+
+        const vitalsInfoFromRegistration = {
+          temperature: fieldValues.temperature,
+          scoliosis: fieldValues.scoliosis,
+          pallor: fieldValues.pallor,
+          ...pubertyData,
+        };
+
+        formData.append('patient', JSON.stringify(patientInfoFromRegistration));
+        formData.append('vitals', JSON.stringify(vitalsInfoFromRegistration));
+
         const patient = await createPatient(formData);
         if (patient == null) {
           toast.error('Unknown error creating patient');
           return;
         }
+
         useFormReturn.reset({ village_prefix: fieldValues.village_prefix });
         clearLocalStorageData();
 
@@ -104,15 +140,15 @@ export default function RecordPage() {
   };
 
   function setRegistrationFace(picture: string | null) {
-    setFormDetails(old => ({ ...old, picture }))
+    setFormDetails(old => ({ ...old, picture }));
   }
 
   const filteringByFace = faceFilteredPatients !== null;
 
   const searchablePatients = useMemo(() => {
-    if (!faceFilteredPatients) return allPatients
-    const pks = faceFilteredPatients?.map((v) => v.pk)
-    return allPatients.filter((v) => pks?.includes(v.pk))
+    if (!faceFilteredPatients) return allPatients;
+    const pks = faceFilteredPatients?.map(v => v.pk);
+    return allPatients.filter(v => pks?.includes(v.pk));
   }, [allPatients, faceFilteredPatients]);
 
   return (
@@ -141,12 +177,14 @@ export default function RecordPage() {
                 isSubmitting={isSubmitting}
               />
             </FormProvider>
-            <PatientScanForm setFilteredPatients={setFaceFilteredPatients}
-              setRegistrationFace={setRegistrationFace} />
+            <PatientScanForm
+              setFilteredPatients={setFaceFilteredPatients}
+              setRegistrationFace={setRegistrationFace}
+            />
           </div>
         </div>
       </div>
-      <div className="flex flex-1 p-2 overflow-auto">
+      <div className="flex flex-1 overflow-auto p-2">
         <LoadingPage
           isLoading={patientsLoading || isSubmitting}
           message="Loading Patients..."

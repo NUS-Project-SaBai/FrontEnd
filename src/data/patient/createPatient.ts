@@ -2,9 +2,7 @@
 import { axiosInstance } from '@/lib/axiosInstance';
 import { Patient, patientFromJson } from '@/types/Patient';
 
-export async function createPatient(
-  formData: FormData
-): Promise<Patient | null> {
+export async function createPatient(formData: any): Promise<Patient | null> {
   try {
     return await axiosInstance
       .post('/patients/', formData)

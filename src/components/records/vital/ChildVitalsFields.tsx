@@ -46,20 +46,25 @@ const allChildVitalsFields: InputFieldData[] = [
   },
   {
     name: 'scoliosis',
-    label: 'Spine',
+    label: 'Scoliosis',
     type: 'dropdown',
     age: ALL_CHILD_AGES,
     defaultValue: 'Normal',
-     options: [
+    options: [
       { label: 'Normal', value: 'Normal' },
-      { label: 'Abnormal' , value: 'Abnormal' },
-    ]
+      { label: 'Abnormal', value: 'Abnormal' },
+    ],
   },
   {
     name: 'pallor',
     label: 'Pallor',
-    type: 'text',
+    type: 'dropdown',
+    defaultValue: 'No',
     age: ALL_CHILD_AGES,
+    options: [
+      { label: 'Yes', value: 'Yes' },
+      { label: 'No', value: 'No' },
+    ],
   },
   {
     name: 'oral_cavity',
@@ -93,7 +98,7 @@ const allChildVitalsFields: InputFieldData[] = [
   },
 ];
 
-const allPubertyFields: InputFieldData[] = [
+export const allPubertyFields: InputFieldData[] = [
   {
     type: 'yesNoOption',
     name: 'pubarche',
@@ -167,7 +172,7 @@ export function ChildVitalsFields({
   patient,
   curVital,
 }: {
-  patient: Pick<Patient, 'date_of_birth'| 'gender'>;
+  patient: Pick<Patient, 'date_of_birth' | 'gender'>;
   curVital: Vital;
 }) {
   const patientYearsOld = getPatientAge(patient).year;
@@ -233,7 +238,7 @@ function ChildVitalsSection({
   );
 }
 
-function ChildPubertySection({
+export function ChildPubertySection({
   pubertyFields,
   curVital,
 }: {

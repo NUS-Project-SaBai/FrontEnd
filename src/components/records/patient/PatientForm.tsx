@@ -13,7 +13,7 @@ import { EMPTY_VITAL } from '@/types/Vital';
 import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { ChildVitalsFields } from '../vital/ChildVitalsFields';
+import { ALL_CHILD_AGES, allPubertyFields, ChildPubertySection, ChildVitalsFields } from '../vital/ChildVitalsFields';
 
 export function PatientForm({
   onSubmit,
@@ -25,11 +25,12 @@ export function PatientForm({
   closeForm?: () => void;
 }) {
   const { village } = useContext(VillageContext);
-  const { control, formState, getValues } = useFormContext();
+  const { control, formState, getValues, watch } = useFormContext();
   const genderDropdownOptions = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
   ];
+  const gender = watch("gender");
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -104,12 +105,24 @@ export function PatientForm({
                       unit="°C"
                       type="number"
                     />
+          <RHFDropdown name = 'scoliosis'
+              label = 'Spine'
+              defaultValue= 'Normal'
+               options={[
+                { label: 'Normal', value: 'Normal' },
+                { label: 'Abnormal', value: 'Abnormal'}
+              ]}/>
+              <RHFDropdown name = 'pallor'
+              label = 'Pallor'
+              defaultValue= 'No'
+               options={[
+                { label: 'Yes', value: 'Yes' },
+                { label: 'No', value: 'No'}
+              ]}/>
         </div>
         <hr className = 'py-3 border-t-2 border-t-gray-300'/>
-        <ChildVitalsFields
-            patient={{ date_of_birth: '2020-12-09T11:39:10Z', gender: 'Female' }}
-            curVital={EMPTY_VITAL}
-          />
+        <ChildPubertySection curVital={EMPTY_VITAL} pubertyFields={allPubertyFields.filter(
+          field => field.gender == undefined || field.gender == gender)}/>
         <RHFInputField
           name="drug_allergy"
           label="Drug Allergies"
