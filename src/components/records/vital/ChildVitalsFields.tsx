@@ -162,7 +162,7 @@ export function ChildVitalsFields({
   patient,
   curVital,
 }: {
-  patient: Patient;
+  patient: Pick<Patient, 'date_of_birth'| 'gender'>;
   curVital: Vital;
 }) {
   const patientYearsOld = getPatientAge(patient).year;

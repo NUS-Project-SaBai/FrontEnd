@@ -30,7 +30,7 @@ export function NewPatientModal({
         ariaHideApp={false}
         title="New Patient"
         text="Close"
-        className="mx-auto my-8"
+        size='full'
       >
         <PatientForm onSubmit={onSubmit} isSubmitting={isSubmitting} />
       </Modal>

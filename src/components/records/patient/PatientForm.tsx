@@ -9,9 +9,11 @@ import { LoadingUI } from '@/components/LoadingUI';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
+import { EMPTY_VITAL } from '@/types/Vital';
 import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { ChildVitalsFields } from '../vital/ChildVitalsFields';
 
 export function PatientForm({
   onSubmit,
@@ -31,7 +33,7 @@ export function PatientForm({
   return (
     <>
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 py-5">
           <RHFInputField
             name="name"
             label="Name (english + local if possible)"
@@ -103,6 +105,11 @@ export function PatientForm({
                       type="number"
                     />
         </div>
+        <hr className = 'py-3 border-t-2 border-t-gray-300'/>
+        <ChildVitalsFields
+            patient={{ date_of_birth: '2020-12-09T11:39:10Z', gender: 'Female' }}
+            curVital={EMPTY_VITAL}
+          />
         <RHFInputField
           name="drug_allergy"
           label="Drug Allergies"
