@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
-import { RHFSelect } from '@/components/inputs/RHFSelect';
+import { RHFCustomSelect } from '@/components/inputs/RHFCustomSelect';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { ChildVitalsFields } from '@/components/records/vital/ChildVitalsFields';
@@ -188,7 +188,7 @@ export function VitalsForm({
             type="number"
             placeholder={curVital.hbA1c?.toString()}
           />
-          <RHFSelect
+          <RHFCustomSelect
             name="diabetes_mellitus"
             label="Diabetes?"
             defaultValue={curVital.diabetes_mellitus}

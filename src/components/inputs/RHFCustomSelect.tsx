@@ -5,7 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 export type OptionData = { value: string | number; label: string } | string;
 
-type RHFDropdownProps = {
+type RHFCustomSelectProps = {
   name: string;
   label: string;
   options: OptionData[];
@@ -16,7 +16,7 @@ type RHFDropdownProps = {
   optionClassName?: string;
 };
 
-export function RHFSelect({
+export function RHFCustomSelect({
   name,
   label,
   options,
@@ -25,7 +25,7 @@ export function RHFSelect({
   unselectedValue,
   className = '',
   optionClassName = ''
-}: RHFDropdownProps) {
+}: RHFCustomSelectProps) {
   const {
     control,
     setValue,
