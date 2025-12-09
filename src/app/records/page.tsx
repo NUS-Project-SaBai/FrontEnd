@@ -49,6 +49,7 @@ export default function RecordPage() {
   });
 
   useEffect(() => {
+    refreshPatientList();
     const unsub = useFormReturn.subscribe({
       formState: { values: true },
       callback: ({ values }) => {
