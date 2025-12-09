@@ -3,6 +3,7 @@ import { Button } from '@/components/Button';
 import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
 import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { WebcamInput } from '@/components/inputs/WebcamInput';
 import { LoadingUI } from '@/components/LoadingUI';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
@@ -95,6 +96,12 @@ export function PatientForm({
             name="to_get_report"
             defaultValue={getValues('to_get_report') || 'No'}
           />
+          <RHFUnitInputField
+                      name="temperature"
+                      label="Temperature"
+                      unit="°C"
+                      type="number"
+                    />
         </div>
         <RHFInputField
           name="drug_allergy"
