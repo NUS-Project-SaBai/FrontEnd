@@ -56,6 +56,7 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
   const lastVisitLabel = getLastVisitLabel(patient.last_visit_date);
 
   async function handleCreateVisit(patient: Patient) {
+    // await new Promise(resolve => setTimeout(resolve, 3000));
     // check if a last visit date exists
     if (patient.last_visit_date) {
       const lastVisit = DateTime.fromISO(patient.last_visit_date);
@@ -76,7 +77,7 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
         }
       }
     }
-    withLoading(async () => {
+    return withLoading(async () => {
       toast.loading("Creating visit...");
       return createVisit(patient).then(() => getPatientById(patient.pk.toString()))
     }
@@ -124,7 +125,7 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
               colour="green"
               onClick={e => {
                 e.stopPropagation();
-                handleCreateVisit(patient);
+                return handleCreateVisit(patient);
               }}
               onMouseEnter={e => {
                 e.stopPropagation();
