@@ -49,6 +49,7 @@ export default function RecordPage() {
   });
 
   useEffect(() => {
+    refreshPatientList();
     const unsub = useFormReturn.subscribe({
       formState: { values: true },
       callback: ({ values }) => {
@@ -66,7 +67,7 @@ export default function RecordPage() {
     event.preventDefault();
     const formData = new FormData();
 
-    useFormReturn.handleSubmit(
+    return useFormReturn.handleSubmit(
       //onValid
       submitWithLoading(async fieldValues => {
         Object.entries(fieldValues).map(([key, value]) =>
