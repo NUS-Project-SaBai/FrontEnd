@@ -1,6 +1,7 @@
 'use client';
 import { GenderType } from '@/types/Gender';
 import { useEffect, useRef } from 'react';
+import { ALL_CHILD_AGES } from './ChildVitalsFields';
 
 export function HeightWeightGraph({
   age,
@@ -138,11 +139,11 @@ export function HeightWeightGraph({
     };
   }, [age, weight, height, gender]);
 
-  if (age < 2 || age > 18) {
-    return <div>Age not betweeen 2 and 18</div>;
+  if (!ALL_CHILD_AGES.includes(age)) {
+    return <div className='ml-4'>Age not betweeen 2 and 18</div>;
   }
   if (!weight || !height || (gender !== 'Female' && gender !== 'Male')) {
-    return <div>Invalid height, weight or gender</div>;
+    return <div className='ml-4'>Invalid height, weight or gender</div>;
   }
   return (
     <div>
