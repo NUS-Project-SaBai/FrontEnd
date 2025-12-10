@@ -112,6 +112,58 @@ export function isVisualAcuityPoor(visualAcuity: string | undefined): boolean {
   return denominator >= 15;
 }
 
+export const VISUAL_ACUITY_PATTERN =
+  /^6\s*\/\s*(?:120|60|36|24|18|15|12|9|7\.5|6|5)(?:\s*\+\s*[1-3])?$/;
+
+// Special visual acuity values for low vision cases
+const SPECIAL_VISUAL_ACUITY_VALUES = ['CF', 'HM', 'LP', 'NLP'];
+
+export default function isValidVisualAcuity(visualAcuity: string): boolean {
+  // Check for special values first (case-insensitive)
+  const upperValue = visualAcuity.toUpperCase().trim();
+  if (SPECIAL_VISUAL_ACUITY_VALUES.includes(upperValue)) {
+    return true;
+  }
+
+  // Check standard format
+  return VISUAL_ACUITY_PATTERN.test(visualAcuity);
+}
+
+/**
+ * validation function for visual acuity fields.
+ * Validates visual acuity input format and returns either true (valid) or an error message.
+ * Accepts standard formats (6/6, 6/12, 6/20 + 2) and special values (CF, HM, LP, NLP).
+ * @param value - The visual acuity value to validate
+ * @param required - Whether the field is required (default: false)
+ * @returns true if valid, or an error message string if invalid
+ */
+export function validateVisualAcuity(
+  value: string | undefined,
+  required: boolean = false
+): true | string {
+  // Empty values are valid if field is not required
+  if (!value || value.trim() === '') {
+    return required ? 'Visual acuity is required' : (true as const);
+  }
+
+  const trimmedValue = value.trim();
+
+  // Check for special values first (case-insensitive)
+  const upperValue = trimmedValue.toUpperCase();
+  if (SPECIAL_VISUAL_ACUITY_VALUES.includes(upperValue)) {
+    return true;
+  }
+
+  const normalized = normalizeVisualAcuityValues(trimmedValue);
+
+  // Check both original format and normalized format
+  if (isValidVisualAcuity(trimmedValue) || isValidVisualAcuity(normalized)) {
+    return true;
+  }
+
+  return 'Invalid format. Use format like 6/6, 6/12, 6/20 + 2, or special values: CF, HM, LP, NLP if patient is unable to read the biggest E';
+}
+
 export function vitalFromJson(jsonObj: object): Vital | null {
   return jsonObj as Vital;
 }

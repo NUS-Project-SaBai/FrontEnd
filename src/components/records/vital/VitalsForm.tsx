@@ -1,19 +1,19 @@
 'use client';
 
 import { Button } from '@/components/Button';
+import { gridStyle } from '@/components/commonStyles';
 import { DisplayField } from '@/components/DisplayField';
 import { RHFCustomSelect } from '@/components/inputs/RHFCustomSelect';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { ChildVitalsFields } from '@/components/records/vital/ChildVitalsFields';
+import { NAOption } from '@/constants';
 import { patchVital } from '@/data/vital/patchVital';
 import { Patient } from '@/types/Patient';
-import { displayBMI, Vital } from '@/types/Vital';
+import { displayBMI, validateVisualAcuity, Vital } from '@/types/Vital';
 import { FormEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { NAOption } from '@/constants';
-import { gridStyle } from '@/components/commonStyles';
 
 export function VitalsForm({
   patient,
@@ -24,7 +24,10 @@ export function VitalsForm({
   visitId: string;
   curVital: Vital; // can be EMPTY_VITAL
 }) {
-  const useFormReturn = useForm();
+  const useFormReturn = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+  });
   const { handleSubmit, reset, watch } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
 
@@ -45,9 +48,9 @@ export function VitalsForm({
     handleSubmit(
       async (data: FieldValues) => {
         data.visit_id = visitId;
-        console.log("SUBMIT DATA", data)
+        console.log('SUBMIT DATA', data);
         patchVital(data as Vital).then(() => {
-          // super jank because idh time to figure out why RHF keeps resetting this to the wrong value, 
+          // super jank because idh time to figure out why RHF keeps resetting this to the wrong value,
           // and how it interacts with the default value given later
           reset({ diabetes_mellitus: data.diabetes_mellitus });
           toast.success('Updated Vital');
@@ -130,28 +133,44 @@ export function VitalsForm({
             label="Right Eye (eg. 6/6)"
             type="text"
             placeholder={curVital.right_eye_degree}
+            validate={{
+              validFormat: (value: string) =>
+                validateVisualAcuity(value, false),
+            }}
           />
           <RHFInputField
             name="left_eye_degree"
             label="Left Eye (eg. 6/6)"
             type="text"
             placeholder={curVital.left_eye_degree}
+            validate={{
+              validFormat: (value: string) =>
+                validateVisualAcuity(value, false),
+            }}
           />
           <RHFInputField
             name="right_eye_pinhole"
             label="Right Eye Pinhole (eg. 6/6)"
             type="text"
             placeholder={curVital.right_eye_pinhole}
+            validate={{
+              validFormat: (value: string) =>
+                validateVisualAcuity(value, false),
+            }}
           />
           <RHFInputField
             name="left_eye_pinhole"
             label="Left Eye Pinhole (eg. 6/6)"
             type="text"
             placeholder={curVital.left_eye_pinhole}
+            validate={{
+              validFormat: (value: string) =>
+                validateVisualAcuity(value, false),
+            }}
           />
         </div>
         <h2>STAT Investigations</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <RHFInputField
             name="urine_test"
             label="Urine Dip Test"
@@ -191,7 +210,7 @@ export function VitalsForm({
             label="Diabetes?"
             defaultValue={curVital.diabetes_mellitus}
             unselectedValue={NAOption}
-            options={["Yes", "No"]}
+            options={['Yes', 'No']}
           />
         </div>
         <ChildVitalsFields patient={patient} curVital={curVital} />
@@ -201,7 +220,7 @@ export function VitalsForm({
           placeholder={curVital.others}
           type="textarea"
         />
-        <div className='h-4' />
+        <div className="h-4" />
         <Button text="Update" colour="green" type="submit" />
       </form>
     </FormProvider>
