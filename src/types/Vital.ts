@@ -147,16 +147,9 @@ export function validateVisualAcuity(
   }
 
   const trimmedValue = value.trim();
-
-  // Check for special values first (case-insensitive)
-  const upperValue = trimmedValue.toUpperCase();
-  if (SPECIAL_VISUAL_ACUITY_VALUES.includes(upperValue)) {
-    return true;
-  }
-
   const normalized = normalizeVisualAcuityValues(trimmedValue);
 
-  // Check both original format and normalized format
+  // Check both original format and normalized format using isValidVisualAcuity
   if (isValidVisualAcuity(trimmedValue) || isValidVisualAcuity(normalized)) {
     return true;
   }
