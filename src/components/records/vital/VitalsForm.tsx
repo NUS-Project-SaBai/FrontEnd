@@ -9,9 +9,11 @@ import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { ChildVitalsFields } from '@/components/records/vital/ChildVitalsFields';
 import { NAOption } from '@/constants';
 import { patchVital } from '@/data/vital/patchVital';
+import useSafeguardUnsavedChanges from '@/hooks/safeguardUnsavedChanges';
+import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
 import { displayBMI, validateVisualAcuity, Vital } from '@/types/Vital';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -24,12 +26,34 @@ export function VitalsForm({
   visitId: string;
   curVital: Vital; // can be EMPTY_VITAL
 }) {
+  const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
+    'VitalsForm',
+    {} as FieldValues,
+    [visitId, curVital]
+  );
   const useFormReturn = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
   const { handleSubmit, reset, watch } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  const formValues = useFormReturn.watch();
+  useEffect(() => {
+    if (formValues && Object.keys(formValues).length > 0) {
+      setHasUnsavedChanges(true);
+    }
+  }, [formValues]);
+
+  useSafeguardUnsavedChanges(
+    hasUnsavedChanges,
+    'You have unsaved changes to the vitals form. Are you sure you want to leave?',
+    () => {
+      reset({});
+      clearLocalStorageData();
+    }
+  );
 
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).

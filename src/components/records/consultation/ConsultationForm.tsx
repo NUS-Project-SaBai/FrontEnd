@@ -12,10 +12,11 @@ import { deleteDiagnosis } from '@/data/diagnosis/deleteDiagnosis';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { patchDiagnosis } from '@/data/diagnosis/patchDiagnosis';
 import { createReferral } from '@/data/referrals/createReferral';
+import useSafeguardUnsavedChanges from '@/hooks/safeguardUnsavedChanges';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
-import { FormEvent, useEffect, useRef } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 
 import {
   Controller,
@@ -41,9 +42,19 @@ export function ConsultationForm({
     {} as FieldValues,
     [visitId, editConsultId]
   );
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const useFormReturn = useForm({ values: formDetails });
   const loadedConsultIdRef = useRef<number | null>(null);
   const isLoadingRef = useRef(false);
+
+  // Track when form values change (indicating unsaved changes)
+  const formValues = useFormReturn.watch();
+  useEffect(() => {
+    // Only set unsaved changes if we have actual form data
+    if (formDetails && Object.keys(formDetails).length > 0) {
+      setHasUnsavedChanges(true);
+    }
+  }, [formValues, formDetails]);
 
   useEffect(() => {
     if (editConsultId == null) {
@@ -126,6 +137,21 @@ export function ConsultationForm({
   } = useFormReturn;
   const referredFor = useFormReturn.watch('referred_for');
   const isEditing = editConsultId != null;
+
+  // Safeguard against leaving form with unsaved changes
+  useEffect(() => {
+    console.log('ConsultationForm hasUnsavedChanges:', hasUnsavedChanges);
+  }, [hasUnsavedChanges]);
+
+  useSafeguardUnsavedChanges(
+    hasUnsavedChanges,
+    'You have unsaved changes to the consultation form. Are you sure you want to leave?',
+    () => {
+      // When user confirms they want to leave, clear the form state
+      reset({});
+      clearLocalStorageData();
+    }
+  );
 
   // Helper function to process and validate diagnoses
   const processDiagnoses = (
