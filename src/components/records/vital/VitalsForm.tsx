@@ -26,7 +26,7 @@ export function VitalsForm({
   visitId: string;
   curVital: Vital; // can be EMPTY_VITAL
 }) {
-  const [formDetails, setFormDetails, clearLocalStorageData] = useSaveOnWrite(
+  const [, , clearLocalStorageData] = useSaveOnWrite(
     'VitalsForm',
     {} as FieldValues,
     [visitId, curVital]
