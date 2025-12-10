@@ -102,11 +102,19 @@ export function PastVitalTable({
       label: 'Scoliosis',
       value: vital.scoliosis,
       ageToTest: ALL_CHILD_AGES,
+      highlight:
+        vital.scoliosis == 'Abnormal'
+          ? 'bg-red-200'
+          : ''
     },
     {
       label: 'Pallor',
       value: vital.pallor,
       ageToTest: ALL_CHILD_AGES,
+      highlight:
+        vital.pallor == 'Yes'
+          ? 'bg-red-200'
+          : ''
     },
     {
       label: 'Oral Cavity',
@@ -135,52 +143,72 @@ export function PastVitalTable({
     },
   ];
 
+  const highlightPubertyFields = (fields: string[], patientAge: number, ageToFlag: number) => {
+    const allNo: boolean = fields.every(field => field === 'No');
+    if (allNo && patientAge >= ageToFlag) {
+      return 'bg-red-200';
+    } else {
+      return '';
+    }
+  };
+
+  const malePubertyFieldsHighlight = highlightPubertyFields([vital.voice_change, vital.pubarche], age.year, 14);
+  const femalePubertyFieldsHighlight = highlightPubertyFields([vital.thelarche, vital.menarche], age.year, 13);
+
   const pubertyFields: VitalFieldsDataType[] = [
     {
       label: 'Pubarche',
       value: vital.pubarche,
       ageToTest: PUBERTY_AGES_12_19,
+      highlight: gender == 'Male' ? malePubertyFieldsHighlight : ''
     },
     {
       label: 'Pubarche Age',
-      value: vital.pubarche_age,
+      value: vital.pubarche_age == 'Yes' ? vital.pubarche_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_19,
+      highlight: gender == 'Male' ? malePubertyFieldsHighlight : ''
     },
     {
       label: 'Thelarche',
       value: vital.thelarche,
       ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
+      highlight: femalePubertyFieldsHighlight
     },
     {
       label: 'Thelarche Age',
-      value: vital.thelarche_age,
+      value: vital.thelarche == 'Yes' ? vital.thelarche_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
+      highlight: femalePubertyFieldsHighlight
     },
     {
       label: 'Menarche',
       value: vital.menarche,
       ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
+      highlight: femalePubertyFieldsHighlight
     },
     {
       label: 'Menarche Age',
-      value: vital.menarche_age,
+      value: vital.menarche == 'Yes' ? vital.thelarche_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
+      highlight: femalePubertyFieldsHighlight
     },
     {
       label: 'Voice Change',
       value: vital.voice_change,
       ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
+      highlight: malePubertyFieldsHighlight
     },
     {
       label: 'Voice Change Age',
-      value: vital.voice_change_age,
+      value: vital.voice_change_age == 'Yes' ? vital.voice_change_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
+      highlight: malePubertyFieldsHighlight
     },
     {
       label: 'Testicular Growth >= 4ml',
@@ -193,6 +221,7 @@ export function PastVitalTable({
       value: vital.testicular_growth_age,
       ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
+      
     },
   ];
 
