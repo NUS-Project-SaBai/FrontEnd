@@ -6,6 +6,7 @@ import {
 } from '@/components/records/vital/ChildVitalsFields';
 import { GenderType } from '@/types/Gender';
 import { displayBMI, isVisualAcuityPoor, Vital } from '@/types/Vital';
+import { HeightWeightGraph } from './HeightWeightGraph';
 
 type VitalFieldsDataType = {
   label: string;
@@ -197,48 +198,16 @@ export function PastVitalTable({
   ];
 
   return (
-    <div className="grid flex-1 gap-2 [grid-template-columns:repeat(auto-fit,minmax(175px,1fr))]">
-      <DisplayField label="Height" content={vital.height || '-'} />
-      <DisplayField label="Weight" content={vital.weight || '-'} />
-      <DisplayField
-        label="BMI"
-        content={displayBMI(vital.height, vital.weight)}
-      />
+    <>
+      <div className="grid flex-1 gap-2 [grid-template-columns:repeat(auto-fit,minmax(175px,1fr))]">
+        <DisplayField label="Height" content={vital.height || '-'} />
+        <DisplayField label="Weight" content={vital.weight || '-'} />
+        <DisplayField
+          label="BMI"
+          content={displayBMI(vital.height, vital.weight)}
+        />
 
-      {vitalFields.map((field, index) =>
-        field.label == '' ? (
-          <div key={index}></div>
-        ) : (
-          <DisplayField
-            key={field.label}
-            label={field.label}
-            content={field.value?.toString() || '-'}
-            highlight={field.highlight}
-          />
-        )
-      )}
-      <h2 className="col-span-full">Child Vital</h2>
-      {childrenVitalFields.map((field, index) =>
-        field.label == '' ? (
-          <div key={index}></div>
-        ) : (
-          <DisplayField
-            key={field.label}
-            label={field.label}
-            content={field.value?.toString() || '-'}
-            highlight={field.highlight}
-          />
-        )
-      )}
-      <h2 className="col-span-full">Puberty Fields</h2>
-      {pubertyFields
-        .filter(
-          fields =>
-            !fields.ageToTest ||
-            !fields.gender ||
-            (fields.gender == gender && fields.ageToTest.includes(age.year))
-        )
-        .map((field, index) =>
+        {vitalFields.map((field, index) =>
           field.label == '' ? (
             <div key={index}></div>
           ) : (
@@ -250,12 +219,59 @@ export function PastVitalTable({
             />
           )
         )}
-      <h2 className="col-span-full">Others</h2>
-      <DisplayField
-        key="Others"
-        content={vital.others?.toString() || '-'}
-        spanFull
-      />
-    </div>
+        <h2 className="col-span-full">Child Vital</h2>
+        {childrenVitalFields.map((field, index) =>
+          field.label == '' ? (
+            <div key={index}></div>
+          ) : (
+            <DisplayField
+              key={field.label}
+              label={field.label}
+              content={field.value?.toString() || '-'}
+              highlight={field.highlight}
+            />
+          )
+        )}
+
+
+        <h2 className="col-span-full">Puberty Fields</h2>
+        {pubertyFields
+          .filter(
+            fields =>
+              !fields.ageToTest ||
+              !fields.gender ||
+              (fields.gender == gender && fields.ageToTest.includes(age.year))
+          )
+          .map((field, index) =>
+            field.label == '' ? (
+              <div key={index}></div>
+            ) : (
+              <DisplayField
+                key={field.label}
+                label={field.label}
+                content={field.value?.toString() || '-'}
+                highlight={field.highlight}
+              />
+            )
+          )}
+        <h2 className="col-span-full">Others</h2>
+        <DisplayField
+          key="Others"
+          content={vital.others?.toString() || '-'}
+          spanFull
+        />
+      </div>
+      <h2>Growth Chart</h2>
+      {
+        age.year >= 2 && age.year <= 18 &&
+        <HeightWeightGraph age={age.year}
+          weight={parseFloat(vital.weight)}
+          height={parseFloat(vital.height)}
+          gender={gender} />
+
+      }
+
+    </>
+
   );
 }
