@@ -22,6 +22,7 @@ import {
 } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function RecordPage() {
   const {
@@ -48,12 +49,20 @@ export default function RecordPage() {
     resetOptions: { keepDirtyValues: true },
   });
 
+  // Move useDebouncedCallback outside of useEffect
+  const debouncedSetFormDetails = useDebouncedCallback(
+    (values: FieldValues) => {
+      setFormDetails(values);
+    },
+    500
+  );
+
   useEffect(() => {
     refreshPatientList();
     const unsub = useFormReturn.subscribe({
       formState: { values: true },
       callback: ({ values }) => {
-        setFormDetails(values);
+        debouncedSetFormDetails(values);
       },
     });
     return () => {
@@ -63,7 +72,10 @@ export default function RecordPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onPatientRegistrationFormSubmit = (event: FormEvent, closeModal: () => void) => {
+  const onPatientRegistrationFormSubmit = (
+    event: FormEvent,
+    closeModal: () => void
+  ) => {
     event.preventDefault();
     const formData = new FormData();
 
@@ -128,7 +140,7 @@ export default function RecordPage() {
         toast.success('Patient Created!');
         toast.success('New Visit Created!');
         refreshPatientList();
-        closeModal()
+        closeModal();
       }),
       // onInvalid
       () => {
