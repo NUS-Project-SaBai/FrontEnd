@@ -11,8 +11,8 @@ import { Vital } from '@/types/Vital';
 import { fetchPatientConsultationInfo } from './api';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { VisitDropdown } from '@/components/VisitDropdown';
-import { DateTime } from 'luxon';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { formatDate } from '@/utils/formatDate';
 
 export default async function PatientConsultationPage({
   searchParams,
@@ -40,12 +40,11 @@ export default async function PatientConsultationPage({
     return <h1>No Visit Found</h1>;
   }
 
-
   return (
-    <div className="min-h-screen bg-slate-50 py-6 ">
-      <div className="mx-4 max-w space-y-3">
+    <div className="min-h-screen bg-slate-50 py-6">
+      <div className="max-w mx-4 space-y-3">
         <h1>Patient Consultation</h1>
-        
+
         {/* Patient info */}
         <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
@@ -62,9 +61,7 @@ export default async function PatientConsultationPage({
                 Viewing consultation for visit on
               </p>
               <p className="mt-1 text-base font-semibold text-slate-900">
-                {DateTime.fromISO(visitDate.replace(" ", "T")).toLocaleString( // Luxon requires the T separator
-                  DateTime.DATETIME_MED
-                )}
+                {formatDate(visitDate.replace(' ', 'T'), 'datetime')}
               </p>
               <p className="mt-1 text-xs text-slate-500">
                 Select a different visit to compare historical consultations.
@@ -75,7 +72,10 @@ export default async function PatientConsultationPage({
               <VisitDropdown
                 name="visit"
                 visits={patientVisits}
-                placeholder={DateTime.fromISO(visitDate.replace(" ", "T")).toLocaleString(DateTime.DATE_MED)}
+                placeholder={formatDate(
+                  visitDate.replace(' ', 'T'),
+                  'datetime'
+                )}
                 className="w-full"
               />
             </div>

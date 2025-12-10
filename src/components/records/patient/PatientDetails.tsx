@@ -2,7 +2,7 @@ import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
 import { EditPatient } from '@/components/records/patient/EditPatient';
 import { getPatientAge, Patient } from '@/types/Patient';
-import { DateTime } from 'luxon';
+import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -25,9 +25,7 @@ export function PatientDetails({
     { label: 'Gender', value: patient.gender },
     {
       label: 'Date of Birth',
-      value: DateTime.fromISO(patient.date_of_birth).toLocaleString(
-        DateTime.DATE_MED
-      ),
+      value: formatDate(patient.date_of_birth, 'date'),
     },
     {
       label: 'Age',
