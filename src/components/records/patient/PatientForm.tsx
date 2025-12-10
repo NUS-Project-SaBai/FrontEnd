@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/Button';
 import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
-import { RHFDropdown } from '@/components/inputs/RHFDropdown';
+import { RHFCustomSelect } from '@/components/inputs/RHFCustomSelect';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { WebcamInput } from '@/components/inputs/WebcamInput';
 import { LoadingUI } from '@/components/LoadingUI';
@@ -43,7 +43,7 @@ export function PatientForm({
             type="text"
           />
           <RHFInputField name="contact_no" label="Contact Number" type="tel" />
-          <RHFDropdown
+          <RHFCustomSelect
             label="Gender"
             name="gender"
             options={genderDropdownOptions}

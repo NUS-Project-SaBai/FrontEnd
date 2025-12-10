@@ -85,7 +85,7 @@ export function RHFDropdown({
               />
             </SelectTrigger>
 
-            <SelectContent className="border bg-white text-gray-900">
+            <SelectContent className="border bg-white text-gray-900" position="popper">
               {options.map(({ value, label }) => (
                 <SelectItem key={value} value={value}>
                   {label}
