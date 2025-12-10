@@ -10,7 +10,7 @@ import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { getPatientAge } from '@/types/Patient';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
-import { EMPTY_VITAL } from '@/types/Vital';
+import { Vital } from '@/types/Vital';
 import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -40,9 +40,9 @@ export function PatientForm({
   ];
   const gender = watch('gender');
   const age = getPatientAge({ date_of_birth: watch('date_of_birth') }).year;
-  const gridStyle = "grid grid-cols-2 gap-4 pb-4 md:grid-cols-3";
-  const showChildVitals = age && ALL_CHILD_AGES.includes(age)
-  const Divider = () => <hr className="border-t-2 border-t-gray-300 my-2" />
+  const gridStyle = 'grid grid-cols-2 gap-4 pb-4 md:grid-cols-3';
+  const showChildVitals = age && ALL_CHILD_AGES.includes(age);
+  const Divider = () => <hr className="my-2 border-t-2 border-t-gray-300" />;
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -116,57 +116,59 @@ export function PatientForm({
             label="Drug Allergies"
             type="textarea"
             isRequired={true}
-            className='col-span-2'
+            className="col-span-2"
           />
         </div>
-        {!isEditing && (<div>
-          <Divider />
-          <h2>Vitals</h2>
-          <RHFUnitInputField
-            name="temperature"
-            label="Temperature"
-            unit="°C"
-            type="number"
-          />
-          <h2 className='mt-2'>Child Vitals</h2>
-          {showChildVitals ? (<div>
-            <div className={gridStyle}>
-              <RHFCustomSelect
-                name="scoliosis"
-                label="Scoliosis"
-                defaultValue={NAOption}
-                options={[
-                  { label: 'Normal', value: 'Normal' },
-                  { label: 'Abnormal', value: 'Abnormal' },
-                ]}
-                unselectedValue={NAOption}
-              />
-              <RHFCustomSelect
-                name="pallor"
-                label="Pallor"
-                defaultValue={NAOption}
-                options={[
-                  { label: 'Yes', value: 'Yes' },
-                  { label: 'No', value: 'No' },
-                ]}
-                unselectedValue={NAOption}
-              />
-            </div>
-            <ChildPubertySection
-              curVital={EMPTY_VITAL}
-              pubertyFields={allPubertyFields.filter(
-                field =>
-                  (field.gender == undefined || field.gender == gender) &&
-                  field.age.includes(age)
-              )}
+        {!isEditing && (
+          <div>
+            <Divider />
+            <h2>Vitals</h2>
+            <RHFUnitInputField
+              name="temperature"
+              label="Temperature"
+              unit="°C"
+              type="number"
             />
+            <h2 className="mt-2">Child Vitals</h2>
+            {showChildVitals ? (
+              <div>
+                <div className={gridStyle}>
+                  <RHFCustomSelect
+                    name="scoliosis"
+                    label="Scoliosis"
+                    defaultValue={NAOption}
+                    options={[
+                      { label: 'Normal', value: 'Normal' },
+                      { label: 'Abnormal', value: 'Abnormal' },
+                    ]}
+                    unselectedValue={NAOption}
+                  />
+                  <RHFCustomSelect
+                    name="pallor"
+                    label="Pallor"
+                    defaultValue={NAOption}
+                    options={[
+                      { label: 'Yes', value: 'Yes' },
+                      { label: 'No', value: 'No' },
+                    ]}
+                    unselectedValue={NAOption}
+                  />
+                </div>
+                <ChildPubertySection
+                  curVital={getValues() as Vital}
+                  pubertyFields={allPubertyFields.filter(
+                    field =>
+                      (field.gender == undefined || field.gender == gender) &&
+                      field.age.includes(age)
+                  )}
+                />
+              </div>
+            ) : (
+              <p className="w-full">
+                {age ? 'Not within child age range' : 'Age not specified'}
+              </p>
+            )}
           </div>
-          ) : (
-            <p className="w-full">
-              {age ? "Not within child age range" : "Age not specified"}
-            </p>
-          )}
-        </div>
         )}
         <Controller
           name={'picture'}
