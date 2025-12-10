@@ -51,14 +51,13 @@ export function RHFCustomSelect({
         }}
         defaultValue={defaultValue}
         render={({ field }) => {
-          // if (name === "gross_motor") console.log("current motor value in customSelect: ", field.value)
           return (
             <div className='flex flex-row flex-wrap gap-2'>
               {options.map(v => {
                 const currValOverride = watchedValue ?? defaultValue
                 function handleChange(v: string | number) {
-                  if (currValOverride === v) field.onChange(isRequired ? null : unselectedValue)
-                  else field.onChange(v)
+                  if (currValOverride === v && !isRequired) field.onChange(unselectedValue);
+                  else field.onChange(v);
                 }
                 const value = typeof v === "object" ? v.value : v
                 const label = typeof v === "object" ? v.label : v

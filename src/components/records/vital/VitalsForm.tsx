@@ -34,7 +34,7 @@ export function VitalsForm({
   // their values set to these new values via the defaultValue prop.
   useEffect(() => {
     reset({})
-  }, [curVital])
+  }, [curVital, reset])
 
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).

@@ -1,6 +1,6 @@
 import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
 import { RHFCustomSelect } from '@/components/inputs/RHFCustomSelect';
-import { OptionData, RHFDropdown } from '@/components/inputs/RHFDropdown';
+import { OptionData } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { GenderType } from '@/types/Gender';
 import { getPatientAge, Patient } from '@/types/Patient';
@@ -307,6 +307,7 @@ function VitalFieldRenderer({
       return (
         <RHFBinaryOption
           defaultValue={curVital[field.name]?.toString()}
+          isRequired={false}
           {...field}
         />
       );
