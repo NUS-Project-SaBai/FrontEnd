@@ -19,6 +19,7 @@ import {
   allPubertyFields,
   ChildPubertySection,
 } from '../vital/ChildVitalsFields';
+import { NAOption } from '@/constants';
 
 export function PatientForm({
   onSubmit,
@@ -37,10 +38,13 @@ export function PatientForm({
   ];
   const gender = watch('gender');
   const age = getPatientAge({ date_of_birth: watch('date_of_birth') }).year;
+  const gridStyle = "grid grid-cols-2 gap-4 pb-4 md:grid-cols-3";
+  const showChildVitals = age && ALL_CHILD_AGES.includes(age)
+  const Divider = () => <hr className="border-t-2 border-t-gray-300 my-2" />
   return (
     <>
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-2 gap-4 py-5 md:grid-cols-3">
+        <div className={gridStyle}>
           <RHFInputField
             name="name"
             label="Name (english + local if possible)"
@@ -105,54 +109,58 @@ export function PatientForm({
             name="to_get_report"
             defaultValue={getValues('to_get_report') || 'No'}
           />
-          <RHFUnitInputField
-            name="temperature"
-            label="Temperature"
-            unit="°C"
-            type="number"
-          />
           <RHFInputField
             name="drug_allergy"
             label="Drug Allergies"
             type="textarea"
             isRequired={true}
+            className='col-span-2'
           />
         </div>
-
-        <hr className="border-t-2 border-t-gray-300 py-3" />
-        <div className="grid grid-cols-2 pb-4 md:grid-cols-3"></div>
-        {age && ALL_CHILD_AGES.includes(age) ? (
-          <>
-            <RHFDropdown
+        <Divider/>
+        <h2>Vitals</h2>
+        <RHFUnitInputField
+          name="temperature"
+          label="Temperature"
+          unit="°C"
+          type="number"
+        />
+        <h2 className='mt-2'>Child Vitals</h2>
+        {showChildVitals ? (<div>
+          <div className={gridStyle}>
+            <RHFCustomSelect
               name="scoliosis"
-              label="Spine"
-              defaultValue="Normal"
+              label="Scoliosis"
+              defaultValue={NAOption}
               options={[
                 { label: 'Normal', value: 'Normal' },
                 { label: 'Abnormal', value: 'Abnormal' },
               ]}
+              unselectedValue={NAOption}
             />
-            <RHFDropdown
+            <RHFCustomSelect
               name="pallor"
               label="Pallor"
-              defaultValue="No"
+              defaultValue={NAOption}
               options={[
                 { label: 'Yes', value: 'Yes' },
                 { label: 'No', value: 'No' },
               ]}
+              unselectedValue={NAOption}
             />
-            <ChildPubertySection
-              curVital={EMPTY_VITAL}
-              pubertyFields={allPubertyFields.filter(
-                field =>
-                  (field.gender == undefined || field.gender == gender) &&
-                  field.age.includes(age)
-              )}
-            />
-          </>
+          </div>
+          <ChildPubertySection
+            curVital={EMPTY_VITAL}
+            pubertyFields={allPubertyFields.filter(
+              field =>
+                (field.gender == undefined || field.gender == gender) &&
+                field.age.includes(age)
+            )}
+          />
+        </div>
         ) : (
-          <p className="w-full p-2 font-semibold text-gray-600">
-            No child section
+          <p className="w-full">
+            {age ? "Not within child age range" : "Age not specified"}
           </p>
         )}
         <Controller
