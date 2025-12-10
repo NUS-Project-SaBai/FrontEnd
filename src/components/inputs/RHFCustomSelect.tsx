@@ -1,5 +1,6 @@
 'use client';
 
+import { NAOption } from '@/constants';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -22,25 +23,30 @@ export function RHFCustomSelect({
   options,
   defaultValue,
   isRequired = false,
-  unselectedValue,
+  unselectedValue = NAOption,
   className = '',
   optionClassName = ''
 }: RHFCustomSelectProps) {
   const {
     control,
     setValue,
-    formState: { errors, isSubmitted }
+    formState: { errors, isSubmitted },
+    watch
   } = useFormContext();
 
   // keep in sync if defaultValue prop changes
-  useEffect(() => {
-    if (defaultValue !== undefined)
-      setValue(name, defaultValue, { shouldValidate: true });
-  }, [defaultValue, name, setValue]);
+  // useEffect(() => {
+  //   if (defaultValue !== undefined)
+  //     setValue(name, defaultValue, { shouldValidate: true });
+  // }, [defaultValue, name, setValue]);
 
   const hasError = Boolean(errors[name] && isSubmitted);
   const errorMessage = (errors[name]?.message as string) || '';
-
+  const watchedValue = watch(name)
+  // if (name === "gross_motor") {
+  //   console.log("defaultValue in customSelect: ", defaultValue)
+  //   console.log("watch gross motor in customselect", watchedValue)
+  // }
   return (
     <div className={className}>
       <label htmlFor={name} className="mb-1 block text-sm font-medium">
@@ -56,11 +62,13 @@ export function RHFCustomSelect({
         }}
         defaultValue={defaultValue}
         render={({ field }) => {
+          // if (name === "gross_motor") console.log("current motor value in customSelect: ", field.value)
           return (
             <div className='flex flex-row flex-wrap gap-2'>
               {options.map(v => {
+                const currValOverride = watchedValue ?? defaultValue
                 function handleChange(v: string | number) {
-                  if (field.value === v) field.onChange(isRequired ? null : unselectedValue)
+                  if (currValOverride === v) field.onChange(isRequired ? null : unselectedValue)
                   else field.onChange(v)
                 }
                 const value = typeof v === "object" ? v.value : v
@@ -70,7 +78,7 @@ export function RHFCustomSelect({
                   value={value}
                   label={label}
                   className={optionClassName}
-                  selected={field.value === value}
+                  selected={currValOverride === value}
                   onChange={handleChange}
                 />
               }

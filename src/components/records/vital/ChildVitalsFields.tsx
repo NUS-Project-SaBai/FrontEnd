@@ -1,4 +1,5 @@
 import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
+import { RHFCustomSelect } from '@/components/inputs/RHFCustomSelect';
 import { OptionData, RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { GenderType } from '@/types/Gender';
@@ -58,7 +59,7 @@ const allChildVitalsFields: InputFieldData[] = [
     label: 'Scoliosis',
     type: 'dropdown',
     age: ALL_CHILD_AGES,
-    defaultValue: 'Normal',
+    // defaultValue: 'Normal',
     options: [
       { label: 'Normal', value: 'Normal' },
       { label: 'Abnormal', value: 'Abnormal' },
@@ -68,7 +69,7 @@ const allChildVitalsFields: InputFieldData[] = [
     name: 'pallor',
     label: 'Pallor',
     type: 'dropdown',
-    defaultValue: 'No',
+    // defaultValue: 'No',
     age: ALL_CHILD_AGES,
     options: [
       { label: 'Yes', value: 'Yes' },
@@ -185,6 +186,7 @@ export function ChildVitalsFields({
   patient: Pick<Patient, 'date_of_birth' | 'gender'>;
   curVital: Vital;
 }) {
+  // console.log("ChildVitalsFields gross_motor curVital value: ", curVital.gross_motor)
   const patientYearsOld = getPatientAge(patient).year;
 
   const childVitalsFields = useMemo(
@@ -282,10 +284,11 @@ function VitalFieldRenderer({
   field: InputFieldData;
   curVital: Vital;
 }) {
+  // if (field.name === "gross_motor") console.log("VitalFieldRenderer motor: ", curVital[field.name]?.toString())
   switch (field.type) {
     case 'dropdown':
       return (
-        <RHFDropdown
+        <RHFCustomSelect
           defaultValue={curVital[field.name]?.toString()}
           {...field}
         />

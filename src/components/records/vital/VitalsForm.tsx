@@ -9,7 +9,7 @@ import { ChildVitalsFields } from '@/components/records/vital/ChildVitalsFields'
 import { patchVital } from '@/data/vital/patchVital';
 import { Patient } from '@/types/Patient';
 import { displayBMI, Vital } from '@/types/Vital';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { NAOption } from '@/constants';
@@ -27,6 +27,14 @@ export function VitalsForm({
   const useFormReturn = useForm();
   const { handleSubmit, reset, watch } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
+
+  // const [motor] = watch (['gross_motor'])
+  // console.log("gross_motor",motor)
+
+  useEffect(() => {
+    reset({})
+    console.log("form useeffect reset")
+  }, [curVital])
 
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).
@@ -49,7 +57,8 @@ export function VitalsForm({
         patchVital(data as Vital).then(() => {
           // super jank because idh time to figure out why RHF keeps resetting this to the wrong value, 
           // and how it interacts with the default value given later
-          reset({ diabetes_mellitus: data.diabetes_mellitus });
+          // reset({ diabetes_mellitus: data.diabetes_mellitus });
+          console.log("RESETTED")
           toast.success('Updated Vital');
         });
       },
