@@ -17,7 +17,6 @@ export default async function PatientVitalPage({
 }: {
   searchParams: Promise<{ id: string; visit: string }>;
 }) {
-  console.log("WHY IS THIS COMPONENT RERENDERING")
   const { id: patientId, visit: visitId } = await searchParams;
   if (visitId == undefined) {
     return (
@@ -40,7 +39,6 @@ export default async function PatientVitalPage({
       date: visit == null ? new Date() : new Date(visit.date),
     })),
   ]);
-  // console.log("SERVER COMPONENT GROSS MOTOR: ", curVital.gross_motor)
   if (!patient) {
     return (
       <div className="p-2">

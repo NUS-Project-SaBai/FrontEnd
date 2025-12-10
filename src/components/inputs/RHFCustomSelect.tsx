@@ -1,6 +1,7 @@
 'use client';
 
 import { NAOption } from '@/constants';
+import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 export type OptionData = { value: string | number; label: string } | string;
@@ -29,12 +30,21 @@ export function RHFCustomSelect({
   const {
     control,
     formState: { errors, isSubmitted },
-    watch
+    watch,
+    setValue
   } = useFormContext();
 
   const hasError = Boolean(errors[name] && isSubmitted);
   const errorMessage = (errors[name]?.message as string) || '';
   const watchedValue = watch(name)
+
+  // fix issue where after submitting the registration form, the form values are reset;
+  // but because the default values are set at field level (instead of during the useForm call),
+  // calling reset with keepDefaultValues does not actually preserve the default values
+  // TODO: possibly define all the form fields at the useForm level instead.
+  useEffect(() => {
+    if (defaultValue && !watchedValue) setValue(name, defaultValue)
+  },[defaultValue])
 
   return (
     <div className={className}>

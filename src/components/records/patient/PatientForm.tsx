@@ -33,7 +33,7 @@ export function PatientForm({
   isEditing?: boolean;
 }) {
   const { village } = useContext(VillageContext);
-  const { control, formState, getValues, watch } = useFormContext();
+  const { control, formState, watch } = useFormContext();
   const genderDropdownOptions = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
@@ -63,7 +63,7 @@ export function PatientForm({
             label="Gender"
             name="gender"
             options={genderDropdownOptions}
-            defaultValue={getValues('gender') || ''}
+            defaultValue={undefined}
             isRequired={true}
           />
           <RHFInputField
@@ -94,22 +94,22 @@ export function PatientForm({
           <RHFBinaryOption
             label="POOR Card"
             name="poor"
-            defaultValue={getValues('poor') || 'No'}
+            defaultValue={'No'}
           />
           <RHFBinaryOption
             label="BS2 Card"
             name="bs2"
-            defaultValue={getValues('bs2') || 'No'}
+            defaultValue={'No'}
           />
           <RHFBinaryOption
             label="Sabai Card"
             name="sabai"
-            defaultValue={getValues('sabai') || 'No'}
+            defaultValue={'No'}
           />
           <RHFBinaryOption
             label="Receive Reports"
             name="to_get_report"
-            defaultValue={getValues('to_get_report') || 'No'}
+            defaultValue={'No'}
           />
           <RHFInputField
             name="drug_allergy"
