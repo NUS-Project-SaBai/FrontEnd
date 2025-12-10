@@ -25,10 +25,12 @@ export function PatientForm({
   onSubmit,
   isSubmitting = false,
   closeForm = undefined,
+  isEditing = false,
 }: {
   onSubmit: FormEventHandler<HTMLFormElement>;
   isSubmitting?: boolean;
   closeForm?: () => void;
+  isEditing?: boolean;
 }) {
   const { village } = useContext(VillageContext);
   const { control, formState, getValues, watch } = useFormContext();
@@ -117,51 +119,54 @@ export function PatientForm({
             className='col-span-2'
           />
         </div>
-        <Divider/>
-        <h2>Vitals</h2>
-        <RHFUnitInputField
-          name="temperature"
-          label="Temperature"
-          unit="°C"
-          type="number"
-        />
-        <h2 className='mt-2'>Child Vitals</h2>
-        {showChildVitals ? (<div>
-          <div className={gridStyle}>
-            <RHFCustomSelect
-              name="scoliosis"
-              label="Scoliosis"
-              defaultValue={NAOption}
-              options={[
-                { label: 'Normal', value: 'Normal' },
-                { label: 'Abnormal', value: 'Abnormal' },
-              ]}
-              unselectedValue={NAOption}
-            />
-            <RHFCustomSelect
-              name="pallor"
-              label="Pallor"
-              defaultValue={NAOption}
-              options={[
-                { label: 'Yes', value: 'Yes' },
-                { label: 'No', value: 'No' },
-              ]}
-              unselectedValue={NAOption}
+        {!isEditing && (<div>
+          <Divider />
+          <h2>Vitals</h2>
+          <RHFUnitInputField
+            name="temperature"
+            label="Temperature"
+            unit="°C"
+            type="number"
+          />
+          <h2 className='mt-2'>Child Vitals</h2>
+          {showChildVitals ? (<div>
+            <div className={gridStyle}>
+              <RHFCustomSelect
+                name="scoliosis"
+                label="Scoliosis"
+                defaultValue={NAOption}
+                options={[
+                  { label: 'Normal', value: 'Normal' },
+                  { label: 'Abnormal', value: 'Abnormal' },
+                ]}
+                unselectedValue={NAOption}
+              />
+              <RHFCustomSelect
+                name="pallor"
+                label="Pallor"
+                defaultValue={NAOption}
+                options={[
+                  { label: 'Yes', value: 'Yes' },
+                  { label: 'No', value: 'No' },
+                ]}
+                unselectedValue={NAOption}
+              />
+            </div>
+            <ChildPubertySection
+              curVital={EMPTY_VITAL}
+              pubertyFields={allPubertyFields.filter(
+                field =>
+                  (field.gender == undefined || field.gender == gender) &&
+                  field.age.includes(age)
+              )}
             />
           </div>
-          <ChildPubertySection
-            curVital={EMPTY_VITAL}
-            pubertyFields={allPubertyFields.filter(
-              field =>
-                (field.gender == undefined || field.gender == gender) &&
-                field.age.includes(age)
-            )}
-          />
+          ) : (
+            <p className="w-full">
+              {age ? "Not within child age range" : "Age not specified"}
+            </p>
+          )}
         </div>
-        ) : (
-          <p className="w-full">
-            {age ? "Not within child age range" : "Age not specified"}
-          </p>
         )}
         <Controller
           name={'picture'}
