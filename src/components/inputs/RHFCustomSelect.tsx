@@ -44,7 +44,7 @@ export function RHFCustomSelect({
   // TODO: possibly define all the form fields at the useForm level instead.
   useEffect(() => {
     if (defaultValue && !watchedValue) setValue(name, defaultValue)
-  },[defaultValue])
+  },[defaultValue, watchedValue, setValue, name])
 
   return (
     <div className={className}>
