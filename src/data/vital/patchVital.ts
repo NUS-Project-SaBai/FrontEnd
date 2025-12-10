@@ -4,6 +4,7 @@ import { axiosInstance } from '@/lib/axiosInstance';
 import { Vital } from '@/types/Vital';
 
 export async function patchVital(vital: Vital) {
+  console.log("patchvital")
   // remove empty fields to reduce data sent
   const jsonPayload = Object.fromEntries(
     Object.entries(vital).filter(([, v]) => v != undefined && v != '')

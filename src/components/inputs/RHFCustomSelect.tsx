@@ -1,5 +1,6 @@
 'use client';
 
+import { NAOption } from '@/constants';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -22,24 +23,28 @@ export function RHFCustomSelect({
   options,
   defaultValue,
   isRequired = false,
-  unselectedValue,
+  unselectedValue = NAOption,
   className = '',
   optionClassName = ''
 }: RHFCustomSelectProps) {
   const {
     control,
-    setValue,
-    formState: { errors, isSubmitted }
+    formState: { errors, isSubmitted },
+    watch,
+    setValue
   } = useFormContext();
-
-  // keep in sync if defaultValue prop changes
-  useEffect(() => {
-    if (defaultValue !== undefined)
-      setValue(name, defaultValue, { shouldValidate: true });
-  }, [defaultValue, name, setValue]);
 
   const hasError = Boolean(errors[name] && isSubmitted);
   const errorMessage = (errors[name]?.message as string) || '';
+  const watchedValue = watch(name)
+
+  // fix issue where after submitting the registration form, the form values are reset;
+  // but because the default values are set at field level (instead of during the useForm call),
+  // calling reset with keepDefaultValues does not actually preserve the default values
+  // TODO: possibly define all the form fields at the useForm level instead.
+  useEffect(() => {
+    if (defaultValue && !watchedValue) setValue(name, defaultValue)
+  },[defaultValue, watchedValue, setValue, name])
 
   return (
     <div className={className}>
@@ -59,9 +64,10 @@ export function RHFCustomSelect({
           return (
             <div className='flex flex-row flex-wrap gap-2'>
               {options.map(v => {
+                const currValOverride = watchedValue ?? defaultValue
                 function handleChange(v: string | number) {
-                  if (field.value === v) field.onChange(isRequired ? null : unselectedValue)
-                  else field.onChange(v)
+                  if (currValOverride === v && !isRequired) field.onChange(unselectedValue);
+                  else field.onChange(v);
                 }
                 const value = typeof v === "object" ? v.value : v
                 const label = typeof v === "object" ? v.label : v
@@ -70,7 +76,7 @@ export function RHFCustomSelect({
                   value={value}
                   label={label}
                   className={optionClassName}
-                  selected={field.value === value}
+                  selected={currValOverride === value}
                   onChange={handleChange}
                 />
               }
