@@ -95,7 +95,7 @@ export default function RecordPage() {
 
         const pubertyData = allPubertyFields.reduce(
           (acc, field) => {
-            const key = field.name;
+            const key = field[0].name;
             const value = fieldValues[key];
 
             if (value !== undefined && value !== '') {

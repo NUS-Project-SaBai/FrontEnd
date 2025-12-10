@@ -130,7 +130,8 @@ export function PatientForm({
           />
           <h2 className='mt-2'>Child Vitals</h2>
           {showChildVitals ? (<div>
-            <div className={gridStyle}>
+            {/* <div className={gridStyle}> */}
+            <div className="flex flex-row gap-6">
               <RHFCustomSelect
                 name="scoliosis"
                 label="Scoliosis"
@@ -156,8 +157,8 @@ export function PatientForm({
               curVital={EMPTY_VITAL}
               pubertyFields={allPubertyFields.filter(
                 field =>
-                  (field.gender == undefined || field.gender == gender) &&
-                  field.age.includes(age)
+                  (field[0].gender == undefined || field[0].gender == gender) &&
+                  field[0].age.includes(age)
               )}
             />
           </div>
