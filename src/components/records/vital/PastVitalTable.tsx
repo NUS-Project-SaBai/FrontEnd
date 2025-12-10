@@ -6,6 +6,7 @@ import {
 } from '@/components/records/vital/ChildVitalsFields';
 import { GenderType } from '@/types/Gender';
 import { displayBMI, isVisualAcuityPoor, Vital } from '@/types/Vital';
+import { HeightWeightGraph } from './HeightWeightGraph';
 
 type VitalFieldsDataType = {
   label: string;
@@ -102,11 +103,19 @@ export function PastVitalTable({
       label: 'Scoliosis',
       value: vital.scoliosis,
       ageToTest: ALL_CHILD_AGES,
+      highlight:
+        vital.scoliosis == 'Abnormal'
+          ? 'bg-red-200'
+          : ''
     },
     {
       label: 'Pallor',
       value: vital.pallor,
       ageToTest: ALL_CHILD_AGES,
+      highlight:
+        vital.pallor == 'Yes'
+          ? 'bg-red-200'
+          : ''
     },
     {
       label: 'Oral Cavity',
@@ -135,52 +144,72 @@ export function PastVitalTable({
     },
   ];
 
+  const highlightPubertyFields = (fields: string[], patientAge: number, ageToFlag: number) => {
+    const allNo: boolean = fields.every(field => field === 'No');
+    if (allNo && patientAge >= ageToFlag) {
+      return 'bg-red-200';
+    } else {
+      return '';
+    }
+  };
+
+  const malePubertyFieldsHighlight = highlightPubertyFields([vital.voice_change, vital.pubarche], age.year, 14);
+  const femalePubertyFieldsHighlight = highlightPubertyFields([vital.thelarche, vital.menarche], age.year, 13);
+
   const pubertyFields: VitalFieldsDataType[] = [
     {
       label: 'Pubarche',
       value: vital.pubarche,
       ageToTest: PUBERTY_AGES_12_19,
+      highlight: gender == 'Male' ? malePubertyFieldsHighlight : ''
     },
     {
       label: 'Pubarche Age',
-      value: vital.pubarche_age,
+      value: vital.pubarche == 'Yes' ? vital.pubarche_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_19,
+      highlight: gender == 'Male' ? malePubertyFieldsHighlight : ''
     },
     {
       label: 'Thelarche',
       value: vital.thelarche,
       ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
+      highlight: femalePubertyFieldsHighlight
     },
     {
       label: 'Thelarche Age',
-      value: vital.thelarche_age,
+      value: vital.thelarche == 'Yes' ? vital.thelarche_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
+      highlight: femalePubertyFieldsHighlight
     },
     {
       label: 'Menarche',
       value: vital.menarche,
       ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
+      highlight: femalePubertyFieldsHighlight
     },
     {
       label: 'Menarche Age',
-      value: vital.menarche_age,
+      value: vital.menarche == 'Yes' ? vital.thelarche_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
+      highlight: femalePubertyFieldsHighlight
     },
     {
       label: 'Voice Change',
       value: vital.voice_change,
       ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
+      highlight: malePubertyFieldsHighlight
     },
     {
       label: 'Voice Change Age',
-      value: vital.voice_change_age,
+      value: vital.voice_change_age == 'Yes' ? vital.voice_change_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
+      highlight: malePubertyFieldsHighlight
     },
     {
       label: 'Testicular Growth >= 4ml',
@@ -193,52 +222,21 @@ export function PastVitalTable({
       value: vital.testicular_growth_age,
       ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
+      
     },
   ];
 
   return (
-    <div className="grid flex-1 gap-2 [grid-template-columns:repeat(auto-fit,minmax(175px,1fr))]">
-      <DisplayField label="Height" content={vital.height || '-'} />
-      <DisplayField label="Weight" content={vital.weight || '-'} />
-      <DisplayField
-        label="BMI"
-        content={displayBMI(vital.height, vital.weight)}
-      />
+    <>
+      <div className="grid flex-1 gap-2 [grid-template-columns:repeat(auto-fit,minmax(175px,1fr))]">
+        <DisplayField label="Height" content={vital.height || '-'} />
+        <DisplayField label="Weight" content={vital.weight || '-'} />
+        <DisplayField
+          label="BMI"
+          content={displayBMI(vital.height, vital.weight)}
+        />
 
-      {vitalFields.map((field, index) =>
-        field.label == '' ? (
-          <div key={index}></div>
-        ) : (
-          <DisplayField
-            key={field.label}
-            label={field.label}
-            content={field.value?.toString() || '-'}
-            highlight={field.highlight}
-          />
-        )
-      )}
-      <h2 className="col-span-full">Child Vital</h2>
-      {childrenVitalFields.map((field, index) =>
-        field.label == '' ? (
-          <div key={index}></div>
-        ) : (
-          <DisplayField
-            key={field.label}
-            label={field.label}
-            content={field.value?.toString() || '-'}
-            highlight={field.highlight}
-          />
-        )
-      )}
-      <h2 className="col-span-full">Puberty Fields</h2>
-      {pubertyFields
-        .filter(
-          fields =>
-            !fields.ageToTest ||
-            !fields.gender ||
-            (fields.gender == gender && fields.ageToTest.includes(age.year))
-        )
-        .map((field, index) =>
+        {vitalFields.map((field, index) =>
           field.label == '' ? (
             <div key={index}></div>
           ) : (
@@ -250,12 +248,59 @@ export function PastVitalTable({
             />
           )
         )}
-      <h2 className="col-span-full">Others</h2>
-      <DisplayField
-        key="Others"
-        content={vital.others?.toString() || '-'}
-        spanFull
-      />
-    </div>
+        <h2 className="col-span-full">Child Vital</h2>
+        {childrenVitalFields.map((field, index) =>
+          field.label == '' ? (
+            <div key={index}></div>
+          ) : (
+            <DisplayField
+              key={field.label}
+              label={field.label}
+              content={field.value?.toString() || '-'}
+              highlight={field.highlight}
+            />
+          )
+        )}
+
+
+        <h2 className="col-span-full">Puberty Fields</h2>
+        {pubertyFields
+          .filter(
+            fields =>
+              !fields.ageToTest ||
+              !fields.gender ||
+              (fields.gender == gender && fields.ageToTest.includes(age.year))
+          )
+          .map((field, index) =>
+            field.label == '' ? (
+              <div key={index}></div>
+            ) : (
+              <DisplayField
+                key={field.label}
+                label={field.label}
+                content={field.value?.toString() || '-'}
+                highlight={field.highlight}
+              />
+            )
+          )}
+        <h2 className="col-span-full">Others</h2>
+        <DisplayField
+          key="Others"
+          content={vital.others?.toString() || '-'}
+          spanFull
+        />
+      </div>
+      <h2>Growth Chart</h2>
+      {
+        age.year >= 2 && age.year <= 18 &&
+        <HeightWeightGraph age={age.year}
+          weight={parseFloat(vital.weight)}
+          height={parseFloat(vital.height)}
+          gender={gender} />
+
+      }
+
+    </>
+
   );
 }

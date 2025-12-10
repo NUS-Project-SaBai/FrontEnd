@@ -414,10 +414,6 @@ export function ConsultationForm({
                 label: 'AdvancedVision [Within clinic]',
               },
               {
-                value: 'GlassesFitting',
-                label: 'GlassesFitting [Within clinic]',
-              },
-              {
                 value: 'Others',
                 label: 'Others',
               },
