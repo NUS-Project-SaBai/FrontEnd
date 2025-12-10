@@ -173,7 +173,7 @@ export function ConsultationForm({
                 v == undefined
                   ? []
                   : v.map((order: ConsultMedicationOrder) => ({
-                      medicine: order.medication.split(' ', 1)[0],
+                      medicine: order.medicationId,
                       quantity: order.quantity,
                       notes: order.notes,
                     }));

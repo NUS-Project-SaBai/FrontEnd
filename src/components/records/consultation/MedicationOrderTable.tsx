@@ -8,7 +8,7 @@ export function MedicationOrderTable({
   isEditable = true,
 }: {
   consultOrders: ConsultMedicationOrder[];
-  editConsultOrder: (order: ConsultMedicationOrder) => void;
+  editConsultOrder: (order: ConsultMedicationOrder, index: number) => void;
   deleteConsultOrder: (order: ConsultMedicationOrder) => void;
   isEditable: boolean;
 }) {
@@ -26,7 +26,8 @@ export function MedicationOrderTable({
           {consultOrders.map((order, index) => (
             <MedicationOrderRow
               key={index}
-              consultOrder={{ ...order, index: index }}
+              consultOrder={order}
+              orderIndex={index}
               editConsultOrder={editConsultOrder}
               deleteConsultOrder={deleteConsultOrder}
               isEditable={isEditable}
@@ -47,22 +48,20 @@ export function MedicationOrderTable({
 
 function MedicationOrderRow({
   consultOrder,
+  orderIndex,
   editConsultOrder,
   deleteConsultOrder,
   isEditable,
 }: {
   consultOrder: ConsultMedicationOrder;
-  editConsultOrder: (order: ConsultMedicationOrder) => void;
+  orderIndex: number;
+  editConsultOrder: (order: ConsultMedicationOrder, index: number) => void;
   deleteConsultOrder: (order: ConsultMedicationOrder) => void;
   isEditable: boolean;
 }) {
   return (
     <tr className="bg-white">
-      <td>
-        {consultOrder.medication.slice(
-          consultOrder.medication.indexOf(' ') + 1
-        )}
-      </td>
+      <td>{consultOrder.medicationName}</td>
       <td>{consultOrder.quantity}</td>
       <td>
         {isEditable && (
@@ -70,12 +69,7 @@ function MedicationOrderRow({
             <Button
               text="Edit"
               colour="blue"
-              onClick={() =>
-                editConsultOrder({
-                  ...consultOrder,
-                  quantity: consultOrder.quantity || 0,
-                })
-              } // Ensure quantity is a number
+              onClick={() => editConsultOrder(consultOrder, orderIndex)}
             />
             <Button
               text="Delete"

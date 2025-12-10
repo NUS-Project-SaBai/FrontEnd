@@ -5,23 +5,36 @@ import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
+import {
+  createOrder,
+  findMedicationById,
+  hasDuplicateOrder,
+} from '@/components/records/consultation/utils/medicationOrderLogic';
+import {
+  getInStockQuantityColour,
+  getInStockQuantityText,
+} from '@/components/records/consultation/utils/medicationUtils';
 import { getMedication } from '@/data/medication/getMedications';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Medication } from '@/types/Medication';
 import { Patient } from '@/types/Patient';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 export function MedicationOrderForm({
+  isFormOpen,
   selectedOrder,
+  orderIndex,
   setOrder,
   orderList,
   closeForm,
   patient,
 }: {
+  isFormOpen: boolean;
   selectedOrder: ConsultMedicationOrder | null;
+  orderIndex?: number;
   setOrder: (value: ConsultMedicationOrder[]) => void;
   orderList: ConsultMedicationOrder[] | undefined;
   closeForm: () => void;
@@ -31,8 +44,12 @@ export function MedicationOrderForm({
   const useFormReturn = useForm({
     values:
       selectedOrder == null
-        ? { index: undefined, medication: '', quantity: undefined, notes: '' }
-        : selectedOrder,
+        ? { medication: '', quantity: 0, notes: '' }
+        : {
+            medication: selectedOrder.medicationId.toString(),
+            quantity: selectedOrder.quantity,
+            notes: selectedOrder.notes,
+          },
   });
   const { isLoading, withLoading } = useLoadingState(false);
 
@@ -40,52 +57,17 @@ export function MedicationOrderForm({
     withLoading(async () => getMedication().then(setMedications))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOrder]);
+  const sortedMedications = useMemo(
+    () =>
+      [...medications].sort((a, b) =>
+        a.medicine_name.localeCompare(b.medicine_name)
+      ),
+    [medications]
+  );
 
-  const getInStockQuantityColour = (
-    medication: Medication | null
-  ): 'bg-red-200' | 'bg-amber-200' | 'bg-green-200' | '' => {
-    if (medication == null) {
-      return ''; // leave as grey
-    }
+  const selectedMedicationId = useFormReturn.watch('medication');
 
-    if (
-      medication.warning_quantity == null ||
-      medication.quantity >= medication.warning_quantity
-    ) {
-      return 'bg-green-200'; // highlight as green
-    }
-
-    if (medication.quantity < medication.warning_quantity) {
-      return 'bg-red-200'; // highlight as red
-    }
-
-    return '';
-  };
-
-  const getInStockQuantityText = (medication: Medication | null): string => {
-    if (medication == null) {
-      return '-';
-    }
-
-    if (
-      medication.warning_quantity == null ||
-      medication.quantity >= medication.warning_quantity
-    ) {
-      return medication.quantity.toString();
-    }
-
-    if (medication.quantity < medication.warning_quantity) {
-      return medication.quantity.toString() + ' (Low Quantity)';
-    }
-
-    return '-';
-  };
-
-  const selectedMedicationId =
-    useFormReturn.watch('medication').split(' ', 1)[0] || '';
-
-  //find the medicine selected (code to find is being repeated many times, can consider
-  //replacing with this const if safe)
+  // Find the selected medication once and reuse it
   const selectedMedication =
     medications.find(med => med.id.toString() === selectedMedicationId) || null;
 
@@ -93,30 +75,44 @@ export function MedicationOrderForm({
   const quantityInputByUser = useFormReturn.watch('quantity');
   const exceedsStockNow =
     selectedMedication != null &&
-    !Number.isNaN(quantityInputByUser) &&
-    Number(quantityInputByUser) > selectedMedication.quantity;
+    quantityInputByUser > selectedMedication.quantity;
 
   const onOrderSubmit: FormEventHandler = e => {
     e.preventDefault();
     e.stopPropagation();
     useFormReturn.handleSubmit(
       data => {
-        const order = {
-          index: selectedOrder?.index,
-          medication: data.medication, // id & name of the medication
-          quantity: data.quantity || 0,
-          notes: data.notes,
-        };
-
-        // check if the order is already in the list, if it is then update it, else append.
-        orderList = orderList || [];
-        if (selectedOrder?.index == undefined) {
-          setOrder([...orderList, order]);
-        } else {
-          const tmp = [...orderList];
-          tmp[selectedOrder.index] = order;
-          setOrder(tmp);
+        const medication = findMedicationById(
+          medications,
+          parseInt(data.medication, 10)
+        );
+        if (!medication) {
+          toast.error('Invalid medication selected');
+          return;
         }
+
+        const order = createOrder(medication, data);
+        const currentOrders = orderList || [];
+        const isEditing = selectedOrder !== null && orderIndex !== undefined;
+
+        if (isEditing) {
+          if (
+            hasDuplicateOrder(currentOrders, order.medicationId, orderIndex)
+          ) {
+            toast.error('Medication already ordered. Please edit that order.');
+            return;
+          }
+          const updated = [...currentOrders];
+          updated[orderIndex] = order;
+          setOrder(updated);
+        } else {
+          if (hasDuplicateOrder(currentOrders, order.medicationId)) {
+            toast.error('Medication already ordered. Please edit the order.');
+            return;
+          }
+          setOrder([...currentOrders, order]);
+        }
+
         useFormReturn.reset();
         closeForm();
       },
@@ -128,7 +124,7 @@ export function MedicationOrderForm({
 
   return (
     <Modal
-      isOpen={selectedOrder != null}
+      isOpen={isFormOpen}
       onRequestClose={closeForm}
       ariaHideApp={false}
       title="Order"
@@ -151,14 +147,17 @@ export function MedicationOrderForm({
               <RHFDropdown
                 name="medication"
                 label="Medicine"
-                options={medications.map(med => ({
-                  value: `${med.id.toString()} ${med.medicine_name}`,
+                options={sortedMedications.map(med => ({
+                  value: med.id.toString(),
                   label: `${med.medicine_name} (qty: ${med.quantity})`,
                 }))}
-                defaultValue={selectedOrder?.medication || ''}
+                defaultValue={
+                  selectedOrder ? selectedOrder.medicationId.toString() : ''
+                }
                 isRequired={true}
               />
             )}
+
             <div className="grid grid-cols-2 gap-4">
               <DisplayField
                 label="In Stock"
@@ -166,19 +165,19 @@ export function MedicationOrderForm({
                   medications == undefined || selectedMedicationId == ''
                     ? ''
                     : getInStockQuantityColour(
-                      medications.find(
-                        med => med.id.toString() == selectedMedicationId
-                      ) || null
-                    )
+                        medications.find(
+                          med => med.id.toString() == selectedMedicationId
+                        ) || null
+                      )
                 }
                 content={
                   medications == undefined || selectedMedicationId == ''
                     ? '-'
                     : getInStockQuantityText(
-                      medications.find(
-                        med => med.id.toString() == selectedMedicationId
-                      ) || null
-                    )
+                        medications.find(
+                          med => med.id.toString() == selectedMedicationId
+                        ) || null
+                      )
                 }
               />
               <div
@@ -208,7 +207,12 @@ export function MedicationOrderForm({
               placeholder="Dosage Instructions"
               isRequired={true}
             />
-            <Button type="submit" text="Add order" colour="green" className='my-2'/>
+            <Button
+              type="submit"
+              text="Add order"
+              colour="green"
+              className="my-2"
+            />
           </form>
         </FormProvider>
       </div>
