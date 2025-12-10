@@ -164,7 +164,7 @@ export function PastVitalTable({
     },
     {
       label: 'Pubarche Age',
-      value: vital.pubarche_age == 'Yes' ? vital.pubarche_age : 'N/A',
+      value: vital.pubarche == 'Yes' ? vital.pubarche_age : 'N/A',
       ageToTest: PUBERTY_AGES_12_19,
       highlight: gender == 'Male' ? malePubertyFieldsHighlight : ''
     },
