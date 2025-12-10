@@ -1,7 +1,6 @@
 'use client';
 
 import { NAOption } from '@/constants';
-import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 export type OptionData = { value: string | number; label: string } | string;
@@ -29,24 +28,14 @@ export function RHFCustomSelect({
 }: RHFCustomSelectProps) {
   const {
     control,
-    setValue,
     formState: { errors, isSubmitted },
     watch
   } = useFormContext();
 
-  // keep in sync if defaultValue prop changes
-  // useEffect(() => {
-  //   if (defaultValue !== undefined)
-  //     setValue(name, defaultValue, { shouldValidate: true });
-  // }, [defaultValue, name, setValue]);
-
   const hasError = Boolean(errors[name] && isSubmitted);
   const errorMessage = (errors[name]?.message as string) || '';
   const watchedValue = watch(name)
-  // if (name === "gross_motor") {
-  //   console.log("defaultValue in customSelect: ", defaultValue)
-  //   console.log("watch gross motor in customselect", watchedValue)
-  // }
+
   return (
     <div className={className}>
       <label htmlFor={name} className="mb-1 block text-sm font-medium">

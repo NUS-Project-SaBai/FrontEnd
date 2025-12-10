@@ -59,7 +59,6 @@ const allChildVitalsFields: InputFieldData[] = [
     label: 'Scoliosis',
     type: 'dropdown',
     age: ALL_CHILD_AGES,
-    // defaultValue: 'Normal',
     options: [
       { label: 'Normal', value: 'Normal' },
       { label: 'Abnormal', value: 'Abnormal' },
@@ -69,7 +68,6 @@ const allChildVitalsFields: InputFieldData[] = [
     name: 'pallor',
     label: 'Pallor',
     type: 'dropdown',
-    // defaultValue: 'No',
     age: ALL_CHILD_AGES,
     options: [
       { label: 'Yes', value: 'Yes' },
@@ -186,7 +184,6 @@ export function ChildVitalsFields({
   patient: Pick<Patient, 'date_of_birth' | 'gender'>;
   curVital: Vital;
 }) {
-  // console.log("ChildVitalsFields gross_motor curVital value: ", curVital.gross_motor)
   const patientYearsOld = getPatientAge(patient).year;
 
   const childVitalsFields = useMemo(
@@ -284,7 +281,6 @@ function VitalFieldRenderer({
   field: InputFieldData;
   curVital: Vital;
 }) {
-  // if (field.name === "gross_motor") console.log("VitalFieldRenderer motor: ", curVital[field.name]?.toString())
   switch (field.type) {
     case 'dropdown':
       return (
