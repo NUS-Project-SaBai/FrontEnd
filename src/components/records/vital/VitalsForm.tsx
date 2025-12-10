@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
-import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
+import { RHFCustomSelect } from '@/components/inputs/RHFCustomSelect';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { ChildVitalsFields } from '@/components/records/vital/ChildVitalsFields';
@@ -12,6 +12,7 @@ import { displayBMI, Vital } from '@/types/Vital';
 import { FormEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { NAOption } from '@/constants';
 
 export function VitalsForm({
   patient,
@@ -46,8 +47,11 @@ export function VitalsForm({
     handleSubmit(
       async (data: FieldValues) => {
         data.visit_id = visitId;
+        console.log("SUBMIT DATA", data)
         patchVital(data as Vital).then(() => {
-          reset();
+          // super jank because idh time to figure out why RHF keeps resetting this to the wrong value, 
+          // and how it interacts with the default value given later
+          reset({ diabetes_mellitus: data.diabetes_mellitus });
           toast.success('Updated Vital');
         });
       },
@@ -184,10 +188,12 @@ export function VitalsForm({
             type="number"
             placeholder={curVital.hbA1c?.toString()}
           />
-          <RHFBinaryOption
+          <RHFCustomSelect
             name="diabetes_mellitus"
             label="Diabetes?"
             defaultValue={curVital.diabetes_mellitus}
+            unselectedValue={NAOption}
+            options={["Yes", "No"]}
           />
         </div>
         <ChildVitalsFields patient={patient} curVital={curVital} />
@@ -197,7 +203,7 @@ export function VitalsForm({
           placeholder={curVital.others}
           type="textarea"
         />
-        <div className='h-4'/>
+        <div className='h-4' />
         <Button text="Update" colour="green" type="submit" />
       </form>
     </FormProvider>

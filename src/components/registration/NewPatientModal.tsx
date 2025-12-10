@@ -8,7 +8,7 @@ export function NewPatientModal({
   onSubmit,
   isSubmitting,
 }: {
-  onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
+  onSubmit: (event: FormEvent<HTMLFormElement>, closeModal: () => void) => Promise<void>;
   isSubmitting: boolean;
 }) {
   const ICON_CLASS_STYLE = 'h-5 w-5';
@@ -17,8 +17,7 @@ export function NewPatientModal({
   const closeModal = () => setIsOpen(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    await onSubmit(e)
-    setIsOpen(false);
+    await onSubmit(e, () => setIsOpen(false))
   }
 
   return (
