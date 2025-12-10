@@ -57,7 +57,7 @@ export function RHFCustomSelect({
         defaultValue={defaultValue}
         render={({ field }) => {
           return (
-            <div className='flex flex-row flex-wrap gap-4'>
+            <div className='flex flex-row flex-wrap gap-2'>
               {options.map(v => {
                 function handleChange(v: string | number) {
                   if (field.value === v) field.onChange(isRequired ? null : unselectedValue)
@@ -98,7 +98,7 @@ function Option({
   selected: boolean;
   onChange: (v: string | number) => void
 }) {
-  const borderColour = selected ? "border-2 border-black" : "border-2 border-gray-300";
+  const borderColour = selected ? "text- border-2 border-black" : "border-2 border-gray-300";
   return <button
     className={`flex flex-col items-center justify-center px-2 py-1 bg-gray-100 rounded-sm ${borderColour} ${className}`}
     onClick={(e) => {

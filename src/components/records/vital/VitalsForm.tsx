@@ -13,6 +13,7 @@ import { FormEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { NAOption } from '@/constants';
+import { gridStyle } from '@/components/commonStyles';
 
 export function VitalsForm({
   patient,
@@ -26,9 +27,6 @@ export function VitalsForm({
   const useFormReturn = useForm();
   const { handleSubmit, reset, watch } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
-
-  const gridStyle = (minWidth: number) =>
-    `m-2 grid flex-1 gap-2 border-t-2 pt-4 items-end [grid-template-columns:repeat(auto-fit,minmax(${minWidth}px,1fr))]`;
 
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).

@@ -40,6 +40,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
         <FormProvider {...useFormReturn}>
           <PatientForm
             closeForm={closeModal}
+            isEditing
             onSubmit={e => {
               e.preventDefault();
 

@@ -30,7 +30,7 @@ export type Patient = {
  * @param today - The date to calculate the age against (default is current date)
  */
 export function getPatientAge(
-  patient: Patient,
+  patient: Pick<Patient, 'date_of_birth'>,
   today: Date = new Date()
 ): {
   year: number;

@@ -11,6 +11,7 @@ type RHFInputFieldProps = {
   min?: string;
   max?: string;
   textAreaRows?: number;
+  className?: string;
 };
 
 export function RHFInputField({
@@ -22,6 +23,7 @@ export function RHFInputField({
   min,
   max,
   textAreaRows = 4,
+  className = '',
   ...registerOptions
 }: RHFInputFieldProps & RegisterOptions) {
   const { register, formState } = useFormContext();
@@ -31,7 +33,7 @@ export function RHFInputField({
   inputClassStyle +=
     curFormErrorState != undefined ? 'border-l-8 border-red-400' : '';
   return (
-    <div className="flex-col justify-end">
+    <div className={`flex-col justify-end ${className}`}>
       <label htmlFor={name} className="text-sm font-medium">
         {label}
         {isRequired && <span className="text-red-500">*</span>}

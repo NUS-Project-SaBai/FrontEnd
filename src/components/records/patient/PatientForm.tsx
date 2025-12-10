@@ -3,34 +3,50 @@ import { Button } from '@/components/Button';
 import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
 import { RHFCustomSelect } from '@/components/inputs/RHFCustomSelect';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { WebcamInput } from '@/components/inputs/WebcamInput';
 import { LoadingUI } from '@/components/LoadingUI';
 import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
+import { getPatientAge } from '@/types/Patient';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
+import { EMPTY_VITAL } from '@/types/Vital';
 import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import {
+  ALL_CHILD_AGES,
+  allPubertyFields,
+  ChildPubertySection,
+} from '../vital/ChildVitalsFields';
+import { NAOption } from '@/constants';
 
 export function PatientForm({
   onSubmit,
   isSubmitting = false,
   closeForm = undefined,
+  isEditing = false,
 }: {
   onSubmit: FormEventHandler<HTMLFormElement>;
   isSubmitting?: boolean;
   closeForm?: () => void;
+  isEditing?: boolean;
 }) {
   const { village } = useContext(VillageContext);
-  const { control, formState, getValues } = useFormContext();
+  const { control, formState, getValues, watch } = useFormContext();
   const genderDropdownOptions = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
   ];
+  const gender = watch('gender');
+  const age = getPatientAge({ date_of_birth: watch('date_of_birth') }).year;
+  const gridStyle = "grid grid-cols-2 gap-4 pb-4 md:grid-cols-3";
+  const showChildVitals = age && ALL_CHILD_AGES.includes(age)
+  const Divider = () => <hr className="border-t-2 border-t-gray-300 my-2" />
   return (
     <>
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-2 gap-4">
+        <div className={gridStyle}>
           <RHFInputField
             name="name"
             label="Name (english + local if possible)"
@@ -95,13 +111,63 @@ export function PatientForm({
             name="to_get_report"
             defaultValue={getValues('to_get_report') || 'No'}
           />
+          <RHFInputField
+            name="drug_allergy"
+            label="Drug Allergies"
+            type="textarea"
+            isRequired={true}
+            className='col-span-2'
+          />
         </div>
-        <RHFInputField
-          name="drug_allergy"
-          label="Drug Allergies"
-          type="textarea"
-          isRequired={true}
-        />
+        {!isEditing && (<div>
+          <Divider />
+          <h2>Vitals</h2>
+          <RHFUnitInputField
+            name="temperature"
+            label="Temperature"
+            unit="°C"
+            type="number"
+          />
+          <h2 className='mt-2'>Child Vitals</h2>
+          {showChildVitals ? (<div>
+            <div className={gridStyle}>
+              <RHFCustomSelect
+                name="scoliosis"
+                label="Scoliosis"
+                defaultValue={NAOption}
+                options={[
+                  { label: 'Normal', value: 'Normal' },
+                  { label: 'Abnormal', value: 'Abnormal' },
+                ]}
+                unselectedValue={NAOption}
+              />
+              <RHFCustomSelect
+                name="pallor"
+                label="Pallor"
+                defaultValue={NAOption}
+                options={[
+                  { label: 'Yes', value: 'Yes' },
+                  { label: 'No', value: 'No' },
+                ]}
+                unselectedValue={NAOption}
+              />
+            </div>
+            <ChildPubertySection
+              curVital={EMPTY_VITAL}
+              pubertyFields={allPubertyFields.filter(
+                field =>
+                  (field.gender == undefined || field.gender == gender) &&
+                  field.age.includes(age)
+              )}
+            />
+          </div>
+          ) : (
+            <p className="w-full">
+              {age ? "Not within child age range" : "Age not specified"}
+            </p>
+          )}
+        </div>
+        )}
         <Controller
           name={'picture'}
           control={control}
