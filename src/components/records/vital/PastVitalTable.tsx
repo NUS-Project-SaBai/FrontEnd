@@ -1,5 +1,9 @@
 import { DisplayField } from '@/components/DisplayField';
-import { ALL_CHILD_AGES } from '@/components/records/vital/ChildVitalsFields';
+import {
+  ALL_CHILD_AGES,
+  PUBERTY_AGES_12_17,
+  PUBERTY_AGES_12_19,
+} from '@/components/records/vital/ChildVitalsFields';
 import { GenderType } from '@/types/Gender';
 import { displayBMI, isVisualAcuityPoor, Vital } from '@/types/Vital';
 
@@ -33,9 +37,9 @@ export function PastVitalTable({
         vital.systolic == undefined || vital.diastolic == undefined
           ? undefined
           : vital.systolic > 140 ||
-            vital.diastolic > 90 ||
-            vital.systolic < 90 ||
-            vital.diastolic < 60
+              vital.diastolic > 90 ||
+              vital.systolic < 90 ||
+              vital.diastolic < 60
             ? 'bg-red-200'
             : undefined,
     },
@@ -80,7 +84,7 @@ export function PastVitalTable({
               : '',
     },
     { label: 'HbA1c', value: vital.hbA1c || '' },
-    { label: 'Diabetes Mellitus?', value: vital.diabetes_mellitus }
+    { label: 'Diabetes Mellitus?', value: vital.diabetes_mellitus },
   ];
   //Note: The UI display for scoliosis instances are labelled spine
   const childrenVitalFields: VitalFieldsDataType[] = [
@@ -95,7 +99,7 @@ export function PastVitalTable({
       ageToTest: ALL_CHILD_AGES,
     },
     {
-      label: 'Spine',
+      label: 'Scoliosis',
       value: vital.scoliosis,
       ageToTest: ALL_CHILD_AGES,
     },
@@ -135,59 +139,59 @@ export function PastVitalTable({
     {
       label: 'Pubarche',
       value: vital.pubarche,
-      ageToTest: [13, 14, 15, 16, 17, 18],
+      ageToTest: PUBERTY_AGES_12_19,
     },
     {
       label: 'Pubarche Age',
       value: vital.pubarche_age,
-      ageToTest: [13, 14, 15, 16, 17, 18],
+      ageToTest: PUBERTY_AGES_12_19,
     },
     {
       label: 'Thelarche',
       value: vital.thelarche,
-      ageToTest: [13, 14, 15, 16, 17, 18],
+      ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
     },
     {
       label: 'Thelarche Age',
       value: vital.thelarche_age,
-      ageToTest: [13, 14, 15, 16, 17, 18],
+      ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
     },
     {
       label: 'Menarche',
       value: vital.menarche,
-      ageToTest: [13, 14, 15, 16, 17, 18],
+      ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
     },
     {
       label: 'Menarche Age',
       value: vital.menarche_age,
-      ageToTest: [13, 14, 15, 16, 17, 18],
+      ageToTest: PUBERTY_AGES_12_19,
       gender: 'Female',
     },
     {
       label: 'Voice Change',
       value: vital.voice_change,
-      ageToTest: [13, 14, 15, 16],
+      ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
     },
     {
       label: 'Voice Change Age',
       value: vital.voice_change_age,
-      ageToTest: [13, 14, 15, 16],
+      ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
     },
     {
       label: 'Testicular Growth >= 4ml',
       value: vital.testicular_growth,
-      ageToTest: [13, 14, 15, 16],
+      ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
     },
     {
       label: 'Testicular Growth Age',
       value: vital.testicular_growth_age,
-      ageToTest: [13, 14, 15, 16],
+      ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
     },
   ];
