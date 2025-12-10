@@ -2,7 +2,7 @@
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
-import { RHFReactSelect } from '@/components/inputs/RHFSearchableDropdown';
+import { RHFSearchableDropdown } from '@/components/inputs/RHFSearchableDropdown';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { getMedication } from '@/data/medication/getMedications';
@@ -158,12 +158,12 @@ export function MedicationOrderForm({
               //   defaultValue={selectedOrder?.medication || ''}
               //   isRequired={true}
               // />
-              <RHFReactSelect
+              <RHFSearchableDropdown
                 name="medication"
                 label="Medicine"
                 isRequired
                 options={medications.map((med) => ({
-                  value: med.id.toString(),
+                  value: `${med.id} ${med.medicine_name}`,
                   label: `${med.medicine_name} (qty: ${med.quantity})`,
                 }))}
               />

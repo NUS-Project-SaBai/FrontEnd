@@ -18,7 +18,7 @@ type RHFReactSelectProps = {
   placeholder?: string;
 };
 
-export function RHFReactSelect({
+export function RHFSearchableDropdown({
   name,
   label,
   options,
@@ -45,7 +45,7 @@ export function RHFReactSelect({
         name={name}
         control={control}
         rules={{
-          required: isRequired ? `Select Option for ${label}!` : false,
+          required: isRequired ? `Select option for ${label}!` : false,
         }}
         render={({ field }) => (
           <Select
