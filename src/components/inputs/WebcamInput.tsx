@@ -30,8 +30,15 @@ export function WebcamInput({
   const webcamCapture = useCallback(() => {
     const imgSrc = webcamRef?.current?.getScreenshot() || null;
     setImageDetails(imgSrc);
-    setCameraIsOpen(false);
-  }, [setCameraIsOpen, setImageDetails]);
+  }, [setImageDetails]);
+
+  useEffect(() => {
+    // close camera if image is already available (either photo just taken, or 
+    // photo is already available when you open registration modal)
+    if (imageDetails) setCameraIsOpen(false);
+    // open camera automatically if there is no image
+    else setCameraIsOpen(true);
+  }, [imageDetails, setCameraIsOpen])
 
   useEffect(() => {
     if (cameraIsOpenCallback) cameraIsOpenCallback(cameraIsOpen);

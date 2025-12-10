@@ -47,3 +47,5 @@ export const VILLAGES_AND_ALL: {
   },
   ...VILLAGES,
 };
+
+export const NAOption = "Haven't Asked / Not Applicable"

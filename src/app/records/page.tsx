@@ -2,11 +2,11 @@
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { PatientRecordTable } from '@/components/records/PatientRecordTable';
+import { allPubertyFields } from '@/components/records/vital/ChildVitalsFields';
 import { NewPatientModal } from '@/components/registration/NewPatientModal';
 import { PatientScanForm } from '@/components/registration/PatientScanForm';
 import { PatientListContext } from '@/context/PatientListContext';
 import { createPatient } from '@/data/patient/createPatient';
-import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
@@ -49,6 +49,7 @@ export default function RecordPage() {
   });
 
   useEffect(() => {
+    refreshPatientList();
     const unsub = useFormReturn.subscribe({
       formState: { values: true },
       callback: ({ values }) => {
@@ -62,16 +63,13 @@ export default function RecordPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onPatientRegistrationFormSubmit = (event: FormEvent) => {
+  const onPatientRegistrationFormSubmit = (event: FormEvent, closeModal: () => void) => {
     event.preventDefault();
     const formData = new FormData();
 
-    useFormReturn.handleSubmit(
+    return useFormReturn.handleSubmit(
       //onValid
       submitWithLoading(async fieldValues => {
-        Object.entries(fieldValues).map(([key, value]) =>
-          formData.append(key, value)
-        );
         formData.append(
           'picture',
           await urlToFile(
@@ -80,19 +78,57 @@ export default function RecordPage() {
             'image/jpg'
           )
         );
-        formData.set('to_get_report', fieldValues.to_get_report === 'Yes' ? 'true' : 'false');
+
+        const patientInfoFromRegistration = {
+          name: fieldValues.name,
+          identification_number: fieldValues.identification_number,
+          contact_no: fieldValues.contact_no,
+          date_of_birth: fieldValues.date_of_birth,
+          village_prefix: fieldValues.village_prefix,
+          poor: fieldValues.poor,
+          bs2: fieldValues.bs2,
+          sabai: fieldValues.sabai,
+          to_get_report: fieldValues.to_get_report === 'Yes' ? 'true' : 'false',
+          drug_allergy: fieldValues.drug_allergy,
+          gender: fieldValues.gender,
+        };
+
+        const pubertyData = allPubertyFields.reduce(
+          (acc, field) => {
+            const key = field.name;
+            const value = fieldValues[key];
+
+            if (value !== undefined && value !== '') {
+              acc[key] = value;
+            }
+            return acc;
+          },
+          {} as Record<string, string | number | boolean>
+        );
+
+        const vitalsInfoFromRegistration = {
+          temperature: fieldValues.temperature,
+          scoliosis: fieldValues.scoliosis,
+          pallor: fieldValues.pallor,
+          ...pubertyData,
+        };
+
+        formData.append('patient', JSON.stringify(patientInfoFromRegistration));
+        formData.append('vitals', JSON.stringify(vitalsInfoFromRegistration));
+
         const patient = await createPatient(formData);
         if (patient == null) {
           toast.error('Unknown error creating patient');
           return;
         }
+
         useFormReturn.reset({ village_prefix: fieldValues.village_prefix });
         clearLocalStorageData();
 
         toast.success('Patient Created!');
-        createVisit(patient);
         toast.success('New Visit Created!');
         refreshPatientList();
+        closeModal()
       }),
       // onInvalid
       () => {
@@ -106,15 +142,15 @@ export default function RecordPage() {
   };
 
   function setRegistrationFace(picture: string | null) {
-    setFormDetails(old => ({ ...old, picture }))
+    setFormDetails(old => ({ ...old, picture }));
   }
 
   const filteringByFace = faceFilteredPatients !== null;
 
   const searchablePatients = useMemo(() => {
-    if (!faceFilteredPatients) return allPatients
-    const pks = faceFilteredPatients?.map((v) => v.pk)
-    return allPatients.filter((v) => pks?.includes(v.pk))
+    if (!faceFilteredPatients) return allPatients;
+    const pks = faceFilteredPatients?.map(v => v.pk);
+    return allPatients.filter(v => pks?.includes(v.pk));
   }, [allPatients, faceFilteredPatients]);
 
   return (
@@ -143,12 +179,14 @@ export default function RecordPage() {
                 isSubmitting={isSubmitting}
               />
             </FormProvider>
-            <PatientScanForm setFilteredPatients={setFaceFilteredPatients}
-              setRegistrationFace={setRegistrationFace} />
+            <PatientScanForm
+              setFilteredPatients={setFaceFilteredPatients}
+              setRegistrationFace={setRegistrationFace}
+            />
           </div>
         </div>
       </div>
-      <div className="flex flex-1 p-2 overflow-auto">
+      <div className="flex flex-1 overflow-auto p-2">
         <LoadingPage
           isLoading={patientsLoading || isSubmitting}
           message="Loading Patients..."

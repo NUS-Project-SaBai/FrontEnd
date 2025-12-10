@@ -7,8 +7,17 @@ import { Vital } from '@/types/Vital';
 import { useMemo } from 'react';
 
 export const ALL_CHILD_AGES = [
-  2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+  2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
 ];
+
+export const PUBERTY_AGES_12_19 = [
+  12, 13, 14, 15, 16, 17, 18, 19
+];
+
+export const PUBERTY_AGES_12_17 = [
+  12, 13, 14, 15, 16, 17
+];
+
 type InputFieldData =
   | {
       type: 'dropdown';
@@ -46,15 +55,25 @@ const allChildVitalsFields: InputFieldData[] = [
   },
   {
     name: 'scoliosis',
-    label: 'Spine',
-    type: 'text',
+    label: 'Scoliosis',
+    type: 'dropdown',
     age: ALL_CHILD_AGES,
+    defaultValue: 'Normal',
+    options: [
+      { label: 'Normal', value: 'Normal' },
+      { label: 'Abnormal', value: 'Abnormal' },
+    ],
   },
   {
     name: 'pallor',
     label: 'Pallor',
-    type: 'text',
+    type: 'dropdown',
+    defaultValue: 'No',
     age: ALL_CHILD_AGES,
+    options: [
+      { label: 'Yes', value: 'Yes' },
+      { label: 'No', value: 'No' },
+    ],
   },
   {
     name: 'oral_cavity',
@@ -88,81 +107,82 @@ const allChildVitalsFields: InputFieldData[] = [
   },
 ];
 
-const allPubertyFields: InputFieldData[] = [
+export const allPubertyFields: InputFieldData[] = [
   {
     type: 'yesNoOption',
     name: 'pubarche',
     label: 'Pubarche',
-    age: [13, 14, 15, 16, 17, 18],
+    age: PUBERTY_AGES_12_19
   },
   {
     type: 'number',
     name: 'pubarche_age',
     label: 'Pubarche Age',
-    age: [13, 14, 15, 16, 17, 18],
+    age: PUBERTY_AGES_12_19
   },
   {
     type: 'yesNoOption',
     name: 'thelarche',
-    label: 'Thelarche',
-    age: [13, 14, 15, 16, 17, 18],
+    label: 'Thelarche (F)',
+    age: PUBERTY_AGES_12_19,
     gender: 'Female',
   },
   {
     type: 'number',
     name: 'thelarche_age',
-    label: 'Thelarche Age',
-    age: [13, 14, 15, 16, 17, 18],
+    label: 'Thelarche Age (F)',
+    age: PUBERTY_AGES_12_19,
     gender: 'Female',
   },
   {
     type: 'yesNoOption',
     name: 'menarche',
-    label: 'Menarche',
-    age: [13, 14, 15, 16, 17, 18],
+    label: 'Menarche (F)',
+    age: PUBERTY_AGES_12_19,
     gender: 'Female',
   },
   {
     type: 'text',
     name: 'menarche_age',
-    label: 'Menarche Age',
-    age: [13, 14, 15, 16, 17, 18],
+    label: 'Menarche Age (F)',
+    age: PUBERTY_AGES_12_19,
     gender: 'Female',
   },
   {
     type: 'yesNoOption',
     name: 'voice_change',
-    label: 'Voice Change',
-    age: [13, 14, 15, 16],
+    label: 'Voice Change (M)',
+    age: PUBERTY_AGES_12_17,
     gender: 'Male',
   },
   {
     type: 'number',
     name: 'voice_change_age',
-    label: 'Voice Change Age',
-    age: [13, 14, 15, 16],
+    label: 'Voice Change Age (M)',
+    age: PUBERTY_AGES_12_17,
     gender: 'Male',
   },
   {
     type: 'yesNoOption',
     name: 'testicular_growth',
-    label: 'Testicular Growth >= 4ml',
-    age: [13, 14, 15, 16],
+    label: 'Testicular Growth >= 4ml (M)',
+    age: PUBERTY_AGES_12_17,
     gender: 'Male',
   },
   {
     type: 'number',
     name: 'testicular_growth_age',
-    label: 'Testicular Growth Age',
-    age: [13, 14, 15, 16],
+    label: 'Testicular Growth Age (M)',
+    age: PUBERTY_AGES_12_17,
     gender: 'Male',
   },
 ];
+
 export function ChildVitalsFields({
   patient,
   curVital,
 }: {
-  patient: Patient;
+  patient: Pick<Patient, 'date_of_birth' | 'gender'>;
   curVital: Vital;
 }) {
   const patientYearsOld = getPatientAge(patient).year;
@@ -228,7 +248,7 @@ function ChildVitalsSection({
   );
 }
 
-function ChildPubertySection({
+export function ChildPubertySection({
   pubertyFields,
   curVital,
 }: {
@@ -238,15 +258,19 @@ function ChildPubertySection({
   return (
     <div>
       <h2>Puberty Fields</h2>
-      <div className="grids-col-1 grid gap-2 md:grid-cols-2">
-        {pubertyFields.map(field => (
-          <VitalFieldRenderer
-            key={field.name}
-            field={field}
-            curVital={curVital}
-          />
-        ))}
-      </div>{' '}
+      {pubertyFields.length === 0 ? (
+        <p>No Puberty Fields, Ensure gender and age is correct</p>
+      ) : (
+        <div className="grids-col-1 grid gap-2 md:grid-cols-2">
+          {pubertyFields.map(field => (
+            <VitalFieldRenderer
+              key={field.name}
+              field={field}
+              curVital={curVital}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
