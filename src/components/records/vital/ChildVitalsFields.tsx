@@ -304,7 +304,7 @@ function ChildVitalsSection({
     <div>
       <h2>Child Vitals</h2>
       <div className="flex flex-row">
-      {/* <div className="grids-col-1 grid gap-2 md:grid-cols-2"> */}
+        {/* <div className="grids-col-1 grid gap-2 md:grid-cols-2"> */}
         {childVitalsFields.map(field => (
           <VitalFieldRenderer
             key={field.name}
@@ -331,11 +331,11 @@ export function ChildPubertySection({
         <p>No Puberty Fields, Ensure gender and age is correct</p>
       ) : (
         <div className="flex flex-row flex-wrap">
-        {/* <div className="grids-col-1 grid gap-2 lg:grid-cols-3"> */}
-        {/* <div className="flex flex-col gap-2"> */}
+          {/* <div className="grids-col-1 grid gap-2 lg:grid-cols-3"> */}
+          {/* <div className="flex flex-col gap-2"> */}
           {pubertyFields.map(field => (
             // <div className='flex flex-row gap-4 rounded-lg mr-6 p-2 border-2 border-gray-50'>
-            <div className='flex flex-row gap-4 rounded-lg mr-6 p-2 bg-gray-50 shadow-sm mb-2'>
+            <div className='flex flex-row gap-4 rounded-lg mr-6 p-2 bg-gray-50 shadow-sm mb-2' key={field[0].name}>
               <VitalFieldRenderer
                 key={field[0].name}
                 field={field[0]}
