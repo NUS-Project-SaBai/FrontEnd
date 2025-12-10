@@ -38,9 +38,9 @@ export function PastVitalTable({
         vital.systolic == undefined || vital.diastolic == undefined
           ? undefined
           : vital.systolic > 140 ||
-              vital.diastolic > 90 ||
-              vital.systolic < 90 ||
-              vital.diastolic < 60
+            vital.diastolic > 90 ||
+            vital.systolic < 90 ||
+            vital.diastolic < 60
             ? 'bg-red-200'
             : undefined,
     },
@@ -222,7 +222,7 @@ export function PastVitalTable({
       value: vital.testicular_growth_age,
       ageToTest: PUBERTY_AGES_12_17,
       gender: 'Male',
-      
+
     },
   ];
 
@@ -290,14 +290,15 @@ export function PastVitalTable({
           spanFull
         />
       </div>
-      <h2>Growth Chart</h2>
       {
         age.year >= 2 && age.year <= 18 &&
-        <HeightWeightGraph age={age.year}
-          weight={parseFloat(vital.weight)}
-          height={parseFloat(vital.height)}
-          gender={gender} />
-
+        <>
+          <h2>Growth Chart</h2>
+          <HeightWeightGraph age={age.year}
+            weight={parseFloat(vital.weight)}
+            height={parseFloat(vital.height)}
+            gender={gender} />
+        </>
       }
 
     </>
