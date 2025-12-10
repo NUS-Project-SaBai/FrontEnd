@@ -138,11 +138,6 @@ export function ConsultationForm({
   const referredFor = useFormReturn.watch('referred_for');
   const isEditing = editConsultId != null;
 
-  // Safeguard against leaving form with unsaved changes
-  useEffect(() => {
-    console.log('ConsultationForm hasUnsavedChanges:', hasUnsavedChanges);
-  }, [hasUnsavedChanges]);
-
   useSafeguardUnsavedChanges(
     hasUnsavedChanges,
     'You have unsaved changes to the consultation form. Are you sure you want to leave?',
