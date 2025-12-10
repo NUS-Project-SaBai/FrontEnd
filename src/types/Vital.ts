@@ -154,7 +154,7 @@ export function validateVisualAcuity(
     return true;
   }
 
-  return 'Invalid format. Use format like 6/6, 6/12, 6/20 + 2, or special values: CF, HM, LP, NLP if patient is unable to read the biggest E';
+  return 'Invalid format. Use format like 6/6, 6/12, 6/15 + 2, or special values: CF, HM, LP, NLP if patient is unable to read the biggest E';
 }
 
 export function vitalFromJson(jsonObj: object): Vital | null {
