@@ -11,7 +11,7 @@ import { NAOption } from '@/constants';
 import { patchVital } from '@/data/vital/patchVital';
 import { Patient } from '@/types/Patient';
 import { displayBMI, validateVisualAcuity, Vital } from '@/types/Vital';
-import { FormEvent, useEffect } from 'react';
+import { useEffect } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
