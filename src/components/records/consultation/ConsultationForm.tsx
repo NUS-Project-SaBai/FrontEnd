@@ -45,15 +45,9 @@ export function ConsultationForm({
   const useFormReturn = useForm();
   const loadedConsultIdRef = useRef<number | null>(null);
   const isLoadingRef = useRef(false);
-  const justSubmittedRef = useRef(false);
 
   useEffect(() => {
-    if (
-      !editConsultId &&
-      formDetails &&
-      Object.keys(formDetails).length > 0 &&
-      !justSubmittedRef.current
-    ) {
+    if (!editConsultId && formDetails && Object.keys(formDetails).length > 0) {
       useFormReturn.reset(formDetails);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -322,7 +316,7 @@ export function ConsultationForm({
         }
 
         // Clear form after successful submission
-        justSubmittedRef.current = true;
+
         reset({});
         clearLocalStorageData();
         if (isEditing && onEditComplete) {
