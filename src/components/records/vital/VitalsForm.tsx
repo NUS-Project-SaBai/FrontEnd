@@ -13,7 +13,7 @@ import useSafeguardUnsavedChanges from '@/hooks/safeguardUnsavedChanges';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
 import { displayBMI, validateVisualAcuity, Vital } from '@/types/Vital';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -35,19 +35,11 @@ export function VitalsForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
-  const { handleSubmit, reset, watch } = useFormReturn;
+  const { handleSubmit, reset, watch, formState } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-  const formValues = useFormReturn.watch();
-  useEffect(() => {
-    if (formValues && Object.keys(formValues).length > 0) {
-      setHasUnsavedChanges(true);
-    }
-  }, [formValues]);
 
   useSafeguardUnsavedChanges(
-    hasUnsavedChanges,
+    formState.isDirty,
     'You have unsaved changes to the vitals form. Are you sure you want to leave?',
     () => {
       reset({});

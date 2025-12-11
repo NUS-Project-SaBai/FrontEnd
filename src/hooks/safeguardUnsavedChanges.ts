@@ -39,27 +39,10 @@ export default function useSafeguardUnsavedChanges(
       }
     };
 
-    // Handle pressing of back button
-    const handlePopState = (e: PopStateEvent) => {
-      if (isDirtyRef.current) {
-        if (window.confirm(message)) {
-          isDirtyRef.current = false;
-        } else {
-          // Push state to "undo" the back button action
-          window.history.pushState(null, '', window.location.href);
-          e.preventDefault();
-        }
-      }
-    };
-
-    window.history.pushState(null, '', window.location.href);
-
     document.addEventListener('click', handleClick, true);
-    window.addEventListener('popstate', handlePopState);
 
     return () => {
       document.removeEventListener('click', handleClick, true);
-      window.removeEventListener('popstate', handlePopState);
     };
     //ref handles the life values
   }, [message, pathname]);

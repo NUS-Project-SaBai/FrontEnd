@@ -16,7 +16,7 @@ import useSafeguardUnsavedChanges from '@/hooks/safeguardUnsavedChanges';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef } from 'react';
 
 import {
   Controller,
@@ -42,19 +42,15 @@ export function ConsultationForm({
     {} as FieldValues,
     [visitId, editConsultId]
   );
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const useFormReturn = useForm({ values: formDetails });
+  const useFormReturn = useForm();
   const loadedConsultIdRef = useRef<number | null>(null);
   const isLoadingRef = useRef(false);
 
-  // Track when form values change (indicating unsaved changes)
-  const formValues = useFormReturn.watch();
   useEffect(() => {
-    // Only set unsaved changes if we have actual form data
-    if (formDetails && Object.keys(formDetails).length > 0) {
-      setHasUnsavedChanges(true);
+    if (!editConsultId && formDetails && Object.keys(formDetails).length > 0) {
+      useFormReturn.reset(formDetails);
     }
-  }, [formValues, formDetails]);
+  }, [editConsultId, formDetails, useFormReturn]);
 
   useEffect(() => {
     if (editConsultId == null) {
@@ -133,13 +129,13 @@ export function ConsultationForm({
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isSubmitSuccessful },
   } = useFormReturn;
   const referredFor = useFormReturn.watch('referred_for');
   const isEditing = editConsultId != null;
 
   useSafeguardUnsavedChanges(
-    hasUnsavedChanges,
+    useFormReturn.formState.isDirty && !isSubmitSuccessful,
     'You have unsaved changes to the consultation form. Are you sure you want to leave?',
     () => {
       // When user confirms they want to leave, clear the form state
@@ -147,6 +143,17 @@ export function ConsultationForm({
       clearLocalStorageData();
     }
   );
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset({});
+      clearLocalStorageData();
+      if (isEditing && onEditComplete) {
+        onEditComplete();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitSuccessful]);
 
   // Helper function to process and validate diagnoses
   const processDiagnoses = (
@@ -312,11 +319,6 @@ export function ConsultationForm({
               ? 'Medical Consult Updated!'
               : 'Medical Consult Completed!'
           );
-          reset({});
-          clearLocalStorageData();
-          if (isEditing && onEditComplete) {
-            onEditComplete();
-          }
         } catch (error) {
           console.error('Error submitting consultation form:', error);
           toast.error('Unknown Error');
