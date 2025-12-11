@@ -48,7 +48,8 @@ export function PatientDetails({
   ];
 
   return (
-    <div className="m-2 grid flex-1 gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
+    // <div className="m-2 grid flex-1 gap-2 border-t-2 pt-4 grid-cols-1 sm:grid-cols-2">
+    <div className="m-2 grid flex-1 gap-2 border-t-2 pt-4 [grid-template-columns:repeat(auto-fit,minmax(160px,1fr))]">
       {fieldArray.map(({ label, value }) => (
         <DisplayField key={label} label={label} content={value || '-'} />
       ))}

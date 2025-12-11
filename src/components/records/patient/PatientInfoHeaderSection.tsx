@@ -30,36 +30,36 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
   }, [patient.pk, fetchDocuments]);
 
   return (
-    <div className="flex">
-      <div className="relative h-[15vw] w-[15vw]">
-        <PatientPhoto
-          pictureUrl={patient.picture_url}
-          width={180}
-          height={180}
-        />
-      </div>
-      <div className="flex flex-1 flex-col">
-        <div className="m-2 flex flex-row gap-2">
-          <h1 className="flex-1 content-center text-start">
-            <span
-              className={
-                'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
-              }
-            >
-              {patient.patient_id}
-            </span>
-            <span>, {patient.name}</span>
-          </h1>
+    <div className="flex flex-col">
+      <div className="m-2 flex flex-row gap-2 flex-wrap">
+        <div className="relative h-[15vw] w-[15vw] min-h-20 min-w-20 max-h-40 max-w-40">
+          <PatientPhoto
+            pictureUrl={patient.picture_url}
+            width={180}
+            height={180}
+          />
+        </div>
+        <h1 className="flex-1 text-start">
+          <span
+            className={
+              'font-bold ' + VILLAGES_AND_ALL[patient.village_prefix].color
+            }
+          >
+            {patient.patient_id}
+          </span>
+          <span>, {patient.name}</span>
+        </h1>
+        {/* <div className="flex flex-wrap gap-2"> */}
+        <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3">
           <UploadDocument patient={patient} onUploadSuccess={fetchDocuments} />
           <ViewDocument
             documents={documents}
             setDocuments={setDocuments}
             isLoading={isLoadingDocuments}
           />
-          <EditPatient patient={patient} />
-        </div>
-        <PatientDetails patient={patient} />
+          <EditPatient patient={patient} /></div>
       </div>
+      <PatientDetails patient={patient} />
     </div>
   );
 }

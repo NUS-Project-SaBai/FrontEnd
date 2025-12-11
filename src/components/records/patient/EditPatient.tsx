@@ -29,6 +29,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
         text="Edit Patient Details"
         colour="orange"
         onClick={() => setIsOpen(true)}
+        className='w-28 h-16'
       />
       <Modal
         isOpen={isOpen}

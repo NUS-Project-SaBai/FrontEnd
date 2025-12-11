@@ -303,7 +303,7 @@ function ChildVitalsSection({
   return (
     <div>
       <h2>Child Vitals</h2>
-      <div className="flex flex-row">
+      <div className="flex flex-row flex-wrap">
         {/* <div className="grids-col-1 grid gap-2 md:grid-cols-2"> */}
         {childVitalsFields.map(field => (
           <VitalFieldRenderer
@@ -340,6 +340,7 @@ export function ChildPubertySection({
                 key={field[0].name}
                 field={field[0]}
                 curVital={curVital}
+                className='min-w-24'
               />
               <VitalFieldRenderer
                 key={field[1].name}
@@ -357,15 +358,18 @@ export function ChildPubertySection({
 function VitalFieldRenderer({
   field,
   curVital,
+  className
 }: {
   field: InputFieldData;
   curVital: Vital;
+  className?: string;
 }) {
   switch (field.type) {
     case 'dropdown':
       return (
         <RHFCustomSelect
           defaultValue={curVital[field.name]?.toString()}
+          className={className}
           {...field}
         />
       );
@@ -373,6 +377,7 @@ function VitalFieldRenderer({
       return (
         <RHFInputField
           placeholder={curVital[field.name]?.toString()}
+          className={className}
           {...field}
         />
       );
@@ -380,6 +385,7 @@ function VitalFieldRenderer({
       return (
         <RHFInputField
           placeholder={curVital[field.name]?.toString()}
+          className={className}
           {...field}
         />
       );
@@ -387,6 +393,7 @@ function VitalFieldRenderer({
       return (
         <RHFBinaryOption
           defaultValue={curVital[field.name]?.toString()}
+          className={className}
           isRequired={false}
           {...field}
         />
