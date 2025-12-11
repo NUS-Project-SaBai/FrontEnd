@@ -277,10 +277,7 @@ export function ChildVitalsFields({
   return (
     <div>
       {childVitalsFields.length == 0 || (
-        <ChildVitalsSection
-          childVitalsFields={childVitalsFields}
-          curVital={curVital}
-        />
+        <ChildVitalsSection childVitalsFields={childVitalsFields} />
       )}
 
       {pubertyFields.length == 0 || (
@@ -292,10 +289,8 @@ export function ChildVitalsFields({
 
 function ChildVitalsSection({
   childVitalsFields,
-  curVital,
 }: {
   childVitalsFields: InputFieldData[];
-  curVital: Vital;
 }) {
   return (
     <div>

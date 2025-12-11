@@ -10,7 +10,6 @@ import { VillageOptionDropdown } from '@/components/VillageOptionDropdown';
 import { VillageContext } from '@/context/VillageContext';
 import { getPatientAge } from '@/types/Patient';
 import { VillagePrefix } from '@/types/VillagePrefixEnum';
-import { EMPTY_VITAL } from '@/types/Vital';
 import { DateTime } from 'luxon';
 import { FormEventHandler, useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
