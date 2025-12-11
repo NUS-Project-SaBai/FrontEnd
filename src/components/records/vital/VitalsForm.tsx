@@ -9,6 +9,8 @@ import { RHFUnitInputField } from '@/components/inputs/RHFUnitInputField';
 import { ChildVitalsFields } from '@/components/records/vital/ChildVitalsFields';
 import { NAOption } from '@/constants';
 import { patchVital } from '@/data/vital/patchVital';
+import useSafeguardUnsavedChanges from '@/hooks/safeguardUnsavedChanges';
+import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
 import { displayBMI, validateVisualAcuity, Vital } from '@/types/Vital';
 import { FormEvent, useEffect } from 'react';
@@ -24,20 +26,34 @@ export function VitalsForm({
   visitId: string;
   curVital: Vital; // can be EMPTY_VITAL
 }) {
+  const [, , clearLocalStorageData] = useSaveOnWrite(
+    'VitalsForm',
+    {} as FieldValues,
+    [visitId, curVital]
+  );
   const useFormReturn = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
-  const { handleSubmit, reset, watch } = useFormReturn;
+  const {
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isDirty },
+  } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
 
-  // when curVital updates (i.e. after submitting the Vitals Form), reset the form values
-  // so that the text field values are cleared, showing the placeholders which are set from
-  // the new values in curVitals. The RHFCustomSelect and Dropdown components will have 
-  // their values set to these new values via the defaultValue prop.
+  useSafeguardUnsavedChanges(
+    isDirty,
+    'You have unsaved changes to the vitals form. Are you sure you want to leave?',
+    () => {
+      reset({});
+      clearLocalStorageData();
+    }
+  );
   useEffect(() => {
-    reset({})
-  }, [curVital, reset])
+    reset({});
+  }, [curVital, reset]);
 
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).
@@ -55,10 +71,18 @@ export function VitalsForm({
 
     handleSubmit(
       async (data: FieldValues) => {
-        data.visit_id = visitId;
-        patchVital(data as Vital).then(() => {
+        try {
+          data.visit_id = visitId;
+          await patchVital(data as Vital);
           toast.success('Updated Vital');
-        });
+        } catch (error) {
+          console.error('Error updating vital:', error);
+          toast.error('Unknown Error');
+          return;
+        }
+
+        // Clear form after successful submission
+        reset({});
       },
       () => {
         toast.error('Invalid/Missing Input');

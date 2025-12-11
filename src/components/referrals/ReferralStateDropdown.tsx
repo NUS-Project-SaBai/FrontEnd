@@ -4,6 +4,7 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { Referral } from '@/types/Referral';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+
 import {
   Select,
   SelectContent,
@@ -12,7 +13,13 @@ import {
   SelectValue,
 } from '../ui/select';
 
-export function ReferralStateDropdown({ referral }: { referral: Referral }) {
+export function ReferralStateDropdown({
+  referral,
+  onUpdate,
+}: {
+  referral: Referral;
+  onUpdate?: (referralId: number, updatedReferral: Referral) => void;
+}) {
   const referralState = [
     'None',
     'New',
@@ -37,7 +44,11 @@ export function ReferralStateDropdown({ referral }: { referral: Referral }) {
     });
     patch()
       .then(() => {
+        if (onUpdate) {
+          onUpdate(referral.id, { ...referral, referral_state: value });
+        }
         setReferralStatus(value);
+  
         toast.success('Updated successfully!');
       })
       .catch(() => toast.error('Failed to update'));
