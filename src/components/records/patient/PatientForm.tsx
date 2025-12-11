@@ -91,16 +91,8 @@ export function PatientForm({
               />
             )}
           />
-          <RHFBinaryOption
-            label="POOR Card"
-            name="poor"
-            defaultValue={'No'}
-          />
-          <RHFBinaryOption
-            label="BS2 Card"
-            name="bs2"
-            defaultValue={'No'}
-          />
+          <RHFBinaryOption label="POOR Card" name="poor" defaultValue={'No'} />
+          <RHFBinaryOption label="BS2 Card" name="bs2" defaultValue={'No'} />
           <RHFBinaryOption
             label="Sabai Card"
             name="sabai"
@@ -116,58 +108,60 @@ export function PatientForm({
             label="Drug Allergies"
             type="textarea"
             isRequired={true}
-            className='col-span-2'
+            className="col-span-2"
           />
         </div>
-        {!isEditing && (<div>
-          <Divider />
-          <h2>Vitals</h2>
-          <RHFUnitInputField
-            name="temperature"
-            label="Temperature"
-            unit="°C"
-            type="number"
-          />
-          <h2 className='mt-2'>Child Vitals</h2>
-          {showChildVitals ? (<div>
-            {/* <div className={gridStyle}> */}
-            <div className="flex flex-row gap-6">
-              <RHFCustomSelect
-                name="scoliosis"
-                label="Scoliosis"
-                defaultValue={NAOption}
-                options={[
-                  { label: 'Normal', value: 'Normal' },
-                  { label: 'Abnormal', value: 'Abnormal' },
-                ]}
-                unselectedValue={NAOption}
-              />
-              <RHFCustomSelect
-                name="pallor"
-                label="Pallor"
-                defaultValue={NAOption}
-                options={[
-                  { label: 'Yes', value: 'Yes' },
-                  { label: 'No', value: 'No' },
-                ]}
-                unselectedValue={NAOption}
-              />
-            </div>
-            <ChildPubertySection
-              curVital={EMPTY_VITAL}
-              pubertyFields={allPubertyFields.filter(
-                field =>
-                  (field[0].gender == undefined || field[0].gender == gender) &&
-                  field[0].age.includes(age)
-              )}
+        {!isEditing && (
+          <div>
+            <Divider />
+            <h2>Vitals</h2>
+            <RHFUnitInputField
+              name="temperature"
+              label="Temperature"
+              unit="°C"
+              type="number"
             />
+            <h2 className="mt-2">Child Vitals</h2>
+            {showChildVitals ? (
+              <div>
+                {/* <div className={gridStyle}> */}
+                <div className="flex flex-row gap-6">
+                  <RHFCustomSelect
+                    name="scoliosis"
+                    label="Scoliosis"
+                    defaultValue={NAOption}
+                    options={[
+                      { label: 'Normal', value: 'Normal' },
+                      { label: 'Abnormal', value: 'Abnormal' },
+                    ]}
+                    unselectedValue={NAOption}
+                  />
+                  <RHFCustomSelect
+                    name="pallor"
+                    label="Pallor"
+                    defaultValue={NAOption}
+                    options={[
+                      { label: 'Yes', value: 'Yes' },
+                      { label: 'No', value: 'No' },
+                    ]}
+                    unselectedValue={NAOption}
+                  />
+                </div>
+                <ChildPubertySection
+                  pubertyFields={allPubertyFields.filter(
+                    field =>
+                      (field[0].gender == undefined ||
+                        field[0].gender == gender) &&
+                      field[0].age.includes(age)
+                  )}
+                />
+              </div>
+            ) : (
+              <p className="w-full">
+                {age ? 'Not within child age range' : 'Age not specified'}
+              </p>
+            )}
           </div>
-          ) : (
-            <p className="w-full">
-              {age ? "Not within child age range" : "Age not specified"}
-            </p>
-          )}
-        </div>
         )}
         <Controller
           name={'picture'}
