@@ -63,7 +63,7 @@ export function PatientInfoHeaderSection({
           </span>
           <span>, {patient.name}</span>
         </h1>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 justify-center">
         {/* <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3"> */}
           <UploadDocument patient={patient} onUploadSuccess={fetchDocuments} />
           <ViewDocument
@@ -78,6 +78,7 @@ export function PatientInfoHeaderSection({
               patient={patient}
               labelOverwrite="Go to vitals"
               visitId={visitId}
+              className='w-44 sm:w-28 sm:h-14'
             />
           )}
           {showConsultationButton && (
@@ -85,6 +86,7 @@ export function PatientInfoHeaderSection({
               patient={patient}
               labelOverwrite="Go to consultation"
               visitId={visitId}
+              className='w-44 sm:w-28'
             />
           )}
         </div>

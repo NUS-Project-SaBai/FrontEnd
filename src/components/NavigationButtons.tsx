@@ -8,11 +8,13 @@ export function VitalsButton({
   setIsHovered = () => {},
   labelOverwrite,
   visitId,
+  className,
 }: {
   patient: Patient;
   setIsHovered?: Dispatch<SetStateAction<boolean>>;
   labelOverwrite?: string;
   visitId?: string;
+  className?: string;
 }) {
   return (
     <Link
@@ -24,7 +26,11 @@ export function VitalsButton({
       }}
       onMouseLeave={() => setIsHovered(true)}
     >
-      <Button text={labelOverwrite ?? 'Vitals'} colour="red" />
+      <Button
+        text={labelOverwrite ?? 'Vitals'}
+        colour="red"
+        className={className}
+      />
     </Link>
   );
 }
@@ -34,11 +40,13 @@ export function ConsultationButton({
   setIsHovered = () => {},
   labelOverwrite,
   visitId,
+  className,
 }: {
   patient: Patient;
   setIsHovered?: Dispatch<SetStateAction<boolean>>;
   labelOverwrite?: string;
   visitId?: string;
+  className?: string;
 }) {
   return (
     <Link
@@ -50,7 +58,11 @@ export function ConsultationButton({
       }}
       onMouseLeave={() => setIsHovered(true)}
     >
-      <Button text={labelOverwrite ?? 'Consultation'} colour="indigo" />
+      <Button
+        text={labelOverwrite ?? 'Consultation'}
+        colour="indigo"
+        className={className}
+      />
     </Link>
   );
 }

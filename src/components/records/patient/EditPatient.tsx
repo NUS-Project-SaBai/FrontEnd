@@ -24,12 +24,12 @@ export function EditPatient({ patient }: { patient: Patient }) {
   });
   const router = useRouter();
   return (
-    <>
+    <div>
       <Button
         text="Edit Patient Details"
         colour="orange"
         onClick={() => setIsOpen(true)}
-        className='w-28 h-16'
+        className='w-44 sm:w-28'
       />
       <Modal
         isOpen={isOpen}
@@ -84,6 +84,6 @@ export function EditPatient({ patient }: { patient: Patient }) {
           />
         </FormProvider>
       </Modal>
-    </>
+    </div>
   );
 }

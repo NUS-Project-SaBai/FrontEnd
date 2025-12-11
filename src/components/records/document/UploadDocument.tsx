@@ -28,12 +28,12 @@ export function UploadDocument({
   const { isLoading, withLoading } = useLoadingState(false);
 
   return (
-    <>
+    <div>
       <Button
         text="Upload Document"
         colour="green"
         onClick={() => setIsOpen(true)}
-        className='w-24 h-16'
+        className="w-44 sm:w-28"
       />
       <Modal
         isOpen={isOpen}
@@ -127,6 +127,6 @@ export function UploadDocument({
           </form>
         </FormProvider>
       </Modal>
-    </>
+    </div>
   );
 }
