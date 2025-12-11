@@ -51,10 +51,25 @@ export function VitalsForm({
       clearLocalStorageData();
     }
   );
-  
   useEffect(() => {
-    reset({})
+    reset({});
   }, [curVital, reset]);
+
+  // Reset form after successful submission
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset({});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitSuccessful]);
+
+  useEffect(() => {
+    if (isSubmitSuccessful && useFormReturn.formState.isDirty) {
+      const currentValues = useFormReturn.getValues();
+      reset(currentValues, { keepDirty: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitSuccessful, useFormReturn.formState.isDirty]);
 
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).
