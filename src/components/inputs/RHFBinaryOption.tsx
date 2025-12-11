@@ -1,4 +1,5 @@
-import { OptionData, RHFDropdown } from '@/components/inputs/RHFDropdown';
+import { OptionData } from '@/components/inputs/RHFDropdown';
+import { RHFCustomSelect } from './RHFCustomSelect';
 
 type RHFBinaryOptionProps = {
   name: string;
@@ -9,6 +10,7 @@ type RHFBinaryOptionProps = {
   optionValue2?: string;
   defaultValue?: string;
   isRequired?: boolean;
+  className?: string;
 };
 export function RHFBinaryOption({
   name,
@@ -17,20 +19,22 @@ export function RHFBinaryOption({
   optionValue1 = 'Yes',
   optionLabel2 = 'No',
   optionValue2 = 'No',
-  defaultValue = '',
-  isRequired = false,
+  defaultValue,
+  isRequired = true,
+  className,
 }: RHFBinaryOptionProps) {
   const yesNoOptions: OptionData[] = [
     { label: optionLabel1, value: optionValue1 },
     { label: optionLabel2, value: optionValue2 },
   ];
   return (
-    <RHFDropdown
+    <RHFCustomSelect
       label={label}
       name={name}
       options={yesNoOptions}
       defaultValue={defaultValue}
       isRequired={isRequired}
+      className={className}
     />
   );
 }

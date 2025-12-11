@@ -1,5 +1,6 @@
 import { RHFBinaryOption } from '@/components/inputs/RHFBinaryOption';
-import { OptionData, RHFDropdown } from '@/components/inputs/RHFDropdown';
+import { RHFCustomSelect } from '@/components/inputs/RHFCustomSelect';
+import { OptionData } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
 import { GenderType } from '@/types/Gender';
 import { getPatientAge, Patient } from '@/types/Patient';
@@ -20,21 +21,21 @@ export const PUBERTY_AGES_12_17 = [
 
 type InputFieldData =
   | {
-      type: 'dropdown';
-      name: keyof Omit<Vital, 'id' | 'visit'>;
-      label: string;
-      defaultValue?: string;
-      options: OptionData[];
-      age: number[];
-      gender?: GenderType;
-    }
+    type: 'dropdown';
+    name: keyof Omit<Vital, 'id' | 'visit'>;
+    label: string;
+    defaultValue?: string;
+    options: OptionData[];
+    age: number[];
+    gender?: GenderType;
+  }
   | {
-      type: 'text' | 'yesNoOption' | 'number';
-      name: keyof Omit<Vital, 'id' | 'visit'>;
-      label: string;
-      age: number[];
-      gender?: GenderType;
-    };
+    type: 'text' | 'yesNoOption' | 'number';
+    name: keyof Omit<Vital, 'id' | 'visit'>;
+    label: string;
+    age: number[];
+    gender?: GenderType;
+  };
 const allChildVitalsFields: InputFieldData[] = [
   {
     type: 'dropdown',
@@ -58,7 +59,6 @@ const allChildVitalsFields: InputFieldData[] = [
     label: 'Scoliosis',
     type: 'dropdown',
     age: ALL_CHILD_AGES,
-    defaultValue: 'Normal',
     options: [
       { label: 'Normal', value: 'Normal' },
       { label: 'Abnormal', value: 'Abnormal' },
@@ -68,7 +68,6 @@ const allChildVitalsFields: InputFieldData[] = [
     name: 'pallor',
     label: 'Pallor',
     type: 'dropdown',
-    defaultValue: 'No',
     age: ALL_CHILD_AGES,
     options: [
       { label: 'Yes', value: 'Yes' },
@@ -107,8 +106,77 @@ const allChildVitalsFields: InputFieldData[] = [
   },
 ];
 
-export const allPubertyFields: InputFieldData[] = [
-  {
+export const allPubertyFields: InputFieldData[][] = [
+  // {
+  //   type: 'yesNoOption',
+  //   name: 'pubarche',
+  //   label: 'Pubarche',
+  //   age: PUBERTY_AGES_12_19
+  // },
+  // {
+  //   type: 'number',
+  //   name: 'pubarche_age',
+  //   label: 'Pubarche Age',
+  //   age: PUBERTY_AGES_12_19
+  //   },
+  //   {
+  //     type: 'yesNoOption',
+  //     name: 'thelarche',
+  //     label: 'Thelarche (F)',
+  //     age: PUBERTY_AGES_12_19,
+  //     gender: 'Female',
+  //   },
+  //   {
+  //     type: 'number',
+  //     name: 'thelarche_age',
+  //     label: 'Thelarche Age (F)',
+  //     age: PUBERTY_AGES_12_19,
+  //     gender: 'Female',
+  //   },
+  //   {
+  //     type: 'yesNoOption',
+  //     name: 'menarche',
+  //     label: 'Menarche (F)',
+  //     age: PUBERTY_AGES_12_19,
+  //     gender: 'Female',
+  //   },
+  //   {
+  //     type: 'text',
+  //     name: 'menarche_age',
+  //     label: 'Menarche Age (F)',
+  //     age: PUBERTY_AGES_12_19,
+  //     gender: 'Female',
+  //   },
+  //   {
+  //     type: 'yesNoOption',
+  //     name: 'voice_change',
+  //     label: 'Voice Change (M)',
+  //     age: PUBERTY_AGES_12_17,
+  //     gender: 'Male',
+  //   },
+  //   {
+  //     type: 'number',
+  //     name: 'voice_change_age',
+  //     label: 'Voice Change Age (M)',
+  //     age: PUBERTY_AGES_12_17,
+  //     gender: 'Male',
+  //   },
+  //   {
+  //     type: 'yesNoOption',
+  //     name: 'testicular_growth',
+  //     label: 'Testicular Growth >= 4ml (M)',
+  //     age: PUBERTY_AGES_12_17,
+  //     gender: 'Male',
+  //   },
+  //   {
+  //     type: 'number',
+  //     name: 'testicular_growth_age',
+  //     label: 'Testicular Growth Age (M)',
+  //     age: PUBERTY_AGES_12_17,
+  //     gender: 'Male',
+  //   },
+  // ];
+  [{
     type: 'yesNoOption',
     name: 'pubarche',
     label: 'Pubarche',
@@ -119,8 +187,8 @@ export const allPubertyFields: InputFieldData[] = [
     name: 'pubarche_age',
     label: 'Pubarche Age',
     age: PUBERTY_AGES_12_19
-  },
-  {
+  }],
+  [{
     type: 'yesNoOption',
     name: 'thelarche',
     label: 'Thelarche (F)',
@@ -133,8 +201,8 @@ export const allPubertyFields: InputFieldData[] = [
     label: 'Thelarche Age (F)',
     age: PUBERTY_AGES_12_19,
     gender: 'Female',
-  },
-  {
+  }],
+  [{
     type: 'yesNoOption',
     name: 'menarche',
     label: 'Menarche (F)',
@@ -147,8 +215,8 @@ export const allPubertyFields: InputFieldData[] = [
     label: 'Menarche Age (F)',
     age: PUBERTY_AGES_12_19,
     gender: 'Female',
-  },
-  {
+  }],
+  [{
     type: 'yesNoOption',
     name: 'voice_change',
     label: 'Voice Change (M)',
@@ -161,8 +229,8 @@ export const allPubertyFields: InputFieldData[] = [
     label: 'Voice Change Age (M)',
     age: PUBERTY_AGES_12_17,
     gender: 'Male',
-  },
-  {
+  }],
+  [{
     type: 'yesNoOption',
     name: 'testicular_growth',
     label: 'Testicular Growth >= 4ml (M)',
@@ -175,7 +243,7 @@ export const allPubertyFields: InputFieldData[] = [
     label: 'Testicular Growth Age (M)',
     age: PUBERTY_AGES_12_17,
     gender: 'Male',
-  },
+  }],
 ];
 
 export function ChildVitalsFields({
@@ -201,9 +269,9 @@ export function ChildVitalsFields({
     () =>
       allPubertyFields
         .filter(
-          field => field.gender == undefined || field.gender == patient.gender
+          field => field[0].gender == undefined || field[0].gender == patient.gender
         )
-        .filter(field => field.age.includes(patientYearsOld)),
+        .filter(field => field[0].age.includes(patientYearsOld)),
     [patient.gender, patientYearsOld]
   );
   return (
@@ -235,7 +303,8 @@ function ChildVitalsSection({
   return (
     <div>
       <h2>Child Vitals</h2>
-      <div className="grids-col-1 grid gap-2 md:grid-cols-2">
+      <div className="flex flex-row flex-wrap">
+        {/* <div className="grids-col-1 grid gap-2 md:grid-cols-2"> */}
         {childVitalsFields.map(field => (
           <VitalFieldRenderer
             key={field.name}
@@ -252,7 +321,7 @@ export function ChildPubertySection({
   pubertyFields,
   curVital,
 }: {
-  pubertyFields: InputFieldData[];
+  pubertyFields: InputFieldData[][];
   curVital: Vital;
 }) {
   return (
@@ -261,13 +330,24 @@ export function ChildPubertySection({
       {pubertyFields.length === 0 ? (
         <p>No Puberty Fields, Ensure gender and age is correct</p>
       ) : (
-        <div className="grids-col-1 grid gap-2 md:grid-cols-2">
+        <div className="flex flex-row flex-wrap">
+          {/* <div className="grids-col-1 grid gap-2 lg:grid-cols-3"> */}
+          {/* <div className="flex flex-col gap-2"> */}
           {pubertyFields.map(field => (
-            <VitalFieldRenderer
-              key={field.name}
-              field={field}
-              curVital={curVital}
-            />
+            // <div className='flex flex-row gap-4 rounded-lg mr-6 p-2 border-2 border-gray-50'>
+            <div className='flex flex-row gap-4 rounded-lg mr-6 p-2 bg-gray-50 shadow-sm mb-2' key={field[0].name}>
+              <VitalFieldRenderer
+                key={field[0].name}
+                field={field[0]}
+                curVital={curVital}
+                className='min-w-24'
+              />
+              <VitalFieldRenderer
+                key={field[1].name}
+                field={field[1]}
+                curVital={curVital}
+              />
+            </div>
           ))}
         </div>
       )}
@@ -278,15 +358,18 @@ export function ChildPubertySection({
 function VitalFieldRenderer({
   field,
   curVital,
+  className
 }: {
   field: InputFieldData;
   curVital: Vital;
+  className?: string;
 }) {
   switch (field.type) {
     case 'dropdown':
       return (
-        <RHFDropdown
+        <RHFCustomSelect
           defaultValue={curVital[field.name]?.toString()}
+          className={className}
           {...field}
         />
       );
@@ -294,6 +377,7 @@ function VitalFieldRenderer({
       return (
         <RHFInputField
           placeholder={curVital[field.name]?.toString()}
+          className={className}
           {...field}
         />
       );
@@ -301,6 +385,7 @@ function VitalFieldRenderer({
       return (
         <RHFInputField
           placeholder={curVital[field.name]?.toString()}
+          className={className}
           {...field}
         />
       );
@@ -308,6 +393,8 @@ function VitalFieldRenderer({
       return (
         <RHFBinaryOption
           defaultValue={curVital[field.name]?.toString()}
+          className={className}
+          isRequired={false}
           {...field}
         />
       );

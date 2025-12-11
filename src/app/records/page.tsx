@@ -45,7 +45,7 @@ export default function RecordPage() {
 
   const useFormReturn = useForm({
     values: formDetails,
-    resetOptions: { keepDirtyValues: true },
+    // resetOptions: { keepDefaultValues: true }, // does not work as we set default values at field level for the new patient modal
   });
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function RecordPage() {
 
         const pubertyData = allPubertyFields.reduce(
           (acc, field) => {
-            const key = field.name;
+            const key = field[0].name;
             const value = fieldValues[key];
 
             if (value !== undefined && value !== '') {
@@ -122,7 +122,11 @@ export default function RecordPage() {
           return;
         }
 
+        // useFormReturn.reset({ village_prefix: fieldValues.village_prefix }, { keepDefaultValues: true });
+        // keepDefaultValues does not work as we set default values at field level
+
         useFormReturn.reset({ village_prefix: fieldValues.village_prefix });
+
         clearLocalStorageData();
 
         toast.success('Patient Created!');

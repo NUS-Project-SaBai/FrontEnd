@@ -2,12 +2,14 @@ import { Button } from '@/components/Button';
 import { PatientPhoto } from '@/components/PatientPhoto';
 import { ReferralStateDropdown } from '@/components/referrals/ReferralStateDropdown';
 import { VILLAGES } from '@/constants';
+import { getConsultByID } from '@/data/consult/getConsult';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
 import { formatDate } from '@/utils/formatDate';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { ClipboardList } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function ReferralCard({
   referral,
@@ -20,6 +22,9 @@ export function ReferralCard({
   date: string;
   onGeneratePDF: () => void;
 }) {
+
+  const router  = useRouter();
+
   return (
     <tr>
       <td>
@@ -69,6 +74,18 @@ export function ReferralCard({
             onClick={() => onGeneratePDF()}
             colour="indigo"
           />
+          <Button 
+            text="Go to consult"
+            Icon={<EyeIcon className="h-5 w-5" />}
+            onClick={async () => {
+              const consultId = referral.consult;
+              const consult = await getConsultByID(consultId.toString());
+              const visitId = consult?.visit.id;
+              router.push(`/records/patient-consultation?id=${patient.pk}&visit=${visitId}`)
+            }}
+            colour="blue"
+          />
+
         </div>
       </td>
       <td className="w-48">
