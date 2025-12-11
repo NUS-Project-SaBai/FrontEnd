@@ -130,13 +130,13 @@ export function ConsultationForm({
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting },
   } = useFormReturn;
   const referredFor = useFormReturn.watch('referred_for');
   const isEditing = editConsultId != null;
 
   useSafeguardUnsavedChanges(
-    useFormReturn.formState.isDirty && !isSubmitSuccessful,
+    useFormReturn.formState.isDirty,
     'You have unsaved changes to the consultation form. Are you sure you want to leave?',
     () => {
       // When user confirms they want to leave, clear the form state
@@ -144,25 +144,6 @@ export function ConsultationForm({
       clearLocalStorageData();
     }
   );
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset({});
-      clearLocalStorageData();
-      if (isEditing && onEditComplete) {
-        onEditComplete();
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful]);
-
-  useEffect(() => {
-    if (isSubmitSuccessful && useFormReturn.formState.isDirty) {
-      const currentValues = useFormReturn.getValues();
-      reset(currentValues, { keepDirty: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful, useFormReturn.formState.isDirty]);
 
   // Helper function to process and validate diagnoses
   const processDiagnoses = (
@@ -328,6 +309,11 @@ export function ConsultationForm({
               ? 'Medical Consult Updated!'
               : 'Medical Consult Completed!'
           );
+          reset({});
+          clearLocalStorageData();
+          if (isEditing && onEditComplete) {
+            onEditComplete();
+          }
         } catch (error) {
           console.error('Error submitting consultation form:', error);
           toast.error('Unknown Error');

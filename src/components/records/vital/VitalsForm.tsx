@@ -39,12 +39,12 @@ export function VitalsForm({
     handleSubmit,
     reset,
     watch,
-    formState: { isDirty, isSubmitSuccessful },
+    formState: { isDirty },
   } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
 
   useSafeguardUnsavedChanges(
-    isDirty && !isSubmitSuccessful,
+    isDirty,
     'You have unsaved changes to the vitals form. Are you sure you want to leave?',
     () => {
       reset({});
@@ -54,22 +54,6 @@ export function VitalsForm({
   useEffect(() => {
     reset({});
   }, [curVital, reset]);
-
-  // Reset form after successful submission
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset({});
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful]);
-
-  useEffect(() => {
-    if (isSubmitSuccessful && useFormReturn.formState.isDirty) {
-      const currentValues = useFormReturn.getValues();
-      reset(currentValues, { keepDirty: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful, useFormReturn.formState.isDirty]);
 
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).
@@ -89,6 +73,7 @@ export function VitalsForm({
       async (data: FieldValues) => {
         data.visit_id = visitId;
         patchVital(data as Vital).then(() => {
+          reset({});
           toast.success('Updated Vital');
         });
       },
