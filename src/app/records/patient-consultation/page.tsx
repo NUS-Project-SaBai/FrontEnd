@@ -3,16 +3,16 @@ import { LoadingUI } from '@/components/LoadingUI';
 import { ConsultationForm } from '@/components/records/consultation/ConsultationForm';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
 import { PrescriptionConsultCol } from '@/components/records/PrescriptionConsultCol';
-import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { VisitDropdown } from '@/components/VisitDropdown';
 import { getPatientById } from '@/data/patient/getPatient';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { Consult } from '@/types/Consult';
-import { calculateDobDifference, Patient } from '@/types/Patient';
+import { Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
 import { formatDate } from '@/utils/formatDate';
 import { fetchPatientConsultationInfo } from './api';
+import { VitalsForm } from '@/components/records/vital/VitalsForm';
 
 export default async function PatientConsultationPage({
   searchParams,
@@ -104,7 +104,6 @@ function MainBody({
   consults,
   patient,
   visitId,
-  visitDate,
   prescriptions,
 }: {
   vitals: Vital | null;
@@ -132,14 +131,7 @@ function MainBody({
           {vitals == null ? (
             <p>No vitals found for current visit</p>
           ) : (
-            <PastVitalTable
-              vital={vitals}
-              age={calculateDobDifference(
-                new Date(patient.date_of_birth),
-                visitDate
-              )}
-              gender={patient.gender}
-            />
+            <VitalsForm patient={patient} visitId={visitId} curVital={vitals} />
           )}
           <div className="mt-6 border-t border-slate-200 pt-6">
             <PrescriptionConsultCol
