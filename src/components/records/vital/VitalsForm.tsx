@@ -76,7 +76,8 @@ export function VitalsForm({
           await patchVital(data as Vital);
           toast.success('Updated Vital');
         } catch (error) {
-          toast.error('Error updating vital');
+          console.error('Error updating vital:', error);
+          toast.error('Unknown Error');
           return;
         }
 
