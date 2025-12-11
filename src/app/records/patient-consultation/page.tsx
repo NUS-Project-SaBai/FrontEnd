@@ -4,15 +4,15 @@ import { ConsultationForm } from '@/components/records/consultation/Consultation
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
 import { PrescriptionConsultCol } from '@/components/records/PrescriptionConsultCol';
 import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { VisitDropdown } from '@/components/VisitDropdown';
 import { getPatientById } from '@/data/patient/getPatient';
+import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { Consult } from '@/types/Consult';
 import { calculateDobDifference, Patient } from '@/types/Patient';
 import { Vital } from '@/types/Vital';
-import { fetchPatientConsultationInfo } from './api';
-import { getVisitsByPatientId } from '@/data/visit/getVisit';
-import { VisitDropdown } from '@/components/VisitDropdown';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { formatDate } from '@/utils/formatDate';
+import { fetchPatientConsultationInfo } from './api';
 
 export default async function PatientConsultationPage({
   searchParams,
@@ -50,7 +50,7 @@ export default async function PatientConsultationPage({
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
             Patient information
           </h2>
-          <PatientInfoHeaderSection patient={patient} />
+          <PatientInfoHeaderSection patient={patient} showVitalsButton visitId={visitId}/>
         </section>
 
         {/* Visit selector */}
@@ -122,12 +122,12 @@ function MainBody({
   }[];
 }) {
   return (
-    <section className="grid gap-4 lg:gap-6 lg:grid-cols-2">
+    <section className="grid gap-4 lg:grid-cols-2 lg:gap-6">
       {/* Vitals card */}
-      <div className="order-1 rounded-xl border border-slate-200 bg-white shadow-sm h-[calc(100vh-100px)] overflow-hidden">
+      <div className="order-1 h-[calc(100vh-100px)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <ScrollArea className="h-full p-6">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Patient Vitals
+            Patient Vitals
           </h2>
           {vitals == null ? (
             <p>No vitals found for current visit</p>
@@ -151,7 +151,7 @@ function MainBody({
         </ScrollArea>
       </div>
 
-      <div className="order-2 rounded-xl border border-slate-200 bg-white shadow-sm h-[calc(100vh-100px)] overflow-hidden">
+      <div className="order-2 h-[calc(100vh-100px)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <ScrollArea className="h-full">
           <ConsultationForm visitId={visitId} patient={patient} />
         </ScrollArea>

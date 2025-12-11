@@ -18,12 +18,13 @@ export default async function PatientVitalPage({
   searchParams: Promise<{ id: string; visit: string }>;
 }) {
   const { id: patientId, visit: visitId } = await searchParams;
+  const fullPatientDetails = await getPatientById(patientId);
   if (visitId == undefined) {
     return (
       <div className="p-2">
         <h1>Patient Vitals</h1>
         <div className="border-b-2 py-2">
-          <PatientInfoHeaderSection patient={await getPatientById(patientId)} />
+          <PatientInfoHeaderSection patient={fullPatientDetails} />
         </div>
         <div>
           <LoadingUI message="Loading data..." />
@@ -64,7 +65,11 @@ export default async function PatientVitalPage({
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
             Patient information
           </h2>
-          <PatientInfoHeaderSection patient={patient} />
+          <PatientInfoHeaderSection
+            patient={{ ...fullPatientDetails, ...patient }}
+            showConsultationButton
+            visitId={visitId}
+          />
         </section>
 
         {/* Visit selector */}

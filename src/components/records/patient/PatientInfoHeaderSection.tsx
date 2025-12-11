@@ -1,4 +1,8 @@
 'use client';
+import {
+  ConsultationButton,
+  VitalsButton,
+} from '@/components/NavigationButtons';
 import { PatientPhoto } from '@/components/PatientPhoto';
 import { UploadDocument } from '@/components/records/document/UploadDocument';
 import { ViewDocument } from '@/components/records/document/ViewDocument';
@@ -11,7 +15,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { EditPatient } from './EditPatient';
 import { PatientDetails } from './PatientDetails';
 
-export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
+export function PatientInfoHeaderSection({
+  patient,
+  showVitalsButton = false,
+  showConsultationButton = false,
+  visitId,
+}: {
+  patient: Patient;
+  showVitalsButton?: boolean;
+  showConsultationButton?: boolean;
+  visitId?: string;
+}) {
   const [documents, setDocuments] = useState<UploadFile[]>([]);
 
   const { isLoading: isLoadingDocuments, withLoading: withLoadingDocuments } =
@@ -31,8 +45,8 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
 
   return (
     <div className="flex flex-col">
-      <div className="m-2 flex flex-row gap-2 flex-wrap">
-        <div className="relative h-[15vw] w-[15vw] min-h-20 min-w-20 max-h-40 max-w-40">
+      <div className="m-2 flex flex-row flex-wrap gap-2">
+        <div className="relative h-[15vw] max-h-40 min-h-20 w-[15vw] min-w-20 max-w-40">
           <PatientPhoto
             pictureUrl={patient.picture_url}
             width={180}
@@ -49,15 +63,31 @@ export function PatientInfoHeaderSection({ patient }: { patient: Patient }) {
           </span>
           <span>, {patient.name}</span>
         </h1>
-        {/* <div className="flex flex-wrap gap-2"> */}
-        <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3">
+        <div className="flex flex-wrap gap-2">
+        {/* <div className="flex flex-col gap-2 sm:grid sm:grid-cols-3"> */}
           <UploadDocument patient={patient} onUploadSuccess={fetchDocuments} />
           <ViewDocument
             documents={documents}
             setDocuments={setDocuments}
             isLoading={isLoadingDocuments}
           />
-          <EditPatient patient={patient} /></div>
+          <EditPatient patient={patient} />
+
+          {showVitalsButton && (
+            <VitalsButton
+              patient={patient}
+              labelOverwrite="Go to vitals"
+              visitId={visitId}
+            />
+          )}
+          {showConsultationButton && (
+            <ConsultationButton
+              patient={patient}
+              labelOverwrite="Go to consultation"
+              visitId={visitId}
+            />
+          )}
+        </div>
       </div>
       <PatientDetails patient={patient} />
     </div>
