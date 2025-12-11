@@ -105,6 +105,7 @@ export default function RecordPage() {
           },
           {} as Record<string, string | number | boolean>
         );
+        console.log('Puberty fields', pubertyData);
 
         const vitalsInfoFromRegistration = {
           temperature: fieldValues.temperature,
@@ -112,6 +113,7 @@ export default function RecordPage() {
           pallor: fieldValues.pallor,
           ...pubertyData,
         };
+        console.log('Vitals', vitalsInfoFromRegistration);
 
         formData.append('patient', JSON.stringify(patientInfoFromRegistration));
         formData.append('vitals', JSON.stringify(vitalsInfoFromRegistration));

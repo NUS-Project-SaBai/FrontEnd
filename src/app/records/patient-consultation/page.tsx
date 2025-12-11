@@ -7,12 +7,14 @@ import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
 import { getPatientById } from '@/data/patient/getPatient';
 import { Consult } from '@/types/Consult';
 import { calculateDobDifference, Patient } from '@/types/Patient';
-import { Vital } from '@/types/Vital';
+import { EMPTY_VITAL, Vital } from '@/types/Vital';
 import { fetchPatientConsultationInfo } from './api';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { VisitDropdown } from '@/components/VisitDropdown';
 import { DateTime } from 'luxon';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { VitalsForm } from '@/components/records/vital/VitalsForm';
+import { getVitalByVisit } from '@/data/vital/getVital';
 
 export default async function PatientConsultationPage({
   searchParams,
@@ -121,25 +123,20 @@ function MainBody({
     status: string;
   }[];
 }) {
+
+
   return (
-    <section className="grid gap-4 lg:gap-6 lg:grid-cols-2">
+    <section className="grid gap-4 lg:grid-cols-2 lg:gap-6">
       {/* Vitals card */}
-      <div className="order-1 rounded-xl border border-slate-200 bg-white shadow-sm h-[calc(100vh-100px)] overflow-hidden">
+      <div className="order-1 h-[calc(100vh-100px)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <ScrollArea className="h-full p-6">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Patient Vitals
+            Patient Vitals
           </h2>
           {vitals == null ? (
             <p>No vitals found for current visit</p>
           ) : (
-            <PastVitalTable
-              vital={vitals}
-              age={calculateDobDifference(
-                new Date(patient.date_of_birth),
-                visitDate
-              )}
-              gender={patient.gender}
-            />
+            <VitalsForm patient={patient} visitId={visitId} curVital={vitals} />
           )}
           <div className="mt-6 border-t border-slate-200 pt-6">
             <PrescriptionConsultCol
@@ -151,7 +148,7 @@ function MainBody({
         </ScrollArea>
       </div>
 
-      <div className="order-2 rounded-xl border border-slate-200 bg-white shadow-sm h-[calc(100vh-100px)] overflow-hidden">
+      <div className="order-2 h-[calc(100vh-100px)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <ScrollArea className="h-full">
           <ConsultationForm visitId={visitId} patient={patient} />
         </ScrollArea>
