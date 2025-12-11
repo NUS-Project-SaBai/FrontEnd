@@ -309,14 +309,17 @@ export function ConsultationForm({
               ? 'Medical Consult Updated!'
               : 'Medical Consult Completed!'
           );
-          reset({});
-          clearLocalStorageData();
-          if (isEditing && onEditComplete) {
-            onEditComplete();
-          }
         } catch (error) {
           console.error('Error submitting consultation form:', error);
           toast.error('Unknown Error');
+          return; // Don't clear form if there was an error
+        }
+
+        // Clear form after successful submission
+        reset({});
+        clearLocalStorageData();
+        if (isEditing && onEditComplete) {
+          onEditComplete();
         }
 
         // only submit the form if 'referred_for' is filled in and is not 'Not Referred'

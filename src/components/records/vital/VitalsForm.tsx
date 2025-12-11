@@ -71,11 +71,17 @@ export function VitalsForm({
 
     handleSubmit(
       async (data: FieldValues) => {
-        data.visit_id = visitId;
-        patchVital(data as Vital).then(() => {
-          reset({});
+        try {
+          data.visit_id = visitId;
+          await patchVital(data as Vital);
           toast.success('Updated Vital');
-        });
+        } catch (error) {
+          toast.error('Error updating vital');
+          return;
+        }
+
+        // Clear form after successful submission
+        reset({});
       },
       () => {
         toast.error('Invalid/Missing Input');
