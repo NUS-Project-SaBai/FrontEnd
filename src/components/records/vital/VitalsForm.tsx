@@ -27,6 +27,7 @@ export function VitalsForm({
   const useFormReturn = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
+    defaultValues: curVital,
   });
   const { handleSubmit, reset, watch } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
@@ -36,7 +37,9 @@ export function VitalsForm({
   // the new values in curVitals. The RHFCustomSelect and Dropdown components will have 
   // their values set to these new values via the defaultValue prop.
   useEffect(() => {
-    reset({})
+    if (curVital) {
+      reset(curVital);
+    }
   }, [curVital, reset])
 
   // if the user hasn’t provided a new height/weight, fall back

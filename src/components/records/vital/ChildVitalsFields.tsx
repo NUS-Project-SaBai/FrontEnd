@@ -357,46 +357,21 @@ export function ChildPubertySection({
 
 function VitalFieldRenderer({
   field,
-  curVital,
-  className
+  className,
 }: {
   field: InputFieldData;
-  curVital: Vital;
   className?: string;
 }) {
   switch (field.type) {
     case 'dropdown':
-      return (
-        <RHFCustomSelect
-          defaultValue={curVital[field.name]?.toString()}
-          className={className}
-          {...field}
-        />
-      );
+      return <RHFCustomSelect className={className} {...field} />;
     case 'text':
-      return (
-        <RHFInputField
-          placeholder={curVital[field.name]?.toString()}
-          className={className}
-          {...field}
-        />
-      );
+      return <RHFInputField className={className} {...field} />;
     case 'number':
-      return (
-        <RHFInputField
-          placeholder={curVital[field.name]?.toString()}
-          className={className}
-          {...field}
-        />
-      );
+      return <RHFInputField className={className} {...field} />;
     case 'yesNoOption':
       return (
-        <RHFBinaryOption
-          defaultValue={curVital[field.name]?.toString()}
-          className={className}
-          isRequired={false}
-          {...field}
-        />
+        <RHFBinaryOption className={className} isRequired={false} {...field} />
       );
   }
 }
