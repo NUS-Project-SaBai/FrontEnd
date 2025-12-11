@@ -104,7 +104,7 @@ export default function OrdersPage() {
     return () => clearInterval(intervalId);
   }, [isAutoRefreshEnabled]);
 
-  const handleRemoveNonPendingOrder = (orderId: number) => {
+  const handleApproveOrRejectOrder = (orderId: number) => {
     setOrderRowData(prev =>
       prev
         .map(row => ({
@@ -212,7 +212,7 @@ export default function OrdersPage() {
                   <OrderRow
                     key={x.patient?.patient_id || index}
                     orderRowData={x}
-                    removeNonPendingOrder={handleRemoveNonPendingOrder}
+                    onApproveOrRejectOrder={handleApproveOrRejectOrder}
                   />
                 ))
               )}
@@ -226,10 +226,10 @@ export default function OrdersPage() {
 
 function OrderRow({
   orderRowData: { patient, data },
-  removeNonPendingOrder,
+  onApproveOrRejectOrder,
 }: {
   orderRowData: OrderRowData;
-  removeNonPendingOrder: (id: number) => void;
+  onApproveOrRejectOrder: (id: number) => void;
 }) {
   const onPatchError = (err: Error, medicine_name: string) => {
     toast.error(() => (
@@ -254,7 +254,7 @@ function OrderRow({
           {/* Hacky regex workaround cuz backend send patient_id with village prefix and padded zeroes*/}
           <Link 
             href={`/records/patient-record?id=${patient.patient_id.replace(/^..0*/, "")}`}
-            className="block rounded-lg border border-gray-200 p-4 
+            className="rounded-lg border border-gray-200 p-4 
               transition-all hover:shadow-md hover:-translate-y-0.5 hover:bg-gray-50 cursor-pointer
               flex flex-col items-center bg-slate-50"
             >
@@ -328,7 +328,7 @@ function OrderRow({
                             onPatchError(new Error(r.error), o.medication_name);
                             return;
                           }
-                          removeNonPendingOrder(o.order_id)
+                          onApproveOrRejectOrder(o.order_id)
                         })
                     }}
                     handleCancelOrder={async () => {
@@ -339,7 +339,7 @@ function OrderRow({
                             onPatchError(new Error(r.error), o.medication_name);
                             return;
                           }
-                          removeNonPendingOrder(o.order_id)
+                          onApproveOrRejectOrder(o.order_id)
                         })
                     }}
                   />
