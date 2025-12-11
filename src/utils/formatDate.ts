@@ -18,8 +18,8 @@ export function formatDate(
   } else {
     const dt = DateTime.fromISO(date);
     return format === 'date'
-      ? dt.toFormat('dd MMM yyyy')
-      : dt.toFormat('dd MMM yyyy HH:mm');
+      ? dt.setZone('Asia/Phnom_Penh').toFormat('dd MMM yyyy')
+      : dt.setZone('Asia/Phnom_Penh').toFormat('dd MMM yyyy HH:mm');
   }
 }
 
