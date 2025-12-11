@@ -329,6 +329,7 @@ function OrderRow({
                             return;
                           }
                           onApproveOrRejectOrder(o.order_id)
+                          toast.success(`Order Approved`);
                         })
                     }}
                     handleCancelOrder={async () => {
@@ -340,6 +341,7 @@ function OrderRow({
                             return;
                           }
                           onApproveOrRejectOrder(o.order_id)
+                          toast.success(`Order Rejected`);
                         })
                     }}
                   />
