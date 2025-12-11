@@ -303,7 +303,7 @@ function ChildVitalsSection({
   return (
     <div>
       <h2>Child Vitals</h2>
-      <div className="flex flex-row">
+      <div className="flex flex-row flex-wrap">
         {/* <div className="grids-col-1 grid gap-2 md:grid-cols-2"> */}
         {childVitalsFields.map(field => (
           <VitalFieldRenderer
