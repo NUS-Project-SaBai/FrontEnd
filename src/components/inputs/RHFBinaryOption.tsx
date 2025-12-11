@@ -10,6 +10,7 @@ type RHFBinaryOptionProps = {
   optionValue2?: string;
   defaultValue?: string;
   isRequired?: boolean;
+  className?: string;
 };
 export function RHFBinaryOption({
   name,
@@ -20,6 +21,7 @@ export function RHFBinaryOption({
   optionValue2 = 'No',
   defaultValue,
   isRequired = true,
+  className,
 }: RHFBinaryOptionProps) {
   const yesNoOptions: OptionData[] = [
     { label: optionLabel1, value: optionValue1 },
@@ -32,6 +34,7 @@ export function RHFBinaryOption({
       options={yesNoOptions}
       defaultValue={defaultValue}
       isRequired={isRequired}
+      className={className}
     />
   );
 }
