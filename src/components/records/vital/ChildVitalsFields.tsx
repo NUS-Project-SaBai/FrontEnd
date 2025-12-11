@@ -284,10 +284,7 @@ export function ChildVitalsFields({
       )}
 
       {pubertyFields.length == 0 || (
-        <ChildPubertySection
-          pubertyFields={pubertyFields}
-          curVital={curVital}
-        />
+        <ChildPubertySection pubertyFields={pubertyFields} />
       )}
     </div>
   );
@@ -306,11 +303,7 @@ function ChildVitalsSection({
       <div className="flex flex-row flex-wrap">
         {/* <div className="grids-col-1 grid gap-2 md:grid-cols-2"> */}
         {childVitalsFields.map(field => (
-          <VitalFieldRenderer
-            key={field.name}
-            field={field}
-            curVital={curVital}
-          />
+          <VitalFieldRenderer key={field.name} field={field} />
         ))}
       </div>
     </div>
