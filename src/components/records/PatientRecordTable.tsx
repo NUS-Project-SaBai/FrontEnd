@@ -11,10 +11,9 @@ import { Patient } from '@/types/Patient';
 import { formatDate } from '@/utils/formatDate';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/16/solid';
 import { DateTime, Duration } from 'luxon';
-import Link from 'next/link';
-import type { Dispatch, SetStateAction } from 'react';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { VitalsButton, ConsultationButton } from '../NavigationButtons';
 
 export function PatientRecordTable({
   displayedPatients,
@@ -182,48 +181,4 @@ function getLastVisitLabel(lastVisitDate: string): string {
     : timeSinceLastVisit < Duration.fromObject({ minutes: 10 })
       ? lastVisitDateLuxon.toRelative() || 'Missing relative time?'
       : formatDate(lastVisitDate, 'datetime');
-}
-
-function VitalsButton({
-  patient,
-  setIsHovered,
-}: {
-  patient: Patient;
-  setIsHovered: Dispatch<SetStateAction<boolean>>;
-}) {
-  return (
-    <Link
-      href={`/records/patient-vitals?id=${patient.pk}&visit=${patient.last_visit_id}`}
-      onClick={e => e.stopPropagation()}
-      onMouseEnter={e => {
-        e.stopPropagation();
-        setIsHovered(false);
-      }}
-      onMouseLeave={() => setIsHovered(true)}
-    >
-      <Button text="Vitals" colour="red" />
-    </Link>
-  );
-}
-
-function ConsultationButton({
-  patient,
-  setIsHovered,
-}: {
-  patient: Patient;
-  setIsHovered: Dispatch<SetStateAction<boolean>>;
-}) {
-  return (
-    <Link
-      href={`/records/patient-consultation?id=${patient.pk}&visit=${patient.last_visit_id}`}
-      onClick={e => e.stopPropagation()}
-      onMouseEnter={e => {
-        e.stopPropagation();
-        setIsHovered(false);
-      }}
-      onMouseLeave={() => setIsHovered(true)}
-    >
-      <Button text="Consultation" colour="indigo" />
-    </Link>
-  );
 }
