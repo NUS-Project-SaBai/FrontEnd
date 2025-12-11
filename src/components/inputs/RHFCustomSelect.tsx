@@ -43,7 +43,8 @@ export function RHFCustomSelect({
   // calling reset with keepDefaultValues does not actually preserve the default values
   // TODO: possibly define all the form fields at the useForm level instead.
   useEffect(() => {
-    if (defaultValue && !watchedValue) {
+    // Only set default when field is truly uninitialized (undefined), not just empty ("")
+    if (defaultValue !== undefined && watchedValue === undefined) {
       setValue(name, defaultValue, { shouldDirty: false });
     }
   }, [defaultValue, watchedValue, setValue, name]);
