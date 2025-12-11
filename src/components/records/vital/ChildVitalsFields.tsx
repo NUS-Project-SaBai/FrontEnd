@@ -19,7 +19,7 @@ export const PUBERTY_AGES_12_17 = [
   12, 13, 14, 15, 16, 17
 ];
 
-type InputFieldData =
+export type InputFieldData =
   | {
     type: 'dropdown';
     name: keyof Omit<Vital, 'id' | 'visit'>;
