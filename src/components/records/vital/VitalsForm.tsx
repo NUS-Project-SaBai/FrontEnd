@@ -35,11 +35,16 @@ export function VitalsForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
-  const { handleSubmit, reset, watch, formState } = useFormReturn;
+  const {
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isDirty, isSubmitSuccessful },
+  } = useFormReturn;
   const [formHeight, formWeight] = watch(['height', 'weight']);
 
   useSafeguardUnsavedChanges(
-    formState.isDirty,
+    isDirty && !isSubmitSuccessful,
     'You have unsaved changes to the vitals form. Are you sure you want to leave?',
     () => {
       reset({});
