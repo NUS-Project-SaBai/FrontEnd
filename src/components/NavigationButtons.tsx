@@ -14,10 +14,9 @@ export function VitalsButton({
   labelOverwrite?: string;
   visitId?: string;
 }) {
-  console.log(visitId)
   return (
     <Link
-      href={`/records/patient-vitals?id=${patient.pk}&visit=${visitId ?? patient.last_visit_id}`}
+      href={`/records/patient-vitals?id=${patient.pk}&visit=${visitId ?? patient.last_visit_id}&${visitId && 'specificVisit=true'}`}
       onClick={e => e.stopPropagation()}
       onMouseEnter={e => {
         e.stopPropagation();
@@ -41,10 +40,9 @@ export function ConsultationButton({
   labelOverwrite?: string;
   visitId?: string;
 }) {
-  console.log(visitId)
   return (
     <Link
-      href={`/records/patient-consultation?id=${patient.pk}&visit=${visitId ?? patient.last_visit_id}`}
+      href={`/records/patient-consultation?id=${patient.pk}&visit=${visitId ?? patient.last_visit_id}&${visitId && 'specificVisit=true'}`}
       onClick={e => e.stopPropagation()}
       onMouseEnter={e => {
         e.stopPropagation();

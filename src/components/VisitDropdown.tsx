@@ -46,8 +46,10 @@ export function VisitDropdown({
     searchParams.get('visit') ?? ''
   );
 
+  // automatically select the latest visit unless viewing a specific visit
   useEffect(() => {
-    setVisitId(items[0].value)
+    const viewingSpecificVisit = searchParams.get("specificVisit") === "true"
+    if (!viewingSpecificVisit) setVisitId(items[0].value)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
