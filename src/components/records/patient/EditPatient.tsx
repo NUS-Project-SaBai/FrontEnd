@@ -23,6 +23,7 @@ export function EditPatient({ patient }: { patient: Patient }) {
     },
   });
   const router = useRouter();
+  const [submitting, setSubmitting] = useState(false)
   return (
     <>
       <Button
@@ -42,8 +43,11 @@ export function EditPatient({ patient }: { patient: Patient }) {
           <PatientForm
             closeForm={closeModal}
             isEditing
+            isSubmitting={submitting}
             onSubmit={e => {
               e.preventDefault();
+              console.log("submitting set to true")
+              setSubmitting(true);
 
               useFormReturn.handleSubmit(
                 async fieldValues => {
@@ -72,6 +76,8 @@ export function EditPatient({ patient }: { patient: Patient }) {
                   }
                   patchPatient(fieldValues.pk, formData).then(() => {
                     toast.success('Patient Updated!');
+                    console.log("submitting set to false")
+                    setSubmitting(false)
                     router.refresh();
                     closeModal();
                   });
