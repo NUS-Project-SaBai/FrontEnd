@@ -104,6 +104,38 @@ export default function OrdersPage() {
     return () => clearInterval(intervalId);
   }, [isAutoRefreshEnabled]);
 
+  const handleRemoveNonPendingOrder = (orderId: number) => {
+    setOrderRowData(prev =>
+      prev
+        .map(row => ({
+          ...row,
+          data: row.data
+            .map(visit => ({
+              ...visit,
+              orders: visit.orders.filter(order => order.order_id !== orderId),
+            }))
+            // Drop visits that no longer have any orders
+            .filter(visit => visit.orders.length > 0),
+        }))
+        // Drop patients that no longer have any visits
+        .filter(row => row.data.length > 0)
+    );
+
+    setFilteredOrderRowData(prev =>
+      prev
+        .map(row => ({
+          ...row,
+          data: row.data
+            .map(visit => ({
+              ...visit,
+              orders: visit.orders.filter(order => order.order_id !== orderId),
+            }))
+            .filter(visit => visit.orders.length > 0),
+        }))
+        .filter(row => row.data.length > 0)
+    );
+  };
+
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
       <div className="p-2">
@@ -180,7 +212,7 @@ export default function OrdersPage() {
                   <OrderRow
                     key={x.patient?.patient_id || index}
                     orderRowData={x}
-                    removeNonPendingOrder={fetchPendingOrders}
+                    removeNonPendingOrder={handleRemoveNonPendingOrder}
                   />
                 ))
               )}
