@@ -114,6 +114,7 @@ export function ViewDocument({
         text="View Documents"
         onClick={() => setIsOpen(true)}
         colour="blue"
+        className='w-24 h-16'
       />
       <Modal
         isOpen={isOpen}
