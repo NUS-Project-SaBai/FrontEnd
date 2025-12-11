@@ -1,8 +1,8 @@
 'use client';
 import { Button } from '@/components/Button';
 import { DisplayField } from '@/components/DisplayField';
-import { RHFDropdown } from '@/components/inputs/RHFDropdown';
 import { RHFInputField } from '@/components/inputs/RHFInputField';
+import { RHFSearchableDropdown } from '@/components/inputs/RHFSearchableDropdown';
 import { LoadingUI } from '@/components/LoadingUI';
 import { Modal } from '@/components/Modal';
 import { getMedication } from '@/data/medication/getMedications';
@@ -148,15 +148,24 @@ export function MedicationOrderForm({
             {isLoading ? (
               <LoadingUI message="Loading Available Medications..." />
             ) : (
-              <RHFDropdown
+              // <RHFDropdown
+              //   name="medication"
+              //   label="Medicine"
+              //   options={medications.map(med => ({
+              //     value: `${med.id.toString()} ${med.medicine_name}`,
+              //     label: `${med.medicine_name} (qty: ${med.quantity})`,
+              //   }))}
+              //   defaultValue={selectedOrder?.medication || ''}
+              //   isRequired={true}
+              // />
+              <RHFSearchableDropdown
                 name="medication"
                 label="Medicine"
-                options={medications.map(med => ({
-                  value: `${med.id.toString()} ${med.medicine_name}`,
+                isRequired
+                options={medications.map((med) => ({
+                  value: `${med.id} ${med.medicine_name}`,
                   label: `${med.medicine_name} (qty: ${med.quantity})`,
                 }))}
-                defaultValue={selectedOrder?.medication || ''}
-                isRequired={true}
               />
             )}
             <div className="grid grid-cols-2 gap-4">

@@ -9,17 +9,20 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { Patient } from '@/types/Patient';
 import { Referral } from '@/types/Referral';
 import { formatDate } from '@/utils/formatDate';
-import { CheckIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, PencilIcon, XMarkIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Button } from '@/components/Button';
+import { getConsultByID } from '@/data/consult/getConsult';
 
 export default function ReferralDetailsPage() {
   const ICON_CLASS_STYLE = 'h-6 w-12';
   const { isLoading, withLoading } = useLoadingState(true);
   const [date, setDate] = useState<string>();
   const [patient, setPatient] = useState<Patient>();
-  const [referral, setReferral] = useState<Referral & {doctorNickname: string}>();
+  const [referral, setReferral] = useState<Referral & { doctorNickname: string }>();
   const [editable, setEditable] = useState<boolean>(false);
   const [originalOutcome, setOriginalOutcome] = useState<string>('');
 
@@ -34,7 +37,7 @@ export default function ReferralDetailsPage() {
       const data = await getReferral(id.toString());
       setDate(data.date);
       setPatient(data.patient);
-      setReferral({...data.referral, doctorNickname: data.doctor.nickname});
+      setReferral({ ...data.referral, doctorNickname: data.doctor.nickname });
       setOriginalOutcome(data.referral.referral_outcome || '');
     });
     fetchReferral();
@@ -73,6 +76,8 @@ export default function ReferralDetailsPage() {
       .then(() => toast.success('Updated successfully!'))
       .catch(() => toast.error('Failed to update'));
   }
+
+  const router = useRouter();
 
   return (
     <div className="p-2">
@@ -178,6 +183,26 @@ export default function ReferralDetailsPage() {
                     </div>
                   </td>
                 )}
+              </tr>
+              <tr>
+                <td className="whitespace-nowrap align-top">
+                  Go to Consultation
+                </td>
+                <td className="whitespace-nowrap align-top">
+                  <div className="flex gap-2">
+                    <Button
+                      text="Go to consult"
+                      Icon={<EyeIcon className="h-5 w-5" />}
+                      onClick={async () => {
+                        const consultId = referral!.consult;
+                        const consult = await getConsultByID(consultId.toString());
+                        const visitId = consult?.visit.id;
+                        router.push(`/records/patient-consultation?id=${patient!.pk}&visit=${visitId}`)
+                      }}
+                      colour="blue" />
+                  </div>
+                </td>
+
               </tr>
             </tbody>
           </table>

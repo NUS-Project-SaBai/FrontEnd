@@ -10,7 +10,7 @@ import { getVitalByVisit } from '@/data/vital/getVital';
 import { cn } from '@/lib/utils';
 import { calculateDobDifference } from '@/types/Patient';
 import { EMPTY_VITAL } from '@/types/Vital';
-import { DateTime } from 'luxon';
+import { formatDate } from '@/utils/formatDate';
 
 export default async function PatientVitalPage({
   searchParams,
@@ -18,12 +18,13 @@ export default async function PatientVitalPage({
   searchParams: Promise<{ id: string; visit: string }>;
 }) {
   const { id: patientId, visit: visitId } = await searchParams;
+  const fullPatientDetails = await getPatientById(patientId);
   if (visitId == undefined) {
     return (
       <div className="p-2">
         <h1>Patient Vitals</h1>
         <div className="border-b-2 py-2">
-          <PatientInfoHeaderSection patient={await getPatientById(patientId)} />
+          <PatientInfoHeaderSection patient={fullPatientDetails} />
         </div>
         <div>
           <LoadingUI message="Loading data..." />
@@ -56,7 +57,7 @@ export default async function PatientVitalPage({
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-6">
-      <div className="mx-4 max-w space-y-6">
+      <div className="max-w mx-4 space-y-6">
         <h1>Patient Vitals</h1>
 
         {/* Patient info */}
@@ -64,7 +65,11 @@ export default async function PatientVitalPage({
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
             Patient information
           </h2>
-          <PatientInfoHeaderSection patient={patient} />
+          <PatientInfoHeaderSection
+            patient={{ ...fullPatientDetails, ...patient }}
+            showConsultationButton
+            visitId={visitId}
+          />
         </section>
 
         {/* Visit selector */}
@@ -75,9 +80,7 @@ export default async function PatientVitalPage({
                 Viewing vitals for visit on
               </p>
               <p className="mt-1 text-base font-semibold text-slate-900">
-                {DateTime.fromISO(visitDate.toISOString()).toLocaleString(
-                  DateTime.DATETIME_MED
-                )}
+                {formatDate(visitDate.toISOString(), 'date')}
               </p>
               <p className="mt-1 text-xs text-slate-500">
                 Select a different visit to compare historical vitals.
@@ -88,9 +91,7 @@ export default async function PatientVitalPage({
               <VisitDropdown
                 name="visit"
                 visits={patientVisits}
-                placeholder={DateTime.fromISO(
-                  visitDate.toISOString()
-                ).toLocaleString(DateTime.DATE_MED)}
+                placeholder={formatDate(visitDate.toISOString(), 'date')}
                 className="w-full"
               />
             </div>
@@ -98,13 +99,14 @@ export default async function PatientVitalPage({
         </section>
 
         {/* Main content: vitals + graph */}
-        <section className={cn(
-                            "grid gap-4 lg:gap-6",
-                            (patientVisitAge.year >= 2 && patientVisitAge.year <= 18)
-                              ? "lg:grid-cols-2"
-                              : "lg:grid-cols-1"
-                          )}>
-
+        <section
+          className={cn(
+            'grid gap-4 lg:gap-6',
+            patientVisitAge.year >= 2 && patientVisitAge.year <= 18
+              ? 'lg:grid-cols-2'
+              : 'lg:grid-cols-1'
+          )}
+        >
           {/* Vitals card */}
           <div className="order-1 rounded-xl border border-slate-200 bg-white shadow-sm">
             <VitalsForm
@@ -115,7 +117,7 @@ export default async function PatientVitalPage({
           </div>
 
           {/* Graph card */}
-          {(patientVisitAge.year >= 2 && patientVisitAge.year <= 18)  &&
+          {patientVisitAge.year >= 2 && patientVisitAge.year <= 18 && (
             <div className="order-2 rounded-xl border border-slate-200 bg-white shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-2 p-4">
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
@@ -135,7 +137,7 @@ export default async function PatientVitalPage({
                 />
               </div>
             </div>
-          }
+          )}
         </section>
       </div>
     </div>

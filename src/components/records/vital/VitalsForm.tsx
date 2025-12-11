@@ -13,7 +13,7 @@ import useSafeguardUnsavedChanges from '@/hooks/safeguardUnsavedChanges';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { Patient } from '@/types/Patient';
 import { displayBMI, validateVisualAcuity, Vital } from '@/types/Vital';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -51,6 +51,10 @@ export function VitalsForm({
       clearLocalStorageData();
     }
   );
+  
+  useEffect(() => {
+    reset({})
+  }, [curVital, reset]);
 
   // if the user hasn’t provided a new height/weight, fall back
   // to the current vital values (curVital.height, curVital.weight).
@@ -69,11 +73,7 @@ export function VitalsForm({
     handleSubmit(
       async (data: FieldValues) => {
         data.visit_id = visitId;
-        console.log('SUBMIT DATA', data);
         patchVital(data as Vital).then(() => {
-          // super jank because idh time to figure out why RHF keeps resetting this to the wrong value,
-          // and how it interacts with the default value given later
-          reset({ diabetes_mellitus: data.diabetes_mellitus });
           toast.success('Updated Vital');
         });
       },

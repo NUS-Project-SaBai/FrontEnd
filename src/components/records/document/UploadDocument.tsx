@@ -33,6 +33,7 @@ export function UploadDocument({
         text="Upload Document"
         colour="green"
         onClick={() => setIsOpen(true)}
+        className='w-24 h-16'
       />
       <Modal
         isOpen={isOpen}

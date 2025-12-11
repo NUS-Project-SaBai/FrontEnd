@@ -8,12 +8,12 @@ import { createVisit } from '@/data/visit/createVisit';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { useToggle } from '@/hooks/useToggle';
 import { Patient } from '@/types/Patient';
+import { formatDate } from '@/utils/formatDate';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/16/solid';
 import { DateTime, Duration } from 'luxon';
-import Link from 'next/link';
-import type { Dispatch, SetStateAction } from 'react';
 import { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { VitalsButton, ConsultationButton } from '../NavigationButtons';
 
 export function PatientRecordTable({
   displayedPatients,
@@ -78,18 +78,19 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       }
     }
     return withLoading(async () => {
-      toast.loading("Creating visit...");
-      return createVisit(patient).then(() => getPatientById(patient.pk.toString()))
-    }
-    )().then(freshPatient => {
+      toast.loading('Creating visit...');
+      return createVisit(patient).then(() =>
+        getPatientById(patient.pk.toString())
+      );
+    })().then(freshPatient => {
       setPatients(old => {
         return [
           freshPatient,
           ...old.filter(v => v.patient_id != freshPatient.patient_id),
-        ]
+        ];
       });
       toast.dismiss();
-      toast.success("New visit created")
+      toast.success('New visit created');
       setShouldFlash(true);
       setTimeout(() => setShouldFlash(false), 1000); // 1 second flash
     });
@@ -100,8 +101,9 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
       <div
         // onClick={() => router.push(`/records/patient-record?id=${patient.pk}`)}
         onClick={toggleExpanded}
-        className={`m-2 flex flex-col items-center rounded-md bg-white p-2 shadow transition-shadow duration-300 ${isHovered ? 'shadow-md' : ''
-          } ${shouldFlash ? 'flash' : ''}`}
+        className={`m-2 flex flex-col items-center rounded-md bg-white p-2 shadow transition-shadow duration-300 ${
+          isHovered ? 'shadow-md' : ''
+        } ${shouldFlash ? 'flash' : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         role="button"
@@ -178,54 +180,5 @@ function getLastVisitLabel(lastVisitDate: string): string {
     ? 'Just now'
     : timeSinceLastVisit < Duration.fromObject({ minutes: 10 })
       ? lastVisitDateLuxon.toRelative() || 'Missing relative time?'
-      : timeSinceLastVisit < Duration.fromObject({ days: 10 })
-        ? lastVisitDateLuxon.toLocaleString({
-          ...DateTime.DATETIME_MED,
-          hour12: true,
-        })
-        : lastVisitDateLuxon.toLocaleString(DateTime.DATE_MED);
-}
-
-function VitalsButton({
-  patient,
-  setIsHovered,
-}: {
-  patient: Patient;
-  setIsHovered: Dispatch<SetStateAction<boolean>>;
-}) {
-  return (
-    <Link
-      href={`/records/patient-vitals?id=${patient.pk}&visit=${patient.last_visit_id}`}
-      onClick={e => e.stopPropagation()}
-      onMouseEnter={e => {
-        e.stopPropagation();
-        setIsHovered(false);
-      }}
-      onMouseLeave={() => setIsHovered(true)}
-    >
-      <Button text="Vitals" colour="red" />
-    </Link>
-  );
-}
-
-function ConsultationButton({
-  patient,
-  setIsHovered,
-}: {
-  patient: Patient;
-  setIsHovered: Dispatch<SetStateAction<boolean>>;
-}) {
-  return (
-    <Link
-      href={`/records/patient-consultation?id=${patient.pk}&visit=${patient.last_visit_id}`}
-      onClick={e => e.stopPropagation()}
-      onMouseEnter={e => {
-        e.stopPropagation();
-        setIsHovered(false);
-      }}
-      onMouseLeave={() => setIsHovered(true)}
-    >
-      <Button text="Consultation" colour="indigo" />
-    </Link>
-  );
+      : formatDate(lastVisitDate, 'datetime');
 }

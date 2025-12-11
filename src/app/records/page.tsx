@@ -2,7 +2,7 @@
 import { LoadingPage } from '@/components/LoadingPage';
 import { PatientSearchbar } from '@/components/PatientSearchbar';
 import { PatientRecordTable } from '@/components/records/PatientRecordTable';
-import { allPubertyFields } from '@/components/records/vital/ChildVitalsFields';
+import { allPubertyFields, InputFieldData } from '@/components/records/vital/ChildVitalsFields';
 import { NewPatientModal } from '@/components/registration/NewPatientModal';
 import { PatientScanForm } from '@/components/registration/PatientScanForm';
 import { PatientListContext } from '@/context/PatientListContext';
@@ -45,7 +45,7 @@ export default function RecordPage() {
 
   const useFormReturn = useForm({
     values: formDetails,
-    resetOptions: { keepDirtyValues: true },
+    // resetOptions: { keepDefaultValues: true }, // does not work as we set default values at field level for the new patient modal
   });
 
   useEffect(() => {
@@ -94,13 +94,17 @@ export default function RecordPage() {
         };
 
         const pubertyData = allPubertyFields.reduce(
-          (acc, field) => {
-            const key = field.name;
-            const value = fieldValues[key];
+          (acc, fieldGroup) => {
+            function addField(field: InputFieldData) {
+              const key = field.name;
+              const value = fieldValues[key];
 
-            if (value !== undefined && value !== '') {
-              acc[key] = value;
+              if (value !== undefined && value !== '') {
+                acc[key] = value;
+              }
             }
+            addField(fieldGroup[0])
+            addField(fieldGroup[1])
             return acc;
           },
           {} as Record<string, string | number | boolean>
@@ -122,7 +126,11 @@ export default function RecordPage() {
           return;
         }
 
+        // useFormReturn.reset({ village_prefix: fieldValues.village_prefix }, { keepDefaultValues: true });
+        // keepDefaultValues does not work as we set default values at field level
+
         useFormReturn.reset({ village_prefix: fieldValues.village_prefix });
+
         clearLocalStorageData();
 
         toast.success('Patient Created!');
