@@ -50,7 +50,8 @@ export function ConsultationForm({
     if (!editConsultId && formDetails && Object.keys(formDetails).length > 0) {
       useFormReturn.reset(formDetails);
     }
-  }, [editConsultId, formDetails, useFormReturn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (editConsultId == null) {
