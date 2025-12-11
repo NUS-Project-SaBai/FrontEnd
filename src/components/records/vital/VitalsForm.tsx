@@ -220,7 +220,7 @@ export function VitalsForm({
             options={['Yes', 'No']}
           />
         </div>
-        <ChildVitalsFields patient={patient} curVital={curVital} />
+        <ChildVitalsFields patient={patient} />
         <h2>Other notes</h2>
         <RHFInputField
           name="others"

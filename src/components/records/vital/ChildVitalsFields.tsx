@@ -248,10 +248,8 @@ export const allPubertyFields: InputFieldData[][] = [
 
 export function ChildVitalsFields({
   patient,
-  curVital,
 }: {
   patient: Pick<Patient, 'date_of_birth' | 'gender'>;
-  curVital: Vital;
 }) {
   const patientYearsOld = getPatientAge(patient).year;
 
@@ -269,7 +267,8 @@ export function ChildVitalsFields({
     () =>
       allPubertyFields
         .filter(
-          field => field[0].gender == undefined || field[0].gender == patient.gender
+          field =>
+            field[0].gender == undefined || field[0].gender == patient.gender
         )
         .filter(field => field[0].age.includes(patientYearsOld)),
     [patient.gender, patientYearsOld]
