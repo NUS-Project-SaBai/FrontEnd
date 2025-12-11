@@ -156,6 +156,14 @@ export function ConsultationForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful]);
 
+  useEffect(() => {
+    if (isSubmitSuccessful && useFormReturn.formState.isDirty) {
+      const currentValues = useFormReturn.getValues();
+      reset(currentValues, { keepDirty: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitSuccessful, useFormReturn.formState.isDirty]);
+
   // Helper function to process and validate diagnoses
   const processDiagnoses = (
     diagnoses: Array<{
