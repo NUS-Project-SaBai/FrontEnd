@@ -12,6 +12,7 @@ import { deleteDiagnosis } from '@/data/diagnosis/deleteDiagnosis';
 import { getDiagnosisByConsult } from '@/data/diagnosis/getDiagnosis';
 import { patchDiagnosis } from '@/data/diagnosis/patchDiagnosis';
 import { createReferral } from '@/data/referrals/createReferral';
+import { patchReferralByConsultId } from '@/data/referrals/patchReferral';
 import { useSaveOnWrite } from '@/hooks/useSaveOnWrite';
 import { ConsultMedicationOrder } from '@/types/ConsultMedicationOrder';
 import { Patient } from '@/types/Patient';
@@ -313,15 +314,22 @@ export function ConsultationForm({
             referralPayload['referral_outcome'] = '';
 
             try {
-              const result = createReferral(referralPayload);
-              result
-                .then(
-                  () => {
-                    toast.success('Referral submitted!');
-                  },
-                  () => console.log('error')
-                )
-                .catch(() => toast.error('Error submitting consultation form'));
+              if (isEditing) {
+                patchReferralByConsultId(
+                  referralPayload,
+                  Number(consultID)
+                ).catch(() => toast.error('Error updating referral'));
+              } else {
+                const result = createReferral(referralPayload);
+                result
+                  .then(
+                    () => {
+                      toast.success('Referral submitted!');
+                    },
+                    () => console.log('error')
+                  )
+                  .catch(() => toast.error('Error creating referral'));
+              }
             } catch (error) {
               console.error('Error submitting referral form:', error);
               toast.error('Unknown Error');
