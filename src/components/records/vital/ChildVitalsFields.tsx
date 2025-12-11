@@ -319,10 +319,8 @@ function ChildVitalsSection({
 
 export function ChildPubertySection({
   pubertyFields,
-  curVital,
 }: {
   pubertyFields: InputFieldData[][];
-  curVital: Vital;
 }) {
   return (
     <div>
@@ -335,18 +333,16 @@ export function ChildPubertySection({
           {/* <div className="flex flex-col gap-2"> */}
           {pubertyFields.map(field => (
             // <div className='flex flex-row gap-4 rounded-lg mr-6 p-2 border-2 border-gray-50'>
-            <div className='flex flex-row gap-4 rounded-lg mr-6 p-2 bg-gray-50 shadow-sm mb-2' key={field[0].name}>
+            <div
+              className="mb-2 mr-6 flex flex-row gap-4 rounded-lg bg-gray-50 p-2 shadow-sm"
+              key={field[0].name}
+            >
               <VitalFieldRenderer
                 key={field[0].name}
                 field={field[0]}
-                curVital={curVital}
-                className='min-w-24'
+                className="min-w-24"
               />
-              <VitalFieldRenderer
-                key={field[1].name}
-                field={field[1]}
-                curVital={curVital}
-              />
+              <VitalFieldRenderer key={field[1].name} field={field[1]} />
             </div>
           ))}
         </div>
