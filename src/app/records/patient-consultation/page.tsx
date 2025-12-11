@@ -3,18 +3,16 @@ import { LoadingUI } from '@/components/LoadingUI';
 import { ConsultationForm } from '@/components/records/consultation/ConsultationForm';
 import { PatientInfoHeaderSection } from '@/components/records/patient/PatientInfoHeaderSection';
 import { PrescriptionConsultCol } from '@/components/records/PrescriptionConsultCol';
-import { PastVitalTable } from '@/components/records/vital/PastVitalTable';
 import { getPatientById } from '@/data/patient/getPatient';
 import { Consult } from '@/types/Consult';
-import { calculateDobDifference, Patient } from '@/types/Patient';
-import { EMPTY_VITAL, Vital } from '@/types/Vital';
+import { Patient } from '@/types/Patient';
+import { Vital } from '@/types/Vital';
 import { fetchPatientConsultationInfo } from './api';
 import { getVisitsByPatientId } from '@/data/visit/getVisit';
 import { VisitDropdown } from '@/components/VisitDropdown';
 import { DateTime } from 'luxon';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { VitalsForm } from '@/components/records/vital/VitalsForm';
-import { getVitalByVisit } from '@/data/vital/getVital';
 
 export default async function PatientConsultationPage({
   searchParams,
@@ -106,7 +104,6 @@ function MainBody({
   consults,
   patient,
   visitId,
-  visitDate,
   prescriptions,
 }: {
   vitals: Vital | null;
@@ -123,8 +120,6 @@ function MainBody({
     status: string;
   }[];
 }) {
-
-
   return (
     <section className="grid gap-4 lg:grid-cols-2 lg:gap-6">
       {/* Vitals card */}
