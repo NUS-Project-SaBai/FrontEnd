@@ -46,7 +46,6 @@ export function EditPatient({ patient }: { patient: Patient }) {
             isSubmitting={submitting}
             onSubmit={e => {
               e.preventDefault();
-              console.log("submitting set to true")
               setSubmitting(true);
 
               useFormReturn.handleSubmit(
@@ -76,7 +75,6 @@ export function EditPatient({ patient }: { patient: Patient }) {
                   }
                   patchPatient(fieldValues.pk, formData).then(() => {
                     toast.success('Patient Updated!');
-                    console.log("submitting set to false")
                     setSubmitting(false)
                     router.refresh();
                     closeModal();

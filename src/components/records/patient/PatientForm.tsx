@@ -23,7 +23,7 @@ import { NAOption } from '@/constants';
 
 export function PatientForm({
   onSubmit,
-  isSubmitting,
+  isSubmitting = false,
   closeForm = undefined,
   isEditing = false,
 }: {
