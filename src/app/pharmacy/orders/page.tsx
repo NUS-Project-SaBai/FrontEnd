@@ -24,7 +24,6 @@ import {
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
 import { Switch } from '@/components/ui/switch';
-import Link from 'next/link';
 import { LoadingLink } from '@/components/LoadingLink';
 
 type OrderRowData = {
