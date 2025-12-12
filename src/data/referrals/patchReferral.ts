@@ -9,3 +9,13 @@ export async function patchReferral(
   const data = (await axiosInstance.patch(`/referrals/${id}/`, payload)).data;
   return data;
 }
+
+export async function patchReferralByConsultId(
+  payload: Partial<Referral>,
+  consultId: number
+): Promise<void> {
+  const data = (
+    await axiosInstance.patch(`/referrals/?consult_id=${consultId}`, payload)
+  ).data;
+  return data;
+}
