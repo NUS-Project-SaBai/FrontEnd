@@ -24,7 +24,7 @@ import {
 import toast from 'react-hot-toast';
 import { fetchAllPatientMedicationOrders } from './api';
 import { Switch } from '@/components/ui/switch';
-import Link from 'next/link';
+import { LoadingLink } from '@/components/LoadingLink';
 
 type OrderRowData = {
   patient: {
@@ -104,6 +104,38 @@ export default function OrdersPage() {
     return () => clearInterval(intervalId);
   }, [isAutoRefreshEnabled]);
 
+  const handleApproveOrRejectOrder = (orderId: number) => {
+    setOrderRowData(prev =>
+      prev
+        .map(row => ({
+          ...row,
+          data: row.data
+            .map(visit => ({
+              ...visit,
+              orders: visit.orders.filter(order => order.order_id !== orderId),
+            }))
+            // Drop visits that no longer have any orders
+            .filter(visit => visit.orders.length > 0),
+        }))
+        // Drop patients that no longer have any visits
+        .filter(row => row.data.length > 0)
+    );
+
+    setFilteredOrderRowData(prev =>
+      prev
+        .map(row => ({
+          ...row,
+          data: row.data
+            .map(visit => ({
+              ...visit,
+              orders: visit.orders.filter(order => order.order_id !== orderId),
+            }))
+            .filter(visit => visit.orders.length > 0),
+        }))
+        .filter(row => row.data.length > 0)
+    );
+  };
+
   return (
     <LoadingPage isLoading={isLoading} message="Loading Pending Orders...">
       <div className="p-2">
@@ -180,7 +212,7 @@ export default function OrdersPage() {
                   <OrderRow
                     key={x.patient?.patient_id || index}
                     orderRowData={x}
-                    removeNonPendingOrder={fetchPendingOrders}
+                    onApproveOrRejectOrder={handleApproveOrRejectOrder}
                   />
                 ))
               )}
@@ -194,10 +226,10 @@ export default function OrdersPage() {
 
 function OrderRow({
   orderRowData: { patient, data },
-  removeNonPendingOrder,
+  onApproveOrRejectOrder,
 }: {
   orderRowData: OrderRowData;
-  removeNonPendingOrder: (id: number) => void;
+  onApproveOrRejectOrder: (id: number) => void;
 }) {
   const onPatchError = (err: Error, medicine_name: string) => {
     toast.error(() => (
@@ -220,9 +252,9 @@ function OrderRow({
         {/* rowSpan is data.length + 1 because the current row has no data. */}
         <td className="px-0" rowSpan={data.length + 1}>
           {/* Hacky regex workaround cuz backend send patient_id with village prefix and padded zeroes*/}
-          <Link 
+          <LoadingLink 
             href={`/records/patient-record?id=${patient.patient_id.replace(/^..0*/, "")}`}
-            className="block rounded-lg border border-gray-200 p-4 
+            className="rounded-lg border border-gray-200 p-4 
               transition-all hover:shadow-md hover:-translate-y-0.5 hover:bg-gray-50 cursor-pointer
               flex flex-col items-center bg-slate-50"
             >
@@ -240,7 +272,7 @@ function OrderRow({
               height={80}
               width={80}
             />
-          </Link>
+          </LoadingLink>
         </td>
       </tr>
       {data.map(({ visit_id, visit_date, orders, diagnoses }) => (
@@ -296,7 +328,8 @@ function OrderRow({
                             onPatchError(new Error(r.error), o.medication_name);
                             return;
                           }
-                          removeNonPendingOrder(o.order_id)
+                          onApproveOrRejectOrder(o.order_id)
+                          toast.success(`Order Approved`);
                         })
                     }}
                     handleCancelOrder={async () => {
@@ -307,7 +340,8 @@ function OrderRow({
                             onPatchError(new Error(r.error), o.medication_name);
                             return;
                           }
-                          removeNonPendingOrder(o.order_id)
+                          onApproveOrRejectOrder(o.order_id)
+                          toast.success(`Order Rejected`);
                         })
                     }}
                   />

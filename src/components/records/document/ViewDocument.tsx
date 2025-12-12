@@ -109,12 +109,12 @@ export function ViewDocument({
   };
 
   return (
-    <>
+    <div>
       <Button
         text="View Documents"
         onClick={() => setIsOpen(true)}
         colour="blue"
-        className='w-24 h-16'
+        className='w-44 sm:w-28'
       />
       <Modal
         isOpen={isOpen}
@@ -155,6 +155,6 @@ export function ViewDocument({
           </table>
         )}
       </Modal>
-    </>
+    </div>
   );
 }

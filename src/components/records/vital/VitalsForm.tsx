@@ -11,7 +11,7 @@ import { NAOption } from '@/constants';
 import { patchVital } from '@/data/vital/patchVital';
 import { Patient } from '@/types/Patient';
 import { displayBMI, validateVisualAcuity, Vital } from '@/types/Vital';
-import { FormEvent, useEffect } from 'react';
+import { useEffect } from 'react';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -50,26 +50,9 @@ export function VitalsForm({
       ? String(formWeight)
       : curVital.weight;
 
-  const submitVitalsFormHandler = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    handleSubmit(
-      async (data: FieldValues) => {
-        data.visit_id = visitId;
-        patchVital(data as Vital).then(() => {
-          toast.success('Updated Vital');
-        });
-      },
-      () => {
-        toast.error('Invalid/Missing Input');
-      }
-    )();
-  };
-
   return (
     <FormProvider {...useFormReturn}>
       <form
-        onSubmit={submitVitalsFormHandler}
         className="rounded-lg bg-blue-50 p-4"
       >
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
@@ -225,7 +208,27 @@ export function VitalsForm({
           type="textarea"
         />
         <div className="h-4" />
-        <Button text="Update" colour="green" type="submit" />
+        <Button
+          text="Update"
+          colour="green"
+          type="button"
+          onClick={() => new Promise<void>((resolve, reject) => {
+            handleSubmit(
+              async (data: FieldValues) => {
+                data.visit_id = visitId;
+                patchVital(data as Vital).then(() => {
+                  toast.success('Updated Vital');
+                  resolve();
+                });
+              },
+              () => {
+                toast.error('Invalid/Missing Input');
+                reject();
+              }
+            )()
+          }
+          )}
+        />
       </form>
     </FormProvider>
   );

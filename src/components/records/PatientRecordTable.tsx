@@ -139,7 +139,7 @@ function PatientRecordRow({ patient }: { patient: Patient }) {
             />
             <div className="flex flex-col items-center gap-2 rounded-md border p-2 sm:flex-row">
               <div className="w-[115px]">
-                <p>Last visit:</p>
+                <p>Latest visit:</p>
                 <p>{lastVisitLabel}</p>
               </div>
               <VitalsButton patient={patient} setIsHovered={setIsHovered} />
@@ -171,6 +171,7 @@ function getLastVisitLabel(lastVisitDate: string): string {
   if (!lastVisitDate) {
     return 'Missing last visit date';
   }
+  // lastVisitDate = "2025-12-11T15:30:56.296898Z"
   const lastVisitDateLuxon = DateTime.fromISO(lastVisitDate);
   // Positive duration since last visit
   const timeSinceLastVisit = Duration.fromMillis(
@@ -178,7 +179,7 @@ function getLastVisitLabel(lastVisitDate: string): string {
   );
   return timeSinceLastVisit < Duration.fromObject({ seconds: 5 })
     ? 'Just now'
-    : timeSinceLastVisit < Duration.fromObject({ minutes: 10 })
+    : timeSinceLastVisit < Duration.fromObject({ hours: 2 })
       ? lastVisitDateLuxon.toRelative() || 'Missing relative time?'
       : formatDate(lastVisitDate, 'datetime');
 }

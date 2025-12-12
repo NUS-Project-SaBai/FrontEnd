@@ -154,6 +154,8 @@ export function PatientForm({
               />
             </div>
             <ChildPubertySection
+              // curVital passed in here doesn't really matter in the current state of the codebase as they are just used to set the default values;
+              // the only place where this is used is the registration modal, but curVitals are passed straight into the useForm values
               curVital={EMPTY_VITAL}
               pubertyFields={allPubertyFields.filter(
                 field =>
