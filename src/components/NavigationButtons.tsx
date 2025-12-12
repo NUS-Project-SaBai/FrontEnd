@@ -8,16 +8,17 @@ export function VitalsButton({
   setIsHovered = () => {},
   labelOverwrite,
   visitId,
+  className,
 }: {
   patient: Patient;
   setIsHovered?: Dispatch<SetStateAction<boolean>>;
   labelOverwrite?: string;
   visitId?: string;
+  className?: string;
 }) {
-  console.log(visitId)
   return (
     <Link
-      href={`/records/patient-vitals?id=${patient.pk}&visit=${visitId ?? patient.last_visit_id}`}
+      href={`/records/patient-vitals?id=${patient.pk}&visit=${visitId ?? patient.last_visit_id}&${visitId && 'specificVisit=true'}`}
       onClick={e => e.stopPropagation()}
       onMouseEnter={e => {
         e.stopPropagation();
@@ -25,7 +26,11 @@ export function VitalsButton({
       }}
       onMouseLeave={() => setIsHovered(true)}
     >
-      <Button text={labelOverwrite ?? 'Vitals'} colour="red" />
+      <Button
+        text={labelOverwrite ?? 'Vitals'}
+        colour="red"
+        className={className}
+      />
     </Link>
   );
 }
@@ -35,16 +40,17 @@ export function ConsultationButton({
   setIsHovered = () => {},
   labelOverwrite,
   visitId,
+  className,
 }: {
   patient: Patient;
   setIsHovered?: Dispatch<SetStateAction<boolean>>;
   labelOverwrite?: string;
   visitId?: string;
+  className?: string;
 }) {
-  console.log(visitId)
   return (
     <Link
-      href={`/records/patient-consultation?id=${patient.pk}&visit=${visitId ?? patient.last_visit_id}`}
+      href={`/records/patient-consultation?id=${patient.pk}&visit=${visitId ?? patient.last_visit_id}&${visitId && 'specificVisit=true'}`}
       onClick={e => e.stopPropagation()}
       onMouseEnter={e => {
         e.stopPropagation();
@@ -52,7 +58,11 @@ export function ConsultationButton({
       }}
       onMouseLeave={() => setIsHovered(true)}
     >
-      <Button text={labelOverwrite ?? 'Consultation'} colour="indigo" />
+      <Button
+        text={labelOverwrite ?? 'Consultation'}
+        colour="indigo"
+        className={className}
+      />
     </Link>
   );
 }
