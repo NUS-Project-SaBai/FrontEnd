@@ -8,16 +8,16 @@ export async function getConsultByVisitId(
   if (!visitId) {
     return null;
   }
-  return (await axiosInstance.get(`/consults?visit=${visitId}`)).data;
+  return (await axiosInstance.get(`/consults?visit_id=${visitId}`)).data;
 }
 
 export async function getConsultByID(
-  consultID: string
+  consultId: string
 ): Promise<Consult | null> {
-  if (!consultID) return null;
+  if (!consultId) return null;
   try {
     return await (
-      await axiosInstance.get(`/consults/${consultID}`)
+      await axiosInstance.get(`/consults/${consultId}`)
     ).data;
   } catch {
     return null;
@@ -25,12 +25,12 @@ export async function getConsultByID(
 }
 
 export async function getConsultsByPatientID(
-  patientID: number
+  patientId: number
 ): Promise<Consult[] | null> {
-  if (!patientID) {
+  if (!patientId) {
     return null;
   }
   return (
-    await axiosInstance.get(`/consults/?patientID=${patientID}`)
+    await axiosInstance.get(`/consults/?patient_id=${patientId}`)
   ).data.map((val: Consult) => consultFromJson(val));
 }
